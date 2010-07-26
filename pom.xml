@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.codehaus.sonar-plugins</groupId>
+    <artifactId>parent</artifactId>
+    <version>5</version>
+  </parent>
+  <artifactId>sonar-groovy-plugin</artifactId>
+  <name>Sonar Groovy plugin</name>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>sonar-plugin</packaging>
+  <description>Enables analysis of Groovy projects into Sonar.</description>
+
+  <properties>
+    <sonar.plugin.class>org.sonar.plugins.groovy.GroovyPlugin</sonar.plugin.class>
+    <sonar.version>2.2</sonar.version>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+      <version>${sonar.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codenarc</groupId>
+      <artifactId>CodeNarc</artifactId>
+      <version>0.9</version>
+    </dependency>
+
+    <!-- unit tests -->
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+      <version>${sonar.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <scope>provided</scope>
+      <version>2.0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.5.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.5.6</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.15</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-ws-client</artifactId>
+      <version>${sonar.version}</version>
+      <scope>test</scope>
+    </dependency>
+  <dependency>
+    <groupId>org.codehaus.sonar</groupId>
+    <artifactId>sonar-colorizer</artifactId>
+    <version>${sonar.version}</version>
+  </dependency>
+</dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.sonar</groupId>
+        <artifactId>sonar-packaging-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <version>0.1</version>
+        <configuration>
+          <pluginKey>groovy</pluginKey>
+          <pluginName>Groovy</pluginName>
+          <pluginClass>${sonar.plugin.class}</pluginClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
