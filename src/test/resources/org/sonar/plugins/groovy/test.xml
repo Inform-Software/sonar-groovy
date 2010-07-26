@@ -1,0 +1,1948 @@
+<?xml version="1.0"?>
+<CodeNarc url='http://www.codenarc.org' version='0.9'>
+  <Report timestamp='Jul 26, 2010 11:23:21 PM'/>
+  <Project title='Sonar'>
+    <SourceDirectory>/Users/holly/Downloads/Gosu-codenarc/src/main/groovy</SourceDirectory>
+  </Project>
+  <PackageSummary totalFiles='146' filesWithViolations='125' priority1='0' priority2='430'
+                  priority3='13'></PackageSummary>
+  <Package path='' totalFiles='146' filesWithViolations='125' priority1='0' priority2='430' priority3='13'></Package>
+  <Package path='org' totalFiles='146' filesWithViolations='125' priority1='0' priority2='430' priority3='13'></Package>
+  <Package path='org/codenarc' totalFiles='146' filesWithViolations='125' priority1='0' priority2='430' priority3='13'>
+    <File name='AnalysisContext.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[List sourceDirectories]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[RuleSet ruleSet]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CodeNarc.groovy'>
+      <Violation ruleName='CatchThrowable' priority='2' lineNumber='113'>
+        <SourceLine><![CDATA[catch(Throwable t) {]]></SourceLine>
+      </Violation>
+      <Violation ruleName='PrintStackTrace' priority='2' lineNumber='115'>
+        <SourceLine><![CDATA[t.printStackTrace()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='Println' priority='2' lineNumber='106'>
+        <SourceLine><![CDATA[println HELP]]></SourceLine>
+      </Violation>
+      <Violation ruleName='Println' priority='2' lineNumber='114'>
+        <SourceLine><![CDATA[println "ERROR: ${t.message}"]]></SourceLine>
+      </Violation>
+      <Violation ruleName='Println' priority='2' lineNumber='116'>
+        <SourceLine><![CDATA[println HELP]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='88'>
+        <SourceLine><![CDATA[protected String ruleSetFiles]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='89'>
+        <SourceLine><![CDATA[protected String baseDir]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='90'>
+        <SourceLine><![CDATA[protected String includes]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='91'>
+        <SourceLine><![CDATA[protected String excludes]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='92'>
+        <SourceLine><![CDATA[protected String title]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='93'>
+        <SourceLine><![CDATA[protected List reports = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='96'>
+        <SourceLine><![CDATA[protected createCodeNarcRunner = { return new CodeNarcRunner() }]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CodeNarcRunner.groovy'>
+      <Violation ruleName='Println' priority='2' lineNumber='83'>
+        <SourceLine><![CDATA[println resultsMessage]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[String ruleSetFiles]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[SourceAnalyzer sourceAnalyzer]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[List reportWriters = []]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/analyzer' totalFiles='3' filesWithViolations='2' priority1='0' priority2='11'
+           priority3='0'>
+    <File name='DirectorySourceAnalyzer.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[String baseDirectory]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[List sourceDirectories]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='53'>
+        <SourceLine><![CDATA[String applyToFilesMatching = /.*\.groovy/]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='58'>
+        <SourceLine><![CDATA[String doNotApplyToFilesMatching]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='65'>
+        <SourceLine><![CDATA[String applyToFileNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='72'>
+        <SourceLine><![CDATA[String doNotApplyToFileNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='FilesystemSourceAnalyzer.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[String baseDirectory]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='51'>
+        <SourceLine><![CDATA[String includes = DEFAULT_INCLUDES]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='62'>
+        <SourceLine><![CDATA[String excludes]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='64'>
+        <SourceLine><![CDATA[private WildcardPattern includesPattern]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='65'>
+        <SourceLine><![CDATA[private WildcardPattern excludesPattern]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/ant' totalFiles='4' filesWithViolations='4' priority1='0' priority2='17' priority3='0'>
+    <File name='AntFileSetSourceAnalyzer.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[private Project project]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[protected List fileSets = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[private Map resultsMap = [:]]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[private Map fileCountMap = [:]]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CodeNarcTask.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='60'>
+        <SourceLine><![CDATA[String ruleSetFiles]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='62'>
+        <SourceLine><![CDATA[int maxPriority1Violations = Integer.MAX_VALUE]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='63'>
+        <SourceLine><![CDATA[int maxPriority2Violations = Integer.MAX_VALUE]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='64'>
+        <SourceLine><![CDATA[int maxPriority3Violations = Integer.MAX_VALUE]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='66'>
+        <SourceLine><![CDATA[protected List reportWriters = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='67'>
+        <SourceLine><![CDATA[protected List fileSets = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='68'>
+        <SourceLine><![CDATA[protected ruleSet]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='71'>
+        <SourceLine><![CDATA[protected createCodeNarcRunner = { return new CodeNarcRunner() }]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='Report.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[String type]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String title]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[String toFile]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ReportOption.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[String value]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/report' totalFiles='6' filesWithViolations='4' priority1='0' priority2='16' priority3='0'>
+    <File name='AbstractReportWriter.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[String outputFile]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[Object writeToStandardOut]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='44'>
+        <SourceLine><![CDATA[protected getTimestamp = { new Date() }]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[protected customMessagesBundleName = CUSTOM_MESSAGES_BUNDLE]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[protected resourceBundle]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='49'>
+        <SourceLine><![CDATA[protected initializeResourceBundle = { initializeDefaultResourceBundle() }]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='HtmlReportWriter.groovy'>
+      <Violation ruleName='NestedBlockDepth' priority='2' lineNumber='224'>
+        <SourceLine><![CDATA[if (violation.sourceLine) {]]></SourceLine>
+        <Message><![CDATA[The nested block depth is 6]]></Message>
+      </Violation>
+      <Violation ruleName='NestedBlockDepth' priority='2' lineNumber='226'>
+        <SourceLine><![CDATA[p(class:'violationInfo') {]]></SourceLine>
+        <Message><![CDATA[The nested block depth is 7]]></Message>
+      </Violation>
+      <Violation ruleName='NestedBlockDepth' priority='2' lineNumber='231'>
+        <SourceLine><![CDATA[if (moreInfo) {]]></SourceLine>
+        <Message><![CDATA[The nested block depth is 6]]></Message>
+      </Violation>
+      <Violation ruleName='NestedBlockDepth' priority='2' lineNumber='232'>
+        <SourceLine><![CDATA[p(class:'violationInfo') {]]></SourceLine>
+        <Message><![CDATA[The nested block depth is 7]]></Message>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[String title]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='44'>
+        <SourceLine><![CDATA[String defaultOutputFile = DEFAULT_OUTPUT_FILE]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='TextReportWriter.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[String title]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[String defaultOutputFile = 'CodeNarcReport.txt']]></SourceLine>
+      </Violation>
+    </File>
+    <File name='XmlReportWriter.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[String title]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String defaultOutputFile = 'CodeNarcXmlReport.xml']]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/results' totalFiles='3' filesWithViolations='2' priority1='0' priority2='5' priority3='0'>
+    <File name='DirectoryResults.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='25'>
+        <SourceLine><![CDATA[private String path]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='26'>
+        <SourceLine><![CDATA[private List children = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[int numberOfFilesInThisDirectory = 0]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='FileResults.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='26'>
+        <SourceLine><![CDATA[private String path]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[private List violations]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule' totalFiles='100' filesWithViolations='94' priority1='0' priority2='327'
+           priority3='4'>
+    <File name='AbstractAstVisitor.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[List violations = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[Rule rule]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[SourceCode sourceCode]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[Set visited = [] as Set]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='AbstractAstVisitorRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[Class astVisitorClass]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='53'>
+        <SourceLine><![CDATA[String applyToClassNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='66'>
+        <SourceLine><![CDATA[String doNotApplyToClassNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='AbstractRule.groovy'>
+      <Violation ruleName='CatchThrowable' priority='2' lineNumber='162'>
+        <SourceLine><![CDATA[catch(Throwable t) {]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[boolean enabled = true]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[String applyToFilesMatching]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[String doNotApplyToFilesMatching]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='59'>
+        <SourceLine><![CDATA[String applyToFileNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='68'>
+        <SourceLine><![CDATA[String doNotApplyToFileNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='107'>
+        <SourceLine><![CDATA[String violationMessage]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='113'>
+        <SourceLine><![CDATA[String description]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='Violation.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='25'>
+        <SourceLine><![CDATA[Rule rule]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='26'>
+        <SourceLine><![CDATA[Integer lineNumber]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[String sourceLine]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String message]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/basic' totalFiles='20' filesWithViolations='19' priority1='0' priority2='56'
+           priority3='0'>
+    <File name='AbstractFinallyAstVisitor.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[private finallyLineRanges = []]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='BooleanInstantiationRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[String name = 'BooleanInstantiation']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[Class astVisitorClass = BooleanInstantiationAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CloneableWithoutCloneRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='17'>
+        <SourceLine><![CDATA[String name = 'CloneableWithoutClone']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='18'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='19'>
+        <SourceLine><![CDATA[Class astVisitorClass = CloneableWithoutCloneAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='25'>
+        <SourceLine><![CDATA[private boolean hasCloneMethod]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ConstantIfExpressionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[String name = 'ConstantIfExpression']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[Class astVisitorClass = ConstantIfExpressionAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ConstantTernaryExpressionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[String name = 'ConstantTernaryExpression']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='51'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='52'>
+        <SourceLine><![CDATA[Class astVisitorClass = ConstantTernaryExpressionAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyCatchBlockRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyCatchBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyCatchBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyElseBlockRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyElseBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyElseBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyFinallyBlockRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyFinallyBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyFinallyBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyForStatementRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyForStatement']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyForStatementAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyIfStatementRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyIfStatement']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyIfStatementAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptySwitchStatementRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[String name = 'EmptySwitchStatement']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptySwitchStatementAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptySynchronizedStatementRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptySynchronizedStatement']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptySynchronizedStatementAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyTryBlockRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[String name = 'EmptyTryBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyTryBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EmptyWhileStatementRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EmptyWhileStatement']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EmptyWhileStatementAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='EqualsAndHashCodeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'EqualsAndHashCode']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = EqualsAndHashCodeAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ReturnFromFinallyRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ReturnFromFinallyBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[Class astVisitorClass = ReturnFromFinallyBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='StringInstantiationRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'StringInstantiation']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = StringInstantiationAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowExceptionFromFinallyRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowExceptionFromFinallyBlock']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[Class astVisitorClass = ThrowExceptionFromFinallyBlockAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='UnnecessaryTernaryExpressionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='56'>
+        <SourceLine><![CDATA[String name = 'UnnecessaryTernaryExpression']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='57'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='58'>
+        <SourceLine><![CDATA[Class astVisitorClass = UnnecessaryTernaryExpressionAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/braces' totalFiles='4' filesWithViolations='4' priority1='0' priority2='13'
+           priority3='0'>
+    <File name='ElseBlockBracesRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String name = 'ElseBlockBraces']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[boolean bracesRequiredForElseIf = false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[Class astVisitorClass = ElseBlockBracesAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ForStatementBracesRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'ForStatementBraces']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = ForStatementBracesAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='IfStatementBracesRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'IfStatementBraces']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = IfStatementBracesAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='WhileStatementBracesRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'WhileStatementBraces']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = WhileStatementBracesAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/concurrency' totalFiles='7' filesWithViolations='7' priority1='0' priority2='22'
+           priority3='2'>
+    <File name='NestedSynchronizationRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='17'>
+        <SourceLine><![CDATA[String name = 'NestedSynchronization']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='18'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='19'>
+        <SourceLine><![CDATA[Class astVisitorClass = NestedSynchronizationAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='24'>
+        <SourceLine><![CDATA[private int visitCount = 0;]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SynchronizedMethodRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[String name = 'SynchronizedMethod']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[Class astVisitorClass = SynchronizedMethodAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SynchronizedOnThisRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'SynchronizedOnThis']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[Class astVisitorClass = SynchronizedOnThisAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SystemRunFinalizersOnExitRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String name = 'SystemRunFinalizersOnExit']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[Class astVisitorClass = SystemRunFinalizersOnExitAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnusedImport' priority='3' lineNumber='23'>
+        <SourceLine><![CDATA[import org.codehaus.groovy.ast.expr.SpreadExpression]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThreadLocalNotStaticFinalRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='20'>
+        <SourceLine><![CDATA[String name = 'ThreadLocalNotStaticFinal']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='21'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='22'>
+        <SourceLine><![CDATA[Class astVisitorClass = ThreadLocalNotStaticFinalAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnusedImport' priority='3' lineNumber='6'>
+        <SourceLine><![CDATA[import org.codehaus.groovy.ast.ClassHelper]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThreadYieldRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String name = 'ThreadYield']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[Class astVisitorClass = ThreadYieldAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='VolatileLongOrDoubleFieldRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='17'>
+        <SourceLine><![CDATA[String name = 'VolatileLongOrDoubleField']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='18'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='19'>
+        <SourceLine><![CDATA[Class astVisitorClass = VolatileLongOrDoubleFieldVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/exceptions' totalFiles='12' filesWithViolations='12' priority1='0' priority2='22'
+           priority3='0'>
+    <File name='CatchErrorRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'CatchError']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CatchExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'CatchException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CatchNullPointerExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'CatchNullPointerException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CatchRuntimeExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'CatchRuntimeException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CatchThrowableRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'CatchThrowable']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CommonCatchAstVisitor.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[private exceptionClassNameWithoutPackage]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CommonThrowAstVisitor.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[private List exceptionTypeNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowErrorRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowError']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowNullPointerExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowNullPointerException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowRuntimeExceptionRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowRuntimeException']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ThrowThrowableRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ThrowThrowable']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/generic' totalFiles='3' filesWithViolations='3' priority1='0' priority2='11'
+           priority3='0'>
+    <File name='IllegalRegexRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'IllegalRegex']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[String regex]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='RequiredRegexRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'RequiredRegex']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[String regex]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='StatelessClassRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='60'>
+        <SourceLine><![CDATA[String name = 'StatelessClass']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='61'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='62'>
+        <SourceLine><![CDATA[String ignoreFieldNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='63'>
+        <SourceLine><![CDATA[String ignoreFieldTypes]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='64'>
+        <SourceLine><![CDATA[Class astVisitorClass = StatelessClassAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/gosu' totalFiles='9' filesWithViolations='9' priority1='0' priority2='33'
+           priority3='2'>
+    <File name='GosuClassSizeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[String name = 'GosuClassSize']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine>
+          <![CDATA[String description = 'Lines of code within a Gosu source code file, including comments.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int maxLines = 1200]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuCommentedOutCodeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[String name = 'GosuCommentedOutCode']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String description = 'Check for commented out code.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuCyclomaticComplexityRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'GosuCyclomaticComplexity']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[String description = 'Perform a standard cyclomatic complexity check.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int priority = 1]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int maxMethodComplexity = 7]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuFunctionParameterLengthRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[String name = 'GosuFunctionParameterLength']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String description = 'Check for the maximum allow parameter count.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[int maxParameters = 4]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryGroovyImport' priority='3' lineNumber='19'>
+        <SourceLine><![CDATA[import java.util.List;]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuFunctionSizeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'GosuFunctionSize']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine>
+          <![CDATA[String description = 'Lines of code within a Gosu function, including comments.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[int maxLines = 25]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuIllegalImportsRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'GosuIllegalImports']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine>
+          <![CDATA[String description = 'Illegal imports rule. Check for violations of the illegal imports rule.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuNestedIfRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[String name = 'GosuNestedIf']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine>
+          <![CDATA[String description = 'Nested if rule. Check for violations in nested if statement depth.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[int priority = 1]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[int maxNestedDepth = 4]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuReturnCountRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'GosuReturnCount']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine>
+          <![CDATA[String description = 'Check for a maximum return statement count from Gosu functions.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int priority = 1]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int maxReturnCount = 4]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuUnusedImportsRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'GosuUnusedImports']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine>
+          <![CDATA[String description = 'Unused imports rule. Check for violations of the unused imports rule.']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryGroovyImport' priority='3' lineNumber='19'>
+        <SourceLine><![CDATA[import java.util.List;]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/grails' totalFiles='5' filesWithViolations='4' priority1='0' priority2='17'
+           priority3='0'>
+    <File name='GrailsPublicControllerMethodRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[String name = 'GrailsPublicControllerMethod']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[Class astVisitorClass = GrailsPublicControllerMethodAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='44'>
+        <SourceLine><![CDATA[String applyToFilesMatching = GrailsUtil.CONTROLLERS_FILES]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[String applyToClassNames = GrailsUtil.CONTROLLERS_CLASSES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GrailsServletContextReferenceRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[String name = 'GrailsServletContextReference']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[Class astVisitorClass = GrailsServletContextReferenceAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[String applyToFilesMatching = GrailsUtil.CONTROLLERS_AND_TAGLIB_FILES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GrailsSessionReferenceRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[String name = 'GrailsSessionReference']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[Class astVisitorClass = GrailsSessionReferenceAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[String applyToFilesMatching = GrailsUtil.CONTROLLERS_AND_TAGLIB_FILES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GrailsStatelessServiceRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='65'>
+        <SourceLine><![CDATA[String name = 'GrailsStatelessService']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='66'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='67'>
+        <SourceLine><![CDATA[String applyToFilesMatching = GrailsUtil.SERVICE_FILES]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='68'>
+        <SourceLine><![CDATA[String applyToClassNames = GrailsUtil.SERVICE_CLASSES]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/imports' totalFiles='4' filesWithViolations='4' priority1='0' priority2='8'
+           priority3='0'>
+    <File name='DuplicateImportRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'DuplicateImport']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ImportFromSamePackageRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name = 'ImportFromSamePackage']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='UnnecessaryGroovyImportRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'UnnecessaryGroovyImport']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='UnusedImportRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[String name = 'UnusedImport']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/junit' totalFiles='6' filesWithViolations='5' priority1='0' priority2='20'
+           priority3='0'>
+    <File name='JUnitAssertAlwaysFailsRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[String name = 'JUnitAssertAlwaysFails']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[Class astVisitorClass = JUnitAssertAlwaysFailsAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[String applyToClassNames = DEFAULT_TEST_CLASS_NAMES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='JUnitAssertAlwaysSucceedsRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[String name = 'JUnitAssertAlwaysSucceeds']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[Class astVisitorClass = JUnitAssertAlwaysSucceedsAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[String applyToClassNames = DEFAULT_TEST_CLASS_NAMES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='JUnitPublicNonTestMethodRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[String name = 'JUnitPublicNonTestMethod']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='49'>
+        <SourceLine><![CDATA[Class astVisitorClass = JUnitPublicNonTestMethodAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[String applyToClassNames = DEFAULT_TEST_CLASS_NAMES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='JUnitSetUpCallsSuperRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String name = 'JUnitSetUpCallsSuper']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[Class astVisitorClass = JUnitSetUpCallsSuperAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[String applyToClassNames = DEFAULT_TEST_CLASS_NAMES]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='JUnitTearDownCallsSuperRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String name = 'JUnitTearDownCallsSuper']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[Class astVisitorClass = JUnitTearDownCallsSuperAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[String applyToClassNames = DEFAULT_TEST_CLASS_NAMES]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/logging' totalFiles='4' filesWithViolations='4' priority1='0' priority2='12'
+           priority3='0'>
+    <File name='PrintlnRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[String name = 'Println']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[Class astVisitorClass = PrintlnAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='PrintStackTraceRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'PrintStackTrace']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = PrintStackTraceAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SystemErrPrintRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'SystemErrPrint']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = SystemErrPrintAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SystemOutPrintRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='30'>
+        <SourceLine><![CDATA[String name = 'SystemOutPrint']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[Class astVisitorClass = SystemOutPrintAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/naming' totalFiles='10' filesWithViolations='9' priority1='0' priority2='50'
+           priority3='0'>
+    <File name='AbstractClassNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'AbstractClassName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[Class astVisitorClass = AbstractClassNameAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[String regex]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ClassNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[String name = 'ClassName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[String regex = /[A-Z]\w*/]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[Class astVisitorClass = ClassNameAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='FieldNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='60'>
+        <SourceLine><![CDATA[String name = 'FieldName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='61'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='62'>
+        <SourceLine><![CDATA[String regex = DEFAULT_FIELD_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='63'>
+        <SourceLine><![CDATA[String staticRegex]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='64'>
+        <SourceLine><![CDATA[String finalRegex = DEFAULT_CONST_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='65'>
+        <SourceLine><![CDATA[String staticFinalRegex]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='66'>
+        <SourceLine><![CDATA[String ignoreFieldNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='67'>
+        <SourceLine><![CDATA[Class astVisitorClass = FieldNameAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='75'>
+        <SourceLine><![CDATA[private Set propertyNames = []]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='InterfaceNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[String name = 'InterfaceName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[Class astVisitorClass = InterfaceNameAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String regex]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='MethodNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[String name = 'MethodName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[Class astVisitorClass = MethodNameAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[String regex = /[a-z]\w*/]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[String ignoreMethodNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='PackageNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[String name = 'PackageName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[Class astVisitorClass = PackageNameAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[String regex = /[a-z]+(\.[a-z0-9]+)*/]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[boolean packageNameRequired = false]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ParameterNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[String name = 'ParameterName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[String regex = DEFAULT_VAR_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='44'>
+        <SourceLine><![CDATA[String ignoreParameterNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[Class astVisitorClass = ParameterNameAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='PropertyNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='60'>
+        <SourceLine><![CDATA[String name = 'PropertyName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='61'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='62'>
+        <SourceLine><![CDATA[String regex = DEFAULT_FIELD_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='63'>
+        <SourceLine><![CDATA[String staticRegex]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='64'>
+        <SourceLine><![CDATA[String finalRegex]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='65'>
+        <SourceLine><![CDATA[String staticFinalRegex = DEFAULT_CONST_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='66'>
+        <SourceLine><![CDATA[String ignorePropertyNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='67'>
+        <SourceLine><![CDATA[Class astVisitorClass = PropertyNameAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='VariableNameRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='45'>
+        <SourceLine><![CDATA[String name = 'VariableName']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[String regex = DEFAULT_VAR_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[String finalRegex = DEFAULT_CONST_NAME]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='49'>
+        <SourceLine><![CDATA[String ignoreVariableNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[Class astVisitorClass = VariableNameAstVisitor]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/size' totalFiles='7' filesWithViolations='7' priority1='0' priority2='30'
+           priority3='0'>
+    <File name='AbcComplexityRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='51'>
+        <SourceLine><![CDATA[String name = 'AbcComplexity']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='52'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='53'>
+        <SourceLine><![CDATA[Class astVisitorClass = AbcComplexityAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='54'>
+        <SourceLine><![CDATA[int maxMethodComplexity = 60]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='55'>
+        <SourceLine><![CDATA[int maxClassAverageMethodComplexity = 60]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='56'>
+        <SourceLine><![CDATA[String ignoreMethodNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='AbstractMethodMetricAstVisitor.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[protected metric]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ClassSizeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'ClassSize']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[Class astVisitorClass = ClassSizeAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[int maxLines = 1000]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='CyclomaticComplexityRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[String name = 'CyclomaticComplexity']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='51'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='52'>
+        <SourceLine><![CDATA[Class astVisitorClass = CyclomaticComplexityAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='53'>
+        <SourceLine><![CDATA[int maxMethodComplexity = 20]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='54'>
+        <SourceLine><![CDATA[int maxClassAverageMethodComplexity = 20]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='55'>
+        <SourceLine><![CDATA[String ignoreMethodNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GMetricsSourceCodeAdapter.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[private codeNarcSourceCode]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='MethodSizeRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[String name = 'MethodSize']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[int priority = 3]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[Class astVisitorClass = MethodSizeAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[int maxLines = 100]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[String ignoreMethodNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='NestedBlockDepthRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[String name = 'NestedBlockDepth']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[int maxNestedBlockDepth = 5]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='49'>
+        <SourceLine><![CDATA[Class astVisitorClass = NestedBlockDepthAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='53'>
+        <SourceLine><![CDATA[private Set blocksToProcess = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='54'>
+        <SourceLine><![CDATA[private Set closureFieldExpressions]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='55'>
+        <SourceLine><![CDATA[private nestedBlockDepth = 0]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/rule/unused' totalFiles='3' filesWithViolations='3' priority1='0' priority2='14'
+           priority3='0'>
+    <File name='UnusedPrivateFieldRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[String name = 'UnusedPrivateField']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='38'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[Class astVisitorClass = UnusedPrivateFieldAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[private unusedPrivateFields]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='UnusedPrivateMethodRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='42'>
+        <SourceLine><![CDATA[String name = 'UnusedPrivateMethod']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='43'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='44'>
+        <SourceLine><![CDATA[Class astVisitorClass = UnusedPrivateMethodAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='48'>
+        <SourceLine><![CDATA[private unusedPrivateMethods]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='49'>
+        <SourceLine><![CDATA[private currentClassNode]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='UnusedVariableRule.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[String name = 'UnusedVariable']]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[int priority = 2]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[Class astVisitorClass = UnusedVariableAstVisitor]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[private variablesByBlockScope = [] as Stack]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[private variablesInCurrentBlockScope]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/ruleset' totalFiles='10' filesWithViolations='9' priority1='0' priority2='17'
+           priority3='0'>
+    <File name='CompositeRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[private rules = []]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='FilteredRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine><![CDATA[private rules = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[private includes = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[private excludes = []]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GroovyDslRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='32'>
+        <SourceLine><![CDATA[private ResourceFactory resourceFactory = new DefaultResourceFactory()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='33'>
+        <SourceLine><![CDATA[private rules]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='ListRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[private rules]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='PropertiesFileRuleSetConfigurer.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='46'>
+        <SourceLine><![CDATA[private ResourceFactory resourceFactory = new DefaultResourceFactory()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='47'>
+        <SourceLine><![CDATA[protected defaultPropertiesFilename = 'codenarc.properties']]></SourceLine>
+      </Violation>
+    </File>
+    <File name='RuleSetBuilder.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='37'>
+        <SourceLine><![CDATA[private topLevelDelegate = new TopLevelDelegate()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='50'>
+        <SourceLine><![CDATA[private allRuleSet = new CompositeRuleSet()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='103'>
+        <SourceLine><![CDATA[RuleSet ruleSet]]></SourceLine>
+      </Violation>
+      <Violation ruleName='ThrowRuntimeException' priority='2' lineNumber='120'>
+        <SourceLine><![CDATA[throw new RuntimeException("No such rule named [$name]")]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='RuleSetUtil.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='31'>
+        <SourceLine>
+          <![CDATA[private static ResourceFactory resourceFactory = new DefaultResourceFactory()]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='XmlFileRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[private ResourceFactory resourceFactory = new DefaultResourceFactory()]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[private List rules = []]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='XmlReaderRuleSet.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[private List rules = []]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/source' totalFiles='5' filesWithViolations='4' priority1='0' priority2='13' priority3='0'>
+    <File name='AbstractSourceCode.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='34'>
+        <SourceLine><![CDATA[private ModuleNode ast]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[private List lines]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='36'>
+        <SourceLine><![CDATA[private astParsed = false]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SourceCodeCriteria.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='35'>
+        <SourceLine><![CDATA[String applyToFilesMatching]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[String doNotApplyToFilesMatching]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='51'>
+        <SourceLine><![CDATA[String applyToFileNames]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='61'>
+        <SourceLine><![CDATA[String doNotApplyToFileNames]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SourceFile.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[private File file]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[private String text]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[private path]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='SourceString.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[String path]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='28'>
+        <SourceLine><![CDATA[String name]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='29'>
+        <SourceLine><![CDATA[private String source]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/util' totalFiles='12' filesWithViolations='3' priority1='0' priority2='6' priority3='9'>
+    <File name='WildcardPattern.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='39'>
+        <SourceLine><![CDATA[private List regexes = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='40'>
+        <SourceLine><![CDATA[private List strings = []]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='41'>
+        <SourceLine><![CDATA[private defaultMatches]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/util/gosu' totalFiles='2' filesWithViolations='2' priority1='0' priority2='3'
+           priority3='9'>
+    <File name='GosuCodeBlockWrapper.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='24'>
+        <SourceLine><![CDATA[int startLineNumber]]></SourceLine>
+      </Violation>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='25'>
+        <SourceLine><![CDATA[List lines]]></SourceLine>
+      </Violation>
+    </File>
+    <File name='GosuUtil.groovy'>
+      <Violation ruleName='StatelessClass' priority='2' lineNumber='27'>
+        <SourceLine><![CDATA[private static def functionCache = [:]]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='95'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /for\(.*$/ || textLine.trim() =~ /for \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='115'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /foreach\(.*$/ || textLine.trim() =~ /foreach \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='135'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /while\(.*$/ || textLine.trim() =~ /while \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='155'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /catch\(.*$/ || textLine.trim() =~ /catch \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='175'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /switch\(.*$/ || textLine.trim() =~ /switch \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='195'>
+        <SourceLine>
+          <![CDATA[return textLine.trim() =~ /case.*$/ || textLine.trim() =~ /default.*$/ ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='215'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /uses .*$/ && textLine.trim().indexOf("uses") == 0) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='287'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /if\(.*$/ || textLine.trim() =~ /if \(.*$/) ? true : false]]></SourceLine>
+      </Violation>
+      <Violation ruleName='UnnecessaryTernaryExpression' priority='3' lineNumber='354'>
+        <SourceLine>
+          <![CDATA[return (textLine.trim() =~ /else.*$/ || textLine.trim() =~ /else\{.*$/ || textLine.trim() =~ /else \{.*$/ || textLine.trim() =~ /else if\{.*$/ || textLine.trim() =~ /else if \{.*$/) ? true : false]]></SourceLine>
+      </Violation>
+    </File>
+  </Package>
+  <Package path='org/codenarc/util/io' totalFiles='5' filesWithViolations='0' priority1='0' priority2='0'
+           priority3='0'></Package>
+  <Rules>
+    <Rule name='AbcComplexity'>
+      <Description>
+        <![CDATA[Checks the ABC metric of size/complexity for methods/classes.A method (or "closure field") with an ABC complexity value (score) greater than the maxMethodComplexity property (which defaults to 60) causes a violation. Likewise, a class that has an (average method) ABC complexityvalue greater than the maxClassAverageMethodComplexity property (which defaults to 60) causes a violation.]]></Description>
+    </Rule>
+    <Rule name='AbstractClassName'>
+      <Description>
+        <![CDATA[Verifies that the name of an abstract class matches a regular expression specified in the regex property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active. This rule ignores interfaces.]]></Description>
+    </Rule>
+    <Rule name='BooleanInstantiation'>
+      <Description>
+        <![CDATA[Use Boolean.valueOf() for variable values or Boolean.TRUE and Boolean.FALSE for constant values instead of calling the Boolean() constructor directly or calling Boolean.valueOf(true) or Boolean.valueOf(false).]]></Description>
+    </Rule>
+    <Rule name='CatchError'>
+      <Description>
+        <![CDATA[Catching Error is dangerous; it can catch exceptions such as ThreadDeath and OutOfMemoryError.]]></Description>
+    </Rule>
+    <Rule name='CatchException'>
+      <Description>
+        <![CDATA[Catching Exception is often too broad or general. It should usually be restricted to framework or infrastructure code, rather than application code.]]></Description>
+    </Rule>
+    <Rule name='CatchNullPointerException'>
+      <Description>
+        <![CDATA[Catching NullPointerException is never appropriate. It should be avoided in the first place with proper null checking, and it can mask underlying errors.]]></Description>
+    </Rule>
+    <Rule name='CatchRuntimeException'>
+      <Description>
+        <![CDATA[Catching RuntimeException is often too broad or general. It should usually be restricted to framework or infrastructure code, rather than application code.]]></Description>
+    </Rule>
+    <Rule name='CatchThrowable'>
+      <Description>
+        <![CDATA[Catching Throwable is dangerous; it can catch exceptions such as ThreadDeath and OutOfMemoryError.]]></Description>
+    </Rule>
+    <Rule name='ClassName'>
+      <Description>
+        <![CDATA[Verifies that the name of a class matches a regular expression. By default it checks that the class name starts with an uppercase letter and is followed by zero or more word characters (letters, numbers or underscores). The regex property specifies the regular expression used to validate the class name.]]></Description>
+    </Rule>
+    <Rule name='ClassSize'>
+      <Description>
+        <![CDATA[Checks if the size of a class exceeds the number of lines specified by the maxLines property, which defaults to 1000.]]></Description>
+    </Rule>
+    <Rule name='CloneableWithoutClone'>
+      <Description><![CDATA[A class that implements java.lang.Cloneable should define a clone() method.]]></Description>
+    </Rule>
+    <Rule name='ConstantIfExpression'>
+      <Description>
+        <![CDATA[Checks for if statements with a constant value for the if expression, such as true, false, null, or a literal constant value.]]></Description>
+    </Rule>
+    <Rule name='ConstantTernaryExpression'>
+      <Description>
+        <![CDATA[Checks for ternary expressions with a constant value for the boolean expression, such as true, false, null, or a literal constant value.]]></Description>
+    </Rule>
+    <Rule name='CyclomaticComplexity'>
+      <Description>
+        <![CDATA[Checks the cyclomatic complexity for methods/classes.A method (or "closure field") with a cyclomatic complexity value greater than the maxMethodComplexity property (which defaults to 20) causes a violation. Likewise, a class that has an (average method) cyclomatic complexityvalue greater than the maxClassAverageMethodComplexity property (which defaults to 20) causes a violation.]]></Description>
+    </Rule>
+    <Rule name='DuplicateImport'>
+      <Description><![CDATA[Duplicate import statements are unnecessary.]]></Description>
+    </Rule>
+    <Rule name='ElseBlockBraces'>
+      <Description>
+        <![CDATA[Use braces for else blocks, even for a single statement. By default, braces are not required for an else if it is followed immediately by an if. Set the bracesRequiredForElseIf property to true to require braces is that situation as well.]]></Description>
+    </Rule>
+    <Rule name='EmptyCatchBlock'>
+      <Description><![CDATA[In most cases, exceptions should not be caught and ignored (swallowed).]]></Description>
+    </Rule>
+    <Rule name='EmptyElseBlock'>
+      <Description><![CDATA[Empty else blocks are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptyFinallyBlock'>
+      <Description><![CDATA[Empty finally blocks are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptyForStatement'>
+      <Description><![CDATA[Empty for statements are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptyIfStatement'>
+      <Description><![CDATA[Empty if statements are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptySwitchStatement'>
+      <Description><![CDATA[Empty switch statements are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptySynchronizedStatement'>
+      <Description><![CDATA[Empty synchronized statements are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptyTryBlock'>
+      <Description><![CDATA[Empty try blocks are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EmptyWhileStatement'>
+      <Description><![CDATA[Empty while statements are confusing and serve no purpose.]]></Description>
+    </Rule>
+    <Rule name='EqualsAndHashCode'>
+      <Description>
+        <![CDATA[If either the equals(Object) or the hashCode() methods are overridden within a class, then both must be overridden.]]></Description>
+    </Rule>
+    <Rule name='FieldName'>
+      <Description>
+        <![CDATA[Verifies that the name of each field matches a regular expression. By default it checks that non-'final' field names start with a lowercase letter and contains only letters or numbers, and 'final' field names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The regex property specifies the default regular expression used to validate field names. The finalRegex property specifies the regular expression to validate 'final' field names. The staticRegex property specifies the regular expression to validate 'static' field names. The staticFinalRegex property specifies the regular expression to validate 'static final' field names.  The ignoreFieldNames property can specify field names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='ForStatementBraces'>
+      <Description><![CDATA[Use braces for for statements, even for a single statement.]]></Description>
+    </Rule>
+    <Rule name='GrailsPublicControllerMethod'>
+      <Description>
+        <![CDATA[Checks for public methods on Grails controller classes. Static methods are ignored.]]></Description>
+    </Rule>
+    <Rule name='GrailsServletContextReference'>
+      <Description>
+        <![CDATA[Checks for references to the servletContext object from within Grails controller and taglib classes.]]></Description>
+    </Rule>
+    <Rule name='GrailsStatelessService'>
+      <Description>
+        <![CDATA[Checks for fields on Grails service classes. Grails service classes are singletons, by default, and so they should be reentrant and typically stateless. The ignoreFieldNames property specifies one or more field names that should be ignored. The ignoreFieldTypes property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='IfStatementBraces'>
+      <Description><![CDATA[Use braces for if statements, even for a single statement.]]></Description>
+    </Rule>
+    <Rule name='IllegalRegex'>
+      <Description>
+        <![CDATA[Checks for a specified illegal regular expression within the source code. The regex property specifies the regular expression to check for. It is required and cannot be null or empty.]]></Description>
+    </Rule>
+    <Rule name='ImportFromSamePackage'>
+      <Description><![CDATA[An import of a class that is within the same package is unnecessary.]]></Description>
+    </Rule>
+    <Rule name='InterfaceName'>
+      <Description>
+        <![CDATA[Verifies that the name of an interface matches a regular expression specified in the regex property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active.]]></Description>
+    </Rule>
+    <Rule name='JUnitAssertAlwaysFails'>
+      <Description>
+        <![CDATA[Checks for JUnit assert() method calls with constant arguments such that the assertion always fails. This includes: assertTrue(false), assertFalse(true) and assertNull(CONSTANT).]]></Description>
+    </Rule>
+    <Rule name='JUnitAssertAlwaysSucceeds'>
+      <Description>
+        <![CDATA[Checks for JUnit assert() method calls with constant arguments such that the assertion always succeeds. This includes: assertTrue(true), assertFalse(false) and assertNull(null).]]></Description>
+    </Rule>
+    <Rule name='JUnitPublicNonTestMethod'>
+      <Description>
+        <![CDATA[Checks if a JUnit test class contains public methods other than standard test methods, JUnit framework methods or methods with JUnit annotations.]]></Description>
+    </Rule>
+    <Rule name='JUnitSetUpCallsSuper'>
+      <Description>
+        <![CDATA[Checks that if the JUnit setUp() method is defined, that it includes a call to super.setUp().]]></Description>
+    </Rule>
+    <Rule name='JUnitTearDownCallsSuper'>
+      <Description>
+        <![CDATA[Checks that if the JUnit tearDown() method is defined, that it includes a call to super.tearDown().]]></Description>
+    </Rule>
+    <Rule name='MethodName'>
+      <Description>
+        <![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that the method name starts with a lowercase letter. The regex property specifies the regular expression to check the method name against.  The ignoreMethodNames property can specify method names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='MethodSize'>
+      <Description>
+        <![CDATA[Checks if the size of a method exceeds the number of lines specified by the maxLines property, which defaults to 100.]]></Description>
+    </Rule>
+    <Rule name='NestedBlockDepth'>
+      <Description>
+        <![CDATA[Checks for blocks or closures nested more than maxNestedBlockDepth levels deep, which defaults to 5.]]></Description>
+    </Rule>
+    <Rule name='NestedSynchronization'>
+      <Description>
+        <![CDATA[Nested synchronized statements should be avoided. Nested synchronized statements are either useless (if the lock objects are identical) or prone to deadlock.]]></Description>
+    </Rule>
+    <Rule name='PackageName'>
+      <Description>
+        <![CDATA[Verifies that the package name for a class matches a regular expression. By default it checks that the package name consists of only lowercase letters, separated by periods. The regex property specifies the regular expression used to validate the package name. The packageNameRequired property indicates whether a package name declaration is required for all classes.]]></Description>
+    </Rule>
+    <Rule name='ParameterName'>
+      <Description>
+        <![CDATA[Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. The regex property specifies the default regular expression used to validate the parameter name.  The ignoreParameterNames property can specify parameter names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='PrintStackTrace'>
+      <Description><![CDATA[Checks for calls to printStackTrace().]]></Description>
+    </Rule>
+    <Rule name='Println'>
+      <Description><![CDATA[Checks for calls to this.print(), this.println() or this.printf().]]></Description>
+    </Rule>
+    <Rule name='PropertyName'>
+      <Description>
+        <![CDATA[Verifies that the name of each property matches a regular expression. By default it checks that property names other than 'static final' start with a lowercase letter and contains only letters or numbers, and 'static final' property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The regex property specifies the default regular expression used to validate property names. The finalRegex property specifies the regular expression to validate 'final' property names. The staticRegex property specifies the regular expression to validate 'static' property names. The staticFinalRegex property specifies the regular expression to validate 'static final' property names.  The ignorePropertyNames property can specify property names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='RequiredRegex'>
+      <Description>
+        <![CDATA[Checks for a specified regular expression that must exist within the source code. The regex property specifies the regular expression to check for. It is required and cannot be null or empty.]]></Description>
+    </Rule>
+    <Rule name='ReturnFromFinallyBlock'>
+      <Description>
+        <![CDATA[Returning from a finally block is confusing and can hide the original exception.]]></Description>
+    </Rule>
+    <Rule name='StatelessClass'>
+      <Description>
+        <![CDATA[Checks for fields on classes that should remain "stateless" and reentrant. The ignoreFieldNames property specifies one or more field names that should be ignored. The ignoreFieldTypes property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='StringInstantiation'>
+      <Description>
+        <![CDATA[Use a String literal (e.g., "...") instead of calling the corresponding String constructor (new String("..")) directly.]]></Description>
+    </Rule>
+    <Rule name='SynchronizedMethod'>
+      <Description>
+        <![CDATA[This rule reports uses of the synchronized keyword on methods. Synchronized methods are the same as synchronizing on 'this', which effectively make your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects.]]></Description>
+    </Rule>
+    <Rule name='SystemErrPrint'>
+      <Description>
+        <![CDATA[Checks for calls to System.err.print(), System.err.println() or System.err.printf().]]></Description>
+    </Rule>
+    <Rule name='SystemOutPrint'>
+      <Description>
+        <![CDATA[Checks for calls to System.out.print(), System.out.println() or System.out.printf().]]></Description>
+    </Rule>
+    <Rule name='SystemRunFinalizersOnExit'>
+      <Description>
+        <![CDATA[Method calls to System.runFinalizersOnExit() should not be allowed. This method is inherently non-thread-safe, may result in data corruption, deadlock, and may effect parts of the program far removed from it's call point. It is deprecated, and it's use strongly discouraged.]]></Description>
+    </Rule>
+    <Rule name='ThreadLocalNotStaticFinal'>
+      <Description>
+        <![CDATA[ThreadLocal fields should be static and final. In the most common case a java.lang.ThreadLocal instance associates state with a thread. A non-static non-final java.lang.ThreadLocal field associates state with an instance-thread combination. This is seldom necessary and often a bug which can cause memory leaks and possibly incorrect behavior.]]></Description>
+    </Rule>
+    <Rule name='ThreadYield'>
+      <Description>
+        <![CDATA[Method calls to Thread.yield() should not be allowed. This method has no useful guaranteed semantics, and is often used by inexperienced programmers to mask race conditions.]]></Description>
+    </Rule>
+    <Rule name='ThrowError'>
+      <Description><![CDATA[Checks for throwing an instance of java.lang.Error.]]></Description>
+    </Rule>
+    <Rule name='ThrowException'>
+      <Description><![CDATA[Checks for throwing an instance of java.lang.Exception.]]></Description>
+    </Rule>
+    <Rule name='ThrowExceptionFromFinallyBlock'>
+      <Description>
+        <![CDATA[Throwing an exception from a finally block is confusing and can hide the original exception.]]></Description>
+    </Rule>
+    <Rule name='ThrowNullPointerException'>
+      <Description><![CDATA[Checks for throwing an instance of java.lang.NullPointerException.]]></Description>
+    </Rule>
+    <Rule name='ThrowRuntimeException'>
+      <Description><![CDATA[Checks for throwing an instance of <em>java.lang.RuntimeException</em>.]]></Description>
+    </Rule>
+    <Rule name='ThrowThrowable'>
+      <Description><![CDATA[Checks for throwing an instance of java.lang.Throwable.]]></Description>
+    </Rule>
+    <Rule name='UnnecessaryGroovyImport'>
+      <Description>
+        <![CDATA[A Groovy file does not need to include an import for classes from java.lang, java.util, java.io, java.net, groovy.lang and groovy.util, as well as the classes java.math.BigDecimal and java.math.BigInteger.]]></Description>
+    </Rule>
+    <Rule name='UnnecessaryTernaryExpression'>
+      <Description>
+        <![CDATA[Checks for ternary expressions where the conditional expression always evaluates to a boolean and the true and false expressions are merely returning true and false constants. Also checks for ternary expressions where both expressions are the same constant or variable.]]></Description>
+    </Rule>
+    <Rule name='UnusedImport'>
+      <Description>
+        <![CDATA[Imports for a class that is never referenced within the source file is unnecessary.]]></Description>
+    </Rule>
+    <Rule name='UnusedPrivateField'>
+      <Description><![CDATA[Checks for private fields that are not referenced within the same class.]]></Description>
+    </Rule>
+    <Rule name='UnusedPrivateMethod'>
+      <Description><![CDATA[Checks for private methods that are not referenced within the same class.]]></Description>
+    </Rule>
+    <Rule name='UnusedVariable'>
+      <Description><![CDATA[Checks for variables that are never referenced.]]></Description>
+    </Rule>
+    <Rule name='VariableName'>
+      <Description>
+        <![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that non-'final' variable names start with a lowercase letter and contains only letters or numbers, and 'final' variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The regex property specifies the default regular expression used to validate a non-'final' variable name. The finalRegex property specifies the regular expression used to validate 'final' variable names. The ignoreVariableNames property can specify variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></Description>
+    </Rule>
+    <Rule name='VolatileLongOrDoubleField'>
+      <Description>
+        <![CDATA[Long or double fields should not be declared as volatile. Java specifies that reads and writes from such fields are atomic, but many JVM's have violated this specification. Unless you are certain of your JVM, it is better to synchronize access to such fields rather than declare them volatile. This rule flags fields marked volatile when their type is double or long or the name of their type is "Double" or "Long".]]></Description>
+    </Rule>
+    <Rule name='WhileStatementBraces'>
+      <Description><![CDATA[Use braces for while statements, even for a single statement.]]></Description>
+    </Rule>
+  </Rules>
+</CodeNarc>

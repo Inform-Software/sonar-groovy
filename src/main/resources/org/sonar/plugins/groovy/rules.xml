@@ -1,0 +1,646 @@
+<rules>
+
+  <!-- Basic Rules -->
+  <rule key="org.codenarc.rule.basic.BooleanInstantiationRule">
+    <name><![CDATA[Boolean Instantiation]]></name>
+    <configKey><![CDATA[BooleanInstantiation]]></configKey>
+    <category name="Reliability"/>
+    <description>Use
+      <em>Boolean.valueOf()</em>
+      for variable values or
+      <em>Boolean.TRUE</em>
+      and
+      <em>Boolean.FALSE</em>
+      for constant values instead of calling the
+      <em>Boolean()</em>
+      constructor directly or calling
+      <em>Boolean.valueOf(true)</em>
+      or
+      <em>Boolean.valueOf(false)</em>
+    </description>
+  </rule>
+
+
+  <rule key="org.codenarc.rule.basic.EmptyElseBlockRule">
+    <name><![CDATA[Empty Else Block]]></name>
+    <configKey><![CDATA[EmptyElseBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>else</em>
+      blocks are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptyForStatementRule">
+    <name><![CDATA[Empty For Statement]]></name>
+    <configKey><![CDATA[EmptyForStatement]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>for</em>
+      statements are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptyFinallyBlockRule">
+    <name><![CDATA[Empty Finally Block]]></name>
+    <configKey><![CDATA[EmptyFinallyBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>finally</em>
+      blocks are confusing and serve no purpose.
+    </description>
+  </rule>
+
+
+  <rule key="org.codenarc.rule.basic.EmptyIfStatementRule">
+    <name><![CDATA[Empty If Statement]]></name>
+    <configKey><![CDATA[EmptyIfStatement]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>if</em>
+      statements are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptySwitchStatementRule">
+    <name><![CDATA[Empty Switch Statement]]></name>
+    <configKey><![CDATA[EmptySwitchStatement]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>switch</em>
+      statements are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptySynchronizedStatementRule">
+    <name><![CDATA[Empty Synchronized Statement]]></name>
+    <configKey><![CDATA[EmptySynchronizedStatement]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>Synchronize</em>
+      statements are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptyTryBlockRule">
+    <name><![CDATA[Empty Try Block]]></name>
+    <configKey><![CDATA[EmptyTryBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>try</em>
+      blocks are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptyWhileStatementRule">
+    <name><![CDATA[Empty While Statement]]></name>
+    <configKey><![CDATA[EmptyWhileStatement]]></configKey>
+    <category name="Reliability"/>
+    <description>Empty
+      <em>while</em>
+      statements are confusing and serve no purpose.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EqualsAndHashCodeRule">
+    <name><![CDATA[Equals and Hash Code]]></name>
+    <configKey><![CDATA[EqualsAndHashCode]]></configKey>
+    <category name="Reliability"/>
+    <description>If either the
+      <em>boolean equals(Object)</em>
+      or the
+      <em>int hashCode()</em>
+      methods are overridden within a class, then both must be overridden..
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.ReturnFromFinallyBlockRule">
+    <name><![CDATA[Return from Finally Block]]></name>
+    <configKey><![CDATA[ReturnFromFinallyBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>Returning from a
+      <em>finally</em>
+      block is confusing and can hide the original exception.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.StringInstantiationRule">
+    <name><![CDATA[String Instantiation]]></name>
+    <configKey><![CDATA[StringInstantiation]]></configKey>
+    <category name="Reliability"/>
+    <description>Use a String literal (e.g., "...") instead of calling the corresponding String constructor (new
+      String("..")) directly.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule">
+    <name><![CDATA[Throw Exception From Finally Block]]></name>
+    <configKey><![CDATA[ThrowExceptionFromFinallyBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>Throwing an exception from a
+      <em>finally</em>
+      block is confusing and can hide the original exception..
+    </description>
+  </rule>
+
+  <!-- Grails Rules -->
+  <rule key="org.codenarc.rule.grails.GrailsPublicControllerMethodRule">
+    <name><![CDATA[Grails Public Controller Method]]></name>
+    <configKey><![CDATA[GrailsPublicControllerMethod]]></configKey>
+    <category name="Usability"/>
+    <description>Grails controller actions and interceptors are defined as properties on the controller class. Public
+      methods on a controller class are unnecessary. They break encapsulation and can be confusing.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.grails.GrailsServletContextReferenceRule">
+    <name><![CDATA[Grails Servlet Context Reference]]></name>
+    <configKey><![CDATA[GrailsServletContextReference]]></configKey>
+    <category name="Usability"/>
+    <description>Referencing the servletContext may inhibit scalability and/or performance and should be carefully
+      considered.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.grails.GrailsSessionReferenceRule">
+    <name><![CDATA[Grails Session Reference]]></name>
+    <configKey><![CDATA[GrailsSessionReference]]></configKey>
+    <category name="Usability"/>
+    <description>Referencing the session may inhibit scalability and/or performance and should be carefully considered.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.grails.GrailsStatelessServiceRule">
+    <name><![CDATA[Grails Stateless Service]]></name>
+    <configKey><![CDATA[GrailsStatelessService]]></configKey>
+    <category name="Usability"/>
+    <description>Grails service classes are singletons by default, and so they should be reentrant. In most cases, this
+      implies (or at least encourages) that they should be stateless.
+    </description>
+  </rule>
+
+  <!-- Unused Rules -->
+  <rule key="org.codenarc.rule.imports.UnusedImportRule">
+    <name><![CDATA[Unused Import]]></name>
+    <configKey><![CDATA[UnusedImport]]></configKey>
+    <category name="Efficiency"/>
+    <description>Imported class is never used</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.unused.UnusedPrivateFieldRule">
+    <name><![CDATA[Unused Private Field]]></name>
+    <configKey><![CDATA[UnusedPrivateField]]></configKey>
+    <category name="Efficiency"/>
+    <description>Private field never referenced</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.unused.UnusedPrivateMethodRule">
+    <name><![CDATA[Unused Private Method]]></name>
+    <configKey><![CDATA[UnusedPrivateMethod]]></configKey>
+    <category name="Efficiency"/>
+    <description>Private Method declared but never used</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.unused.UnusedVariableRule">
+    <name><![CDATA[Unused Variable]]></name>
+    <configKey><![CDATA[UnusedVariable]]></configKey>
+    <category name="Efficiency"/>
+    <description>Variable declared but never referenced</description>
+  </rule>
+
+
+  <!-- Naming Rules -->
+  <rule key="org.codenarc.rule.naming.AbstractClassNameRule">
+    <name><![CDATA[Abstract Class Name]]></name>
+    <configKey><![CDATA[AbstractClassName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Abstract Class declared using unwanted characters</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.ClassNameRule">
+    <name><![CDATA[Class Name]]></name>
+    <configKey><![CDATA[ClassName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Class declared using unwanted characters</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.FieldNameRule">
+    <name><![CDATA[Field Name]]></name>
+    <configKey><![CDATA[FieldName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Field Name declared using unwanted characters</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.InterfaceNameRule">
+    <name><![CDATA[Interface Name]]></name>
+    <configKey><![CDATA[InterfaceName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Interface name does not conform to locally defined standards. Consult your administrator for more
+      information.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.MethodNameRule">
+    <name><![CDATA[Method Name]]></name>
+    <configKey><![CDATA[MethodName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Method name does not conform to locally defined standards(possibly starts with upper case?). Consult
+      your administrator for more information.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.PackageNameRule">
+    <name><![CDATA[Package Name]]></name>
+    <configKey><![CDATA[PackageName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Package name does not conform to locally defined standards(possibly contains uppercase or numbers?).
+      Consult your administrator for more information.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.ParameterNameRule">
+    <name><![CDATA[Parameter Name]]></name>
+    <configKey><![CDATA[ParameterName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Parameter name does not conform to locally defined standards(possibly starts with uppercase?). Consult
+      your administrator for more information.
+    </description>
+  </rule>
+
+
+  <rule key="org.codenarc.rule.naming.PropertyNameRule">
+    <name><![CDATA[Property Name]]></name>
+    <configKey><![CDATA[PropertyName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Property name does not conform to locally defined standards. Property name should start with a
+      lowercase letter and contain only letters or numbers. If declared
+      <i>final</i>
+      it may contain only uppercase and numbers or uderscores. Consult your administrator for more information.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.naming.VariableNameRule">
+    <name><![CDATA[Variable Name]]></name>
+    <configKey><![CDATA[VariableName]]></configKey>
+    <category name="Maintainability"/>
+    <description>Variable name does not conform to locally defined standards(possibly starts with uppercase?). Consult
+      your administrator for more information.
+    </description>
+  </rule>
+
+  <!-- Braces Rules -->
+  <rule key="org.codenarc.rule.braces.ElseBlockBracesRule">
+    <name><![CDATA[Else Block Braces]]></name>
+    <configKey><![CDATA[ElseBlockBraces]]></configKey>
+    <category name="Reliability"/>
+    <description>Else block should use braces, even for a single statement.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.braces.ForStatementBracesRule">
+    <name><![CDATA[For Statement Braces]]></name>
+    <configKey><![CDATA[ForStatementBraces]]></configKey>
+    <category name="Reliability"/>
+    <description>For block should use braces, even for a single statement.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.braces.IfStatementBracesRule">
+    <name><![CDATA[If Statement Braces]]></name>
+    <configKey><![CDATA[IfStatementBraces]]></configKey>
+    <category name="Reliability"/>
+    <description>If block should use braces, even for a single statement.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.braces.WhileStatementBracesRule">
+    <name><![CDATA[While Statement Braces]]></name>
+    <configKey><![CDATA[WhileStatementBraces]]></configKey>
+    <category name="Reliability"/>
+    <description>While block should use braces, even for a single statement.</description>
+  </rule>
+
+  <!-- Exception Rules -->
+  <rule key="org.codenarc.rule.exceptions.CatchErrorRule">
+    <name><![CDATA[Catch Error]]></name>
+    <configKey><![CDATA[CatchError]]></configKey>
+    <category name="Reliability"/>
+    <description>In most cases this is much too broad, and is also dangerous because it can catch exceptions such as
+      ThreadDeath and OutOfMemoryError.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.CatchExceptionRule">
+    <name><![CDATA[Catch Exception]]></name>
+    <configKey><![CDATA[CatchException]]></configKey>
+    <category name="Reliability"/>
+    <description>In most cases this is too broad or general. It should usually be restricted to framework or
+      infrastructure code, rather than application code.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.CatchNullPointerExceptionRule">
+    <name><![CDATA[Catch Null Pointer Exception]]></name>
+    <configKey><![CDATA[CatchNullPointerException]]></configKey>
+    <category name="Reliability"/>
+    <description>Catching NullPointerException is never appropriate. It should be avoided in the first place with proper
+      null checking, and it can mask underlying errors.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.CatchRuntimeExceptionRule">
+    <name><![CDATA[Catch Runtime Exception]]></name>
+    <configKey><![CDATA[CatchRuntimeException]]></configKey>
+    <category name="Reliability"/>
+    <description>In most cases this is too broad or general. It should usually be restricted to framework or
+      infrastructure code, rather than application code.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.CatchThrowableRule">
+    <name><![CDATA[Catch Throwable]]></name>
+    <configKey><![CDATA[CatchThrowable]]></configKey>
+    <category name="Reliability"/>
+    <description>In most cases this is much too broad, and is also dangerous because it can catch exceptions such as
+      ThreadDeath and OutOfMemoryError .
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.ThrowErrorRule">
+    <name><![CDATA[Throw Error]]></name>
+    <configKey><![CDATA[ThrowError]]></configKey>
+    <category name="Reliability"/>
+    <description>This is not appropriate within normal application code. Throw an instance of a more specific exception
+      subclass instead.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.ThrowExceptionRule">
+    <name><![CDATA[Throw Exception]]></name>
+    <configKey><![CDATA[ThrowException]]></configKey>
+    <category name="Reliability"/>
+    <description>Throw an instance of a more specific exception subclass instead.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.ThrowNullPointerExceptionRule">
+    <name><![CDATA[Throw Null Pointer Exception]]></name>
+    <configKey><![CDATA[ThrowNullPointerException]]></configKey>
+    <category name="Reliability"/>
+    <description>Applications should never throw a NullPointerException.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.ThrowRuntimeExceptionRule">
+    <name><![CDATA[Throw Runtime Exception]]></name>
+    <configKey><![CDATA[ThrowRuntimeException]]></configKey>
+    <category name="Reliability"/>
+    <description>Throw an instance of a more specific exception subclass instead.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.exceptions.ThrowThrowableRule">
+    <name><![CDATA[Throw Throwable]]></name>
+    <configKey><![CDATA[ThrowThrowable]]></configKey>
+    <category name="Reliability"/>
+    <description>Throw an instance of a more specific exception subclass instead.</description>
+  </rule>
+
+  <!-- Generic Rules -->
+
+  <rule key="org.codenarc.rule.generic.IllegalRegexRule">
+    <name><![CDATA[Illegal Regex]]></name>
+    <configKey><![CDATA[IllegalRegex]]></configKey>
+    <category name="Maintainability"/>
+    <description>Illegal Regex. Expressions like this have been flagged by your local admins and should be avoided.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.generic.RequiredRegexRule">
+    <name><![CDATA[Required Regex]]></name>
+    <configKey><![CDATA[RequiredRegex]]></configKey>
+    <category name="Maintainability"/>
+    <description>A Regex as required by the local ruleset is missing.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.generic.StatelessClassRule">
+    <name><![CDATA[Stateless Class]]></name>
+    <configKey><![CDATA[StatelessClass]]></configKey>
+    <category name="Maintainability"/>
+    <description>Classes should remain stateless. Check for non-final fields on the class.</description>
+  </rule>
+
+  <!-- Import Rules -->
+
+  <rule key="org.codenarc.rule.imports.DuplicateImportRule">
+    <name><![CDATA[Duplicate Import]]></name>
+    <configKey><![CDATA[DuplicateImport]]></configKey>
+    <category name="Efficiency"/>
+    <description>Import duplicated.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.imports.ImportFromSamePackageRule">
+    <name><![CDATA[Import From Same Package]]></name>
+    <configKey><![CDATA[ImportFromSamePackage]]></configKey>
+    <category name="Efficiency"/>
+    <description>Import in same class as the importing class.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.imports.UnnecessaryGroovyImportRule">
+    <name><![CDATA[Unnecessary Groovy Import]]></name>
+    <configKey><![CDATA[UnnecessaryGroovyImport]]></configKey>
+    <category name="Efficiency"/>
+    <description>Import is automatically done by Groovy so does not need to be explicitly imported.</description>
+  </rule>
+
+
+  <!-- JUnit Rules -->
+
+  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysFailsRule">
+    <name><![CDATA[JUnit Assert Always Fails]]></name>
+    <configKey><![CDATA[JUnitAssertAlwaysFails]]></configKey>
+    <category name="Reliability"/>
+    <description>Assertion always fails. Check usage.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysSucceedsRule">
+    <name><![CDATA[JUnit Assert Always Succeeds]]></name>
+    <configKey><![CDATA[JUnitAssertAlwaysSucceeds]]></configKey>
+    <category name="Reliability"/>
+    <description>Assertion always succeeds. Check usage.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.junit.JUnitPublicNonTestMethodRule">
+    <name><![CDATA[JUnit Public Non Test Method]]></name>
+    <configKey><![CDATA[JUnitPublicNonTestMethod]]></configKey>
+    <category name="Reliability"/>
+    <description>Public, non-test methods on a test class violate conventional usage of test classes, and they typically
+      break encapsulation unnecessarily.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.junit.JUnitSetUpCallsSuperRule">
+    <name><![CDATA[JUnit SetUp Calls Super]]></name>
+    <configKey><![CDATA[JUnitSetUpCallsSuper]]></configKey>
+    <category name="Reliability"/>
+    <description>Setup method should include a call to super.setUp().</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.junit.JUnitTearDownCallsSuperRule">
+    <name><![CDATA[JUnit Tear Down Calls Super]]></name>
+    <configKey><![CDATA[JUnitTearDownCallsSuper]]></configKey>
+    <category name="Reliability"/>
+    <description>Teardown method should include a call to super.tearDown().</description>
+  </rule>
+
+
+  <!-- Logging Rules -->
+
+  <rule key="org.codenarc.rule.logging.PrintlnRule">
+    <name><![CDATA[Println]]></name>
+    <configKey><![CDATA[Println]]></configKey>
+    <category name="Usability"/>
+    <description>Consider using a standard logging facility instead.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.logging.PrintStackTraceRule">
+    <name><![CDATA[Print Stack Trace]]></name>
+    <configKey><![CDATA[PrintStackTrace]]></configKey>
+    <category name="Usability"/>
+    <description>Consider using a standard logging facility instead.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.logging.SystemOutPrintRule">
+    <name><![CDATA[System Out Print]]></name>
+    <configKey><![CDATA[SystemOutPrint]]></configKey>
+    <category name="Usability"/>
+    <description>Consider using a standard logging facility instead.</description>
+  </rule>
+
+
+  <!-- Size/Complexity Rules -->
+
+  <rule key="org.codenarc.rule.size.ClassSizeRule">
+    <name><![CDATA[Class Size]]></name>
+    <configKey><![CDATA[ClassSize]]></configKey>
+    <category name="Maintainability"/>
+    <description>Class size exceeds the maximum number of lines as specified by maxLines property.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.size.MethodSizeRule">
+    <name><![CDATA[Method Size]]></name>
+    <configKey><![CDATA[MethodSize]]></configKey>
+    <category name="Maintainability"/>
+    <description>Method size exceeds the maximum number of lines as specified by maxLines property.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.size.NestedBlockDepthRule">
+    <name><![CDATA[Nested Block Depth]]></name>
+    <configKey><![CDATA[NestedBlockDepth]]></configKey>
+    <category name="Maintainability"/>
+    <description>Nested depth exceeds the maximum number of lines as specified by maxNestedBlockDepth property.
+    </description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.UnnecessaryTernaryExpressionRule">
+    <name><![CDATA[Unnecessary Ternary Expression]]></name>
+    <configKey><![CDATA[UnnecessaryTernaryExpression]]></configKey>
+    <category name="Reliability"/>
+    <description>
+      <![CDATA[Checks for ternary expressions where the conditional expression always evaluates to a boolean and the true and false expressions are merely returning true and false constants. Also checks for ternary expressions where both expressions are the same constant or variable.]]></description>
+  </rule>
+
+
+  <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule">
+    <name><![CDATA[Cloneable Without Clone]]></name>
+    <configKey><![CDATA[CloneableWithoutClone]]></configKey>
+    <category name="Reliability"/>
+    <description><![CDATA[A class that implements java.lang.Cloneable should define a clone() method.]]></description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.ConstantIfExpressionRule">
+    <name><![CDATA[Constant If Expression]]></name>
+    <configKey><![CDATA[ConstantIfExpression]]></configKey>
+    <category name="Reliability"/>
+    <description>
+      <![CDATA[Checks for if statements with a constant value for the if expression, such as true, false, null, or a literal constant value.]]></description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.ConstantTernaryExpressionRule">
+    <name><![CDATA[Constant Ternary Expression]]></name>
+    <configKey><![CDATA[ConstantTernaryExpression]]></configKey>
+    <category name="Reliability"/>
+    <description>
+      <![CDATA[Checks for ternary expressions with a constant value for the boolean expression, such as true, false, null, or a literal constant value.]]></description>
+  </rule>
+
+  <rule key="org.codenarc.rule.basic.EmptyCatchBlockRule">
+    <name><![CDATA[Empty Catch Block]]></name>
+    <configKey><![CDATA[EmptyCatchBlock]]></configKey>
+    <category name="Reliability"/>
+    <description>In most cases, exceptions should not be caught and ignored (swallowed).</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.NestedSynchronizationRule">
+    <name><![CDATA[Nested Synchronization]]></name>
+    <configKey><![CDATA[NestedSynchronization]]></configKey>
+    <category name="Reliability"/>
+    <description>Nested synchronized statements should be avoided. Nested synchronized statements are either useless (if the lock objects are identical) or prone to deadlock.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.SynchronizedMethodRule">
+    <name><![CDATA[Synchronized Method]]></name>
+    <configKey><![CDATA[SynchronizedMethod]]></configKey>
+    <category name="Reliability"/>
+    <description>This rule reports uses of the <em>synchronized</em> keyword on methods. Synchronized methods are the same as synchronizing on 'this', which effectively make your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule">
+    <name><![CDATA[System Run Finalizers On Exit]]></name>
+    <configKey><![CDATA[SystemRunFinalizersOnExit]]></configKey>
+    <category name="Reliability"/>
+    <description>Method calls to <em>System.runFinalizersOnExit()</em> should not be allowed. This method is inherently non-thread-safe, may result in data corruption, deadlock, and may effect parts of the program far removed from it's call point. It is deprecated, and it's use strongly discouraged.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.ThreadLocalNotStaticFinalRule">
+    <name><![CDATA[Thread Local Not Static Final]]></name>
+    <configKey><![CDATA[ThreadLocalNotStaticFinalRule]]></configKey>
+    <category name="Reliability"/>
+    <description><em>ThreadLocal</em> fields should be <em>static</em> and <em>final</em>. In the most common case a <em>java.lang.ThreadLocal</em> instance associates state with a thread. A non-<em>static</em> non-<em>final</em> <em>java.lang.ThreadLocal</em> field associates state with an instance-thread combination. This is seldom necessary and often a bug which can cause memory leaks and possibly incorrect behavior.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.ThreadYieldRule">
+    <name><![CDATA[Thread Yield]]></name>
+    <configKey><![CDATA[ThreadYieldRule]]></configKey>
+    <category name="Reliability"/>
+    <description>Method calls to <em>Thread.yield()</em> should not be allowed. This method has no useful guaranteed semantics, and is often used by inexperienced programmers to mask race conditions.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule">
+    <name><![CDATA[Volatile Long Or Double Field]]></name>
+    <configKey><![CDATA[VolatileLongOrDoubleFieldRule]]></configKey>
+    <category name="Reliability"/>
+    <description>Long or double fields should not be declared as <em>volatile</em>. Java specifies that reads and writes from such fields are atomic, but many JVM's have violated this specification. Unless you are certain of your JVM, it is better to synchronize access to such fields rather than declare them <em>volatile</em>. This rule flags fields marked <em>volatile</em> when their type is double or long or the name of their type is "Double" or "Long".</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.logging.SystemErrPrintRule">
+    <name><![CDATA[System Err Print]]></name>
+    <configKey><![CDATA[SystemErrPrint]]></configKey>
+    <category name="Reliability"/>
+    <description>Checks for calls to <em>System.err.print()</em>, <em>System.err.println()</em> or <em>System.err.printf()</em>.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.size.AbcComplexityRule">
+    <name><![CDATA[Abc Complexity]]></name>
+    <configKey><![CDATA[AbcComplexity]]></configKey>
+    <category name="Maintainability"/>
+    <description>Checks the ABC metric of size/complexity for methods/classes.\
+  A method (or "closure field") with an ABC complexity value (score) greater than the <em>maxMethodComplexity</em> \
+  property (which defaults to 60) causes a violation. Likewise, a class that has an (average method) ABC complexity\
+  value greater than the <em>maxClassAverageMethodComplexity</em> property (which defaults to 60) causes a violation.</description>
+  </rule>
+
+  <rule key="org.codenarc.rule.size.CyclomaticComplexityRule">
+    <name><![CDATA[Cyclomatic Complexity]]></name>
+    <configKey><![CDATA[CyclomaticComplexity]]></configKey>
+    <category name="Maintainability"/>
+    <description>Checks the cyclomatic complexity for methods/classes.\
+  A method (or "closure field") with a cyclomatic complexity value greater than the <em>maxMethodComplexity</em> \
+  property (which defaults to 20) causes a violation. Likewise, a class that has an (average method) cyclomatic complexity\
+  value greater than the <em>maxClassAverageMethodComplexity</em> property (which defaults to 20) causes a violation.</description>
+  </rule>
+</rules>
