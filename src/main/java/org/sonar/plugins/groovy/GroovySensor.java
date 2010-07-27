@@ -38,6 +38,7 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser;
 import org.sonar.plugins.groovy.codenarc.GroovyMessageDispatcher;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
+import org.sonar.plugins.groovy.foundation.GroovyPackage;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsRunner;
 import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
@@ -48,7 +49,7 @@ import org.sonar.squid.text.Source;
 import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.List;
+import java.util.*;
 
 public class GroovySensor implements Sensor {
 
@@ -145,11 +146,13 @@ public class GroovySensor implements Sensor {
   protected void computeBaseMetrics(SensorContext sensorContext, Project project) {
     Reader reader = null;
     ProjectFileSystem fileSystem = project.getFileSystem();
+    Set<Resource> packageList = new HashSet();
     for (File groovyFile : fileSystem.getSourceFiles(groovy)) {
       try {
         reader = new StringReader(FileUtils.readFileToString(groovyFile, fileSystem.getSourceCharset().name()));
         Resource resource = GroovyFile.fromIOFile(groovyFile, fileSystem.getSourceDirs());
         Source source = new Source(reader, new GroovyRecognizer());
+        packageList.add(new GroovyPackage(resource.getParent().getKey()));
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
@@ -160,6 +163,10 @@ public class GroovySensor implements Sensor {
       } finally {
         IOUtils.closeQuietly(reader);
       }
+
+    }
+    for(Resource pack : packageList) {
+      sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
     }
   }
 }

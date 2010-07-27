@@ -42,12 +42,7 @@ public class GroovyCpdTokenizer implements Tokenizer {
       token = lexer.nextToken();
       while (token.getType() != Token.EOF_TYPE) {
         cpdTokens.add(new TokenEntry(token.getText(), fileName, token.getLine()));
-        try {
-          token = lexer.nextToken();
-        }
-        catch (TokenStreamException tse) {
-          GroovyUtils.LOG.error("Unexpected token when lexing file : " + fileName, tse);
-        }
+        token = lexer.nextToken();
       }
     }
     catch (TokenStreamException tse) {
