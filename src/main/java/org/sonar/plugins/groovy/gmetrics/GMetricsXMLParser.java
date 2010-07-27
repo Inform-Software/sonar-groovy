@@ -1,6 +1,6 @@
 /*
  * Sonar, open source software quality management tool.
- * Copyright (C) 2009 SonarSource SA
+ * Copyright (C) 2009 SonarSource
  * mailto:contact AT sonarsource DOT com
  *
  * Sonar is free software; you can redistribute it and/or
@@ -80,12 +80,10 @@ public class GMetricsXMLParser {
 
         }
       }
-    }
-    );
+    });
     try {
       parser.parse(xmlFile);
-    }
-    catch (XMLStreamException e) {
+    } catch (XMLStreamException e) {
       GroovyUtils.LOG.error("Error parsing file : " + xmlFile);
     }
   }

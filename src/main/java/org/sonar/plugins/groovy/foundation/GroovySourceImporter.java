@@ -1,6 +1,6 @@
 /*
  * Sonar, open source software quality management tool.
- * Copyright (C) 2009 SonarSource SA
+ * Copyright (C) 2009 SonarSource
  * mailto:contact AT sonarsource DOT com
  *
  * Sonar is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@ import org.sonar.api.resources.Resource;
 import java.io.File;
 import java.util.List;
 
-
 public class GroovySourceImporter extends AbstractSourceImporter {
 
   public GroovySourceImporter(Groovy groovy) {
@@ -43,4 +42,3 @@ public class GroovySourceImporter extends AbstractSourceImporter {
     return getClass().getSimpleName();
   }
 }
-

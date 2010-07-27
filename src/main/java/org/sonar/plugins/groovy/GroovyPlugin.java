@@ -1,6 +1,6 @@
 /*
  * Sonar, open source software quality management tool.
- * Copyright (C) 2009 SonarSource SA
+ * Copyright (C) 2009 SonarSource
  * mailto:contact AT sonarsource DOT com
  *
  * Sonar is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
  * License along with Sonar; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
+
 package org.sonar.plugins.groovy;
 
 import org.sonar.api.Plugin;
@@ -48,36 +49,32 @@ import java.util.List;
     global = false
   )
 })
+public class GroovyPlugin implements Plugin {
+  public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
+  public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
 
-  public class GroovyPlugin implements Plugin {
-    public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
-    public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  public String getKey() {
+    return Groovy.KEY;
+  }
 
-    public String getKey() {
-      return Groovy.KEY;
-    }
+  public String getName() {
+    return "Groovy";
+  }
 
-    public String getName() {
-      return "Groovy";
-    }
+  public String getDescription() {
+    return "Analysis of Groovy projects";
+  }
 
-    public String getDescription() {
-      return "Analysis of Groovy projects";
-    }
-
-    public List getExtensions() {
-      List list = new ArrayList();
-
-      // CodeNarc
-      list.add(CodeNarcCheckTemplateRepository.class);
-            
-      // foundation
-      list.add(Groovy.class);
-      list.add(GroovyColorizerFormat.class);
-      list.add(GroovySourceImporter.class);
-
-      // Main sensor
-      list.add(GroovySensor.class);
-      return list;
-    }
+  public List getExtensions() {
+    List list = new ArrayList();
+    // CodeNarc
+    list.add(CodeNarcCheckTemplateRepository.class);
+    // foundation
+    list.add(Groovy.class);
+    list.add(GroovyColorizerFormat.class);
+    list.add(GroovySourceImporter.class);
+    // Main sensor
+    list.add(GroovySensor.class);
+    return list;
+  }
 }
