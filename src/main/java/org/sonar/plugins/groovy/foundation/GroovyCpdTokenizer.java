@@ -1,6 +1,6 @@
 /*
  * Sonar, open source software quality management tool.
- * Copyright (C) 2009 SonarSource SA
+ * Copyright (C) 2009 SonarSource
  * mailto:contact AT sonarsource DOT com
  *
  * Sonar is free software; you can redistribute it and/or
@@ -28,25 +28,33 @@ import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
-import java.io.StringReader;
+
+import java.io.*;
 
 public class GroovyCpdTokenizer implements Tokenizer {
   public final void tokenize(SourceCode source, Tokens cpdTokens) {
-    GroovyLexer lexer = new GroovyLexer(new StringReader(source.toString()));
     String fileName = source.getFileName();
-
     Token token;
+    GroovyLexer lexer;
+
     try {
+      lexer = new GroovyLexer(new FileReader(new File(fileName)));
       token = lexer.nextToken();
-      System.out.println(fileName);
       while (token.getType() != Token.EOF_TYPE) {
-        System.out.println(token.getText() + " " + token.getFilename() + " " +token.getLine());
-        cpdTokens.add(new TokenEntry(token.getText(), token.getFilename(), token.getLine()));
-        token = lexer.nextToken();
+        cpdTokens.add(new TokenEntry(token.getText(), fileName, token.getLine()));
+        try {
+          token = lexer.nextToken();
+        }
+        catch (TokenStreamException tse) {
+          GroovyUtils.LOG.error("Unexpected token when lexing file : " + fileName, tse);
+        }
       }
     }
     catch (TokenStreamException tse) {
       GroovyUtils.LOG.error("Unexpected token when lexing file : " + fileName, tse);
+    }
+    catch (FileNotFoundException fnfe) {
+      GroovyUtils.LOG.error("Could not find : " + fileName, fnfe);
     }
     cpdTokens.add(TokenEntry.getEOF());
   }
