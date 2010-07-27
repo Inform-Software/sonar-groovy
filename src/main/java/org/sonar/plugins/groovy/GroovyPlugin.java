@@ -23,6 +23,8 @@ package org.sonar.plugins.groovy;
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
+import org.sonar.api.checks.profiles.CheckProfile;
+import org.sonar.api.checks.profiles.CheckProfileXmlMarshaller;
 import org.sonar.plugins.groovy.codenarc.CodeNarcCheckTemplateRepository;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
@@ -81,6 +83,11 @@ import java.util.List;
 
       // Main sensor
       list.add(GroovySensor.class);
+      list.add(getCheckProfile());
       return list;
     }
+
+  CheckProfile getCheckProfile() {
+    return CheckProfileXmlMarshaller.fromXmlInClasspath("/org/sonar/plugins/groovy/sonar-way.xml", getClass());
+  }
 }

@@ -1,7 +1,7 @@
 <rules>
 
   <!-- Basic Rules -->
-  <rule key="org.codenarc.rule.basic.BooleanInstantiationRule">
+  <rule key="org.codenarc.rule.basic.BooleanInstantiationRule" priority="MAJOR">
     <name><![CDATA[Boolean Instantiation]]></name>
     <configKey><![CDATA[BooleanInstantiation]]></configKey>
     <category name="Reliability"/>
@@ -21,7 +21,7 @@
   </rule>
 
 
-  <rule key="org.codenarc.rule.basic.EmptyElseBlockRule">
+  <rule key="org.codenarc.rule.basic.EmptyElseBlockRule" priority="MINOR">
     <name><![CDATA[Empty Else Block]]></name>
     <configKey><![CDATA[EmptyElseBlock]]></configKey>
     <category name="Reliability"/>
@@ -31,7 +31,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptyForStatementRule">
+  <rule key="org.codenarc.rule.basic.EmptyForStatementRule" priority="MINOR">
     <name><![CDATA[Empty For Statement]]></name>
     <configKey><![CDATA[EmptyForStatement]]></configKey>
     <category name="Reliability"/>
@@ -41,7 +41,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptyFinallyBlockRule">
+  <rule key="org.codenarc.rule.basic.EmptyFinallyBlockRule" priority="MAJOR">
     <name><![CDATA[Empty Finally Block]]></name>
     <configKey><![CDATA[EmptyFinallyBlock]]></configKey>
     <category name="Reliability"/>
@@ -52,7 +52,7 @@
   </rule>
 
 
-  <rule key="org.codenarc.rule.basic.EmptyIfStatementRule">
+  <rule key="org.codenarc.rule.basic.EmptyIfStatementRule" priority="MINOR">
     <name><![CDATA[Empty If Statement]]></name>
     <configKey><![CDATA[EmptyIfStatement]]></configKey>
     <category name="Reliability"/>
@@ -62,7 +62,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptySwitchStatementRule">
+  <rule key="org.codenarc.rule.basic.EmptySwitchStatementRule" priority="MINOR">
     <name><![CDATA[Empty Switch Statement]]></name>
     <configKey><![CDATA[EmptySwitchStatement]]></configKey>
     <category name="Reliability"/>
@@ -72,7 +72,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptySynchronizedStatementRule">
+  <rule key="org.codenarc.rule.basic.EmptySynchronizedStatementRule" priority="MAJOR">
     <name><![CDATA[Empty Synchronized Statement]]></name>
     <configKey><![CDATA[EmptySynchronizedStatement]]></configKey>
     <category name="Reliability"/>
@@ -82,7 +82,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptyTryBlockRule">
+  <rule key="org.codenarc.rule.basic.EmptyTryBlockRule" priority="MAJOR">
     <name><![CDATA[Empty Try Block]]></name>
     <configKey><![CDATA[EmptyTryBlock]]></configKey>
     <category name="Reliability"/>
@@ -92,7 +92,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptyWhileStatementRule">
+  <rule key="org.codenarc.rule.basic.EmptyWhileStatementRule" priority="MINOR">
     <name><![CDATA[Empty While Statement]]></name>
     <configKey><![CDATA[EmptyWhileStatement]]></configKey>
     <category name="Reliability"/>
@@ -102,7 +102,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EqualsAndHashCodeRule">
+  <rule key="org.codenarc.rule.basic.EqualsAndHashCodeRule" priority="CRITICAL">
     <name><![CDATA[Equals and Hash Code]]></name>
     <configKey><![CDATA[EqualsAndHashCode]]></configKey>
     <category name="Reliability"/>
@@ -114,7 +114,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.ReturnFromFinallyBlockRule">
+  <rule key="org.codenarc.rule.basic.ReturnFromFinallyBlockRule" priority="MAJOR">
     <name><![CDATA[Return from Finally Block]]></name>
     <configKey><![CDATA[ReturnFromFinallyBlock]]></configKey>
     <category name="Reliability"/>
@@ -124,7 +124,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.StringInstantiationRule">
+  <rule key="org.codenarc.rule.basic.StringInstantiationRule" priority="MINOR">
     <name><![CDATA[String Instantiation]]></name>
     <configKey><![CDATA[StringInstantiation]]></configKey>
     <category name="Reliability"/>
@@ -133,7 +133,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule">
+  <rule key="org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule" priority="MAJOR">
     <name><![CDATA[Throw Exception From Finally Block]]></name>
     <configKey><![CDATA[ThrowExceptionFromFinallyBlock]]></configKey>
     <category name="Reliability"/>
@@ -144,7 +144,7 @@
   </rule>
 
   <!-- Grails Rules -->
-  <rule key="org.codenarc.rule.grails.GrailsPublicControllerMethodRule">
+  <rule key="org.codenarc.rule.grails.GrailsPublicControllerMethodRule" priority="MINOR">
     <name><![CDATA[Grails Public Controller Method]]></name>
     <configKey><![CDATA[GrailsPublicControllerMethod]]></configKey>
     <category name="Usability"/>
@@ -153,7 +153,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.grails.GrailsServletContextReferenceRule">
+  <rule key="org.codenarc.rule.grails.GrailsServletContextReferenceRule" priority="MINOR">
     <name><![CDATA[Grails Servlet Context Reference]]></name>
     <configKey><![CDATA[GrailsServletContextReference]]></configKey>
     <category name="Usability"/>
@@ -162,7 +162,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.grails.GrailsSessionReferenceRule">
+  <rule key="org.codenarc.rule.grails.GrailsSessionReferenceRule" priority="MAJOR">
     <name><![CDATA[Grails Session Reference]]></name>
     <configKey><![CDATA[GrailsSessionReference]]></configKey>
     <category name="Usability"/>
@@ -170,7 +170,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.grails.GrailsStatelessServiceRule">
+  <rule key="org.codenarc.rule.grails.GrailsStatelessServiceRule" priority="MAJOR">
     <name><![CDATA[Grails Stateless Service]]></name>
     <configKey><![CDATA[GrailsStatelessService]]></configKey>
     <category name="Usability"/>
@@ -180,28 +180,28 @@
   </rule>
 
   <!-- Unused Rules -->
-  <rule key="org.codenarc.rule.imports.UnusedImportRule">
+  <rule key="org.codenarc.rule.imports.UnusedImportRule"  priority="INFO">
     <name><![CDATA[Unused Import]]></name>
     <configKey><![CDATA[UnusedImport]]></configKey>
     <category name="Efficiency"/>
     <description>Imported class is never used</description>
   </rule>
 
-  <rule key="org.codenarc.rule.unused.UnusedPrivateFieldRule">
+  <rule key="org.codenarc.rule.unused.UnusedPrivateFieldRule" priority="INFO">
     <name><![CDATA[Unused Private Field]]></name>
     <configKey><![CDATA[UnusedPrivateField]]></configKey>
     <category name="Efficiency"/>
     <description>Private field never referenced</description>
   </rule>
 
-  <rule key="org.codenarc.rule.unused.UnusedPrivateMethodRule">
+  <rule key="org.codenarc.rule.unused.UnusedPrivateMethodRule" priority="INFO">
     <name><![CDATA[Unused Private Method]]></name>
     <configKey><![CDATA[UnusedPrivateMethod]]></configKey>
     <category name="Efficiency"/>
     <description>Private Method declared but never used</description>
   </rule>
 
-  <rule key="org.codenarc.rule.unused.UnusedVariableRule">
+  <rule key="org.codenarc.rule.unused.UnusedVariableRule" priority="INFO">
     <name><![CDATA[Unused Variable]]></name>
     <configKey><![CDATA[UnusedVariable]]></configKey>
     <category name="Efficiency"/>
@@ -210,28 +210,28 @@
 
 
   <!-- Naming Rules -->
-  <rule key="org.codenarc.rule.naming.AbstractClassNameRule">
+  <rule key="org.codenarc.rule.naming.AbstractClassNameRule" priority="INFO">
     <name><![CDATA[Abstract Class Name]]></name>
     <configKey><![CDATA[AbstractClassName]]></configKey>
     <category name="Maintainability"/>
     <description>Abstract Class declared using unwanted characters</description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.ClassNameRule">
+  <rule key="org.codenarc.rule.naming.ClassNameRule" priority="INFO">
     <name><![CDATA[Class Name]]></name>
     <configKey><![CDATA[ClassName]]></configKey>
     <category name="Maintainability"/>
     <description>Class declared using unwanted characters</description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.FieldNameRule">
+  <rule key="org.codenarc.rule.naming.FieldNameRule" priority="INFO">
     <name><![CDATA[Field Name]]></name>
     <configKey><![CDATA[FieldName]]></configKey>
     <category name="Maintainability"/>
     <description>Field Name declared using unwanted characters</description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.InterfaceNameRule">
+  <rule key="org.codenarc.rule.naming.InterfaceNameRule" priority="INFO">
     <name><![CDATA[Interface Name]]></name>
     <configKey><![CDATA[InterfaceName]]></configKey>
     <category name="Maintainability"/>
@@ -240,7 +240,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.MethodNameRule">
+  <rule key="org.codenarc.rule.naming.MethodNameRule" priority="INFO">
     <name><![CDATA[Method Name]]></name>
     <configKey><![CDATA[MethodName]]></configKey>
     <category name="Maintainability"/>
@@ -249,7 +249,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.PackageNameRule">
+  <rule key="org.codenarc.rule.naming.PackageNameRule" priority="INFO">
     <name><![CDATA[Package Name]]></name>
     <configKey><![CDATA[PackageName]]></configKey>
     <category name="Maintainability"/>
@@ -258,7 +258,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.ParameterNameRule">
+  <rule key="org.codenarc.rule.naming.ParameterNameRule" priority="INFO">
     <name><![CDATA[Parameter Name]]></name>
     <configKey><![CDATA[ParameterName]]></configKey>
     <category name="Maintainability"/>
@@ -268,7 +268,7 @@
   </rule>
 
 
-  <rule key="org.codenarc.rule.naming.PropertyNameRule">
+  <rule key="org.codenarc.rule.naming.PropertyNameRule" priority="INFO">
     <name><![CDATA[Property Name]]></name>
     <configKey><![CDATA[PropertyName]]></configKey>
     <category name="Maintainability"/>
@@ -279,7 +279,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.naming.VariableNameRule">
+  <rule key="org.codenarc.rule.naming.VariableNameRule" priority="INFO">
     <name><![CDATA[Variable Name]]></name>
     <configKey><![CDATA[VariableName]]></configKey>
     <category name="Maintainability"/>
@@ -289,28 +289,28 @@
   </rule>
 
   <!-- Braces Rules -->
-  <rule key="org.codenarc.rule.braces.ElseBlockBracesRule">
+  <rule key="org.codenarc.rule.braces.ElseBlockBracesRule" priority="MINOR">
     <name><![CDATA[Else Block Braces]]></name>
     <configKey><![CDATA[ElseBlockBraces]]></configKey>
     <category name="Reliability"/>
     <description>Else block should use braces, even for a single statement.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.braces.ForStatementBracesRule">
+  <rule key="org.codenarc.rule.braces.ForStatementBracesRule" priority="MINOR">
     <name><![CDATA[For Statement Braces]]></name>
     <configKey><![CDATA[ForStatementBraces]]></configKey>
     <category name="Reliability"/>
     <description>For block should use braces, even for a single statement.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.braces.IfStatementBracesRule">
+  <rule key="org.codenarc.rule.braces.IfStatementBracesRule" priority="MINOR">
     <name><![CDATA[If Statement Braces]]></name>
     <configKey><![CDATA[IfStatementBraces]]></configKey>
     <category name="Reliability"/>
     <description>If block should use braces, even for a single statement.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.braces.WhileStatementBracesRule">
+  <rule key="org.codenarc.rule.braces.WhileStatementBracesRule" priority="MINOR">
     <name><![CDATA[While Statement Braces]]></name>
     <configKey><![CDATA[WhileStatementBraces]]></configKey>
     <category name="Reliability"/>
@@ -318,7 +318,7 @@
   </rule>
 
   <!-- Exception Rules -->
-  <rule key="org.codenarc.rule.exceptions.CatchErrorRule">
+  <rule key="org.codenarc.rule.exceptions.CatchErrorRule" priority="MAJOR">
     <name><![CDATA[Catch Error]]></name>
     <configKey><![CDATA[CatchError]]></configKey>
     <category name="Reliability"/>
@@ -327,7 +327,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.CatchExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.CatchExceptionRule" priority="MAJOR">
     <name><![CDATA[Catch Exception]]></name>
     <configKey><![CDATA[CatchException]]></configKey>
     <category name="Reliability"/>
@@ -336,7 +336,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.CatchNullPointerExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.CatchNullPointerExceptionRule" priority="CRITICAL">
     <name><![CDATA[Catch Null Pointer Exception]]></name>
     <configKey><![CDATA[CatchNullPointerException]]></configKey>
     <category name="Reliability"/>
@@ -345,7 +345,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.CatchRuntimeExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.CatchRuntimeExceptionRule" priority="CRITICAL">
     <name><![CDATA[Catch Runtime Exception]]></name>
     <configKey><![CDATA[CatchRuntimeException]]></configKey>
     <category name="Reliability"/>
@@ -354,7 +354,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.CatchThrowableRule">
+  <rule key="org.codenarc.rule.exceptions.CatchThrowableRule" priority="CRITICAL">
     <name><![CDATA[Catch Throwable]]></name>
     <configKey><![CDATA[CatchThrowable]]></configKey>
     <category name="Reliability"/>
@@ -363,7 +363,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.ThrowErrorRule">
+  <rule key="org.codenarc.rule.exceptions.ThrowErrorRule" priority="MAJOR">
     <name><![CDATA[Throw Error]]></name>
     <configKey><![CDATA[ThrowError]]></configKey>
     <category name="Reliability"/>
@@ -372,28 +372,28 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.ThrowExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.ThrowExceptionRule" priority="MAJOR">
     <name><![CDATA[Throw Exception]]></name>
     <configKey><![CDATA[ThrowException]]></configKey>
     <category name="Reliability"/>
     <description>Throw an instance of a more specific exception subclass instead.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.ThrowNullPointerExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.ThrowNullPointerExceptionRule" priority="MAJOR">
     <name><![CDATA[Throw Null Pointer Exception]]></name>
     <configKey><![CDATA[ThrowNullPointerException]]></configKey>
     <category name="Reliability"/>
     <description>Applications should never throw a NullPointerException.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.ThrowRuntimeExceptionRule">
+  <rule key="org.codenarc.rule.exceptions.ThrowRuntimeExceptionRule" priority="MAJOR">
     <name><![CDATA[Throw Runtime Exception]]></name>
     <configKey><![CDATA[ThrowRuntimeException]]></configKey>
     <category name="Reliability"/>
     <description>Throw an instance of a more specific exception subclass instead.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.exceptions.ThrowThrowableRule">
+  <rule key="org.codenarc.rule.exceptions.ThrowThrowableRule" priority="MAJOR">
     <name><![CDATA[Throw Throwable]]></name>
     <configKey><![CDATA[ThrowThrowable]]></configKey>
     <category name="Reliability"/>
@@ -402,7 +402,7 @@
 
   <!-- Generic Rules -->
 
-  <rule key="org.codenarc.rule.generic.IllegalRegexRule">
+  <rule key="org.codenarc.rule.generic.IllegalRegexRule" priority="MINOR">
     <name><![CDATA[Illegal Regex]]></name>
     <configKey><![CDATA[IllegalRegex]]></configKey>
     <category name="Maintainability"/>
@@ -410,14 +410,14 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.generic.RequiredRegexRule">
+  <rule key="org.codenarc.rule.generic.RequiredRegexRule" priority="MINOR">
     <name><![CDATA[Required Regex]]></name>
     <configKey><![CDATA[RequiredRegex]]></configKey>
     <category name="Maintainability"/>
     <description>A Regex as required by the local ruleset is missing.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.generic.StatelessClassRule">
+  <rule key="org.codenarc.rule.generic.StatelessClassRule" priority="MINOR">
     <name><![CDATA[Stateless Class]]></name>
     <configKey><![CDATA[StatelessClass]]></configKey>
     <category name="Maintainability"/>
@@ -426,21 +426,21 @@
 
   <!-- Import Rules -->
 
-  <rule key="org.codenarc.rule.imports.DuplicateImportRule">
+  <rule key="org.codenarc.rule.imports.DuplicateImportRule" priority="INFO">
     <name><![CDATA[Duplicate Import]]></name>
     <configKey><![CDATA[DuplicateImport]]></configKey>
     <category name="Efficiency"/>
     <description>Import duplicated.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.imports.ImportFromSamePackageRule">
+  <rule key="org.codenarc.rule.imports.ImportFromSamePackageRule" priority="INFO">
     <name><![CDATA[Import From Same Package]]></name>
     <configKey><![CDATA[ImportFromSamePackage]]></configKey>
     <category name="Efficiency"/>
     <description>Import in same class as the importing class.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.imports.UnnecessaryGroovyImportRule">
+  <rule key="org.codenarc.rule.imports.UnnecessaryGroovyImportRule" priority="INFO">
     <name><![CDATA[Unnecessary Groovy Import]]></name>
     <configKey><![CDATA[UnnecessaryGroovyImport]]></configKey>
     <category name="Efficiency"/>
@@ -450,21 +450,21 @@
 
   <!-- JUnit Rules -->
 
-  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysFailsRule">
+  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysFailsRule" priority="MINOR">
     <name><![CDATA[JUnit Assert Always Fails]]></name>
     <configKey><![CDATA[JUnitAssertAlwaysFails]]></configKey>
     <category name="Reliability"/>
     <description>Assertion always fails. Check usage.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysSucceedsRule">
+  <rule key="org.codenarc.rule.junit.JUnitAssertAlwaysSucceedsRule" priority="MAJOR">
     <name><![CDATA[JUnit Assert Always Succeeds]]></name>
     <configKey><![CDATA[JUnitAssertAlwaysSucceeds]]></configKey>
     <category name="Reliability"/>
     <description>Assertion always succeeds. Check usage.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.junit.JUnitPublicNonTestMethodRule">
+  <rule key="org.codenarc.rule.junit.JUnitPublicNonTestMethodRule" priority="MAJOR">
     <name><![CDATA[JUnit Public Non Test Method]]></name>
     <configKey><![CDATA[JUnitPublicNonTestMethod]]></configKey>
     <category name="Reliability"/>
@@ -473,14 +473,14 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.junit.JUnitSetUpCallsSuperRule">
+  <rule key="org.codenarc.rule.junit.JUnitSetUpCallsSuperRule" priority="MAJOR">
     <name><![CDATA[JUnit SetUp Calls Super]]></name>
     <configKey><![CDATA[JUnitSetUpCallsSuper]]></configKey>
     <category name="Reliability"/>
     <description>Setup method should include a call to super.setUp().</description>
   </rule>
 
-  <rule key="org.codenarc.rule.junit.JUnitTearDownCallsSuperRule">
+  <rule key="org.codenarc.rule.junit.JUnitTearDownCallsSuperRule" priority="MAJOR">
     <name><![CDATA[JUnit Tear Down Calls Super]]></name>
     <configKey><![CDATA[JUnitTearDownCallsSuper]]></configKey>
     <category name="Reliability"/>
@@ -490,21 +490,21 @@
 
   <!-- Logging Rules -->
 
-  <rule key="org.codenarc.rule.logging.PrintlnRule">
+  <rule key="org.codenarc.rule.logging.PrintlnRule" priority="MINOR">
     <name><![CDATA[Println]]></name>
     <configKey><![CDATA[Println]]></configKey>
     <category name="Usability"/>
     <description>Consider using a standard logging facility instead.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.logging.PrintStackTraceRule">
+  <rule key="org.codenarc.rule.logging.PrintStackTraceRule" priority="MAJOR">
     <name><![CDATA[Print Stack Trace]]></name>
     <configKey><![CDATA[PrintStackTrace]]></configKey>
     <category name="Usability"/>
     <description>Consider using a standard logging facility instead.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.logging.SystemOutPrintRule">
+  <rule key="org.codenarc.rule.logging.SystemOutPrintRule" priority="INFO">
     <name><![CDATA[System Out Print]]></name>
     <configKey><![CDATA[SystemOutPrint]]></configKey>
     <category name="Usability"/>
@@ -514,21 +514,21 @@
 
   <!-- Size/Complexity Rules -->
 
-  <rule key="org.codenarc.rule.size.ClassSizeRule">
+  <rule key="org.codenarc.rule.size.ClassSizeRule" priority="MINOR">
     <name><![CDATA[Class Size]]></name>
     <configKey><![CDATA[ClassSize]]></configKey>
     <category name="Maintainability"/>
     <description>Class size exceeds the maximum number of lines as specified by maxLines property.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.size.MethodSizeRule">
+  <rule key="org.codenarc.rule.size.MethodSizeRule" priority="MINOR">
     <name><![CDATA[Method Size]]></name>
     <configKey><![CDATA[MethodSize]]></configKey>
     <category name="Maintainability"/>
     <description>Method size exceeds the maximum number of lines as specified by maxLines property.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.size.NestedBlockDepthRule">
+  <rule key="org.codenarc.rule.size.NestedBlockDepthRule" priority="MAJOR">
     <name><![CDATA[Nested Block Depth]]></name>
     <configKey><![CDATA[NestedBlockDepth]]></configKey>
     <category name="Maintainability"/>
@@ -536,7 +536,7 @@
     </description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.UnnecessaryTernaryExpressionRule">
+  <rule key="org.codenarc.rule.basic.UnnecessaryTernaryExpressionRule" priority="INFO">
     <name><![CDATA[Unnecessary Ternary Expression]]></name>
     <configKey><![CDATA[UnnecessaryTernaryExpression]]></configKey>
     <category name="Reliability"/>
@@ -545,14 +545,14 @@
   </rule>
 
 
-  <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule">
+  <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule" priority="MINOR">
     <name><![CDATA[Cloneable Without Clone]]></name>
     <configKey><![CDATA[CloneableWithoutClone]]></configKey>
     <category name="Reliability"/>
     <description><![CDATA[A class that implements java.lang.Cloneable should define a clone() method.]]></description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.ConstantIfExpressionRule">
+  <rule key="org.codenarc.rule.basic.ConstantIfExpressionRule" priority="MAJOR">
     <name><![CDATA[Constant If Expression]]></name>
     <configKey><![CDATA[ConstantIfExpression]]></configKey>
     <category name="Reliability"/>
@@ -560,7 +560,7 @@
       <![CDATA[Checks for if statements with a constant value for the if expression, such as true, false, null, or a literal constant value.]]></description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.ConstantTernaryExpressionRule">
+  <rule key="org.codenarc.rule.basic.ConstantTernaryExpressionRule" priority="MAJOR">
     <name><![CDATA[Constant Ternary Expression]]></name>
     <configKey><![CDATA[ConstantTernaryExpression]]></configKey>
     <category name="Reliability"/>
@@ -568,63 +568,63 @@
       <![CDATA[Checks for ternary expressions with a constant value for the boolean expression, such as true, false, null, or a literal constant value.]]></description>
   </rule>
 
-  <rule key="org.codenarc.rule.basic.EmptyCatchBlockRule">
+  <rule key="org.codenarc.rule.basic.EmptyCatchBlockRule" priority="INFO">
     <name><![CDATA[Empty Catch Block]]></name>
     <configKey><![CDATA[EmptyCatchBlock]]></configKey>
     <category name="Reliability"/>
     <description>In most cases, exceptions should not be caught and ignored (swallowed).</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.NestedSynchronizationRule">
+  <rule key="org.codenarc.rule.concurrency.NestedSynchronizationRule" priority="CRITICAL">
     <name><![CDATA[Nested Synchronization]]></name>
     <configKey><![CDATA[NestedSynchronization]]></configKey>
     <category name="Reliability"/>
     <description>Nested synchronized statements should be avoided. Nested synchronized statements are either useless (if the lock objects are identical) or prone to deadlock.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.SynchronizedMethodRule">
+  <rule key="org.codenarc.rule.concurrency.SynchronizedMethodRule" priority="MAJOR">
     <name><![CDATA[Synchronized Method]]></name>
     <configKey><![CDATA[SynchronizedMethod]]></configKey>
     <category name="Reliability"/>
     <description>This rule reports uses of the <em>synchronized</em> keyword on methods. Synchronized methods are the same as synchronizing on 'this', which effectively make your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule">
+  <rule key="org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule" priority="MAJOR">
     <name><![CDATA[System Run Finalizers On Exit]]></name>
     <configKey><![CDATA[SystemRunFinalizersOnExit]]></configKey>
     <category name="Reliability"/>
     <description>Method calls to <em>System.runFinalizersOnExit()</em> should not be allowed. This method is inherently non-thread-safe, may result in data corruption, deadlock, and may effect parts of the program far removed from it's call point. It is deprecated, and it's use strongly discouraged.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.ThreadLocalNotStaticFinalRule">
+  <rule key="org.codenarc.rule.concurrency.ThreadLocalNotStaticFinalRule" priority="MAJOR">
     <name><![CDATA[Thread Local Not Static Final]]></name>
     <configKey><![CDATA[ThreadLocalNotStaticFinalRule]]></configKey>
     <category name="Reliability"/>
     <description><em>ThreadLocal</em> fields should be <em>static</em> and <em>final</em>. In the most common case a <em>java.lang.ThreadLocal</em> instance associates state with a thread. A non-<em>static</em> non-<em>final</em> <em>java.lang.ThreadLocal</em> field associates state with an instance-thread combination. This is seldom necessary and often a bug which can cause memory leaks and possibly incorrect behavior.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.ThreadYieldRule">
+  <rule key="org.codenarc.rule.concurrency.ThreadYieldRule" priority="CRITICAL">
     <name><![CDATA[Thread Yield]]></name>
     <configKey><![CDATA[ThreadYieldRule]]></configKey>
     <category name="Reliability"/>
     <description>Method calls to <em>Thread.yield()</em> should not be allowed. This method has no useful guaranteed semantics, and is often used by inexperienced programmers to mask race conditions.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule">
+  <rule key="org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule" priority="MAJOR">
     <name><![CDATA[Volatile Long Or Double Field]]></name>
     <configKey><![CDATA[VolatileLongOrDoubleFieldRule]]></configKey>
     <category name="Reliability"/>
     <description>Long or double fields should not be declared as <em>volatile</em>. Java specifies that reads and writes from such fields are atomic, but many JVM's have violated this specification. Unless you are certain of your JVM, it is better to synchronize access to such fields rather than declare them <em>volatile</em>. This rule flags fields marked <em>volatile</em> when their type is double or long or the name of their type is "Double" or "Long".</description>
   </rule>
 
-  <rule key="org.codenarc.rule.logging.SystemErrPrintRule">
+  <rule key="org.codenarc.rule.logging.SystemErrPrintRule" priority="MAJOR">
     <name><![CDATA[System Err Print]]></name>
     <configKey><![CDATA[SystemErrPrint]]></configKey>
     <category name="Reliability"/>
     <description>Checks for calls to <em>System.err.print()</em>, <em>System.err.println()</em> or <em>System.err.printf()</em>.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.size.AbcComplexityRule">
+  <rule key="org.codenarc.rule.size.AbcComplexityRule" priority="MAJOR">
     <name><![CDATA[Abc Complexity]]></name>
     <configKey><![CDATA[AbcComplexity]]></configKey>
     <category name="Maintainability"/>
@@ -634,7 +634,7 @@
   value greater than the <em>maxClassAverageMethodComplexity</em> property (which defaults to 60) causes a violation.</description>
   </rule>
 
-  <rule key="org.codenarc.rule.size.CyclomaticComplexityRule">
+  <rule key="org.codenarc.rule.size.CyclomaticComplexityRule" priority="MAJOR">
     <name><![CDATA[Cyclomatic Complexity]]></name>
     <configKey><![CDATA[CyclomaticComplexity]]></configKey>
     <category name="Maintainability"/>
