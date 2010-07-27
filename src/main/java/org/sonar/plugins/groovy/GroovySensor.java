@@ -157,6 +157,7 @@ public class GroovySensor implements Sensor {
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.FILES, 1.0);
+        sensorContext.saveMeasure(resource, CoreMetrics.CLASSES, 1.0);
       }
       catch (Exception e) {
         GroovyUtils.LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
