@@ -149,7 +149,7 @@ public class GroovySensor implements Sensor {
       try {
         reader = new StringReader(FileUtils.readFileToString(groovyFile, fileSystem.getSourceCharset().name()));
         Resource resource = GroovyFile.fromIOFile(groovyFile, fileSystem.getSourceDirs());
-        Source source = new Source(reader, new GroovyRecognizer(), "");
+        Source source = new Source(reader, new GroovyRecognizer());
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
