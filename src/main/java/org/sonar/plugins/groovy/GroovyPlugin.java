@@ -31,7 +31,7 @@ import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Properties({
@@ -50,42 +50,37 @@ import java.util.List;
     module = true,
     project = true,
     global = false
-  )
-})
+  )})
+public class GroovyPlugin implements Plugin {
+  public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
+  public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
 
-  public class GroovyPlugin implements Plugin {
-    public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
-    public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  public String getKey() {
+    return Groovy.KEY;
+  }
 
-    public String getKey() {
-      return Groovy.KEY;
-    }
+  public String getName() {
+    return "Groovy";
+  }
 
-    public String getName() {
-      return "Groovy";
-    }
+  public String getDescription() {
+    return "Analysis of Groovy projects";
+  }
 
-    public String getDescription() {
-      return "Analysis of Groovy projects";
-    }
-
-    public List getExtensions() {
-      List list = new ArrayList();
-
+  public List getExtensions() {
+    return Arrays.asList(
       // CodeNarc
-      list.add(CodeNarcCheckTemplateRepository.class);
-            
-      // foundation
-      list.add(Groovy.class);
-      list.add(GroovyColorizerFormat.class);
-      list.add(GroovySourceImporter.class);
-      list.add(GroovyCpdMapping.class);
-
+      CodeNarcCheckTemplateRepository.class,
+      // Foundation
+      Groovy.class,
+      GroovyColorizerFormat.class,
+      GroovySourceImporter.class,
+      GroovyCpdMapping.class,
       // Main sensor
-      list.add(GroovySensor.class);
-      list.add(getCheckProfile());
-      return list;
-    }
+      GroovySensor.class,
+      getCheckProfile()
+    );
+  }
 
   CheckProfile getCheckProfile() {
     return CheckProfileXmlMarshaller.fromXmlInClasspath("/org/sonar/plugins/groovy/sonar-way.xml", getClass());

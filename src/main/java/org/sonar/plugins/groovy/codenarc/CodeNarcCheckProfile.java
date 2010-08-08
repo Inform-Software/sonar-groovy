@@ -20,11 +20,9 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
 import org.sonar.api.checks.profiles.Check;
 import org.sonar.api.checks.profiles.CheckProfile;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;

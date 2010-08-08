@@ -83,8 +83,8 @@ public class GroovySensor implements Sensor {
       // Yes
       File gmetricsReport = getReport(project, gmetricsReportPath);
       if (gmetricsReport != null) {
-        GMetricsXMLParser GMetricsXMLParser = new GMetricsXMLParser();
-        GMetricsXMLParser.parseAndProcessGMetricsResults(gmetricsReport, context);
+        GMetricsXMLParser xmlParser = new GMetricsXMLParser();
+        xmlParser.parseAndProcessGMetricsResults(gmetricsReport, context);
       }
     }
     // No, run Gmetrics
@@ -169,5 +169,10 @@ public class GroovySensor implements Sensor {
     for(Resource pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
     }
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
   }
 }

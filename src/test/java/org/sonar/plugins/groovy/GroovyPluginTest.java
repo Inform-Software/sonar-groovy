@@ -18,20 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-package org.sonar.plugins.groovy.foundation;
+package org.sonar.plugins.groovy;
 
-import org.sonar.api.resources.AbstractLanguage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class Groovy extends AbstractLanguage {
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
-  public static final String KEY = "grvy";
-  public static Groovy INSTANCE = new Groovy();
+/**
+ * @author Evgeny Mandrikov
+ */
+public class GroovyPluginTest {
 
-  public Groovy() {
-    super(KEY, "Groovy");
+  private GroovyPlugin plugin;
+
+  @Before
+  public void setUp() {
+    plugin = new GroovyPlugin();
   }
 
-  public String[] getFileSuffixes() {
-    return new String[]{"groovy"};
+  @Test
+  public void testExtensions() {
+    assertThat(plugin.getExtensions().size(), is(7));
   }
+
 }

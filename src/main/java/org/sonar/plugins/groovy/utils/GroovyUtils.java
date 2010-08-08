@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.GroovyPlugin;
 
-public class GroovyUtils {
+public final class GroovyUtils {
   private GroovyUtils() {
     // only static methods
   }

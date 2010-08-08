@@ -22,9 +22,9 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.report.XmlReportWriter;
-import org.codenarc.results.Results;
 import org.sonar.api.checks.profiles.CheckProfile;
 import org.sonar.api.resources.Project;
+import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class CodeNarcRunner {
     // generated xml report
     XmlReportWriter xmlReport = new XmlReportWriter();
     xmlReport.setTitle("Sonar");
-    xmlReport.setDefaultOutputFile(new File(project.getFileSystem().getSonarWorkingDirectory(),"codenarc-report.xml").getAbsolutePath());
+    xmlReport.setDefaultOutputFile(new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml").getAbsolutePath());
     runner.setReportWriters(Arrays.asList(xmlReport));
 
     File conf = new File(project.getFileSystem().getSonarWorkingDirectory(), "checkProfile.xml");
@@ -55,7 +55,7 @@ public class CodeNarcRunner {
       new CodeNarcCheckProfile().save(checkProfile, conf);
     }
     catch (IOException e) {
-      throw new RuntimeException("Can not generate the configuration file: " + conf, e);
+      throw new SonarException("Can not generate the configuration file: " + conf, e);
     }
     runner.setRuleSetFiles("file:" + conf.getAbsolutePath());
 
