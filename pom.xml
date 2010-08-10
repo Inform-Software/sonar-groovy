@@ -18,6 +18,7 @@
   <description>Enables analysis of Groovy projects into Sonar.</description>
 
   <inceptionYear>2010</inceptionYear>
+  <url>http://docs.codehaus.org/display/SONAR/Groovy+Plugin</url>
   <organization>
     <name>SonarSource</name>
     <url>http://www.sonarsource.com</url>
