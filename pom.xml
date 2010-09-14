@@ -52,6 +52,8 @@
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
     <sonar.version>2.2</sonar.version>
+
+    <sonar.runtimeVersion>${sonarVersion}</sonar.runtimeVersion>
   </properties>
 
   <dependencies>
@@ -182,26 +184,35 @@
           </plugin>
           <plugin>
             <groupId>org.codehaus.sonar</groupId>
-            <artifactId>sonar-dev-mojo</artifactId>
-            <version>2.0.1</version>
+            <artifactId>sonar-dev-maven-plugin</artifactId>
+            <version>0.4</version>
             <executions>
               <execution>
                 <id>start-server</id>
                 <phase>pre-integration-test</phase>
                 <configuration>
-                  <wait>false</wait>
-                  <analyzeProjects>true</analyzeProjects>
-                  <mavenProjectsDir>${project.build.directory}/it/maven-projects</mavenProjectsDir>
+                  <sonar.background>true</sonar.background>
+                  <sonar.clean>true</sonar.clean>
                 </configuration>
                 <goals>
-                  <goal>start</goal>
+                  <goal>start-war</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>analyze-projects</id>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <sonar.projectsDir>${project.build.directory}/it/maven-projects</sonar.projectsDir>
+                </configuration>
+                <goals>
+                  <goal>analyze</goal>
                 </goals>
               </execution>
               <execution>
                 <id>stop-server</id>
                 <phase>post-integration-test</phase>
                 <goals>
-                  <goal>stop</goal>
+                  <goal>stop-war</goal>
                 </goals>
               </execution>
             </executions>
@@ -242,5 +253,5 @@
       </repositories>
     </profile>
   </profiles>
-  
+
 </project>
