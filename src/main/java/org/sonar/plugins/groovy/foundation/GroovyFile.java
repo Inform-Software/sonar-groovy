@@ -20,15 +20,15 @@
 
 package org.sonar.plugins.groovy.foundation;
 
+import java.io.File;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.DefaultProjectFileSystem;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.WildcardPattern;
-
-import java.io.File;
-import java.util.List;
 
 public class GroovyFile extends Resource<GroovyPackage> {
 
@@ -38,12 +38,20 @@ public class GroovyFile extends Resource<GroovyPackage> {
   private boolean unitTest = false;
   private GroovyPackage parent = null;
 
-  public  GroovyFile(String key) {
+  /**
+   * SONARPLUGINS-687: For backward compatibility
+   */
+  public GroovyFile(String key) {
+    this(key, false);
+  }
+
+  public GroovyFile(String key, boolean unitTest) {
     super();
     if (key != null && key.indexOf('$') >= 0) {
       throw new IllegalArgumentException("Flex inner classes are not supported : " + key);
     }
     String realKey = StringUtils.trim(key);
+    this.unitTest = unitTest;
 
     if (realKey.contains(".")) {
       this.filename = StringUtils.substringAfterLast(realKey, ".");
@@ -59,7 +67,7 @@ public class GroovyFile extends Resource<GroovyPackage> {
     setKey(realKey);
   }
 
-  public GroovyFile(String packageKey, String className) {
+  public GroovyFile(String packageKey, String className, boolean unitTest) {
     super();
     if (className != null && className.indexOf('$') >= 0) {
       throw new IllegalArgumentException("Java inner classes are not supported : " + className);
@@ -76,9 +84,8 @@ public class GroovyFile extends Resource<GroovyPackage> {
       this.longName = key;
     }
     setKey(key);
+    this.unitTest = unitTest;
   }
-
-
 
   public GroovyPackage getParent() {
     if (parent == null) {
@@ -121,7 +128,20 @@ public class GroovyFile extends Resource<GroovyPackage> {
     return matcher.match(getKey());
   }
 
+  /**
+   * SONARPLUGINS-687: For backward compatibility
+   */
   public static GroovyFile fromIOFile(File file, List<File> sourceDirs) {
+    return fromIOFile(file, sourceDirs, false);
+  }
+
+  /**
+   * Creates a {@link GroovyFile} from a file in the source directories.
+   * 
+   * @param unitTest whether it is a unit test file or a source file
+   * @return the {@link GroovyFile} created if exists, null otherwise
+   */
+  public static GroovyFile fromIOFile(File file, List<File> sourceDirs, boolean unitTest) {
     if (file == null) {
       return null;
     }
@@ -136,25 +156,28 @@ public class GroovyFile extends Resource<GroovyPackage> {
         classname = StringUtils.substringAfterLast(relativePath, "/");
       }
       classname = StringUtils.substringBeforeLast(classname, ".");
-      return new GroovyFile(pacname, classname);
+      return new GroovyFile(pacname, classname, unitTest);
     }
     return null;
   }
 
+  /**
+   * Shortcut to {@link #fromIOFile(File, List, boolean)} with an absolute path.
+   */
   public static GroovyFile fromAbsolutePath(String path, List<File> sourceDirs, boolean unitTest) {
     if (path == null) {
       return null;
     }
-    return fromIOFile(new File(path), sourceDirs);
+    return fromIOFile(new File(path), sourceDirs, unitTest);
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder(this)
-      .append("key", getKey())
-      .append("package", packageKey)
-      .append("longName", longName)
-      .append("unitTest", unitTest)
-      .toString();
+        .append("key", getKey())
+        .append("package", packageKey)
+        .append("longName", longName)
+        .append("unitTest", unitTest)
+        .toString();
   }
 }
