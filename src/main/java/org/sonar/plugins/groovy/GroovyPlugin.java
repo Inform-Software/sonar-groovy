@@ -20,19 +20,22 @@
 
 package org.sonar.plugins.groovy;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.checks.profiles.CheckProfile;
 import org.sonar.api.checks.profiles.CheckProfileXmlMarshaller;
+import org.sonar.plugins.groovy.cobertura.CoberturaMavenPluginHandler;
+import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcCheckTemplateRepository;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
-
-import java.util.Arrays;
-import java.util.List;
+import org.sonar.plugins.groovy.surefire.SurefireSensor;
 
 @Properties({
   @Property(
@@ -50,7 +53,7 @@ import java.util.List;
     module = true,
     project = true,
     global = false
-  )})
+) })
 public class GroovyPlugin implements Plugin {
   public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
   public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
@@ -78,8 +81,14 @@ public class GroovyPlugin implements Plugin {
       GroovyCpdMapping.class,
       // Main sensor
       GroovySensor.class,
-      getCheckProfile()
-    );
+
+      // Cobertura
+      CoberturaSensor.class,
+      CoberturaMavenPluginHandler.class,
+      // Surefire
+      SurefireSensor.class,
+
+      getCheckProfile());
   }
 
   CheckProfile getCheckProfile() {

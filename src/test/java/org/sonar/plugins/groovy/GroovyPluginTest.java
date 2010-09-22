@@ -20,11 +20,11 @@
 
 package org.sonar.plugins.groovy;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Evgeny Mandrikov
@@ -40,7 +40,7 @@ public class GroovyPluginTest {
 
   @Test
   public void testExtensions() {
-    assertThat(plugin.getExtensions().size(), is(7));
+    assertThat(plugin.getExtensions().size(), is(10));
   }
 
 }
