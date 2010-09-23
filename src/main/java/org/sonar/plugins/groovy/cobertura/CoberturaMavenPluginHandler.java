@@ -64,7 +64,7 @@ public class CoberturaMavenPluginHandler implements MavenPluginHandler {
   private void configureCobertura(Project project, MavenPlugin coberturaPlugin) {
     coberturaPlugin.setParameter("formats/format", "xml");
     for (String pattern : project.getExclusionPatterns()) {
-      if (pattern.endsWith(".java")) {
+      if (pattern.endsWith(".groovy")) {
         pattern = StringUtils.substringBeforeLast(pattern, ".") + ".class";
 
       } else if (StringUtils.substringAfterLast(pattern, "/").indexOf(".") < 0) {

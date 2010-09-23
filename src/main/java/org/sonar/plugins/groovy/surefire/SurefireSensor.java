@@ -203,6 +203,6 @@ public class SurefireSensor implements Sensor {
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "ForGroovy";
+    return getClass().getSimpleName();
   }
 }
