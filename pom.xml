@@ -185,14 +185,14 @@
           <plugin>
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-dev-maven-plugin</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
             <executions>
               <execution>
                 <id>start-server</id>
                 <phase>pre-integration-test</phase>
                 <configuration>
-                  <sonar.background>true</sonar.background>
-                  <sonar.clean>true</sonar.clean>
+                  <background>true</background>
+                  <clean>true</clean>
                 </configuration>
                 <goals>
                   <goal>start-war</goal>
@@ -202,7 +202,7 @@
                 <id>analyze-projects</id>
                 <phase>pre-integration-test</phase>
                 <configuration>
-                  <sonar.projectsDir>${project.build.directory}/it/maven-projects</sonar.projectsDir>
+                  <projectsDir>${project.build.directory}/it/maven-projects</projectsDir>
                 </configuration>
                 <goals>
                   <goal>analyze</goal>
