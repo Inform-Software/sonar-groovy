@@ -20,19 +20,6 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
-import static java.util.Locale.ENGLISH;
-import static org.sonar.api.utils.ParsingUtils.parseNumber;
-import static org.sonar.api.utils.ParsingUtils.scaleValue;
-
-import java.io.File;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
@@ -56,8 +43,21 @@ import org.sonar.api.utils.XmlParserException;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
 
+import java.io.File;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
+import static java.util.Locale.ENGLISH;
+import static org.sonar.api.utils.ParsingUtils.parseNumber;
+import static org.sonar.api.utils.ParsingUtils.scaleValue;
+
 /**
- * TODO copied from sonar-cobertura-plugin with modifications: JavaFile replaced by GroovyFile
+ * TODO copied from sonar-cobertura-plugin with modifications: JavaFile replaced by GroovyFile, fixed SONARPLUGINS-696
  */
 public class CoberturaSensor extends AbstractCoverageExtension implements Sensor, DependsUponMavenPlugin {
 
@@ -184,11 +184,11 @@ public class CoberturaSensor extends AbstractCoverageExtension implements Sensor
       String lineId = line.getAttrValue("number");
       data.addLine(lineId, (int) parseNumber(line.getAttrValue("hits"), ENGLISH));
 
+      String isBranch = line.getAttrValue("branch");
       String text = line.getAttrValue("condition-coverage");
-      if (StringUtils.isNotBlank(text)) {
+      if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
         String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-        data.addConditionLine(lineId, Integer.parseInt(conditions[0]), Integer.parseInt(conditions[1]), StringUtils.substringBefore(text,
-            " "));
+        data.addConditionLine(lineId, Integer.parseInt(conditions[0]), Integer.parseInt(conditions[1]), StringUtils.substringBefore(text, " "));
       }
     }
   }
