@@ -20,8 +20,6 @@
 
 package org.sonar.plugins.groovy;
 
-
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sonar.wsclient.Sonar;
@@ -31,7 +29,6 @@ import org.sonar.wsclient.services.ResourceQuery;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-
 
 public class GroovyIT {
   private static Sonar sonar;
@@ -45,7 +42,7 @@ public class GroovyIT {
   }
 
   @Test
-  public void strutsIsAnalyzed() {
+  public void codenarcIsAnalyzed() {
     assertThat(sonar.find(new ResourceQuery(PROJECT_CODENARC)).getName(), is("CodeNarc"));
     assertThat(sonar.find(new ResourceQuery(PROJECT_CODENARC)).getVersion(), is("0.9"));
     assertThat(sonar.find(new ResourceQuery(PACKAGE_REPORT)).getName(), is("org.codenarc.report"));
@@ -53,75 +50,99 @@ public class GroovyIT {
 
   @Test
   public void projectsMetrics() {
-    Assert.assertThat(getProjectMeasure("ncloc").getIntValue(), is(4199));
-    Assert.assertThat(getProjectMeasure("lines").getIntValue(), is(9439));
-    Assert.assertThat(getProjectMeasure("files").getIntValue(), is(198));
-    Assert.assertThat(getProjectMeasure("classes").getIntValue(), is(135));
-    Assert.assertThat(getProjectMeasure("packages").getIntValue(), is(22));
-    Assert.assertThat(getProjectMeasure("functions").getIntValue(), is(365));
-    Assert.assertThat(getProjectMeasure("comment_lines_density").getValue(), is(40.5));
-    Assert.assertThat(getProjectMeasure("comment_lines").getIntValue(), is(2856));
+    assertThat(getProjectMeasure("ncloc").getIntValue(), is(4199));
+    assertThat(getProjectMeasure("lines").getIntValue(), is(9439));
+    assertThat(getProjectMeasure("files").getIntValue(), is(198));
+    assertThat(getProjectMeasure("classes").getIntValue(), is(135));
+    assertThat(getProjectMeasure("packages").getIntValue(), is(22));
+    assertThat(getProjectMeasure("functions").getIntValue(), is(365));
+    assertThat(getProjectMeasure("comment_lines_density").getValue(), is(40.5));
+    assertThat(getProjectMeasure("comment_lines").getIntValue(), is(2856));
 
-    Assert.assertThat(getProjectMeasure("duplicated_lines").getIntValue(), is(54));
-    Assert.assertThat(getProjectMeasure("duplicated_blocks").getIntValue(), is(2));
-    Assert.assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.6));
-    Assert.assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
+    assertThat(getProjectMeasure("duplicated_lines").getIntValue(), is(54));
+    assertThat(getProjectMeasure("duplicated_blocks").getIntValue(), is(2));
+    assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.6));
+    assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
 
-    Assert.assertThat(getProjectMeasure("complexity").getIntValue(), is(816));
-    Assert.assertThat(getProjectMeasure("function_complexity").getValue(), is(2.2));
-    Assert.assertThat(getProjectMeasure("class_complexity").getValue(), is(6.0));
-    Assert.assertThat(getProjectMeasure("violations").getIntValue(), is(12));
-    Assert.assertThat(getProjectMeasure("violations_density").getValue(), is(99.3));
-    Assert.assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
-    Assert.assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
+    assertThat(getProjectMeasure("complexity").getIntValue(), is(816));
+    assertThat(getProjectMeasure("function_complexity").getValue(), is(2.2));
+    assertThat(getProjectMeasure("class_complexity").getValue(), is(6.0));
+    assertThat(getProjectMeasure("violations").getIntValue(), is(12));
+    assertThat(getProjectMeasure("violations_density").getValue(), is(99.3));
+    assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
+    assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
+
+    assertThat(getProjectMeasure("coverage").getValue(), is(89.8));
+    assertThat(getProjectMeasure("line_coverage").getValue(), is(98.9));
+    assertThat(getProjectMeasure("lines_to_cover").getValue(), is(1802.0));
+    assertThat(getProjectMeasure("uncovered_lines").getValue(), is(20.0));
+
+    assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
+    assertThat(getProjectMeasure("test_success_density").getValue(), is(99.9));
   }
 
   @Test
   public void packagesMetrics() {
-    Assert.assertThat(getPackageMeasure("ncloc").getIntValue(), is(540));
-    Assert.assertThat(getPackageMeasure("lines").getIntValue(), is(807));
-    Assert.assertThat(getPackageMeasure("files").getIntValue(), is(6));
-    Assert.assertThat(getPackageMeasure("classes").getIntValue(), is(6));
-    Assert.assertThat(getPackageMeasure("packages").getIntValue(), is(1));
-    Assert.assertThat(getPackageMeasure("functions").getIntValue(), is(56));
-    Assert.assertThat(getPackageMeasure("comment_lines_density").getValue(), is(17.8));
-    Assert.assertThat(getPackageMeasure("comment_lines").getIntValue(), is(117));
+    assertThat(getPackageMeasure("ncloc").getIntValue(), is(540));
+    assertThat(getPackageMeasure("lines").getIntValue(), is(807));
+    assertThat(getPackageMeasure("files").getIntValue(), is(6));
+    assertThat(getPackageMeasure("classes").getIntValue(), is(6));
+    assertThat(getPackageMeasure("packages").getIntValue(), is(1));
+    assertThat(getPackageMeasure("functions").getIntValue(), is(56));
+    assertThat(getPackageMeasure("comment_lines_density").getValue(), is(17.8));
+    assertThat(getPackageMeasure("comment_lines").getIntValue(), is(117));
 
-    Assert.assertThat(getPackageMeasure("duplicated_lines").getIntValue(), is(0));
-    Assert.assertThat(getPackageMeasure("duplicated_blocks").getIntValue(), is(0));
-    Assert.assertThat(getPackageMeasure("duplicated_lines_density").getValue(), is(0.0));
-    Assert.assertThat(getPackageMeasure("duplicated_files").getIntValue(), is(0));
+    assertThat(getPackageMeasure("duplicated_lines").getIntValue(), is(0));
+    assertThat(getPackageMeasure("duplicated_blocks").getIntValue(), is(0));
+    assertThat(getPackageMeasure("duplicated_lines_density").getValue(), is(0.0));
+    assertThat(getPackageMeasure("duplicated_files").getIntValue(), is(0));
 
-    Assert.assertThat(getPackageMeasure("complexity").getIntValue(), is(96));
-    Assert.assertThat(getPackageMeasure("function_complexity").getValue(), is(1.7));
-    Assert.assertThat(getPackageMeasure("class_complexity").getValue(), is(16.0));
-    Assert.assertThat(getPackageMeasure("violations").getIntValue(), is(4));
-    Assert.assertThat(getPackageMeasure("violations_density").getValue(), is(97.8));
-    Assert.assertThat(getPackageMeasure("class_complexity_distribution").getData(), is("0=2;5=0;10=2;20=1;30=1;60=0;90=0"));
-    Assert.assertThat(getPackageMeasure("function_complexity_distribution").getData(), is("1=31;2=20;4=5;6=0;8=0;10=0;12=0"));
+    assertThat(getPackageMeasure("complexity").getIntValue(), is(96));
+    assertThat(getPackageMeasure("function_complexity").getValue(), is(1.7));
+    assertThat(getPackageMeasure("class_complexity").getValue(), is(16.0));
+    assertThat(getPackageMeasure("violations").getIntValue(), is(4));
+    assertThat(getPackageMeasure("violations_density").getValue(), is(97.8));
+    assertThat(getPackageMeasure("class_complexity_distribution").getData(), is("0=2;5=0;10=2;20=1;30=1;60=0;90=0"));
+    assertThat(getPackageMeasure("function_complexity_distribution").getData(), is("1=31;2=20;4=5;6=0;8=0;10=0;12=0"));
+
+    assertThat(getPackageMeasure("coverage").getValue(), is(88.8));
+    assertThat(getPackageMeasure("line_coverage").getValue(), is(99.7));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), is(304.0));
+    assertThat(getPackageMeasure("uncovered_lines").getValue(), is(1.0));
+
+    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
+    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
   }
 
   @Test
   public void filesMetrics() {
-    Assert.assertThat(getFileMeasure("ncloc").getIntValue(), is(238));
-    Assert.assertThat(getFileMeasure("lines").getIntValue(), is(319));
-    Assert.assertThat(getFileMeasure("files").getIntValue(), is(1));
-    Assert.assertThat(getFileMeasure("classes").getIntValue(), is(1));
+    assertThat(getFileMeasure("ncloc").getIntValue(), is(238));
+    assertThat(getFileMeasure("lines").getIntValue(), is(319));
+    assertThat(getFileMeasure("files").getIntValue(), is(1));
+    assertThat(getFileMeasure("classes").getIntValue(), is(1));
     assertNull(getFileMeasure("packages"));
-    Assert.assertThat(getFileMeasure("functions").getIntValue(), is(18));
-    Assert.assertThat(getFileMeasure("comment_lines_density").getValue(), is(12.8));
-    Assert.assertThat(getFileMeasure("comment_lines").getIntValue(), is(35));
+    assertThat(getFileMeasure("functions").getIntValue(), is(18));
+    assertThat(getFileMeasure("comment_lines_density").getValue(), is(12.8));
+    assertThat(getFileMeasure("comment_lines").getIntValue(), is(35));
     assertNull(getFileMeasure("duplicated_lines"));
     assertNull(getFileMeasure("duplicated_blocks"));
     assertNull(getFileMeasure("duplicated_files"));
     assertNull(getFileMeasure("duplicated_lines_density"));
-    Assert.assertThat(getFileMeasure("complexity").getIntValue(), is(36));
-    Assert.assertThat(getFileMeasure("function_complexity").getValue(), is(2.0));
-    Assert.assertThat(getFileMeasure("class_complexity").getValue(), is(36.0));
-    Assert.assertThat(getFileMeasure("violations").getIntValue(), is(4));
-    Assert.assertThat(getFileMeasure("violations_density").getValue(), is(95.0));
+    assertThat(getFileMeasure("complexity").getIntValue(), is(36));
+    assertThat(getFileMeasure("function_complexity").getValue(), is(2.0));
+    assertThat(getFileMeasure("class_complexity").getValue(), is(36.0));
+    assertThat(getFileMeasure("violations").getIntValue(), is(4));
+    assertThat(getFileMeasure("violations_density").getValue(), is(95.0));
     assertNull(getFileMeasure("class_complexity_distribution"));
     assertNull(getFileMeasure("function_complexity_distribution"));
+
+    assertThat(getFileMeasure("coverage").getValue(), is(87.1));
+    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), is(148.0));
+    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
+
+    assertNull(getFileMeasure("tests"));
+    assertNull(getFileMeasure("test_success_density"));
   }
 
   private Measure getFileMeasure(String metricKey) {

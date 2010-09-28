@@ -173,7 +173,7 @@
                     <artifactItem>
                       <groupId>org.codehaus.sonar.plugins.it</groupId>
                       <artifactId>codenarc</artifactId>
-                      <version>0.9</version>
+                      <version>0.9-r1</version>
                       <type>zip</type>
                     </artifactItem>
                   </artifactItems>
@@ -218,9 +218,8 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>failsafe-maven-plugin</artifactId>
-            <version>2.4.3-alpha-1</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
             <executions>
               <execution>
                 <id>integration-test</id>
