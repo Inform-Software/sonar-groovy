@@ -39,7 +39,7 @@ public class GroovyIT {
 
   @BeforeClass
   public static void buildServer() {
-    sonar = Sonar.create("http://192.168.1.88:9002");
+    sonar = Sonar.create("http://localhost:9000");
   }
 
   @Test
