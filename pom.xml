@@ -52,8 +52,6 @@
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
     <sonar.version>2.2</sonar.version>
-
-    <sonar.runtimeVersion>${sonarVersion}</sonar.runtimeVersion>
   </properties>
 
   <dependencies>
