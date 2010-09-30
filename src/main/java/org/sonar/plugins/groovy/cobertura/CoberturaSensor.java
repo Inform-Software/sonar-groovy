@@ -250,7 +250,7 @@ public class CoberturaSensor extends AbstractCoverageExtension implements Sensor
 
   @Override
   public String toString() {
-    return getClass().getSimpleName();
+    return "Groovy CoberturaSensor";
   }
 
   private double calculateCoverage(int coveredElements, int elements) {
