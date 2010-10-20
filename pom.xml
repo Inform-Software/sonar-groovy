@@ -35,6 +35,10 @@
       <id>ogaudin</id>
       <name>Olivier Gaudin</name>
     </developer>
+    <developer>
+      <id>godin</id>
+      <name>Evgeny Mandrikov</name>
+    </developer>
   </developers>
 
   <scm>
@@ -51,13 +55,33 @@
     <sonar.pluginKey>groovy</sonar.pluginKey>
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
-    <sonar.version>2.2</sonar.version>
+    <sonar.version>2.4-SNAPSHOT</sonar.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-plugin-api</artifactId>
+      <version>${sonar.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-deprecated</artifactId>
+      <version>${sonar.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar.plugins</groupId>
+      <artifactId>sonar-surefire-plugin</artifactId>
+      <type>sonar-plugin</type>
+      <version>${sonar.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar.plugins</groupId>
+      <artifactId>sonar-cobertura-plugin</artifactId>
+      <type>sonar-plugin</type>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -150,6 +174,18 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.sonar</groupId>
+          <artifactId>sonar-packaging-maven-plugin</artifactId>
+          <version>0.3</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <profiles>
     <profile>

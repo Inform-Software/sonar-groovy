@@ -25,23 +25,20 @@ import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.maven.MavenPlugin;
 import org.sonar.api.batch.maven.MavenPluginHandler;
 import org.sonar.api.batch.maven.MavenSurefireUtils;
-import org.sonar.api.batch.maven.MavenUtils;
 import org.sonar.api.resources.Project;
+import org.sonar.plugins.cobertura.api.CoberturaUtils;
 
 /**
  * TODO copied from sonar-cobertura-plugin
  */
 public class CoberturaMavenPluginHandler implements MavenPluginHandler {
 
-  public static final String GROUP_ID = MavenUtils.GROUP_ID_CODEHAUS_MOJO;
-  public static final String ARTIFACT_ID = "cobertura-maven-plugin";
-
   public String getGroupId() {
-    return GROUP_ID;
+    return CoberturaUtils.COBERTURA_GROUP_ID;
   }
 
   public String getArtifactId() {
-    return ARTIFACT_ID;
+    return CoberturaUtils.COBERTURA_ARTIFACT_ID;
   }
 
   public String getVersion() {
@@ -72,7 +69,6 @@ public class CoberturaMavenPluginHandler implements MavenPluginHandler {
       }
       coberturaPlugin.addParameter("instrumentation/excludes/exclude", pattern);
     }
-    coberturaPlugin.setParameter("maxmem", project.getConfiguration().getString(CoreProperties.COBERTURA_MAXMEM_PROPERTY,
-        CoreProperties.COBERTURA_MAXMEM_DEFAULT_VALUE));
+    coberturaPlugin.setParameter("maxmem", project.getConfiguration().getString(CoreProperties.COBERTURA_MAXMEM_PROPERTY, CoreProperties.COBERTURA_MAXMEM_DEFAULT_VALUE));
   }
 }
