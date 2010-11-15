@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>6</version>
+    <version>8-SNAPSHOT</version>
     <relativePath>../parent</relativePath>
   </parent>
 
@@ -52,10 +52,10 @@
   </issueManagement>
 
   <properties>
-    <sonar.pluginKey>groovy</sonar.pluginKey>
+    <sonar.version>2.4-RC1</sonar.version>
+    <sonar.pluginKey>grvy</sonar.pluginKey>
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
-    <sonar.version>2.4-RC1</sonar.version>
   </properties>
 
   <dependencies>
@@ -174,18 +174,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.sonar</groupId>
-          <artifactId>sonar-packaging-maven-plugin</artifactId>
-          <version>0.3</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 
   <profiles>
     <profile>
@@ -219,7 +207,6 @@
           <plugin>
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-dev-maven-plugin</artifactId>
-            <version>0.7</version>
             <executions>
               <execution>
                 <id>start-server</id>
@@ -247,24 +234,6 @@
                 <phase>post-integration-test</phase>
                 <goals>
                   <goal>stop-war</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>verify</id>
-                <goals>
-                  <goal>verify</goal>
                 </goals>
               </execution>
             </executions>
