@@ -52,7 +52,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>2.4-RC1</sonar.version>
+    <sonar.version>2.4</sonar.version>
     <sonar.pluginKey>grvy</sonar.pluginKey>
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
