@@ -84,7 +84,7 @@ public class GroovyIT {
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
 
     assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
-    assertThat(getProjectMeasure("test_success_density").getValue(), is(99.9));
+    assertThat(getProjectMeasure("test_success_density").getValue(), anyOf(is(99.8), is(99.9)));
   }
 
   @Test
