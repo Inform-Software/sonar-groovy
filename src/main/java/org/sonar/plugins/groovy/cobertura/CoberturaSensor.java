@@ -21,7 +21,6 @@
 package org.sonar.plugins.groovy.cobertura;
 
 import org.slf4j.LoggerFactory;
-import org.sonar.api.Plugins;
 import org.sonar.api.batch.AbstractCoverageExtension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
@@ -43,8 +42,7 @@ public class CoberturaSensor extends AbstractCoverageExtension implements Sensor
 
   private CoberturaMavenPluginHandler handler;
 
-  public CoberturaSensor(Plugins plugins, CoberturaMavenPluginHandler handler) {
-    super(plugins);
+  public CoberturaSensor(CoberturaMavenPluginHandler handler) {
     this.handler = handler;
   }
 

@@ -24,6 +24,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.sonar.api.BatchExtension;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
@@ -38,17 +39,15 @@ import java.io.File;
 
 import javax.xml.stream.XMLStreamException;
 
-public class CodeNarcXMLParser {
+public class CodeNarcXMLParser implements BatchExtension {
 
-  private SensorContext context;
   private RuleFinder ruleFinder;
 
-  public CodeNarcXMLParser(SensorContext context, RuleFinder ruleFinder) {
-    this.context = context;
+  public CodeNarcXMLParser(RuleFinder ruleFinder) {
     this.ruleFinder = ruleFinder;
   }
 
-  public void parseAndLogCodeNarcResults(File xmlFile) {
+  public void parseAndLogCodeNarcResults(File xmlFile, final SensorContext context) {
     GroovyUtils.LOG.info("Parsing {}", xmlFile);
 
     StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
@@ -66,7 +65,7 @@ public class CodeNarcXMLParser {
               String lineNumber = violation.getAttrValue("lineNumber");
               String checkKey = violation.getAttrValue("ruleName");
 
-              log(checkKey, fileName, Integer.parseInt(lineNumber), "");
+              log(context, checkKey, fileName, Integer.parseInt(lineNumber), "");
             }
           }
         }
@@ -79,7 +78,7 @@ public class CodeNarcXMLParser {
     }
   }
 
-  void log(String checkKey, String filename, Integer line, String message) {
+  void log(SensorContext context, String checkKey, String filename, Integer line, String message) {
     RuleQuery ruleQuery = RuleQuery.create()
         .withRepositoryKey(GroovyConstants.REPOSITORY_KEY)
         .withConfigKey(checkKey);

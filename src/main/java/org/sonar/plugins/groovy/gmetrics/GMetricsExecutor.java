@@ -20,20 +20,24 @@
 
 package org.sonar.plugins.groovy.gmetrics;
 
+import org.gmetrics.GMetricsRunner;
 import org.gmetrics.analyzer.FilesystemSourceAnalyzer;
 import org.gmetrics.metricset.DefaultMetricSet;
 import org.gmetrics.report.XmlReportWriter;
+import org.sonar.api.BatchExtension;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class GMetricsRunner {
-
-  public void execute(File sourceDir, Project project) {
+public class GMetricsExecutor implements BatchExtension {
+  /**
+   * @return generated XML report
+   */
+  public File execute(File sourceDir, Project project) {
     GroovyUtils.LOG.info("Executing GMetrics");
-    org.gmetrics.GMetricsRunner runner = new org.gmetrics.GMetricsRunner();
+    GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
 
     // sources
@@ -42,13 +46,15 @@ public class GMetricsRunner {
     sources.setIncludes("**/*.groovy");
     runner.setSourceAnalyzer(sources);
 
-    // generated xml report
+    // generated XML report
     XmlReportWriter report = new XmlReportWriter();
     report.setTitle("Sonar");
-    report.setOutputFile(new File(project.getFileSystem().getSonarWorkingDirectory(), "gmetrics-report.xml").getAbsolutePath());
+    File reportFile = new File(project.getFileSystem().getSonarWorkingDirectory(), "gmetrics-report.xml");
+    report.setOutputFile(reportFile.getAbsolutePath());
     runner.setReportWriters(Arrays.asList(report));
 
     runner.execute();
-  }
 
+    return reportFile;
+  }
 }

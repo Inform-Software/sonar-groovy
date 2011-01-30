@@ -25,13 +25,13 @@ import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.plugins.groovy.cobertura.CoberturaMavenPluginHandler;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
-import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
-import org.sonar.plugins.groovy.codenarc.CodeNarcRuleRepository;
-import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
+import org.sonar.plugins.groovy.codenarc.*;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
+import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
+import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
 import org.sonar.plugins.groovy.surefire.SurefireSensor;
 
 import java.util.Arrays;
@@ -76,6 +76,11 @@ public class GroovyPlugin implements Plugin {
         CodeNarcRuleRepository.class,
         CodeNarcProfileExporter.class,
         SonarWayProfile.class,
+        CodeNarcExecutor.class,
+        CodeNarcXMLParser.class,
+        // GMetrics
+        GMetricsExecutor.class,
+        GMetricsXMLParser.class,
         // Foundation
         Groovy.class,
         GroovyColorizerFormat.class,

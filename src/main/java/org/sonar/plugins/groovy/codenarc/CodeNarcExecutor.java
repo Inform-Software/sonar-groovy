@@ -20,8 +20,10 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import org.codenarc.CodeNarcRunner;
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.report.XmlReportWriter;
+import org.sonar.api.BatchExtension;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
@@ -32,22 +34,25 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 
-public class CodeNarcRunner {
+public class CodeNarcExecutor implements BatchExtension {
 
   private RulesProfile rulesProfile;
   private CodeNarcProfileExporter profileExporter;
   private Project project;
 
-  public CodeNarcRunner(RulesProfile rulesProfile, CodeNarcProfileExporter profileExporter, Project project) {
+  public CodeNarcExecutor(RulesProfile rulesProfile, CodeNarcProfileExporter profileExporter, Project project) {
     this.rulesProfile = rulesProfile;
     this.profileExporter = profileExporter;
     this.project = project;
   }
 
-  public void execute(File sourceDir) {
+  /**
+   * @return generated XML report
+   */
+  public File execute(File sourceDir) {
     GroovyUtils.LOG.info("Executing CodeNarc");
 
-    org.codenarc.CodeNarcRunner runner = new org.codenarc.CodeNarcRunner();
+    CodeNarcRunner runner = new CodeNarcRunner();
     FilesystemSourceAnalyzer analyzer = new FilesystemSourceAnalyzer();
 
     // only one source directory
@@ -55,16 +60,19 @@ public class CodeNarcRunner {
     analyzer.setIncludes("**/*.groovy");
     runner.setSourceAnalyzer(analyzer);
 
-    // generated xml report
+    // generated XML report
     XmlReportWriter xmlReport = new XmlReportWriter();
     xmlReport.setTitle("Sonar");
-    xmlReport.setDefaultOutputFile(new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml").getAbsolutePath());
+    File reportFile = new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml");
+    xmlReport.setDefaultOutputFile(reportFile.getAbsolutePath());
     runner.setReportWriters(Arrays.asList(xmlReport));
 
     runner.setRuleSetFiles("file:" + getConfiguration().getAbsolutePath());
 
     // TODO : might be possible to process results object to get violations
     runner.execute();
+
+    return reportFile;
   }
 
   private File getConfiguration() {

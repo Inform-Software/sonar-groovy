@@ -33,7 +33,7 @@ public class CoberturaSensorTest {
 
   @Before
   public void setUp() throws Exception {
-    sensor = new CoberturaSensor(null, null);
+    sensor = new CoberturaSensor(null);
   }
 
   @Test

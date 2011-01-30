@@ -22,6 +22,7 @@ package org.sonar.plugins.groovy.gmetrics;
 
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.sonar.api.BatchExtension;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.PersistenceMode;
@@ -30,13 +31,14 @@ import org.sonar.api.utils.StaxParser;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 
-public class GMetricsXMLParser {
+import javax.xml.stream.XMLStreamException;
 
-  private final static Number[] METHODS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
-  private final static Number[] CLASS_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
+public class GMetricsXMLParser implements BatchExtension {
+
+  private final static Number[] METHODS_DISTRIB_BOTTOM_LIMITS = { 1, 2, 4, 6, 8, 10, 12 };
+  private final static Number[] CLASS_DISTRIB_BOTTOM_LIMITS = { 0, 5, 10, 20, 30, 60, 90 };
 
   public void parseAndProcessGMetricsResults(File xmlFile, final SensorContext context) {
     GroovyUtils.LOG.info("parsing {}", xmlFile);
@@ -52,10 +54,11 @@ public class GMetricsXMLParser {
           double nbMethods = 0;
           double complexity = 0;
 
-          RangeDistributionBuilder complexityMethodsDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION,
-            METHODS_DISTRIB_BOTTOM_LIMITS);
+          RangeDistributionBuilder complexityMethodsDistribution = new RangeDistributionBuilder(
+              CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION,
+              METHODS_DISTRIB_BOTTOM_LIMITS);
           RangeDistributionBuilder complexityClassDistribution = new RangeDistributionBuilder(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION,
-            CLASS_DISTRIB_BOTTOM_LIMITS);
+              CLASS_DISTRIB_BOTTOM_LIMITS);
 
           SMInputCursor method = clazz.descendantElementCursor("Method");
 

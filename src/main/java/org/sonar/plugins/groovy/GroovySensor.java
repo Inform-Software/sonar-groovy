@@ -20,26 +20,21 @@
 
 package org.sonar.plugins.groovy;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
-import org.sonar.plugins.groovy.codenarc.CodeNarcRunner;
+import org.sonar.plugins.groovy.codenarc.CodeNarcExecutor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.foundation.GroovyPackage;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
-import org.sonar.plugins.groovy.gmetrics.GMetricsRunner;
+import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
 import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 import org.sonar.squid.measures.Metric;
@@ -55,18 +50,19 @@ import java.util.Set;
 public class GroovySensor implements Sensor {
 
   private Groovy groovy;
-  private RulesProfile rulesProfile;
-  private CodeNarcProfileExporter profileExporter;
-  private Configuration configuration;
-  private RuleFinder ruleFinder;
+  private GMetricsExecutor gmetricsExecutor;
+  private GMetricsXMLParser gmetricsParser;
+  private CodeNarcExecutor codeNarcExecutor;
+  private CodeNarcXMLParser codeNarcParser;
 
-  public GroovySensor(Groovy groovy, RulesProfile rulesProfile, CodeNarcProfileExporter profileExporter,
-      Configuration configuration, RuleFinder ruleFinder) {
-    this.ruleFinder = ruleFinder;
+  public GroovySensor(Groovy groovy,
+      GMetricsExecutor gmetricsExecutor, GMetricsXMLParser gmetricsParser,
+      CodeNarcExecutor codeNarcExecutor, CodeNarcXMLParser codeNarcParser) {
+    this.gmetricsExecutor = gmetricsExecutor;
+    this.gmetricsParser = gmetricsParser;
+    this.codeNarcExecutor = codeNarcExecutor;
+    this.codeNarcParser = codeNarcParser;
     this.groovy = groovy;
-    this.rulesProfile = rulesProfile;
-    this.profileExporter = profileExporter;
-    this.configuration = configuration;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -81,39 +77,36 @@ public class GroovySensor implements Sensor {
 
   private void computeGMetricsReport(Project project, SensorContext context) {
     // Should we reuse existing report from GMetrics ?
-    if (StringUtils.isNotBlank(configuration.getString(GroovyPlugin.GMETRICS_REPORT_PATH))) {
+    if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.GMETRICS_REPORT_PATH))) {
       // Yes
       File gmetricsReport = getReport(project, GroovyPlugin.GMETRICS_REPORT_PATH);
       if (gmetricsReport != null) {
-        new GMetricsXMLParser().parseAndProcessGMetricsResults(gmetricsReport, context);
+        gmetricsParser.parseAndProcessGMetricsResults(gmetricsReport, context);
       }
     } else {
       // No, run GMetrics
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
-        new GMetricsRunner().execute(sourceDir, project);
-        File report = new File(project.getFileSystem().getSonarWorkingDirectory(), "gmetrics-report.xml");
-        new GMetricsXMLParser().parseAndProcessGMetricsResults(report, context);
+        File report = gmetricsExecutor.execute(sourceDir, project);
+        gmetricsParser.parseAndProcessGMetricsResults(report, context);
       }
     }
   }
 
   private void computeCodeNarcReport(Project project, SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (StringUtils.isNotBlank(configuration.getString(GroovyPlugin.CODENARC_REPORT_PATH))) {
+    if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH))) {
       // Yes
       File codeNarcReport = getReport(project, GroovyPlugin.CODENARC_REPORT_PATH);
       if (codeNarcReport != null) {
-        new CodeNarcXMLParser(context, ruleFinder).parseAndLogCodeNarcResults(codeNarcReport);
+        codeNarcParser.parseAndLogCodeNarcResults(codeNarcReport, context);
       }
     } else {
       // No, run CodeNarc
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
-        // TODO use container injection
-        new CodeNarcRunner(rulesProfile, profileExporter, project).execute(sourceDir);
-        File report = new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml");
-        new CodeNarcXMLParser(context, ruleFinder).parseAndLogCodeNarcResults(report);
+        File report = codeNarcExecutor.execute(sourceDir);
+        codeNarcParser.parseAndLogCodeNarcResults(report, context);
       }
     }
   }
@@ -138,11 +131,11 @@ public class GroovySensor implements Sensor {
   protected void computeBaseMetrics(SensorContext sensorContext, Project project) {
     Reader reader = null;
     ProjectFileSystem fileSystem = project.getFileSystem();
-    Set<Resource> packageList = new HashSet();
+    Set<GroovyPackage> packageList = new HashSet<GroovyPackage>();
     for (File groovyFile : fileSystem.getSourceFiles(groovy)) {
       try {
         reader = new StringReader(FileUtils.readFileToString(groovyFile, fileSystem.getSourceCharset().name()));
-        Resource resource = GroovyFile.fromIOFile(groovyFile, fileSystem.getSourceDirs());
+        GroovyFile resource = GroovyFile.fromIOFile(groovyFile, fileSystem.getSourceDirs());
         Source source = new Source(reader, new GroovyRecognizer());
         packageList.add(new GroovyPackage(resource.getParent().getKey()));
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
@@ -156,7 +149,7 @@ public class GroovySensor implements Sensor {
         IOUtils.closeQuietly(reader);
       }
     }
-    for (Resource pack : packageList) {
+    for (GroovyPackage pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
     }
   }
