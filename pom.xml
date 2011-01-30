@@ -52,6 +52,7 @@
   </issueManagement>
 
   <properties>
+    <!-- TODO should be 2.5 -->
     <sonar.version>2.4</sonar.version>
     <sonar.pluginKey>grvy</sonar.pluginKey>
     <sonar.pluginName>Groovy</sonar.pluginName>
@@ -62,12 +63,6 @@
     <dependency>
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-plugin-api</artifactId>
-      <version>${sonar.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-deprecated</artifactId>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>

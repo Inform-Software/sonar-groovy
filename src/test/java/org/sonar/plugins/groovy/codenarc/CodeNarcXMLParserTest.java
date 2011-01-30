@@ -22,40 +22,33 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class CodeNarcXMLParserTest {
 
   @Test
   public void testCodeNarcReportParser() {
-    GroovyMessageDispatcher messageDispatcher = mock(GroovyMessageDispatcher.class);
-    SensorContext context = mock(SensorContext.class);
-    Project project = mock(Project.class);
-    ProjectFileSystem fileSystem = mock(ProjectFileSystem.class);
-
-    when(project.getFileSystem()).thenReturn(fileSystem);
-    List<java.io.File> l = new ArrayList<java.io.File>();
-    l.add(new java.io.File(""));
-    when(fileSystem.getSourceDirs()).thenReturn(l);
-
     File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/CodeNarcXmlSampleReport.xml"));
-    new CodeNarcXMLParser(messageDispatcher).parseAndLogCodeNarcResults(fileToParse);
 
-    verify(messageDispatcher).log("EmptyIfStatement", "org/codenarc/sample/domain/SampleDomain", 21, "");
-    verify(messageDispatcher).log("EmptyWhileStatement", "org/codenarc/sample/service/NewService", 18, "");
-    verify(messageDispatcher, times(2)).log(anyString(), eq("org/codenarc/sample/service/NewService"), anyInt(), anyString());
-    verify(messageDispatcher, times(16)).log(anyString(), anyString(), anyInt(), anyString());
+    CodeNarcXMLParser parser = new CodeNarcXMLParser(null, null);
+    parser = spy(parser);
+    doNothing().when(parser).log(anyString(), anyString(), anyInt(), anyString());
+
+    parser.parseAndLogCodeNarcResults(fileToParse);
+
+    verify(parser).log("EmptyIfStatement", "org/codenarc/sample/domain/SampleDomain", 21, "");
+    verify(parser).log("EmptyWhileStatement", "org/codenarc/sample/service/NewService", 18, "");
+    verify(parser, times(2)).log(anyString(), eq("org/codenarc/sample/service/NewService"), anyInt(), anyString());
+    verify(parser, times(16)).log(anyString(), anyString(), anyInt(), anyString());
   }
 
 }

@@ -22,9 +22,7 @@ package org.sonar.plugins.groovy.gmetrics;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.checks.profiles.CheckProfile;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
@@ -48,9 +46,8 @@ public class GMetricsXMLParserTest {
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     ProjectFileSystem fileSystem = mock(ProjectFileSystem.class);
-    CheckProfile checkProfile = mock(CheckProfile.class);
-
     when(project.getFileSystem()).thenReturn(fileSystem);
+
     List<File> l = new ArrayList<File>();
     l.add(new File(""));
     when(fileSystem.getSourceDirs()).thenReturn(l);
@@ -58,13 +55,12 @@ public class GMetricsXMLParserTest {
     File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/GMetricsSampleReport.xml"));
     new GMetricsXMLParser().parseAndProcessGMetricsResults(fileToParse, context);
 
-
     org.sonar.api.resources.File file = new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer");
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.FUNCTIONS), eq(7.0));
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.COMPLEXITY), eq(13.0));
     verify(context).saveMeasure(eq(new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer")), argThat(
-      new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=4;2=2;4=1;6=0;8=0;10=0;12=0")));
+        new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=4;2=2;4=1;6=0;8=0;10=0;12=0")));
     verify(context).saveMeasure(eq(new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer")), argThat(
-      new IsMeasure(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, "0=0;5=0;10=1;20=0;30=0;60=0;90=0")));
+        new IsMeasure(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, "0=0;5=0;10=1;20=0;30=0;60=0;90=0")));
   }
 }

@@ -22,18 +22,29 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.report.XmlReportWriter;
-import org.sonar.api.checks.profiles.CheckProfile;
+import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 public class CodeNarcRunner {
 
-  public void execute(File sourceDir, CheckProfile checkProfile, Project project) {
+  private RulesProfile rulesProfile;
+  private CodeNarcProfileExporter profileExporter;
+  private Project project;
+
+  public CodeNarcRunner(RulesProfile rulesProfile, CodeNarcProfileExporter profileExporter, Project project) {
+    this.rulesProfile = rulesProfile;
+    this.profileExporter = profileExporter;
+    this.project = project;
+  }
+
+  public void execute(File sourceDir) {
     GroovyUtils.LOG.info("Executing CodeNarc");
 
     org.codenarc.CodeNarcRunner runner = new org.codenarc.CodeNarcRunner();
@@ -50,16 +61,19 @@ public class CodeNarcRunner {
     xmlReport.setDefaultOutputFile(new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml").getAbsolutePath());
     runner.setReportWriters(Arrays.asList(xmlReport));
 
-    File conf = new File(project.getFileSystem().getSonarWorkingDirectory(), "checkProfile.xml");
-    try {
-      new CodeNarcCheckProfile().save(checkProfile, conf);
-    }
-    catch (IOException e) {
-      throw new SonarException("Can not generate the configuration file: " + conf, e);
-    }
-    runner.setRuleSetFiles("file:" + conf.getAbsolutePath());
+    runner.setRuleSetFiles("file:" + getConfiguration().getAbsolutePath());
 
     // TODO : might be possible to process results object to get violations
     runner.execute();
+  }
+
+  private File getConfiguration() {
+    try {
+      StringWriter writer = new StringWriter();
+      profileExporter.exportProfile(rulesProfile, writer);
+      return project.getFileSystem().writeToWorkingDirectory(writer.toString(), "checkProfile.xml");
+    } catch (IOException e) {
+      throw new SonarException("Can not generate CodeNarc configuration file", e);
+    }
   }
 }

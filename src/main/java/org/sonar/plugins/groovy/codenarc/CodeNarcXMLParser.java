@@ -21,23 +21,35 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.sonar.api.batch.SensorContext;
+import org.sonar.api.rules.Rule;
+import org.sonar.api.rules.RuleFinder;
+import org.sonar.api.rules.RuleQuery;
+import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.StaxParser;
+import org.sonar.plugins.groovy.GroovyConstants;
+import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 
-public class CodeNarcXMLParser {
-  private GroovyMessageDispatcher messageDispatcher;
+import javax.xml.stream.XMLStreamException;
 
-  public CodeNarcXMLParser(GroovyMessageDispatcher messageDispatcher) {
-    this.messageDispatcher = messageDispatcher;
+public class CodeNarcXMLParser {
+
+  private SensorContext context;
+  private RuleFinder ruleFinder;
+
+  public CodeNarcXMLParser(SensorContext context, RuleFinder ruleFinder) {
+    this.context = context;
+    this.ruleFinder = ruleFinder;
   }
 
   public void parseAndLogCodeNarcResults(File xmlFile) {
-    GroovyUtils.LOG.info("parsing {}", xmlFile);
+    GroovyUtils.LOG.info("Parsing {}", xmlFile);
 
     StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
       public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
@@ -54,7 +66,7 @@ public class CodeNarcXMLParser {
               String lineNumber = violation.getAttrValue("lineNumber");
               String checkKey = violation.getAttrValue("ruleName");
 
-              messageDispatcher.log(checkKey, fileName, Integer.parseInt(lineNumber), "");
+              log(checkKey, fileName, Integer.parseInt(lineNumber), "");
             }
           }
         }
@@ -64,6 +76,18 @@ public class CodeNarcXMLParser {
       parser.parse(xmlFile);
     } catch (XMLStreamException e) {
       GroovyUtils.LOG.error("Error parsing file : " + xmlFile);
+    }
+  }
+
+  void log(String checkKey, String filename, Integer line, String message) {
+    RuleQuery ruleQuery = RuleQuery.create()
+        .withRepositoryKey(GroovyConstants.REPOSITORY_KEY)
+        .withConfigKey(checkKey);
+    Rule rule = ruleFinder.find(ruleQuery);
+    if (rule != null) {
+      GroovyFile sonarFile = new GroovyFile(StringUtils.replace(filename, "/", "."));
+      Violation violation = Violation.create(rule, sonarFile).setLineId(line).setMessage(message);
+      context.saveViolation(violation);
     }
   }
 }

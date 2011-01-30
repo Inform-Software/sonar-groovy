@@ -26,16 +26,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.checks.profiles.CheckProfile;
-import org.sonar.api.checks.templates.CheckTemplateRepository;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.resources.Resource;
-import org.sonar.plugins.groovy.codenarc.CodeNarcCheckTemplateRepository;
+import org.sonar.api.rules.RuleFinder;
+import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
 import org.sonar.plugins.groovy.codenarc.CodeNarcRunner;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser;
-import org.sonar.plugins.groovy.codenarc.GroovyMessageDispatcher;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.foundation.GroovyPackage;
@@ -56,15 +55,18 @@ import java.util.Set;
 public class GroovySensor implements Sensor {
 
   private Groovy groovy;
-  private CheckProfile checkProfile;
+  private RulesProfile rulesProfile;
+  private CodeNarcProfileExporter profileExporter;
   private Configuration configuration;
-  private CheckTemplateRepository repo;
+  private RuleFinder ruleFinder;
 
-  public GroovySensor(Groovy groovy, CheckProfile checkProfile, Configuration configuration, CodeNarcCheckTemplateRepository repo) {
+  public GroovySensor(Groovy groovy, RulesProfile rulesProfile, CodeNarcProfileExporter profileExporter,
+      Configuration configuration, RuleFinder ruleFinder) {
+    this.ruleFinder = ruleFinder;
     this.groovy = groovy;
-    this.checkProfile = checkProfile;
+    this.rulesProfile = rulesProfile;
+    this.profileExporter = profileExporter;
     this.configuration = configuration;
-    this.repo = repo;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -83,41 +85,35 @@ public class GroovySensor implements Sensor {
       // Yes
       File gmetricsReport = getReport(project, GroovyPlugin.GMETRICS_REPORT_PATH);
       if (gmetricsReport != null) {
-        GMetricsXMLParser xmlParser = new GMetricsXMLParser();
-        xmlParser.parseAndProcessGMetricsResults(gmetricsReport, context);
+        new GMetricsXMLParser().parseAndProcessGMetricsResults(gmetricsReport, context);
       }
     } else {
-      // No, run Gmetrics
+      // No, run GMetrics
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
         new GMetricsRunner().execute(sourceDir, project);
         File report = new File(project.getFileSystem().getSonarWorkingDirectory(), "gmetrics-report.xml");
-        GMetricsXMLParser gMetricsXMLParser = new GMetricsXMLParser();
-        gMetricsXMLParser.parseAndProcessGMetricsResults(report, context);
-
+        new GMetricsXMLParser().parseAndProcessGMetricsResults(report, context);
       }
     }
   }
 
   private void computeCodeNarcReport(Project project, SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    GroovyMessageDispatcher messageDispatcher = new GroovyMessageDispatcher(checkProfile, project, groovy, context, repo);
     if (StringUtils.isNotBlank(configuration.getString(GroovyPlugin.CODENARC_REPORT_PATH))) {
       // Yes
       File codeNarcReport = getReport(project, GroovyPlugin.CODENARC_REPORT_PATH);
       if (codeNarcReport != null) {
-        CodeNarcXMLParser codeNarcXMLParser = new CodeNarcXMLParser(messageDispatcher);
-        codeNarcXMLParser.parseAndLogCodeNarcResults(codeNarcReport);
+        new CodeNarcXMLParser(context, ruleFinder).parseAndLogCodeNarcResults(codeNarcReport);
       }
     } else {
       // No, run CodeNarc
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
-        new CodeNarcRunner().execute(sourceDir, checkProfile, project);
+        // TODO use container injection
+        new CodeNarcRunner(rulesProfile, profileExporter, project).execute(sourceDir);
         File report = new File(project.getFileSystem().getSonarWorkingDirectory(), "codenarc-report.xml");
-        CodeNarcXMLParser codeNarcXMLParser = new CodeNarcXMLParser(messageDispatcher);
-        codeNarcXMLParser.parseAndLogCodeNarcResults(report);
-
+        new CodeNarcXMLParser(context, ruleFinder).parseAndLogCodeNarcResults(report);
       }
     }
   }

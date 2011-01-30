@@ -18,20 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-package org.sonar.plugins.groovy.codenarc;
+package org.sonar.plugins.groovy;
 
-import org.junit.Test;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+public class GroovyConstants {
 
-public class CodeNarcCheckTemplateRepositoryTest {
-
-  @Test
-  public void test() {
-    CodeNarcCheckTemplateRepository repo = new CodeNarcCheckTemplateRepository(new Groovy());
-    assertThat(repo.getTemplates().size(), is(72));
-  }
+  public static final String REPOSITORY_KEY = Groovy.KEY;
 
 }

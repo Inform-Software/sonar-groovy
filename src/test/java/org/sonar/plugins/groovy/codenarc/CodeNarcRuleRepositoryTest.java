@@ -20,26 +20,18 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import org.apache.commons.io.IOUtils;
-import org.sonar.api.checks.templates.CheckTemplateRepository;
-import org.sonar.api.checks.templates.XmlCheckTemplateFactory;
-import org.sonar.plugins.groovy.foundation.Groovy;
+import org.junit.Test;
+import org.sonar.api.rules.XMLRuleParser;
 
-import java.io.InputStream;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
-public class CodeNarcCheckTemplateRepository extends CheckTemplateRepository {
+public class CodeNarcRuleRepositoryTest {
 
-  public CodeNarcCheckTemplateRepository(Groovy groovy) {
-    super(Groovy.KEY);
-    setLanguage(groovy);
-
-    InputStream input = getClass().getResourceAsStream("/org/sonar/plugins/groovy/rules.xml");
-    try {
-      setTemplates(new XmlCheckTemplateFactory().parse(input));
-
-    } finally {
-      IOUtils.closeQuietly(input);
-    }
+  @Test
+  public void test() {
+    CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
+    assertThat(repo.createRules().size(), is(72));
   }
 
 }

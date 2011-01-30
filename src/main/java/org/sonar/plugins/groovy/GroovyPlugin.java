@@ -20,40 +20,40 @@
 
 package org.sonar.plugins.groovy;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
-import org.sonar.api.checks.profiles.CheckProfile;
-import org.sonar.api.checks.profiles.CheckProfileXmlMarshaller;
 import org.sonar.plugins.groovy.cobertura.CoberturaMavenPluginHandler;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
-import org.sonar.plugins.groovy.codenarc.CodeNarcCheckTemplateRepository;
+import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
+import org.sonar.plugins.groovy.codenarc.CodeNarcRuleRepository;
+import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
 import org.sonar.plugins.groovy.surefire.SurefireSensor;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Properties({
-  @Property(
-    key = GroovyPlugin.GMETRICS_REPORT_PATH,
-    name = "Report file",
-    description = "Path (absolute or relative) to GMetrics XML report in case generation is not handle by the plugin.",
-    module = true,
-    project = true,
-    global = false
-  ),
-  @Property(
-    key = GroovyPlugin.CODENARC_REPORT_PATH,
-    name = "Report file",
-    description = "Path (absolute or relative) to CodeNarc XML report in case generation is not handle by the plugin.",
-    module = true,
-    project = true,
-    global = false
-) })
+    @Property(
+        key = GroovyPlugin.GMETRICS_REPORT_PATH,
+        name = "Report file",
+        description = "Path (absolute or relative) to GMetrics XML report in case generation is not handle by the plugin.",
+        module = true,
+        project = true,
+        global = false
+    ),
+    @Property(
+        key = GroovyPlugin.CODENARC_REPORT_PATH,
+        name = "Report file",
+        description = "Path (absolute or relative) to CodeNarc XML report in case generation is not handle by the plugin.",
+        module = true,
+        project = true,
+        global = false
+    ) })
 public class GroovyPlugin implements Plugin {
   public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
   public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
@@ -72,26 +72,23 @@ public class GroovyPlugin implements Plugin {
 
   public List getExtensions() {
     return Arrays.asList(
-      // CodeNarc
-      CodeNarcCheckTemplateRepository.class,
-      // Foundation
-      Groovy.class,
-      GroovyColorizerFormat.class,
-      GroovySourceImporter.class,
-      GroovyCpdMapping.class,
-      // Main sensor
-      GroovySensor.class,
+        // CodeNarc
+        CodeNarcRuleRepository.class,
+        CodeNarcProfileExporter.class,
+        SonarWayProfile.class,
+        // Foundation
+        Groovy.class,
+        GroovyColorizerFormat.class,
+        GroovySourceImporter.class,
+        GroovyCpdMapping.class,
+        // Main sensor
+        GroovySensor.class,
 
-      // Cobertura
-      CoberturaSensor.class,
-      CoberturaMavenPluginHandler.class,
-      // Surefire
-      SurefireSensor.class,
-
-      getCheckProfile());
+        // Cobertura
+        CoberturaSensor.class,
+        CoberturaMavenPluginHandler.class,
+        // Surefire
+        SurefireSensor.class);
   }
 
-  CheckProfile getCheckProfile() {
-    return CheckProfileXmlMarshaller.fromXmlInClasspath("/org/sonar/plugins/groovy/sonar-way.xml", getClass());
-  }
 }

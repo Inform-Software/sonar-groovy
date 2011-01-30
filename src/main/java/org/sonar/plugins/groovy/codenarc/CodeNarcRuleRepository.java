@@ -18,29 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-package org.sonar.plugins.groovy;
+package org.sonar.plugins.groovy.codenarc;
 
-import org.junit.Before;
-import org.junit.Test;
+import com.google.common.collect.Lists;
+import org.sonar.api.rules.Rule;
+import org.sonar.api.rules.RuleRepository;
+import org.sonar.api.rules.XMLRuleParser;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertThat;
+import java.util.List;
 
-/**
- * @author Evgeny Mandrikov
- */
-public class GroovyPluginTest {
+public class CodeNarcRuleRepository extends RuleRepository {
 
-  private GroovyPlugin plugin;
+  private XMLRuleParser xmlRuleParser;
 
-  @Before
-  public void setUp() {
-    plugin = new GroovyPlugin();
+  public CodeNarcRuleRepository(XMLRuleParser xmlRuleParser) {
+    super(Groovy.KEY, Groovy.KEY);
+    setName("CodeNarc"); // TODO repository name
+    this.xmlRuleParser = xmlRuleParser;
   }
 
-  @Test
-  public void testExtensions() {
-    assertThat(plugin.getExtensions().size(), greaterThan(0));
+  @Override
+  public List<Rule> createRules() {
+    List<Rule> rules = Lists.newArrayList();
+    rules.addAll(xmlRuleParser.parse(getClass().getResourceAsStream("/org/sonar/plugins/groovy/rules.xml")));
+    return rules;
   }
 
 }
