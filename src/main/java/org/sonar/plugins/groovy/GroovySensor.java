@@ -49,7 +49,9 @@ import org.sonar.squid.text.Source;
 import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GroovySensor implements Sensor {
 
@@ -76,19 +78,16 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeGMetricsReport(Project project, SensorContext context) {
-
     // Should we reuse existing report from GMetrics ?
-    String gmetricsReportPath = configuration.getString(GroovyPlugin.GMETRICS_REPORT_PATH);
-    if (StringUtils.isNotBlank(gmetricsReportPath)) {
+    if (StringUtils.isNotBlank(configuration.getString(GroovyPlugin.GMETRICS_REPORT_PATH))) {
       // Yes
-      File gmetricsReport = getReport(project, gmetricsReportPath);
+      File gmetricsReport = getReport(project, GroovyPlugin.GMETRICS_REPORT_PATH);
       if (gmetricsReport != null) {
         GMetricsXMLParser xmlParser = new GMetricsXMLParser();
         xmlParser.parseAndProcessGMetricsResults(gmetricsReport, context);
       }
-    }
-    // No, run Gmetrics
-    else {
+    } else {
+      // No, run Gmetrics
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
         new GMetricsRunner().execute(sourceDir, project);
@@ -101,20 +100,17 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeCodeNarcReport(Project project, SensorContext context) {
-
     // Should we reuse existing report from CodeNarc ?
-    String codeNarcReportPath = configuration.getString(GroovyPlugin.CODENARC_REPORT_PATH);
     GroovyMessageDispatcher messageDispatcher = new GroovyMessageDispatcher(checkProfile, project, groovy, context, repo);
-    if (StringUtils.isNotBlank(codeNarcReportPath)) {
+    if (StringUtils.isNotBlank(configuration.getString(GroovyPlugin.CODENARC_REPORT_PATH))) {
       // Yes
-      File codeNarcReport = getReport(project, codeNarcReportPath);
+      File codeNarcReport = getReport(project, GroovyPlugin.CODENARC_REPORT_PATH);
       if (codeNarcReport != null) {
         CodeNarcXMLParser codeNarcXMLParser = new CodeNarcXMLParser(messageDispatcher);
         codeNarcXMLParser.parseAndLogCodeNarcResults(codeNarcReport);
       }
-    }
-    // No, run CodeNarc
-    else {
+    } else {
+      // No, run CodeNarc
       List<File> listDirs = project.getFileSystem().getSourceDirs();
       for (File sourceDir : listDirs) {
         new CodeNarcRunner().execute(sourceDir, checkProfile, project);
@@ -126,17 +122,17 @@ public class GroovySensor implements Sensor {
     }
   }
 
-  protected File getReport(Project project, String reportPath) {
-    File report = getReportFromProperty(project, reportPath);
+  protected File getReport(Project project, String reportProperty) {
+    File report = getReportFromProperty(project, reportProperty);
     if (report == null || !report.exists() || !report.isFile()) {
-      GroovyUtils.LOG.warn("Groovy report : " + reportPath + " not found at {}", report);
+      GroovyUtils.LOG.warn("Groovy report " + reportProperty + " not found at {}", report);
       report = null;
     }
     return report;
   }
 
-  private File getReportFromProperty(Project project, String reportPath) {
-    String path = (String) project.getProperty(reportPath);
+  private File getReportFromProperty(Project project, String reportProperty) {
+    String path = (String) project.getProperty(reportProperty);
     if (path != null) {
       return project.getFileSystem().resolvePath(path);
     }
@@ -158,15 +154,13 @@ public class GroovySensor implements Sensor {
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.FILES, 1.0);
         sensorContext.saveMeasure(resource, CoreMetrics.CLASSES, 1.0);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         GroovyUtils.LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
       } finally {
         IOUtils.closeQuietly(reader);
       }
-
     }
-    for(Resource pack : packageList) {
+    for (Resource pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
     }
   }
