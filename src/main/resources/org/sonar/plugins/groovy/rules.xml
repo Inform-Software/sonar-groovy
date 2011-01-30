@@ -1,6 +1,8 @@
 <rules>
 
   <!-- Basic Rules -->
+
+  <!-- was in 0.9 , but not in 0.12
   <rule key="org.codenarc.rule.basic.BooleanInstantiationRule" priority="MAJOR">
     <name><![CDATA[Boolean Instantiation]]></name>
     <configKey><![CDATA[BooleanInstantiation]]></configKey>
@@ -19,7 +21,7 @@
       <em>Boolean.valueOf(false)</em>
     </description>
   </rule>
-
+  -->
 
   <rule key="org.codenarc.rule.basic.EmptyElseBlockRule" priority="MINOR">
     <name><![CDATA[Empty Else Block]]></name>
@@ -124,6 +126,7 @@
     </description>
   </rule>
 
+  <!-- was in 0.9 , but not in 0.12
   <rule key="org.codenarc.rule.basic.StringInstantiationRule" priority="MINOR">
     <name><![CDATA[String Instantiation]]></name>
     <configKey><![CDATA[StringInstantiation]]></configKey>
@@ -132,6 +135,7 @@
       String("..")) directly.
     </description>
   </rule>
+  -->
 
   <rule key="org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule" priority="MAJOR">
     <name><![CDATA[Throw Exception From Finally Block]]></name>
@@ -536,6 +540,7 @@
     </description>
   </rule>
 
+  <!-- was in 0.9 , but not in 0.12
   <rule key="org.codenarc.rule.basic.UnnecessaryTernaryExpressionRule" priority="INFO">
     <name><![CDATA[Unnecessary Ternary Expression]]></name>
     <configKey><![CDATA[UnnecessaryTernaryExpression]]></configKey>
@@ -543,7 +548,7 @@
     <description>
       <![CDATA[Checks for ternary expressions where the conditional expression always evaluates to a boolean and the true and false expressions are merely returning true and false constants. Also checks for ternary expressions where both expressions are the same constant or variable.]]></description>
   </rule>
-
+  -->
 
   <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule" priority="MINOR">
     <name><![CDATA[Cloneable Without Clone]]></name>

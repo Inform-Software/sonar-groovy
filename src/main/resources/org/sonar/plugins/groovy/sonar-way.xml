@@ -1,11 +1,13 @@
 <profile>
   <name>Sonar Groovy Way</name>
   <language>grvy</language>
+  <!-- was in 0.9, but not in 0.12
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.basic.BooleanInstantiationRule</template>
     <priority>MAJOR</priority>
   </check>
+  -->
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.exceptions.CatchErrorRule</template>
@@ -83,11 +85,13 @@
     <template>org.codenarc.rule.basic.ReturnFromFinallyBlockRule</template>
     <priority>MAJOR</priority>
   </check>
+  <!-- was in 0.9, but not in 0.12
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.basic.StringInstantiationRule</template>
     <priority>MINOR</priority>
   </check>
+  -->
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.concurrency.SynchronizedMethodRule</template>
@@ -148,11 +152,13 @@
     <template>org.codenarc.rule.imports.UnnecessaryGroovyImportRule</template>
     <priority>MAJOR</priority>
   </check>
+  <!-- was in 0.9, but not in 0.12
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.basic.UnnecessaryTernaryExpressionRule</template>
     <priority>MAJOR</priority>
   </check>
+  -->
   <check>
     <repository>grvy</repository>
     <template>org.codenarc.rule.imports.UnusedImportRule</template>

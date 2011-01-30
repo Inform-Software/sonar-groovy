@@ -88,7 +88,7 @@
     <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
-      <version>0.9</version>
+      <version>0.12</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
@@ -99,20 +99,9 @@
           <artifactId>junit</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.codehaus.groovy.maven.runtime</groupId>
-          <artifactId>gmaven-runtime-1.5</artifactId>
+          <groupId>ant</groupId>
+          <artifactId>ant</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.codehaus.groovy.maven.runtime</groupId>
-          <artifactId>gmaven-runtime-1.6</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-      <version>1.6.0</version>
-      <exclusions>
         <exclusion>
           <groupId>org.apache.ant</groupId>
           <artifactId>ant</artifactId>

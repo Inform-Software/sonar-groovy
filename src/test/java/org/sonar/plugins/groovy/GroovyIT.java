@@ -56,7 +56,7 @@ public class GroovyIT {
     assertThat(getProjectMeasure("files").getIntValue(), is(198));
     assertThat(getProjectMeasure("classes").getIntValue(), is(135));
     assertThat(getProjectMeasure("packages").getIntValue(), is(22));
-    assertThat(getProjectMeasure("functions").getIntValue(), is(365));
+    assertThat(getProjectMeasure("functions").getIntValue(), is(392)); // 365 with codenarc 0.9
     assertThat(getProjectMeasure("comment_lines_density").getValue(), is(40.5));
     assertThat(getProjectMeasure("comment_lines").getIntValue(), is(2856));
 
@@ -65,20 +65,23 @@ public class GroovyIT {
     assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.6));
     assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
 
-    assertThat(getProjectMeasure("complexity").getIntValue(), is(816));
+    assertThat(getProjectMeasure("complexity").getIntValue(), is(845)); // 816 with codenarc 0.9
     assertThat(getProjectMeasure("function_complexity").getValue(), is(2.2));
-    assertThat(getProjectMeasure("class_complexity").getValue(), is(6.0));
+    assertThat(getProjectMeasure("class_complexity").getValue(), is(6.3)); // 6.0 with codenarc 0.9
     assertThat(getProjectMeasure("violations").getIntValue(), is(12));
     assertThat(getProjectMeasure("violations_density").getValue(), is(99.3));
-    assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
-    assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
+    assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=135;5=33;10=19;20=8;30=1;60=0;90=0"));
+    assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=203;2=134;4=38;6=11;8=1;10=4;12=1"));
+    // with codenarc 0.9
+    // assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
+    // assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
 
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat("coverage", getProjectMeasure("coverage").getValue(), anyOf(
-      is(89.8),
-      is(90.0),
-      is(89.9) // java 1.6.0_20
-      ));
+        is(89.8),
+        is(90.0),
+        is(89.9) // java 1.6.0_20
+        ));
     assertThat(getProjectMeasure("line_coverage").getValue(), anyOf(is(98.9), is(98.8)));
     assertThat(getProjectMeasure("lines_to_cover").getValue(), anyOf(is(1802.0), is(1806.0), is(1805.0)));
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
