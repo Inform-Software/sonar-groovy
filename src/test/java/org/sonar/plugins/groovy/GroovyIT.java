@@ -22,14 +22,19 @@ package org.sonar.plugins.groovy;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.sonar.updatecenter.common.Version;
 import org.sonar.wsclient.Sonar;
 import org.sonar.wsclient.services.Measure;
 import org.sonar.wsclient.services.ResourceQuery;
+import org.sonar.wsclient.services.ServerQuery;
 
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assume.assumeThat;
 
 public class GroovyIT {
   private static Sonar sonar;
@@ -37,9 +42,13 @@ public class GroovyIT {
   private static final String PACKAGE_REPORT = "org.codenarc:CodeNarc:org.codenarc.report";
   private static final String FILE_REPORT_WRITER = "org.codenarc:CodeNarc:org.codenarc.report.HtmlReportWriter";
 
+  private static Version sonarVersion;
+
+
   @BeforeClass
   public static void buildServer() {
     sonar = Sonar.create("http://localhost:9000");
+    sonarVersion = Version.create(sonar.find(new ServerQuery()).getVersion());
   }
 
   @Test
@@ -47,6 +56,7 @@ public class GroovyIT {
     assertThat(sonar.find(new ResourceQuery(PROJECT_CODENARC)).getName(), is("CodeNarc"));
     assertThat(sonar.find(new ResourceQuery(PROJECT_CODENARC)).getVersion(), is("0.9"));
     assertThat(sonar.find(new ResourceQuery(PACKAGE_REPORT)).getName(), is("org.codenarc.report"));
+
   }
 
   @Test
@@ -76,12 +86,18 @@ public class GroovyIT {
     // assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
     // assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
 
+
+  }
+
+  @Test
+  public void testProjectCoverageBeforeSonar27() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat("coverage", getProjectMeasure("coverage").getValue(), anyOf(
         is(89.8),
         is(90.0),
         is(89.9) // java 1.6.0_20
-        ));
+    ));
     assertThat(getProjectMeasure("line_coverage").getValue(), anyOf(is(98.9), is(98.8)));
     assertThat(getProjectMeasure("lines_to_cover").getValue(), anyOf(is(1802.0), is(1806.0), is(1805.0)));
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
@@ -89,6 +105,72 @@ public class GroovyIT {
     assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
     assertThat(getProjectMeasure("test_success_density").getValue(), anyOf(is(99.8), is(99.9)));
   }
+
+  @Test
+  public void testPackageCoverageBeforeSonar27() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getPackageMeasure("coverage").getValue(), anyOf(is(88.8), is(89.1)));
+    assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), anyOf(is(304.0), is(303.0), is(305.0)));
+    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
+
+    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
+    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
+  }
+
+  @Test
+  public void testFileCoverageBeforeSonar27() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getFileMeasure("coverage").getValue(), anyOf(is(87.1), is(87.7)));
+    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), anyOf(is(148.0), is(149.0)));
+    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
+
+    assertNull(getFileMeasure("tests"));
+    assertNull(getFileMeasure("test_success_density"));
+  }
+
+  @Test
+  public void testProjectCoverageAfterSonar27() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat("coverage", getProjectMeasure("coverage").getValue(), is(89.5));
+    assertThat(getProjectMeasure("line_coverage").getValue(), is(98.8));
+    assertThat(getProjectMeasure("lines_to_cover").getValue(), is(1668.0));
+    assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
+
+    assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
+    assertThat(getProjectMeasure("test_success_density").getValue(), anyOf(is(99.8), is(99.9)));
+  }
+
+  @Test
+  public void testPackageCoverageAfterSonar27() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getPackageMeasure("coverage").getValue(), is(88.3));
+    assertThat(getPackageMeasure("line_coverage").getValue(), is(99.6));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), is(278.0));
+    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
+
+    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
+    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
+  }
+
+  @Test
+  public void testFileCoverageAfterSonar27() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getFileMeasure("coverage").getValue(), is(86.5));
+    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), is(135.0));
+    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
+
+    assertNull(getFileMeasure("tests"));
+    assertNull(getFileMeasure("test_success_density"));
+  }
+
 
   @Test
   public void packagesMetrics() {
@@ -113,15 +195,6 @@ public class GroovyIT {
     assertThat(getPackageMeasure("violations_density").getValue(), is(97.8));
     assertThat(getPackageMeasure("class_complexity_distribution").getData(), is("0=2;5=0;10=2;20=1;30=1;60=0;90=0"));
     assertThat(getPackageMeasure("function_complexity_distribution").getData(), is("1=31;2=20;4=5;6=0;8=0;10=0;12=0"));
-
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getPackageMeasure("coverage").getValue(), anyOf(is(88.8), is(89.1)));
-    assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
-    assertThat(getPackageMeasure("lines_to_cover").getValue(), anyOf(is(304.0), is(303.0), is(305.0)));
-    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
-
-    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
-    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
   }
 
   @Test
@@ -145,15 +218,6 @@ public class GroovyIT {
     assertThat(getFileMeasure("violations_density").getValue(), is(95.0));
     assertNull(getFileMeasure("class_complexity_distribution"));
     assertNull(getFileMeasure("function_complexity_distribution"));
-
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getFileMeasure("coverage").getValue(), anyOf(is(87.1), is(87.7)));
-    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
-    assertThat(getFileMeasure("lines_to_cover").getValue(), anyOf(is(148.0), is(149.0)));
-    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
-
-    assertNull(getFileMeasure("tests"));
-    assertNull(getFileMeasure("test_success_density"));
   }
 
   private Measure getFileMeasure(String metricKey) {
