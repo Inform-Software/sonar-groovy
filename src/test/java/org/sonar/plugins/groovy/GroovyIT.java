@@ -139,7 +139,7 @@ public class GroovyIT {
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat("coverage", getProjectMeasure("coverage").getValue(), closeTo(89.5, 0.2));
     assertThat(getProjectMeasure("line_coverage").getValue(), closeTo(98.8, 0.2));
-    assertThat(getProjectMeasure("lines_to_cover").getValue(), is(1668.0));
+    assertThat(getProjectMeasure("lines_to_cover").getValue(), closeTo(1668.0, 5.0));
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
 
     assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
