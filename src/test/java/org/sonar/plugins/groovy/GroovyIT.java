@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assume.assumeThat;
 
 public class GroovyIT {
@@ -136,7 +137,7 @@ public class GroovyIT {
   public void testProjectCoverageAfterSonar27() {
     assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat("coverage", getProjectMeasure("coverage").getValue(), is(89.5));
+    assertThat("coverage", getProjectMeasure("coverage").getValue(), closeTo(89.5, 0.1));
     assertThat(getProjectMeasure("line_coverage").getValue(), is(98.8));
     assertThat(getProjectMeasure("lines_to_cover").getValue(), is(1668.0));
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
