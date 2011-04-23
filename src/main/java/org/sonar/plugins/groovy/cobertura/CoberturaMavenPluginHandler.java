@@ -29,7 +29,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
 
 /**
- * TODO copied from sonar-cobertura-plugin
+ * TODO copied from sonar-cobertura-plugin with changes
  */
 public class CoberturaMavenPluginHandler implements MavenPluginHandler {
 
@@ -42,7 +42,7 @@ public class CoberturaMavenPluginHandler implements MavenPluginHandler {
   }
 
   public String getVersion() {
-    return "2.4";
+    return "2.5";
   }
 
   public boolean isFixedVersion() {
