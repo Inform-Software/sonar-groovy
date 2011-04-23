@@ -20,12 +20,6 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
-
-import java.io.File;
-
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -36,11 +30,17 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import org.sonar.api.batch.SensorContext;
+
+import java.io.File;
+
 public class CodeNarcXMLParserTest {
 
   @Test
   public void testCodeNarcReportParser() {
-    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/CodeNarcXmlSampleReport.xml"));
+    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/codenarc/sample.xml"));
 
     CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
     parser = spy(parser);
@@ -53,6 +53,24 @@ public class CodeNarcXMLParserTest {
     verify(parser).log(eq(context), eq("EmptyWhileStatement"), eq("org/codenarc/sample/service/NewService"), eq(18), eq(""));
     verify(parser, times(2)).log(eq(context), anyString(), eq("org/codenarc/sample/service/NewService"), anyInt(), anyString());
     verify(parser, times(16)).log(eq(context), anyString(), anyString(), anyInt(), anyString());
+  }
+
+  /**
+   * See http://jira.codehaus.org/browse/SONARPLUGINS-620
+   */
+  @Test
+  public void shouldNotFailWhenLineNumberNotSpecified() {
+    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/codenarc/line-number-not-specified.xml"));
+
+    CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
+    parser = spy(parser);
+    doNothing().when(parser).log((SensorContext) anyObject(), anyString(), anyString(), anyInt(), anyString());
+
+    SensorContext context = mock(SensorContext.class);
+    parser.parseAndLogCodeNarcResults(fileToParse, context);
+
+    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example"), eq(0),
+        eq("The cyclomatic complexity for class [org.example.Example] is [27.0]"));
   }
 
 }

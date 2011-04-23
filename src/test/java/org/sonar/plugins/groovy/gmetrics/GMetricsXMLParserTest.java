@@ -20,6 +20,12 @@
 
 package org.sonar.plugins.groovy.gmetrics;
 
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
 import org.sonar.api.batch.SensorContext;
@@ -31,12 +37,6 @@ import org.sonar.api.test.IsMeasure;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Ignore
 public class GMetricsXMLParserTest {
@@ -52,7 +52,7 @@ public class GMetricsXMLParserTest {
     l.add(new File(""));
     when(fileSystem.getSourceDirs()).thenReturn(l);
 
-    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/GMetricsSampleReport.xml"));
+    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/gmetrics/sample.xml"));
     new GMetricsXMLParser().parseAndProcessGMetricsResults(fileToParse, context);
 
     org.sonar.api.resources.File file = new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer");

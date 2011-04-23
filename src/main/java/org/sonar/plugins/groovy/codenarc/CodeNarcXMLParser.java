@@ -65,7 +65,10 @@ public class CodeNarcXMLParser implements BatchExtension {
               String lineNumber = violation.getAttrValue("lineNumber");
               String checkKey = violation.getAttrValue("ruleName");
 
-              log(context, checkKey, fileName, Integer.parseInt(lineNumber), "");
+              SMInputCursor messageCursor = violation.childElementCursor("Message");
+              String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
+
+              log(context, checkKey, fileName, parseLineNumber(lineNumber), message);
             }
           }
         }
@@ -74,8 +77,12 @@ public class CodeNarcXMLParser implements BatchExtension {
     try {
       parser.parse(xmlFile);
     } catch (XMLStreamException e) {
-      GroovyUtils.LOG.error("Error parsing file : " + xmlFile);
+      GroovyUtils.LOG.error("Error parsing file : " + xmlFile, e);
     }
+  }
+
+  private Integer parseLineNumber(String lineNumber) {
+    return StringUtils.isBlank(lineNumber) ? 0 : Integer.parseInt(lineNumber);
   }
 
   void log(SensorContext context, String checkKey, String filename, Integer line, String message) {
