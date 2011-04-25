@@ -23,6 +23,7 @@ package org.sonar.plugins.groovy.codenarc;
 import org.sonar.api.profiles.ProfileExporter;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.rules.ActiveRuleParam;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.GroovyConstants;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -45,9 +46,21 @@ public class CodeNarcProfileExporter extends ProfileExporter {
           "          xsi:noNamespaceSchemaLocation=\"http://codenarc.org/ruleset-schema.xsd\">\n");
       for (ActiveRule activeRule : profile.getActiveRules()) {
         if (GroovyConstants.REPOSITORY_KEY.equals(activeRule.getRepositoryKey())) {
-          writer.append("<rule class=\"");
-          writer.append(activeRule.getRuleKey()); // TODO configKey?
-          writer.append("\"/>\n");
+          writer.append("<rule class=\"")
+              .append(activeRule.getRuleKey()); // TODO configKey?
+          if (activeRule.getActiveRuleParams().isEmpty()) {
+            writer.append("\"/>\n");
+          } else {
+            writer.append("\">\n");
+            for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
+              writer.append("<property name=\"")
+                  .append(activeRuleParam.getKey())
+                  .append("\" value=\"")
+                  .append(activeRuleParam.getValue())
+                  .append("\"/>\n");
+            }
+            writer.append("</rule>\n");
+          }
         }
       }
       writer.append("</ruleset>");

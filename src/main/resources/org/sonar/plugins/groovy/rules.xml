@@ -584,13 +584,15 @@
   <rule key="org.codenarc.rule.dry.DuplicateNumberLiteralRule" priority="MINOR">
     <name><![CDATA[Duplicate Number Literal]]></name>
     <configKey><![CDATA[DuplicateNumberLiteral]]></configKey>
-    <description><![CDATA[Code containing number String literals can usually be improved by declaring the number as a constant field.  The <em>ignoreNumbers</em> property (${rule.ignoreNumbers}) can optionally specify a comma-separated list of numbers to ignore.]]></description>
+    <description><![CDATA[Code containing number String literals can usually be improved by declaring the number as a constant field.  The <em>ignoreNumbers</em> property can optionally specify a comma-separated list of numbers to ignore.]]></description>
+    <param key="ignoreNumbers"/>
   </rule>
 
   <rule key="org.codenarc.rule.dry.DuplicateStringLiteralRule" priority="MINOR">
     <name><![CDATA[Duplicate String Literal]]></name>
     <configKey><![CDATA[DuplicateStringLiteral]]></configKey>
-    <description><![CDATA[Code containing duplicate String literals can usually be improved by declaring the String as a constant field. The <em>ignoreStrings</em> property (${rule.ignoreStrings}) can optionally specify a comma-separated list of Strings to ignore.]]></description>
+    <description><![CDATA[Code containing duplicate String literals can usually be improved by declaring the String as a constant field. The <em>ignoreStrings</em> property can optionally specify a comma-separated list of Strings to ignore.]]></description>
+    <param key="ignoreStrings"/>
   </rule>
 
   <!-- exceptions rules -->
@@ -720,7 +722,8 @@
   <rule key="org.codenarc.rule.generic.StatelessClassRule" priority="MINOR">
     <name><![CDATA[Stateless Class]]></name>
     <configKey><![CDATA[StatelessClass]]></configKey>
-    <description><![CDATA[Checks for fields on classes that should remain "stateless" and reentrant. The <em>ignoreFieldNames</em> property (${rule.ignoreFieldNames}) specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Checks for fields on classes that should remain "stateless" and reentrant. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreFieldNames"/>
   </rule>
 
   <!-- grails rules -->
@@ -746,7 +749,9 @@
   <rule key="org.codenarc.rule.grails.GrailsStatelessServiceRule" priority="MINOR">
     <name><![CDATA[Grails Stateless Service]]></name>
     <configKey><![CDATA[GrailsStatelessService]]></configKey>
-    <description><![CDATA[Checks for fields on Grails service classes. Grails service classes are singletons, by default, and so they should be reentrant and typically stateless. The <em>ignoreFieldNames</em> property (${rule.ignoreFieldNames}) specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property (${rule.ignoreFieldTypes}) specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Checks for fields on Grails service classes. Grails service classes are singletons, by default, and so they should be reentrant and typically stateless. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreFieldNames"/>
+    <param key="ignoreFieldTypes"/>
   </rule>
 
   <!-- imports rules -->
@@ -964,7 +969,8 @@
   <rule key="org.codenarc.rule.naming.FieldNameRule" priority="MINOR">
     <name><![CDATA[Field Name]]></name>
     <configKey><![CDATA[FieldName]]></configKey>
-    <description><![CDATA[Verifies that the name of each field matches a regular expression. By default it checks that non-'final' field names start with a lowercase letter and contains only letters or numbers, and 'final' field names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate field names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' field names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' field names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' field names.  The <em>ignoreFieldNames</em> property (${rule.ignoreFieldNames})can specify field names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Verifies that the name of each field matches a regular expression. By default it checks that non-'final' field names start with a lowercase letter and contains only letters or numbers, and 'final' field names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate field names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' field names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' field names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' field names.  The <em>ignoreFieldNames</em> propertycan specify field names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreFieldNames"/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.InterfaceNameRule" priority="MINOR">
@@ -976,7 +982,8 @@
   <rule key="org.codenarc.rule.naming.MethodNameRule" priority="MINOR">
     <name><![CDATA[Method Name]]></name>
     <configKey><![CDATA[MethodName]]></configKey>
-    <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that the method name starts with a lowercase letter. The <em>regex</em> property specifies the regular expression to check the method name against.  The <em>ignoreMethodNames</em> property (${rule.ignoreMethodNames}) can specify method names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that the method name starts with a lowercase letter. The <em>regex</em> property specifies the regular expression to check the method name against.  The <em>ignoreMethodNames</em> property can specify method names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreMethodNames"/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.ObjectOverrideMisspelledMethodNameRule" priority="MINOR">
@@ -994,19 +1001,22 @@
   <rule key="org.codenarc.rule.naming.ParameterNameRule" priority="MINOR">
     <name><![CDATA[Parameter Name]]></name>
     <configKey><![CDATA[ParameterName]]></configKey>
-    <description><![CDATA[Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. The <em>regex</em> property specifies the default regular expression used to validate the parameter name.  The <em>ignoreParameterNames</em> property (${rule.ignoreParameterNames}) can specify parameter names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. The <em>regex</em> property specifies the default regular expression used to validate the parameter name.  The <em>ignoreParameterNames</em> property can specify parameter names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreParameterNames"/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.PropertyNameRule" priority="MINOR">
     <name><![CDATA[Property Name]]></name>
     <configKey><![CDATA[PropertyName]]></configKey>
-    <description><![CDATA[Verifies that the name of each property matches a regular expression. By default it checks that property names other than 'static final' start with a lowercase letter and contains only letters or numbers, and 'static final' property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate property names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' property names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' property names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' property names.  The <em>ignorePropertyNames</em> property (${rule.ignorePropertyNames}) can specify property names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Verifies that the name of each property matches a regular expression. By default it checks that property names other than 'static final' start with a lowercase letter and contains only letters or numbers, and 'static final' property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate property names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' property names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' property names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' property names.  The <em>ignorePropertyNames</em> property can specify property names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignorePropertyNames"/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.VariableNameRule" priority="MINOR">
     <name><![CDATA[Variable Name]]></name>
     <configKey><![CDATA[VariableName]]></configKey>
-    <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that non-'final' variable names start with a lowercase letter and contains only letters or numbers, and 'final' variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate a non-'final' variable name. The <em>finalRegex</em> property specifies the regular expression used to validate 'final' variable names. The <em>ignoreVariableNames</em> property (${rule.ignoreVariableNames}) can specify variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that non-'final' variable names start with a lowercase letter and contains only letters or numbers, and 'final' variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate a non-'final' variable name. The <em>finalRegex</em> property specifies the regular expression used to validate 'final' variable names. The <em>ignoreVariableNames</em> property can specify variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreVariableNames"/>
   </rule>
 
   <!-- size rules -->
@@ -1014,37 +1024,45 @@
   <rule key="org.codenarc.rule.size.AbcComplexityRule" priority="MINOR">
     <name><![CDATA[Abc Complexity]]></name>
     <configKey><![CDATA[AbcComplexity]]></configKey>
-    <description><![CDATA[Checks the ABC metric of size/complexity for methods/classes.A method (or "closure field") with an ABC complexity value (score) greater than the <em>maxMethodComplexity</em> property (${rule.maxMethodComplexity}) causes a violation. Likewise, a class that has an (average method) ABC complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property (${rule.maxClassAverageMethodComplexity}) causes a violation.]]></description>
+    <description><![CDATA[Checks the ABC metric of size/complexity for methods/classes.A method (or "closure field") with an ABC complexity value (score) greater than the <em>maxMethodComplexity</em> property causes a violation. Likewise, a class that has an (average method) ABC complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property causes a violation.]]></description>
+    <param key="maxMethodComplexity"/>
+    <param key="maxClassAverageMethodComplexity"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.ClassSizeRule" priority="MAJOR">
     <name><![CDATA[Class Size]]></name>
     <configKey><![CDATA[ClassSize]]></configKey>
-    <description><![CDATA[Checks if the size of a class exceeds the number of lines specified by the <em>maxLines</em> property (${rule.maxLines}).]]></description>
+    <description><![CDATA[Checks if the size of a class exceeds the number of lines specified by the <em>maxLines</em> property.]]></description>
+    <param key="maxLines"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.CyclomaticComplexityRule" priority="MINOR">
     <name><![CDATA[Cyclomatic Complexity]]></name>
     <configKey><![CDATA[CyclomaticComplexity]]></configKey>
-    <description><![CDATA[Checks the cyclomatic complexity for methods/classes.A method (or "closure field") with a cyclomatic complexity value greater than the <em>maxMethodComplexity</em> property (${rule.maxMethodComplexity}) causes a violation. Likewise, a class that has an (average method) cyclomatic complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property (${rule.maxClassAverageMethodComplexity}) causes a violation.]]></description>
+    <description><![CDATA[Checks the cyclomatic complexity for methods/classes.A method (or "closure field") with a cyclomatic complexity value greater than the <em>maxMethodComplexity</em> property causes a violation. Likewise, a class that has an (average method) cyclomatic complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property causes a violation.]]></description>
+    <param key="maxMethodComplexity"/>
+    <param key="maxClassAverageMethodComplexity"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.MethodCountRule" priority="MINOR">
     <name><![CDATA[Method Count]]></name>
     <configKey><![CDATA[MethodCount]]></configKey>
-    <description><![CDATA[A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to have more fine grained objects.The <em>maxMethods</em> property (${rule.maxMethods}) specifies the threshold.]]></description>
+    <description><![CDATA[A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to have more fine grained objects.The <em>maxMethods</em> property specifies the threshold.]]></description>
+    <param key="maxMethods"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.MethodSizeRule" priority="MAJOR">
     <name><![CDATA[Method Size]]></name>
     <configKey><![CDATA[MethodSize]]></configKey>
-    <description><![CDATA[Checks if the size of a method exceeds the number of lines specified by the <em>maxLines</em> property (${rule.maxLines}).]]></description>
+    <description><![CDATA[Checks if the size of a method exceeds the number of lines specified by the <em>maxLines</em> property.]]></description>
+    <param key="maxLines"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.NestedBlockDepthRule" priority="MINOR">
     <name><![CDATA[Nested Block Depth]]></name>
     <configKey><![CDATA[NestedBlockDepth]]></configKey>
-    <description><![CDATA[Checks for blocks or closures nested more than <em>maxNestedBlockDepth</em> (${rule.maxNestedBlockDepth}) levels deep.]]></description>
+    <description><![CDATA[Checks for blocks or closures nested more than <em>maxNestedBlockDepth</em> levels deep.]]></description>
+    <param key="maxNestedBlockDepth"/>
   </rule>
 
   <!-- unnecessary rules -->
