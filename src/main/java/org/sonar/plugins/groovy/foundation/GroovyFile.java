@@ -20,15 +20,15 @@
 
 package org.sonar.plugins.groovy.foundation;
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sonar.api.resources.DefaultProjectFileSystem;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.WildcardPattern;
+
+import java.io.File;
+import java.util.List;
 
 public class GroovyFile extends Resource<GroovyPackage> {
 
@@ -48,7 +48,7 @@ public class GroovyFile extends Resource<GroovyPackage> {
   public GroovyFile(String key, boolean unitTest) {
     super();
     if (key != null && key.indexOf('$') >= 0) {
-      throw new IllegalArgumentException("Flex inner classes are not supported : " + key);
+      throw new IllegalArgumentException("Groovy inner classes are not supported : " + key);
     }
     String realKey = StringUtils.trim(key);
     this.unitTest = unitTest;
@@ -70,7 +70,7 @@ public class GroovyFile extends Resource<GroovyPackage> {
   public GroovyFile(String packageKey, String className, boolean unitTest) {
     super();
     if (className != null && className.indexOf('$') >= 0) {
-      throw new IllegalArgumentException("Java inner classes are not supported : " + className);
+      throw new IllegalArgumentException("Groovy inner classes are not supported : " + className);
     }
     this.filename = className.trim();
     String key;
