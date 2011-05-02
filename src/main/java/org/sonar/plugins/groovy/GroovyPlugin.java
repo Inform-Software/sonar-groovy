@@ -75,6 +75,7 @@ public class GroovyPlugin implements Plugin {
         // CodeNarc
         CodeNarcRuleRepository.class,
         CodeNarcProfileExporter.class,
+        CodeNarcProfileImporter.class,
         SonarWayProfile.class,
         CodeNarcExecutor.class,
         CodeNarcXMLParser.class,

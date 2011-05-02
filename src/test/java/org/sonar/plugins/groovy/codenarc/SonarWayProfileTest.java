@@ -20,47 +20,38 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.RuleQuery;
-import org.sonar.api.utils.ValidationMessages;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.sonar.api.profiles.ProfileDefinition;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.rules.Rule;
+import org.sonar.api.rules.RuleFinder;
+import org.sonar.api.utils.ValidationMessages;
+
 public class SonarWayProfileTest {
-
-  private SonarWayProfile profileDefinition;
-  private ValidationMessages messages;
-
-  @Before
-  public void setUp() {
-    messages = ValidationMessages.create();
-    RuleFinder ruleFinder = createRuleFinder();
-    profileDefinition = new SonarWayProfile(ruleFinder);
-  }
-
   @Test
-  public void test() {
+  public void shouldCreateProfile() {
+    ProfileDefinition profileDefinition = new SonarWayProfile(new XMLProfileParser(newRuleFinder()));
+    ValidationMessages messages = ValidationMessages.create();
     RulesProfile profile = profileDefinition.createProfile(messages);
 
     assertThat(profile.getActiveRules().size(), is(32));
+    assertThat(messages.hasErrors(), is(false));
   }
 
-  private RuleFinder createRuleFinder() {
+  private RuleFinder newRuleFinder() {
     RuleFinder ruleFinder = mock(RuleFinder.class);
-    when(ruleFinder.find((RuleQuery) anyObject())).thenAnswer(new Answer<Rule>() {
-      public Rule answer(InvocationOnMock invocation) throws Throwable {
-        RuleQuery query = (RuleQuery) invocation.getArguments()[0];
-        return Rule.create(query.getRepositoryKey(), query.getConfigKey(), "Rule name - " + query.getConfigKey());
+    when(ruleFinder.findByKey(anyString(), anyString())).thenAnswer(new Answer<Rule>() {
+      public Rule answer(InvocationOnMock iom) throws Throwable {
+        return Rule.create((String) iom.getArguments()[0], (String) iom.getArguments()[1], (String) iom.getArguments()[1]);
       }
     });
     return ruleFinder;

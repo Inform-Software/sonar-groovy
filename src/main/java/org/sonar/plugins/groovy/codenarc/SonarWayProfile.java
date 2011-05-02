@@ -22,74 +22,18 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.RulePriority;
-import org.sonar.api.rules.RuleQuery;
+import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.groovy.foundation.Groovy;
 
 public class SonarWayProfile extends ProfileDefinition {
+  private XMLProfileParser xmlProfileParser;
 
-  private RuleFinder ruleFinder;
-
-  public SonarWayProfile(RuleFinder ruleFinder) {
-    this.ruleFinder = ruleFinder;
+  public SonarWayProfile(XMLProfileParser xmlProfileParser) {
+    this.xmlProfileParser = xmlProfileParser;
   }
 
   @Override
-  public RulesProfile createProfile(ValidationMessages validation) {
-    RulesProfile profile = RulesProfile.create();
-    profile.setLanguage(Groovy.KEY);
-    profile.setName("Sonar Groovy way");
-
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.CatchErrorRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.CatchExceptionRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.CatchNullPointerExceptionRule", RulePriority.CRITICAL);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.CatchRuntimeExceptionRule", RulePriority.CRITICAL);
-    activateRule(validation, profile, "org.codenarc.rule.basic.CloneableWithoutCloneRule", RulePriority.MINOR);
-    activateRule(validation, profile, "org.codenarc.rule.braces.ElseBlockBracesRule", RulePriority.MINOR);
-    activateRule(validation, profile, "org.codenarc.rule.grails.GrailsPublicControllerMethodRule", RulePriority.MINOR);
-    activateRule(validation, profile, "org.codenarc.rule.grails.GrailsServletContextReferenceRule", RulePriority.MINOR);
-    activateRule(validation, profile, "org.codenarc.rule.grails.GrailsSessionReferenceRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.grails.GrailsStatelessServiceRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.size.NestedBlockDepthRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.concurrency.NestedSynchronizationRule", RulePriority.CRITICAL);
-    activateRule(validation, profile, "org.codenarc.rule.logging.PrintStackTraceRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.logging.PrintlnRule", RulePriority.MINOR);
-    activateRule(validation, profile, "org.codenarc.rule.basic.ReturnFromFinallyBlockRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.concurrency.SynchronizedMethodRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.logging.SystemErrPrintRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.logging.SystemOutPrintRule", RulePriority.INFO);
-    activateRule(validation, profile, "org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.concurrency.ThreadYieldRule", RulePriority.CRITICAL);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.ThrowErrorRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.ThrowExceptionRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.ThrowNullPointerExceptionRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.ThrowRuntimeExceptionRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.exceptions.ThrowThrowableRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.imports.UnnecessaryGroovyImportRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.imports.UnusedImportRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.unused.UnusedPrivateFieldRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.unused.UnusedPrivateMethodRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.unused.UnusedVariableRule", RulePriority.MAJOR);
-    activateRule(validation, profile, "org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule", RulePriority.MAJOR);
-
-    return profile;
+  public RulesProfile createProfile(ValidationMessages messages) {
+    return xmlProfileParser.parseResource(getClass().getClassLoader(), "org/sonar/plugins/groovy/profile-sonar-way.xml", messages);
   }
-
-  private void activateRule(ValidationMessages validation, RulesProfile profile, String ruleClass, RulePriority priority) {
-    Rule rule = getRule(ruleClass);
-    if (rule != null) {
-      profile.activateRule(rule, priority);
-    } else {
-      validation.addWarningText("Unknwon rule : " + ruleClass);
-    }
-  }
-
-  private Rule getRule(String key) {
-    return ruleFinder.find(RuleQuery.create().withRepositoryKey(CodeNarcConstants.REPOSITORY_KEY).withKey(key));
-  }
-
 }
