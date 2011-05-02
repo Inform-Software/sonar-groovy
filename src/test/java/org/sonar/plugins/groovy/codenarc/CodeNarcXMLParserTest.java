@@ -69,7 +69,7 @@ public class CodeNarcXMLParserTest {
     SensorContext context = mock(SensorContext.class);
     parser.parseAndLogCodeNarcResults(fileToParse, context);
 
-    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example"), eq(0),
+    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example"), (Integer) eq(null),
         eq("The cyclomatic complexity for class [org.example.Example] is [27.0]"));
   }
 

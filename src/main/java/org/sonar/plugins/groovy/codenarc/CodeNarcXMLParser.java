@@ -81,7 +81,7 @@ public class CodeNarcXMLParser implements BatchExtension {
   }
 
   private Integer parseLineNumber(String lineNumber) {
-    return StringUtils.isBlank(lineNumber) ? 0 : Integer.parseInt(lineNumber);
+    return StringUtils.isBlank(lineNumber) ? null : Integer.parseInt(lineNumber);
   }
 
   void log(SensorContext context, String checkKey, String filename, Integer line, String message) {
