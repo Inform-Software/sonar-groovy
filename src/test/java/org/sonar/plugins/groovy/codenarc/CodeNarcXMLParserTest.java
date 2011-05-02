@@ -40,7 +40,7 @@ public class CodeNarcXMLParserTest {
 
   @Test
   public void testCodeNarcReportParser() {
-    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/codenarc/sample.xml"));
+    File fileToParse = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml"));
 
     CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
     parser = spy(parser);
@@ -60,7 +60,7 @@ public class CodeNarcXMLParserTest {
    */
   @Test
   public void shouldNotFailWhenLineNumberNotSpecified() {
-    File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/codenarc/line-number-not-specified.xml"));
+    File fileToParse = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/line-number-not-specified.xml"));
 
     CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
     parser = spy(parser);

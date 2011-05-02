@@ -31,7 +31,6 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.groovy.GroovyConstants;
 import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
@@ -87,7 +86,7 @@ public class CodeNarcXMLParser implements BatchExtension {
 
   void log(SensorContext context, String checkKey, String filename, Integer line, String message) {
     RuleQuery ruleQuery = RuleQuery.create()
-        .withRepositoryKey(GroovyConstants.REPOSITORY_KEY)
+        .withRepositoryKey(CodeNarcConstants.REPOSITORY_KEY)
         .withConfigKey(checkKey);
     Rule rule = ruleFinder.find(ruleQuery);
     if (rule != null) {

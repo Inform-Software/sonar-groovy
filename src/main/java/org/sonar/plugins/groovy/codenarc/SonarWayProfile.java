@@ -27,7 +27,6 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.groovy.GroovyConstants;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 public class SonarWayProfile extends ProfileDefinition {
@@ -90,7 +89,7 @@ public class SonarWayProfile extends ProfileDefinition {
   }
 
   private Rule getRule(String key) {
-    return ruleFinder.find(RuleQuery.create().withRepositoryKey(GroovyConstants.REPOSITORY_KEY).withKey(key));
+    return ruleFinder.find(RuleQuery.create().withRepositoryKey(CodeNarcConstants.REPOSITORY_KEY).withKey(key));
   }
 
 }

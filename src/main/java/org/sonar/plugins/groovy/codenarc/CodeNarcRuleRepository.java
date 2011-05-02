@@ -33,8 +33,8 @@ public class CodeNarcRuleRepository extends RuleRepository {
   private XMLRuleParser xmlRuleParser;
 
   public CodeNarcRuleRepository(XMLRuleParser xmlRuleParser) {
-    super(Groovy.KEY, Groovy.KEY);
-    setName("CodeNarc"); // TODO repository name
+    super(CodeNarcConstants.REPOSITORY_KEY, Groovy.KEY);
+    setName(CodeNarcConstants.REPOSITORY_NAME);
     this.xmlRuleParser = xmlRuleParser;
   }
 

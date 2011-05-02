@@ -18,12 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-package org.sonar.plugins.groovy;
+package org.sonar.plugins.groovy.codenarc;
 
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-public class GroovyConstants {
+public final class CodeNarcConstants {
 
   public static final String REPOSITORY_KEY = Groovy.KEY;
+  public static final String REPOSITORY_NAME = "CodeNarc";
+
+  private CodeNarcConstants() {
+  }
 
 }
