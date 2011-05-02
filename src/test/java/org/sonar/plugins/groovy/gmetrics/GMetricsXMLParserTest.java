@@ -24,43 +24,32 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.test.IsMeasure;
+import org.sonar.plugins.groovy.foundation.GroovyFile;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-@Ignore
 public class GMetricsXMLParserTest {
-
-  @Ignore
+  @Test
   public void testGMetricsReportParser() {
     SensorContext context = mock(SensorContext.class);
-    Project project = mock(Project.class);
-    ProjectFileSystem fileSystem = mock(ProjectFileSystem.class);
-    when(project.getFileSystem()).thenReturn(fileSystem);
-
-    List<File> l = new ArrayList<File>();
-    l.add(new File(""));
-    when(fileSystem.getSourceDirs()).thenReturn(l);
 
     File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/gmetrics/sample.xml"));
     new GMetricsXMLParser().parseAndProcessGMetricsResults(fileToParse, context);
 
-    org.sonar.api.resources.File file = new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer");
+    GroovyFile file = new GroovyFile("org.gmetrics.analyzer.FilesystemSourceAnalyzer");
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.FUNCTIONS), eq(7.0));
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.COMPLEXITY), eq(13.0));
-    verify(context).saveMeasure(eq(new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer")), argThat(
-        new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=4;2=2;4=1;6=0;8=0;10=0;12=0")));
-    verify(context).saveMeasure(eq(new org.sonar.api.resources.File("org.gmetrics.analyzer.FilesystemSourceAnalyzer")), argThat(
-        new IsMeasure(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, "0=0;5=0;10=1;20=0;30=0;60=0;90=0")));
+    verify(context).saveMeasure(
+        eq(file),
+        argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=4;2=2;4=1;6=0;8=0;10=0;12=0")));
+    verify(context).saveMeasure(
+        eq(file),
+        argThat(new IsMeasure(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, "0=0;5=0;10=1;20=0;30=0;60=0;90=0")));
   }
 }

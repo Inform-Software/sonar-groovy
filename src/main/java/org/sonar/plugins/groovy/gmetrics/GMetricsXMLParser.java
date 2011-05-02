@@ -54,11 +54,10 @@ public class GMetricsXMLParser implements BatchExtension {
           double nbMethods = 0;
           double complexity = 0;
 
-          RangeDistributionBuilder complexityMethodsDistribution = new RangeDistributionBuilder(
-              CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION,
-              METHODS_DISTRIB_BOTTOM_LIMITS);
-          RangeDistributionBuilder complexityClassDistribution = new RangeDistributionBuilder(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION,
-              CLASS_DISTRIB_BOTTOM_LIMITS);
+          RangeDistributionBuilder complexityMethodsDistribution =
+              new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, METHODS_DISTRIB_BOTTOM_LIMITS);
+          RangeDistributionBuilder complexityClassDistribution =
+              new RangeDistributionBuilder(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, CLASS_DISTRIB_BOTTOM_LIMITS);
 
           SMInputCursor method = clazz.descendantElementCursor("Method");
 
@@ -79,7 +78,6 @@ public class GMetricsXMLParser implements BatchExtension {
 
           complexityClassDistribution.add(complexity);
           context.saveMeasure(sonarFile, complexityClassDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-
         }
       }
     });
