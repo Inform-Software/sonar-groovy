@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>8</version>
+    <version>9</version>
     <relativePath>../parent</relativePath>
   </parent>
 
@@ -195,7 +195,6 @@
           <plugin>
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-dev-maven-plugin</artifactId>
-            <version>1.2</version>
             <executions>
               <execution>
                 <id>start-server</id>
@@ -203,7 +202,6 @@
                 <configuration>
                   <background>true</background>
                   <clean>true</clean>
-                  <workDir>${project.build.directory}/it-work</workDir>
                 </configuration>
                 <goals>
                   <goal>start-war</goal>
@@ -225,9 +223,6 @@
                 <goals>
                   <goal>stop-war</goal>
                 </goals>
-                <configuration>
-                  <workDir>${project.build.directory}/it-work</workDir>
-                </configuration>
               </execution>
             </executions>
           </plugin>
