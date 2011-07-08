@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.13 -->
+<!-- Generated using CodeNarc 0.14 -->
 <rules>
 
   <!-- basic rules -->
@@ -27,7 +27,7 @@
   <rule key="org.codenarc.rule.basic.BooleanGetBooleanRule" priority="MINOR">
     <name><![CDATA[Boolean Get Boolean]]></name>
     <configKey><![CDATA[BooleanGetBoolean]]></configKey>
-    <description><![CDATA[This rule catches usages of java.lang.Boolean.getBoolean(String) which reads a boolean from the System properties. It is often mistakenly used to attempt to read user input or parse a String into a boolean. It is a poor piece of API to use; replace it with System.properties['propÍ'].]]></description>
+    <description><![CDATA[This rule catches usages of java.lang.Boolean.getBoolean(String) which reads a boolean from the System properties. It is often mistakenly used to attempt to read user input or parse a String into a boolean. It is a poor piece of API to use; replace it with System.properties['prop'].]]></description>
   </rule>
 
   <!-- since 0.11 -->
@@ -41,7 +41,7 @@
   <rule key="org.codenarc.rule.basic.BrokenOddnessCheckRule" priority="MINOR">
     <name><![CDATA[Broken Oddness Check]]></name>
     <configKey><![CDATA[BrokenOddnessCheck]]></configKey>
-    <description><![CDATA[The code uses x % 2 == 1 to check to see if a value is odd, but this won't work for negative numbers (e.g., (-5) % 2 == -1). If this code is intending to check for oddness, consider using x & 1 == 1, or x % 2 != 0.]]></description>
+    <description><![CDATA[The code uses x % 2 == 1 to check to see if a value is odd, but this won't work for negative numbers (e.g., (-5) % 2 == -1). If this code is intending to check for oddness, consider using x &amp; 1 == 1, or x % 2 != 0.]]></description>
   </rule>
 
   <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule" priority="MINOR">
@@ -196,21 +196,21 @@
   <rule key="org.codenarc.rule.basic.ExplicitArrayListInstantiationRule" priority="MINOR">
     <name><![CDATA[Explicit Array List Instantiation]]></name>
     <configKey><![CDATA[ExplicitArrayListInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of an <em>ArrayList</em> using the no-arg constructor. In Groovy, it is best to write <em>new ArrayList()</em> as <em>[]<em>, which creates the same object.]]></description>
+    <description><![CDATA[This rule checks for the explicit instantiation of an <em>ArrayList</em> using the no-arg constructor. In Groovy, it is best to write <em>new ArrayList()</em> as <em>[]</em>, which creates the same object.]]></description>
   </rule>
 
   <!-- since 0.11 -->
   <rule key="org.codenarc.rule.basic.ExplicitCallToAndMethodRule" priority="MINOR">
     <name><![CDATA[Explicit Call To And Method]]></name>
     <configKey><![CDATA[ExplicitCallToAndMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>and(Object)</em> method is called directly in code instead of using the & operator. A groovier way to express this: <em>a.and(b)</em> is this: <em>a & b</em>]]></description>
+    <description><![CDATA[This rule detects when the <em>and(Object)</em> method is called directly in code instead of using the &amp; operator. A groovier way to express this: <em>a.and(b)</em> is this: <em>a &amp; b</em>]]></description>
   </rule>
 
   <!-- since 0.11 -->
   <rule key="org.codenarc.rule.basic.ExplicitCallToCompareToMethodRule" priority="MINOR">
     <name><![CDATA[Explicit Call To Compare To Method]]></name>
     <configKey><![CDATA[ExplicitCallToCompareToMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>compareTo(Object)</em> method is called directly in code instead of using the <=>, >, >=, <, and <= operators. A groovier way to express this: <em>a.compareTo(b)</em> is this: <em>a <=> b</em>, or using the other operators.]]></description>
+    <description><![CDATA[This rule detects when the <em>compareTo(Object)</em> method is called directly in code instead of using the &lt;=&gt;, &gt;, &gt;=, &lt;, and &lt;= operators. A groovier way to express this: <em>a.compareTo(b)</em> is this: <em>a &lt;=&gt; b</em>, or using the other operators.]]></description>
   </rule>
 
   <!-- since 0.11 -->
@@ -238,7 +238,7 @@
   <rule key="org.codenarc.rule.basic.ExplicitCallToLeftShiftMethodRule" priority="MINOR">
     <name><![CDATA[Explicit Call To Left Shift Method]]></name>
     <configKey><![CDATA[ExplicitCallToLeftShiftMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>leftShift(Object)</em> method is called directly in code instead of using the << operator. A groovier way to express this: <em>a.leftShift(b)</em> is this: <em>a << b</em>]]></description>
+    <description><![CDATA[This rule detects when the <em>leftShift(Object)</em> method is called directly in code instead of using the &lt;&lt; operator. A groovier way to express this: <em>a.leftShift(b)</em> is this: <em>a &lt;&lt; b</em>]]></description>
   </rule>
 
   <!-- since 0.11 -->
@@ -394,20 +394,6 @@
     <description><![CDATA[Consider returning a zero length collection rather than null. It is often a better design to return a length zero collection rather than a null reference to indicate that there are no results (i.e., an empty list of results). This way, no explicit check for null is needed by clients of the method.]]></description>
   </rule>
 
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.SerialVersionUIDRule" priority="MINOR">
-    <name><![CDATA[Serial Version UID]]></name>
-    <configKey><![CDATA[SerialVersionUID]]></configKey>
-    <description><![CDATA[A serialVersionUID is normally intended to be used with Serialization. It needs to be of type long, static, and final. Also, it should have a visibility modifier such as public or private. Providing no modifier creates a Property and Groovy generates a getter, which is probably not intended.]]></description>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.basic.SerializableClassMustDefineSerialVersionUIDRule" priority="MINOR">
-    <name><![CDATA[Serializable Class Must Define Serial Version UID]]></name>
-    <configKey><![CDATA[SerializableClassMustDefineSerialVersionUID]]></configKey>
-    <description><![CDATA[Classes that implement Serializable should define a serialVersionUID. If you don't define serialVersionUID, the system will make one by hashing most of your class's features. Then if you change anything, the UID will change and Java won't let you reload old data. ]]></description>
-  </rule>
-
   <!-- since 0.12 -->
   <rule key="org.codenarc.rule.basic.SimpleDateFormatMissingLocaleRule" priority="MINOR">
     <name><![CDATA[Simple Date Format Missing Locale]]></name>
@@ -419,6 +405,92 @@
     <name><![CDATA[Throw Exception From Finally Block]]></name>
     <configKey><![CDATA[ThrowExceptionFromFinallyBlock]]></configKey>
     <description><![CDATA[Throwing an exception from a <em>finally</em> block is confusing and can hide the original exception.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ExplicitLinkedHashMapInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Linked Hash Map Instantiation]]></name>
+    <configKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>LinkedHashMap</em> using the no-arg constructor. In Groovy, it is best to write <em>new LinkedHashMap()</em> as <em>[:]</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.DuplicateMapKeyRule" priority="MINOR">
+    <name><![CDATA[Duplicate Map Key]]></name>
+    <configKey><![CDATA[DuplicateMapKey]]></configKey>
+    <description><![CDATA[A map literal is created with duplicated key. The map entry will be overwritten.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.DuplicateSetValueRule" priority="MINOR">
+    <name><![CDATA[Duplicate Set Value]]></name>
+    <configKey><![CDATA[DuplicateSetValue]]></configKey>
+    <description><![CDATA[A Set literal is created with duplicate constant value. A set cannot contain two elements with the same value.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.EqualsOverloadedRule" priority="MINOR">
+    <name><![CDATA[Equals Overloaded]]></name>
+    <configKey><![CDATA[EqualsOverloaded]]></configKey>
+    <description><![CDATA[The class has an equals method, but the parameter of the method is not of type Object. It is not overriding equals but instead overloading it.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ForLoopShouldBeWhileLoopRule" priority="MAJOR">
+    <name><![CDATA[For Loop Should Be While Loop]]></name>
+    <configKey><![CDATA[ForLoopShouldBeWhileLoop]]></configKey>
+    <description><![CDATA[A for loop without an init and update statement can be simplified to a while loop.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ClosureAsLastMethodParameterRule" priority="MAJOR">
+    <name><![CDATA[Closure As Last Method Parameter]]></name>
+    <configKey><![CDATA[ClosureAsLastMethodParameter]]></configKey>
+    <description><![CDATA[If a method is called and the last parameter is an inline closure then it can be declared outside of the method call brackets.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ClassForNameRule" priority="MINOR">
+    <name><![CDATA[Class For Name]]></name>
+    <configKey><![CDATA[ClassForName]]></configKey>
+    <description><![CDATA[Using Class.forName(...) is a common way to add dynamic behavior to a system. However, using this method can cause resource leaks because the classes can be pinned in memory for long periods of time.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ComparisonOfTwoConstantsRule" priority="MINOR">
+    <name><![CDATA[Comparison Of Two Constants]]></name>
+    <configKey><![CDATA[ComparisonOfTwoConstants]]></configKey>
+    <description><![CDATA[Checks for expressions where a comparison operator or <em>equals()</em> or <em>compareTo()</em> is used to compare two constants to each other or two literals that contain only constant values., e.g.: <em>23 == 67, Boolean.FALSE != false, 0.17 &lt;= 0.99, "abc" &gt; "ddd", [a:1] &lt;=&gt; [a:2], [1,2].equals([3,4]) or [a:false, b:true].compareTo(['a':34.5, b:Boolean.TRUE]</em>.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.basic.ComparisonWithSelfRule" priority="MINOR">
+    <name><![CDATA[Comparison With Self]]></name>
+    <configKey><![CDATA[ComparisonWithSelf]]></configKey>
+    <description><![CDATA[Checks for expressions where a comparison operator or <em>equals()</em> or <em>compareTo()</em> is used to compare a variable to itself, e.g.: <em>x == x, x != x, x &lt;=&gt; x, x &lt; x, x =&gt;= x, x.equals(x) or x.compareTo(x)</em>, where <em>x</em> is a variable.]]></description>
+  </rule>
+
+  <!-- serialization rules -->
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.serialization.SerialVersionUIDRule" priority="MINOR">
+    <name><![CDATA[Serial Version UID]]></name>
+    <configKey><![CDATA[SerialVersionUID]]></configKey>
+    <description><![CDATA[A serialVersionUID is normally intended to be used with Serialization. It needs to be of type long, static, and final. Also, it should have a visibility modifier such as public or private. Providing no modifier creates a Property and Groovy generates a getter, which is probably not intended.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.serialization.SerializableClassMustDefineSerialVersionUIDRule" priority="MINOR">
+    <name><![CDATA[Serializable Class Must Define Serial Version UID]]></name>
+    <configKey><![CDATA[SerializableClassMustDefineSerialVersionUID]]></configKey>
+    <description><![CDATA[Classes that implement Serializable should define a serialVersionUID. If you don't define serialVersionUID, the system will make one by hashing most of your class's features. Then if you change anything, the UID will change and Java won't let you reload old data. ]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.serialization.SerialPersistentFieldsRule" priority="MINOR">
+    <name><![CDATA[Serial Persistent Fields]]></name>
+    <configKey><![CDATA[SerialPersistentFields]]></configKey>
+    <description><![CDATA[To use a Serializable object's serialPersistentFields correctly, it must be declared private, static, and final.]]></description>
   </rule>
 
   <!-- braces rules -->
@@ -488,21 +560,21 @@
   <rule key="org.codenarc.rule.concurrency.StaticCalendarFieldRule" priority="MINOR">
     <name><![CDATA[Static Calendar Field]]></name>
     <configKey><![CDATA[StaticCalendarField]]></configKey>
-    <description><![CDATA[Calendar objects should not be used as static fields. Calendars are inherently unsafe for multihtreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
+    <description><![CDATA[<em>Calendar</em> objects should not be used as static fields. <em>Calendars</em> are inherently unsafe for multihtreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
   </rule>
 
   <!-- since 0.13 -->
   <rule key="org.codenarc.rule.concurrency.StaticDateFormatFieldRule" priority="MINOR">
     <name><![CDATA[Static Date Format Field]]></name>
     <configKey><![CDATA[StaticDateFormatField]]></configKey>
-    <description><![CDATA[DateFormat objects should not be used as static fields. DateFormat are inherently unsafe for multithreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
+    <description><![CDATA[<em>DateFormat</em> objects should not be used as static fields. <em>DateFormat</em> are inherently unsafe for multithreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
   </rule>
 
   <!-- since 0.13 -->
   <rule key="org.codenarc.rule.concurrency.StaticMatcherFieldRule" priority="MINOR">
     <name><![CDATA[Static Matcher Field]]></name>
     <configKey><![CDATA[StaticMatcherField]]></configKey>
-    <description><![CDATA[Matcher objects should not be used as static fields. Calendars are inherently unsafe for multithreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
+    <description><![CDATA[<em>Matcher</em> objects should not be used as static fields. <em>Matcher</em> instances are inherently unsafe for multithreaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
   </rule>
 
   <rule key="org.codenarc.rule.concurrency.SynchronizedMethodRule" priority="MINOR">
@@ -603,6 +675,20 @@
     <description><![CDATA[Calls to <em>Object.wait()</em> must be within a <em>while</em> loop. Consider using the Java concurrency utilities instead of <em>wait()</em> and <em>notify()</em>.]]></description>
   </rule>
 
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.concurrency.StaticConnectionRule" priority="MINOR">
+    <name><![CDATA[Static Connection]]></name>
+    <configKey><![CDATA[StaticConnection]]></configKey>
+    <description><![CDATA[Creates violations when a java.sql.Connection object is used as a static field. Database connections stored in static fields will be shared between threads, which is unsafe and can lead to race conditions.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.concurrency.StaticSimpleDateFormatFieldRule" priority="MINOR">
+    <name><![CDATA[Static Simple Date Format Field]]></name>
+    <configKey><![CDATA[StaticSimpleDateFormatField]]></configKey>
+    <description><![CDATA[<em>SimpleDateFormat</em> objects should not be used as <em>static</em> fields. <em>SimpleDateFormat</em> are inherently unsafe for multi-threaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
+  </rule>
+
   <!-- design rules -->
 
   <!-- since 0.12 -->
@@ -644,6 +730,27 @@
     <name><![CDATA[Final Class With Protected Member]]></name>
     <configKey><![CDATA[FinalClassWithProtectedMember]]></configKey>
     <description><![CDATA[This rule finds classes marked final that contain protected methods. If a class is final then it may not be subclassed, and there is therefore no point in having a method with protected visibility. Either the class should not be final or the method should be private or protected.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.design.PublicInstanceFieldRule" priority="MINOR">
+    <name><![CDATA[Public Instance Field]]></name>
+    <configKey><![CDATA[PublicInstanceField]]></configKey>
+    <description><![CDATA[Using public fields is considered to be a bad design. Use properties instead.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.design.StatelessSingletonRule" priority="MINOR">
+    <name><![CDATA[Stateless Singleton]]></name>
+    <configKey><![CDATA[StatelessSingleton]]></configKey>
+    <description><![CDATA[There is no point in creating a stateless Singleton because there is nothing within the class that needs guarding and no side effects to calling the constructor. Just create new instances of the object or write a Utility class with static methods.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.design.AbstractClassWithPublicConstructorRule" priority="MINOR">
+    <name><![CDATA[Abstract Class With Public Constructor]]></name>
+    <configKey><![CDATA[AbstractClassWithPublicConstructor]]></configKey>
+    <description><![CDATA[Checks for <em>abstract</em> classes that define a public constructor, which is useless and confusing.]]></description>
   </rule>
 
   <!-- dry rules -->
@@ -775,6 +882,13 @@
     <description><![CDATA[Checks for throwing an instance of <em>java.lang.Throwable</em>.]]></description>
   </rule>
 
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.exceptions.SwallowThreadDeathRule" priority="MINOR">
+    <name><![CDATA[Swallow Thread Death]]></name>
+    <configKey><![CDATA[SwallowThreadDeath]]></configKey>
+    <description><![CDATA[Checks for code that catches ThreadDeath without re-throwing it.]]></description>
+  </rule>
+
   <!-- generic rules -->
 
   <rule key="org.codenarc.rule.generic.IllegalRegexRule" priority="MAJOR">
@@ -804,6 +918,13 @@
     <description><![CDATA[Checks for fields on classes that should remain "stateless" and reentrant. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
     <param key="ignoreFieldNames"/>
     <param key="ignoreFieldTypes"/>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.generic.IllegalPackageReferenceRule" priority="MINOR">
+    <name><![CDATA[Illegal Package Reference]]></name>
+    <configKey><![CDATA[IllegalPackageReference]]></configKey>
+    <description><![CDATA[Checks for reference to any of the packages configured in <em>packageNames</em>.]]></description>
   </rule>
 
   <!-- grails rules -->
@@ -858,6 +979,20 @@
     <name><![CDATA[Unused Import]]></name>
     <configKey><![CDATA[UnusedImport]]></configKey>
     <description><![CDATA[Imports for a class that is never referenced within the source file is unnecessary.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.imports.ImportFromSunPackagesRule" priority="MINOR">
+    <name><![CDATA[Import From Sun Packages]]></name>
+    <configKey><![CDATA[ImportFromSunPackages]]></configKey>
+    <description><![CDATA[Avoid importing anything from the 'sun.*' packages. These packages are not portable and are likely to change.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.imports.MisorderedStaticImportsRule" priority="MAJOR">
+    <name><![CDATA[Misordered Static Imports]]></name>
+    <configKey><![CDATA[MisorderedStaticImports]]></configKey>
+    <description><![CDATA[Static imports should never be declared after nonstatic imports.]]></description>
   </rule>
 
   <!-- junit rules -->
@@ -988,6 +1123,13 @@
     <description><![CDATA[In a unit test, catching an exception and immediately calling Assert.fail() is pointless and hides the stack trace. It is better to rethrow the exception or not catch the exception at all.]]></description>
   </rule>
 
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.junit.SpockIgnoreRestUsedRule" priority="MINOR">
+    <name><![CDATA[Spock Ignore Rest Used]]></name>
+    <configKey><![CDATA[SpockIgnoreRestUsed]]></configKey>
+    <description><![CDATA[If Spock's @IgnoreRest appears on any method, all non-annotated test methods are not executed. This behaviour is almost always unintended. It's fine to use @IgnoreRest locally during development, but when committing code, it should be removed.]]></description>
+  </rule>
+
   <!-- logging rules -->
 
   <!-- since 0.12 -->
@@ -1008,7 +1150,7 @@
   <rule key="org.codenarc.rule.logging.LoggerWithWrongModifiersRule" priority="MINOR">
     <name><![CDATA[Logger With Wrong Modifiers]]></name>
     <configKey><![CDATA[LoggerWithWrongModifiers]]></configKey>
-    <description><![CDATA[Logger objects should be declared private, static, and final. This rule find loggers that are not declared with these modifiers.]]></description>
+    <description><![CDATA[Logger objects should be declared private, static and final. If subclasses should have access to a Logger in a parent class then the Logger should be declared protected, non-static and final. This rule find loggers that are not declared with these modifiers.]]></description>
   </rule>
 
   <!-- since 0.12 -->
@@ -1199,7 +1341,7 @@
   <rule key="org.codenarc.rule.unnecessary.UnnecessaryBooleanExpressionRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Boolean Expression]]></name>
     <configKey><![CDATA[UnnecessaryBooleanExpression]]></configKey>
-    <description><![CDATA[Checks for unnecessary boolean expressions, including ANDing (&&) or ORing (||) with <em>true</em>, <em>false</em>, <em>null</em>, or a Map/List/String/Number literal. Also checks for negation (!) of <em>true</em>, <em>false</em>, <em>null</em>, or a Map/List/String/Number literal.]]></description>
+    <description><![CDATA[Checks for unnecessary boolean expressions, including ANDing (&amp;&amp;) or ORing (||) with <em>true</em>, <em>false</em>, <em>null</em>, or a Map/List/String/Number literal. Also checks for negation (!) of <em>true</em>, <em>false</em>, <em>null</em>, or a Map/List/String/Number literal.]]></description>
   </rule>
 
   <!-- since 0.12 -->
@@ -1317,7 +1459,7 @@
   <rule key="org.codenarc.rule.unnecessary.UnnecessaryModOneRule" priority="MINOR">
     <name><![CDATA[Unnecessary Mod One]]></name>
     <configKey><![CDATA[UnnecessaryModOne]]></configKey>
-    <description><![CDATA[Any expression mod 1 (exp % 1) is guaranteed to always return zero. This code is probably an error, and should be either (exp & 1) or (exp % 2).]]></description>
+    <description><![CDATA[Any expression mod 1 (exp % 1) is guaranteed to always return zero. This code is probably an error, and should be either (exp &amp; 1) or (exp % 2).]]></description>
   </rule>
 
   <!-- since 0.12 -->
@@ -1396,6 +1538,34 @@
     <description><![CDATA[The field is marked as transient, but the class isn't Serializable, so marking it as transient has no effect.]]></description>
   </rule>
 
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryFinalOnPrivateMethodRule" priority="MINOR">
+    <name><![CDATA[Unnecessary Final On Private Method]]></name>
+    <configKey><![CDATA[UnnecessaryFinalOnPrivateMethod]]></configKey>
+    <description><![CDATA[A private method is marked final. Private methods cannot be overridden, so marking it final is unnecessary.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryElseStatementRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Else Statement]]></name>
+    <configKey><![CDATA[UnnecessaryElseStatement]]></configKey>
+    <description><![CDATA[When an if statement block ends with a return statement the else is unnecessary. The logic in the else branch can be run without being in a new scope.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryParenthesesForMethodCallWithClosureRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Parentheses For Method Call With Closure]]></name>
+    <configKey><![CDATA[UnnecessaryParenthesesForMethodCallWithClosure]]></configKey>
+    <description><![CDATA[If a method is called and the only parameter to that method is an inline closure then the parentheses of the method call can be omitted.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryPackageReferenceRule" priority="MINOR">
+    <name><![CDATA[Unnecessary Package Reference]]></name>
+    <configKey><![CDATA[UnnecessaryPackageReference]]></configKey>
+    <description><![CDATA[Checks for explicit package reference for classes that Groovy imports by default, such as <em>java.lang.String</em>, <em>java.util.Map</em> and <em>groovy.lang.Closure</em>.]]></description>
+  </rule>
+
   <!-- unused rules -->
 
   <rule key="org.codenarc.rule.unused.UnusedArrayRule" priority="MINOR">
@@ -1433,6 +1603,80 @@
     <name><![CDATA[Unused Variable]]></name>
     <configKey><![CDATA[UnusedVariable]]></configKey>
     <description><![CDATA[Checks for variables that are never referenced.]]></description>
+  </rule>
+
+  <!-- jdbc rules -->
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.jdbc.DirectConnectionManagementRule" priority="MINOR">
+    <name><![CDATA[Direct Connection Management]]></name>
+    <configKey><![CDATA[DirectConnectionManagement]]></configKey>
+    <description><![CDATA[The J2EE standard requires that applications use the container's resource management facilities to obtain connections to resources. Every major web application container provides pooled database connection management as part of its resource management framework. Duplicating this functionality in an application is difficult and error prone, which is part of the reason it is forbidden under the J2EE standard.]]></description>
+  </rule>
+
+  <!-- security rules -->
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.NonFinalSubclassOfSensitiveInterfaceRule" priority="MINOR">
+    <name><![CDATA[Non Final Subclass Of Sensitive Interface]]></name>
+    <configKey><![CDATA[NonFinalSubclassOfSensitiveInterface]]></configKey>
+    <description><![CDATA[The permissions classes such as java.security.Permission and java.security.BasicPermission are designed to be extended. Classes that derive from these permissions classes, however, must prohibit extension. This prohibition ensures that malicious subclasses cannot change the properties of the derived class. Classes that implement sensitive interfaces such as java.security.PrivilegedAction and java.security.PrivilegedActionException must also be declared final for analogous reasons.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.InsecureRandomRule" priority="MINOR">
+    <name><![CDATA[Insecure Random]]></name>
+    <configKey><![CDATA[InsecureRandom]]></configKey>
+    <description><![CDATA[Reports usages of java.util.Random, which can produce very predictable results. If two instances of Random are created with the same seed and sequence of method calls, they will generate the exact same results. Use java.security.SecureRandom instead, which provides a cryptographically strong random number generator. SecureRandom uses PRNG, which means they are using a deterministic algorithm to produce a pseudo-random number from a true random seed. SecureRandom produces non-deterministic output.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.FileCreateTempFileRule" priority="MINOR">
+    <name><![CDATA[File Create Temp File]]></name>
+    <configKey><![CDATA[FileCreateTempFile]]></configKey>
+    <description><![CDATA[The File.createTempFile() method is insecure, and has been deprecated by the ESAPI secure coding library. It has been replaced by the ESAPI Randomizer.getRandomFilename(String) method.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.SystemExitRule" priority="MINOR">
+    <name><![CDATA[System Exit]]></name>
+    <configKey><![CDATA[SystemExit]]></configKey>
+    <description><![CDATA[Web applications should never call System.exit(). A call to System.exit() is probably part of leftover debug code or code imported from a non-J2EE application.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.ObjectFinalizeRule" priority="MINOR">
+    <name><![CDATA[Object Finalize]]></name>
+    <configKey><![CDATA[ObjectFinalize]]></configKey>
+    <description><![CDATA[The finalize() method should only be called by the JVM after the object has been garbage collected.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.JavaIoPackageAccessRule" priority="MINOR">
+    <name><![CDATA[Java Io Package Access]]></name>
+    <configKey><![CDATA[JavaIoPackageAccess]]></configKey>
+    <description><![CDATA[This rule reports violations of the Enterprise JavaBeans specification by using the java.io package to access files or the file system.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.UnsafeArrayDeclarationRule" priority="MINOR">
+    <name><![CDATA[Unsafe Array Declaration]]></name>
+    <configKey><![CDATA[UnsafeArrayDeclaration]]></configKey>
+    <description><![CDATA[Triggers a violation when an array is declared public, final, and static. Secure coding principles state that, in most cases, an array declared public, final and static is a bug because arrays are mutable objects.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.PublicFinalizeMethodRule" priority="MINOR">
+    <name><![CDATA[Public Finalize Method]]></name>
+    <configKey><![CDATA[PublicFinalizeMethod]]></configKey>
+    <description><![CDATA[Creates a violation when the program violates secure coding principles by declaring a finalize() method public.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.security.NonFinalPublicFieldRule" priority="MINOR">
+    <name><![CDATA[Non Final Public Field]]></name>
+    <configKey><![CDATA[NonFinalPublicField]]></configKey>
+    <description><![CDATA[Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final.]]></description>
   </rule>
 
 </rules>
