@@ -100,7 +100,7 @@ public class GroovyIT {
         is(89.9) // java 1.6.0_20
     ));
     assertThat(getProjectMeasure("line_coverage").getValue(), anyOf(is(98.9), is(98.8)));
-    assertThat(getProjectMeasure("lines_to_cover").getValue(), anyOf(is(1802.0), is(1806.0), is(1805.0)));
+    assertThat(getProjectMeasure("lines_to_cover").getValue(), anyOf(is(1802.0), is(1806.0), is(1809.0), is(1805.0)));
     assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
 
     assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
