@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.sonar.updatecenter.common.Version;
 import org.sonar.wsclient.Sonar;
 import org.sonar.wsclient.services.Measure;
+import org.sonar.wsclient.services.Resource;
 import org.sonar.wsclient.services.ResourceQuery;
 import org.sonar.wsclient.services.ServerQuery;
 
@@ -111,7 +112,7 @@ public class GroovyIT {
   public void testPackageCoverageBeforeSonar27() {
     assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getPackageMeasure("coverage").getValue(), anyOf(is(88.8), is(89.1)));
+    assertThat(getPackageMeasure("coverage").getValue(), closeTo(89.0, 0.3));
     assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
     assertThat(getPackageMeasure("lines_to_cover").getValue(), anyOf(is(304.0), is(303.0), is(305.0)));
     assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
@@ -222,7 +223,10 @@ public class GroovyIT {
   }
 
   private Measure getFileMeasure(String metricKey) {
-    return sonar.find(ResourceQuery.createForMetrics(FILE_REPORT_WRITER, metricKey)).getMeasure(metricKey);
+    Resource resource = sonar.find(ResourceQuery.createForMetrics(FILE_REPORT_WRITER, metricKey));
+    Measure measure = resource!=null ? resource.getMeasure(metricKey) : null;
+
+    return measure;
   }
 
   private Measure getPackageMeasure(String metricKey) {
