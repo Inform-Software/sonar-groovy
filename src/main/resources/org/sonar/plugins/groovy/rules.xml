@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.14 -->
+<!-- Generated using CodeNarc 0.15 -->
 <rules>
 
   <!-- basic rules -->
@@ -470,6 +470,48 @@
     <description><![CDATA[Checks for expressions where a comparison operator or <em>equals()</em> or <em>compareTo()</em> is used to compare a variable to itself, e.g.: <em>x == x, x != x, x &lt;=&gt; x, x &lt; x, x =&gt;= x, x.equals(x) or x.compareTo(x)</em>, where <em>x</em> is a variable.]]></description>
   </rule>
 
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.AssignCollectionUniqueRule" priority="MINOR">
+    <name><![CDATA[Assign Collection Unique]]></name>
+    <configKey><![CDATA[AssignCollectionUnique]]></configKey>
+    <description><![CDATA[The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.AssignCollectionSortRule" priority="MINOR">
+    <name><![CDATA[Assign Collection Sort]]></name>
+    <configKey><![CDATA[AssignCollectionSort]]></configKey>
+    <description><![CDATA[The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.BitwiseOperatorInConditionalRule" priority="MINOR">
+    <name><![CDATA[Bitwise Operator In Conditional]]></name>
+    <configKey><![CDATA[BitwiseOperatorInConditional]]></configKey>
+    <description><![CDATA[Checks for bitwise operations in conditionals, if you need to do a bitwise operation then it is best practive to extract a temp variable.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.HardcodedWindowsRootDirectoryRule" priority="MINOR">
+    <name><![CDATA[Hardcoded Windows Root Directory]]></name>
+    <configKey><![CDATA[HardcodedWindowsRootDirectory]]></configKey>
+    <description><![CDATA[This rule find cases where a File object is constructed with a windows-based path. This is not portable, and using the File.listRoots() method is a better alternative.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.HardCodedWindowsFileSeparatorRule" priority="MINOR">
+    <name><![CDATA[Hard Coded Windows File Separator]]></name>
+    <configKey><![CDATA[HardCodedWindowsFileSeparator]]></configKey>
+    <description><![CDATA[This rule finds usages of a Windows file separator within the constructor call of a File object. It is better to use the Unix file separator or use the File.separator constant.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.RandomDoubleCoercedToZeroRule" priority="MINOR">
+    <name><![CDATA[Random Double Coerced To Zero]]></name>
+    <configKey><![CDATA[RandomDoubleCoercedToZero]]></configKey>
+    <description><![CDATA[The Math.random() method returns a double result greater than or equal to 0.0 and less than 1.0. If you coerce this result into an Integer or int, then it is coerced to zero. Casting the result to int, or assigning it to an int field is probably a bug.]]></description>
+  </rule>
+
   <!-- serialization rules -->
 
   <!-- since 0.14 -->
@@ -925,6 +967,15 @@
     <name><![CDATA[Illegal Package Reference]]></name>
     <configKey><![CDATA[IllegalPackageReference]]></configKey>
     <description><![CDATA[Checks for reference to any of the packages configured in <em>packageNames</em>.]]></description>
+    <param key="packageNames"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.generic.IllegalClassReferenceRule" priority="MINOR">
+    <name><![CDATA[Illegal Class Reference]]></name>
+    <configKey><![CDATA[IllegalClassReference]]></configKey>
+    <description><![CDATA[Checks for reference to any of the classes configured in <em>classNames</em>.]]></description>
+    <param key="classNames"/>
   </rule>
 
   <!-- grails rules -->
@@ -953,6 +1004,20 @@
     <description><![CDATA[Checks for fields on Grails service classes. Grails service classes are singletons, by default, and so they should be reentrant and typically stateless. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
     <param key="ignoreFieldNames"/>
     <param key="ignoreFieldTypes"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.grails.GrailsDomainHasToStringRule" priority="MINOR">
+    <name><![CDATA[Grails Domain Has To String]]></name>
+    <configKey><![CDATA[GrailsDomainHasToString]]></configKey>
+    <description><![CDATA[Checks that Grails domain classes redefine toString()]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.grails.GrailsDomainHasEqualsRule" priority="MINOR">
+    <name><![CDATA[Grails Domain Has Equals]]></name>
+    <configKey><![CDATA[GrailsDomainHasEquals]]></configKey>
+    <description><![CDATA[Checks that Grails domain classes redefine equals().]]></description>
   </rule>
 
   <!-- imports rules -->
@@ -1325,14 +1390,14 @@
   <!-- unnecessary rules -->
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBigDecimalInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBigDecimalInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Big Decimal Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryBigDecimalInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate BigDecimal objects. Instead just use the decimal literal or the 'G' identifier to force the type, such as 123.45 or 123.45G.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBigIntegerInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBigIntegerInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Big Integer Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryBigIntegerInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate BigInteger objects. Instead just use the literal with the 'G' identifier to force the type, such as 8G or 42G.]]></description>
@@ -1345,35 +1410,35 @@
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBooleanInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryBooleanInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Boolean Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryBooleanInstantiation]]></configKey>
     <description><![CDATA[Use <em>Boolean.valueOf()</em> for variable values or <em>Boolean.TRUE</em> and <em>Boolean.FALSE</em> for constant values instead of calling the <em>Boolean()</em> constructor directly or calling <em>Boolean.valueOf(true)</em> or <em>Boolean.valueOf(false)</em>.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCallForLastElementRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCallForLastElementRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Call For Last Element]]></name>
     <configKey><![CDATA[UnnecessaryCallForLastElement]]></configKey>
     <description><![CDATA[This rule checks for excessively verbose methods of accessing the last element of an array or list. For instance, it is possible to access the last element of an array by performing array[array.length - 1], in Groovy it is simpler to either call array.last() or array[-1]. The same is true for lists. This violation is triggered whenever a get, getAt, or array-style access is used with an object size check.]]></description>
   </rule>
 
   <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCallToSubstringRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCallToSubstringRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Call To Substring]]></name>
     <configKey><![CDATA[UnnecessaryCallToSubstring]]></configKey>
     <description><![CDATA[Calling String.substring(0) always returns the original string. This code is meaningless.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCatchBlockRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCatchBlockRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Catch Block]]></name>
     <configKey><![CDATA[UnnecessaryCatchBlock]]></configKey>
     <description><![CDATA[Violations are triggered when a catch block does nothing but throw the original exception. In this scenario there is usually no need for a catch block, just let the exception be thrown from the original code. This condition frequently occurs when catching an exception for debugging purposes but then forgetting to take the catch statement out.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCollectCallRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryCollectCallRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Collect Call]]></name>
     <configKey><![CDATA[UnnecessaryCollectCall]]></configKey>
     <description><![CDATA[Some method calls to Object.collect(Closure) can be replaced with the spread operator. For instance, list.collect { it.multiply(2) } can be replaced by list*.multiply(2).]]></description>
@@ -1397,25 +1462,25 @@
   <rule key="org.codenarc.rule.unnecessary.UnnecessaryDefInMethodDeclarationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Def In Method Declaration]]></name>
     <configKey><![CDATA[UnnecessaryDefInMethodDeclaration]]></configKey>
-    <description><![CDATA[If a method has a visibility modifier, then the def keyword is unneeded. For instance 'def private method() {}' is redundant and can be simplified to 'private method() {}'.]]></description>
+    <description><![CDATA[If a method has a visibility modifier or a type declaration, then the def keyword is unneeded. For instance 'def private method() {}' is redundant and can be simplified to 'private method() {}'.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryDoubleInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryDoubleInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Double Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryDoubleInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate Double objects. Instead just use the double literal or the 'D' identifier to force the type, such as 123.45d or 0.42d.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryFloatInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryFloatInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Float Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryFloatInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate Float objects. Instead just use the float literal with the 'F' identifier to force the type, such as 123.45F or 0.42f.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryGetterRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryGetterRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Getter]]></name>
     <configKey><![CDATA[UnnecessaryGetter]]></configKey>
     <description><![CDATA[Checks for explicit calls to getter/accessor methods which can, for the most part, be replaced by property access. A getter is defined as a method call that matches get[A-Z] but not getClass() or get[A-Z][A-Z] such as getURL(). Getters do not take method arguments.]]></description>
@@ -1435,49 +1500,49 @@
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryInstantiationToGetClassRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryInstantiationToGetClassRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Instantiation To Get Class]]></name>
     <configKey><![CDATA[UnnecessaryInstantiationToGetClass]]></configKey>
     <description><![CDATA[Avoid instantiating an object just to call getClass() on it; use the .class public member instead.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryIntegerInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryIntegerInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Integer Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryIntegerInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate Integer objects. Instead just use the literal with the 'I' identifier to force the type, such as 8I or 42i.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryLongInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryLongInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Long Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryLongInstantiation]]></configKey>
     <description><![CDATA[It is unnecessary to instantiate Long objects. Instead just use the literal with the 'L' identifier to force the type, such as 8L or 42L.]]></description>
   </rule>
 
   <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryModOneRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryModOneRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Mod One]]></name>
     <configKey><![CDATA[UnnecessaryModOne]]></configKey>
     <description><![CDATA[Any expression mod 1 (exp % 1) is guaranteed to always return zero. This code is probably an error, and should be either (exp &amp; 1) or (exp % 2).]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryObjectReferencesRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryObjectReferencesRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Object References]]></name>
     <configKey><![CDATA[UnnecessaryObjectReferences]]></configKey>
     <description><![CDATA[Violations are triggered when an excessive set of consecutive statements all reference the same variable. This can be made more readable by using a with or identity block.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryNullCheckRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryNullCheckRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Null Check]]></name>
     <configKey><![CDATA[UnnecessaryNullCheck]]></configKey>
     <description><![CDATA[Groovy contains the safe dereference operator, which can be used in boolean conditional statements to safely replace explicit "x == null" tests.]]></description>
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryNullCheckBeforeInstanceOfRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryNullCheckBeforeInstanceOfRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Null Check Before Instance Of]]></name>
     <configKey><![CDATA[UnnecessaryNullCheckBeforeInstanceOf]]></configKey>
     <description><![CDATA[There is no need to check for null before an instanceof; the instanceof keyword returns false when given a null argument.]]></description>
@@ -1505,7 +1570,7 @@
   </rule>
 
   <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessarySelfAssignmentRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessarySelfAssignmentRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Self Assignment]]></name>
     <configKey><![CDATA[UnnecessarySelfAssignment]]></configKey>
     <description><![CDATA[Method contains a pointless self-assignment to a variable or property.]]></description>
@@ -1519,7 +1584,7 @@
   </rule>
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule" priority="MAJOR">
     <name><![CDATA[Unnecessary String Instantiation]]></name>
     <configKey><![CDATA[UnnecessaryStringInstantiation]]></configKey>
     <description><![CDATA[Use a String literal (e.g., "...") instead of calling the corresponding String constructor (new String("..")) directly.]]></description>
@@ -1532,14 +1597,14 @@
   </rule>
 
   <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryTransientModifierRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryTransientModifierRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Transient Modifier]]></name>
     <configKey><![CDATA[UnnecessaryTransientModifier]]></configKey>
     <description><![CDATA[The field is marked as transient, but the class isn't Serializable, so marking it as transient has no effect.]]></description>
   </rule>
 
   <!-- since 0.14 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryFinalOnPrivateMethodRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryFinalOnPrivateMethodRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Final On Private Method]]></name>
     <configKey><![CDATA[UnnecessaryFinalOnPrivateMethod]]></configKey>
     <description><![CDATA[A private method is marked final. Private methods cannot be overridden, so marking it final is unnecessary.]]></description>
@@ -1560,10 +1625,38 @@
   </rule>
 
   <!-- since 0.14 -->
-  <rule key="org.codenarc.rule.unnecessary.UnnecessaryPackageReferenceRule" priority="MINOR">
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryPackageReferenceRule" priority="MAJOR">
     <name><![CDATA[Unnecessary Package Reference]]></name>
     <configKey><![CDATA[UnnecessaryPackageReference]]></configKey>
     <description><![CDATA[Checks for explicit package reference for classes that Groovy imports by default, such as <em>java.lang.String</em>, <em>java.util.Map</em> and <em>groovy.lang.Closure</em>.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryDefInVariableDeclarationRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Def In Variable Declaration]]></name>
+    <configKey><![CDATA[UnnecessaryDefInVariableDeclaration]]></configKey>
+    <description><![CDATA[If a variable has a visibility modifier or a type declaration, then the def keyword is unneeded. For instance 'def private n = 2' is redundant and can be simplified to 'private n = 2'.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryDotClassRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Dot Class]]></name>
+    <configKey><![CDATA[UnnecessaryDotClass]]></configKey>
+    <description><![CDATA[To make a reference to a class, it is unnecessary to specify the '.class' identifier. For instance String.class can be shortened to String.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryInstanceOfCheckRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Instance Of Check]]></name>
+    <configKey><![CDATA[UnnecessaryInstanceOfCheck]]></configKey>
+    <description><![CDATA[This rule finds instanceof checks that cannot possibly evaluate to true. For instance, checking that (!variable instanceof String) will never be true because the result of a not expression is always a boolean.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessarySubstringRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Substring]]></name>
+    <configKey><![CDATA[UnnecessarySubstring]]></configKey>
+    <description><![CDATA[This rule finds usages of String.substring(int) and String.substring(int, int) that can be replaced by use of the subscript operator. For instance, var.substring(5) can be replaced with var[5..-1].]]></description>
   </rule>
 
   <!-- unused rules -->
@@ -1612,6 +1705,27 @@
     <name><![CDATA[Direct Connection Management]]></name>
     <configKey><![CDATA[DirectConnectionManagement]]></configKey>
     <description><![CDATA[The J2EE standard requires that applications use the container's resource management facilities to obtain connections to resources. Every major web application container provides pooled database connection management as part of its resource management framework. Duplicating this functionality in an application is difficult and error prone, which is part of the reason it is forbidden under the J2EE standard.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.jdbc.JdbcConnectionReferenceRule" priority="MINOR">
+    <name><![CDATA[Jdbc Connection Reference]]></name>
+    <configKey><![CDATA[JdbcConnectionReference]]></configKey>
+    <description><![CDATA[Check for direct use of <em>java.sql.Connection</em>, which is discouraged and almost never necessary in application code.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.jdbc.JdbcResultSetReferenceRule" priority="MINOR">
+    <name><![CDATA[Jdbc Result Set Reference]]></name>
+    <configKey><![CDATA[JdbcResultSetReference]]></configKey>
+    <description><![CDATA[Check for direct use of <em>java.sql.ResultSet</em>, which is not necessary if using the Groovy <em>Sql</em> facility or an ORM framework such as Hibernate.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.jdbc.JdbcStatementReferenceRule" priority="MINOR">
+    <name><![CDATA[Jdbc Statement Reference]]></name>
+    <configKey><![CDATA[JdbcStatementReference]]></configKey>
+    <description><![CDATA[Check for direct use of <em>java.sql.Statement</em>, <em>java.sql.PreparedStatement</em>, or <em>java.sql.CallableStatement</em>, which is not necessary if using the Groovy <em>Sql</em> facility or an ORM framework such as Hibernate.]]></description>
   </rule>
 
   <!-- security rules -->
@@ -1677,6 +1791,63 @@
     <name><![CDATA[Non Final Public Field]]></name>
     <configKey><![CDATA[NonFinalPublicField]]></configKey>
     <description><![CDATA[Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final.]]></description>
+  </rule>
+
+  <!-- formatting rules -->
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.BracesForClassRule" priority="MINOR">
+    <name><![CDATA[Braces For Class]]></name>
+    <configKey><![CDATA[BracesForClass]]></configKey>
+    <description><![CDATA[Checks the location of the opening brace ({) for classes. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
+    <param key="sameLine"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.LineLengthRule" priority="MINOR">
+    <name><![CDATA[Line Length]]></name>
+    <configKey><![CDATA[LineLength]]></configKey>
+    <description><![CDATA[Checks the maximum length for each line of source code. It checks for number of characters, so lines that include tabs may appear longer than the allowed number when viewing the file. The maximum line length can be configured by setting the length property, which defaults to 120.]]></description>
+    <param key="length"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.BracesForForLoopRule" priority="MINOR">
+    <name><![CDATA[Braces For For Loop]]></name>
+    <configKey><![CDATA[BracesForForLoop]]></configKey>
+    <description><![CDATA[Checks the location of the opening brace ({) for for loops. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
+    <param key="sameLine"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.BracesForIfElseRule" priority="MINOR">
+    <name><![CDATA[Braces For If Else]]></name>
+    <configKey><![CDATA[BracesForIfElse]]></configKey>
+    <description><![CDATA[Checks the location of the opening brace ({) for if statements. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
+    <param key="sameLine"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.BracesForMethodRule" priority="MINOR">
+    <name><![CDATA[Braces For Method]]></name>
+    <configKey><![CDATA[BracesForMethod]]></configKey>
+    <description><![CDATA[Checks the location of the opening brace ({) for constructors and methods. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
+    <param key="sameLine"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.BracesForTryCatchFinallyRule" priority="MINOR">
+    <name><![CDATA[Braces For Try Catch Finally]]></name>
+    <configKey><![CDATA[BracesForTryCatchFinally]]></configKey>
+    <description><![CDATA[Checks the location of the opening brace ({) for try statements. By default, requires them on the line, but the sameLine property can be set to false to override this.]]></description>
+    <param key="sameLine"/>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.formatting.ClassJavadocRule" priority="MINOR">
+    <name><![CDATA[Class Javadoc]]></name>
+    <configKey><![CDATA[ClassJavadoc]]></configKey>
+    <description><![CDATA[Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST.]]></description>
   </rule>
 
 </rules>
