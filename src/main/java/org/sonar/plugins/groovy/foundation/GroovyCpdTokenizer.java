@@ -21,6 +21,7 @@
 package org.sonar.plugins.groovy.foundation;
 
 import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
 import net.sourceforge.pmd.cpd.SourceCode;
 import net.sourceforge.pmd.cpd.TokenEntry;
@@ -35,14 +36,14 @@ public class GroovyCpdTokenizer implements Tokenizer {
   public final void tokenize(SourceCode source, Tokens cpdTokens) {
     String fileName = source.getFileName();
     Token token;
-    GroovyLexer lexer;
+    TokenStream tokenStream;
 
     try {
-      lexer = new GroovyLexer(new FileReader(new File(fileName)));
-      token = lexer.nextToken();
+      tokenStream = new GroovyLexer(new FileReader(new File(fileName))).plumb();
+      token = tokenStream.nextToken();
       while (token.getType() != Token.EOF_TYPE) {
         cpdTokens.add(new TokenEntry(token.getText(), fileName, token.getLine()));
-        token = lexer.nextToken();
+        token = tokenStream.nextToken();
       }
     }
     catch (TokenStreamException tse) {
