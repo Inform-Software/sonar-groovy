@@ -43,48 +43,57 @@ public class GMetricsXMLParser implements BatchExtension {
   public void parseAndProcessGMetricsResults(File xmlFile, final SensorContext context) {
     GroovyUtils.LOG.info("parsing {}", xmlFile);
 
-    StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-        rootCursor.advance();
-        SMInputCursor clazz = rootCursor.descendantElementCursor("Class");
-
-        while (clazz.getNext() != null) {
-          GroovyFile sonarFile = new GroovyFile(clazz.getAttrValue("name"));
-
-          double nbMethods = 0;
-          double complexity = 0;
-
-          RangeDistributionBuilder complexityMethodsDistribution =
-              new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, METHODS_DISTRIB_BOTTOM_LIMITS);
-          RangeDistributionBuilder complexityClassDistribution =
-              new RangeDistributionBuilder(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, CLASS_DISTRIB_BOTTOM_LIMITS);
-
-          SMInputCursor method = clazz.descendantElementCursor("Method");
-
-          while (method.getNext() != null) {
-            nbMethods++;
-            SMInputCursor methodMetric = method.childElementCursor("MetricResult");
-            while (methodMetric.getNext() != null) {
-              if (methodMetric.getAttrValue("name").equals("CyclomaticComplexity")) {
-                double methodComplexity = Double.valueOf(methodMetric.getAttrValue("total"));
-                complexity += methodComplexity;
-                complexityMethodsDistribution.add(methodComplexity);
-              }
-            }
-          }
-          context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, nbMethods);
-          context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
-          context.saveMeasure(sonarFile, complexityMethodsDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-
-          complexityClassDistribution.add(complexity);
-          context.saveMeasure(sonarFile, complexityClassDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-        }
-      }
-    });
+    StaxParser parser = new StaxParser(new GMetricsStreamHandler(context));
     try {
       parser.parse(xmlFile);
     } catch (XMLStreamException e) {
       GroovyUtils.LOG.error("Error parsing file : " + xmlFile);
     }
   }
+
+  private static class GMetricsStreamHandler implements StaxParser.XmlStreamHandler {
+    private final SensorContext context;
+
+    public GMetricsStreamHandler(SensorContext context) {
+      this.context = context;
+    }
+
+    public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+      rootCursor.advance();
+      SMInputCursor clazz = rootCursor.descendantElementCursor("Class");
+
+      while (clazz.getNext() != null) {
+        GroovyFile sonarFile = new GroovyFile(clazz.getAttrValue("name"));
+
+        double nbMethods = 0;
+        double complexity = 0;
+
+        RangeDistributionBuilder complexityMethodsDistribution =
+            new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, METHODS_DISTRIB_BOTTOM_LIMITS);
+        RangeDistributionBuilder complexityClassDistribution =
+            new RangeDistributionBuilder(CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION, CLASS_DISTRIB_BOTTOM_LIMITS);
+
+        SMInputCursor method = clazz.descendantElementCursor("Method");
+
+        while (method.getNext() != null) {
+          nbMethods++;
+          SMInputCursor methodMetric = method.childElementCursor("MetricResult");
+          while (methodMetric.getNext() != null) {
+            if ("CyclomaticComplexity".equals(methodMetric.getAttrValue("name"))) {
+              double methodComplexity = Double.valueOf(methodMetric.getAttrValue("total"));
+              complexity += methodComplexity;
+              complexityMethodsDistribution.add(methodComplexity);
+            }
+          }
+        }
+        context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, nbMethods);
+        context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
+        context.saveMeasure(sonarFile, complexityMethodsDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
+
+        complexityClassDistribution.add(complexity);
+        context.saveMeasure(sonarFile, complexityClassDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
+      }
+    }
+  }
+
 }

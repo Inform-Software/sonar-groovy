@@ -20,6 +20,7 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.AbstractCoverageExtension;
 import org.sonar.api.batch.Sensor;
@@ -39,6 +40,8 @@ import java.io.File;
  * TODO copied from sonar-cobertura-plugin with modifications: JavaFile replaced by GroovyFile, fixed SONARPLUGINS-696
  */
 public class CoberturaSensor extends AbstractCoverageExtension implements Sensor, DependsUponMavenPlugin {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
   private CoberturaMavenPluginHandler handler;
 
@@ -66,14 +69,16 @@ public class CoberturaSensor extends AbstractCoverageExtension implements Sensor
   }
 
   protected void parseReport(File xmlFile, final SensorContext context) {
-    LoggerFactory.getLogger(CoberturaSensor.class).info("parsing {}", xmlFile);
-    new AbstractCoberturaParser() {
-      @Override
-      protected Resource<?> getResource(String fileName) {
-        return new GroovyFile(fileName);
-      }
-    }.parseReport(xmlFile, context);
+    LOG.info("parsing {}", xmlFile);
+    COBERTURA_PARSER.parseReport(xmlFile, context);
   }
+
+  private static final AbstractCoberturaParser COBERTURA_PARSER = new AbstractCoberturaParser() {
+    @Override
+    protected Resource<?> getResource(String fileName) {
+      return new GroovyFile(fileName);
+    }
+  };
 
   @Override
   public String toString() {

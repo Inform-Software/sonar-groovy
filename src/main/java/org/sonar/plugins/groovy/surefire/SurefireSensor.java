@@ -40,7 +40,7 @@ import java.io.File;
  */
 public class SurefireSensor implements Sensor {
 
-  private static Logger logger = LoggerFactory.getLogger(SurefireSensor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SurefireSensor.class);
 
   @DependsUpon
   public Class<?> dependsUponCoverageSensors() {
@@ -57,14 +57,16 @@ public class SurefireSensor implements Sensor {
   }
 
   protected void collect(Project project, SensorContext context, File reportsDir) {
-    logger.info("parsing {}", reportsDir);
-    new AbstractSurefireParser() {
-      @Override
-      protected Resource<?> getUnitTestResource(String classKey) {
-        return new GroovyFile(classKey, true);
-      }
-    }.collect(project, context, reportsDir);
+    LOG.info("parsing {}", reportsDir);
+    SUREFIRE_PARSER.collect(project, context, reportsDir);
   }
+
+  private static final AbstractSurefireParser SUREFIRE_PARSER = new AbstractSurefireParser() {
+    @Override
+    protected Resource<?> getUnitTestResource(String classKey) {
+      return new GroovyFile(classKey, true);
+    }
+  };
 
   @Override
   public String toString() {
