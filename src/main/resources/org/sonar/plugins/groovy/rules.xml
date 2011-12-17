@@ -1,14 +1,7 @@
-<!-- Generated using CodeNarc 0.15 -->
+<!-- Generated using CodeNarc 0.16 -->
 <rules>
 
   <!-- basic rules -->
-
-  <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.basic.AddEmptyStringRule" priority="MINOR">
-    <name><![CDATA[Add Empty String]]></name>
-    <configKey><![CDATA[AddEmptyString]]></configKey>
-    <description><![CDATA[Finds empty string literals which are being added. This is an inefficient way to convert any type to a String.]]></description>
-  </rule>
 
   <!-- since 0.13 -->
   <rule key="org.codenarc.rule.basic.AssignmentInConditionalRule" priority="MINOR">
@@ -30,52 +23,11 @@
     <description><![CDATA[This rule catches usages of java.lang.Boolean.getBoolean(String) which reads a boolean from the System properties. It is often mistakenly used to attempt to read user input or parse a String into a boolean. It is a poor piece of API to use; replace it with System.properties['prop'].]]></description>
   </rule>
 
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.BooleanMethodReturnsNullRule" priority="MINOR">
-    <name><![CDATA[Boolean Method Returns Null]]></name>
-    <configKey><![CDATA[BooleanMethodReturnsNull]]></configKey>
-    <description><![CDATA[Method with Boolean return type returns explicit null. A method that returns either Boolean.TRUE, Boolean.FALSE or null is an accident waiting to happen. This method can be invoked as though it returned a value of type boolean, and the compiler will insert automatic unboxing of the Boolean value. If a null value is returned, this will result in a NullPointerException.]]></description>
-  </rule>
-
   <!-- since 0.13 -->
   <rule key="org.codenarc.rule.basic.BrokenOddnessCheckRule" priority="MINOR">
     <name><![CDATA[Broken Oddness Check]]></name>
     <configKey><![CDATA[BrokenOddnessCheck]]></configKey>
     <description><![CDATA[The code uses x % 2 == 1 to check to see if a value is odd, but this won't work for negative numbers (e.g., (-5) % 2 == -1). If this code is intending to check for oddness, consider using x &amp; 1 == 1, or x % 2 != 0.]]></description>
-  </rule>
-
-  <rule key="org.codenarc.rule.basic.CloneableWithoutCloneRule" priority="MINOR">
-    <name><![CDATA[Cloneable Without Clone]]></name>
-    <configKey><![CDATA[CloneableWithoutClone]]></configKey>
-    <description><![CDATA[A class that implements <em>java.lang.Cloneable</em> should define a <em>clone()</em> method.]]></description>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.basic.ConfusingTernaryRule" priority="MINOR">
-    <name><![CDATA[Confusing Ternary]]></name>
-    <configKey><![CDATA[ConfusingTernary]]></configKey>
-    <description><![CDATA[In a ternary expression avoid negation in the test. For example, rephrase: "(x != y) ? diff : same" as: "(x == y) ? same : diff". Consistent use of this rule makes the code easier to read. Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?".]]></description>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.basic.CompareToWithoutComparableRule" priority="MINOR">
-    <name><![CDATA[Compare To Without Comparable]]></name>
-    <configKey><![CDATA[CompareToWithoutComparable]]></configKey>
-    <description><![CDATA[If you implement a compareTo method then you should also implement the Comparable interface. If you don't then you could possibly get an exception if the Groovy == operator is invoked on your object. This is an issue fixed in Groovy 1.8 but present in previous versions.]]></description>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.basic.ConsecutiveLiteralAppendsRule" priority="MINOR">
-    <name><![CDATA[Consecutive Literal Appends]]></name>
-    <configKey><![CDATA[ConsecutiveLiteralAppends]]></configKey>
-    <description><![CDATA[Violations occur when method calls to append(Object) are chained together with literals as parameters. The chained calls can be joined into one invocation.]]></description>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.basic.ConsecutiveStringConcatenationRule" priority="MAJOR">
-    <name><![CDATA[Consecutive String Concatenation]]></name>
-    <configKey><![CDATA[ConsecutiveStringConcatenation]]></configKey>
-    <description><![CDATA[Catches concatenation of two string literals on the same line. These can safely by joined.]]></description>
   </rule>
 
   <rule key="org.codenarc.rule.basic.ConstantIfExpressionRule" priority="MINOR">
@@ -192,111 +144,6 @@
     <description><![CDATA[If either the <em>boolean equals(Object)</em> or the <em>int hashCode()</em> methods are overridden within a class, then both must be overridden.]]></description>
   </rule>
 
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitArrayListInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Array List Instantiation]]></name>
-    <configKey><![CDATA[ExplicitArrayListInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of an <em>ArrayList</em> using the no-arg constructor. In Groovy, it is best to write <em>new ArrayList()</em> as <em>[]</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToAndMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To And Method]]></name>
-    <configKey><![CDATA[ExplicitCallToAndMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>and(Object)</em> method is called directly in code instead of using the &amp; operator. A groovier way to express this: <em>a.and(b)</em> is this: <em>a &amp; b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToCompareToMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Compare To Method]]></name>
-    <configKey><![CDATA[ExplicitCallToCompareToMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>compareTo(Object)</em> method is called directly in code instead of using the &lt;=&gt;, &gt;, &gt;=, &lt;, and &lt;= operators. A groovier way to express this: <em>a.compareTo(b)</em> is this: <em>a &lt;=&gt; b</em>, or using the other operators.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToDivMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Div Method]]></name>
-    <configKey><![CDATA[ExplicitCallToDivMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>div(Object)</em> method is called directly in code instead of using the / operator. A groovier way to express this: <em>a.div(b)</em> is this: <em>a / b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToEqualsMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Equals Method]]></name>
-    <configKey><![CDATA[ExplicitCallToEqualsMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>equals(Object)</em> method is called directly in code instead of using the == or != operator. A groovier way to express this: <em>a.equals(b)</em> is this: <em>a == b</em> and a groovier way to express : <em>!a.equals(b)</em> is : <em>a != b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToGetAtMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Get At Method]]></name>
-    <configKey><![CDATA[ExplicitCallToGetAtMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>getAt(Object)</em> method is called directly in code instead of using the [] index operator. A groovier way to express this: <em>a.getAt(b)</em> is this: <em>a[b]</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToLeftShiftMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Left Shift Method]]></name>
-    <configKey><![CDATA[ExplicitCallToLeftShiftMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>leftShift(Object)</em> method is called directly in code instead of using the &lt;&lt; operator. A groovier way to express this: <em>a.leftShift(b)</em> is this: <em>a &lt;&lt; b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToMinusMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Minus Method]]></name>
-    <configKey><![CDATA[ExplicitCallToMinusMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>minus(Object)</em> method is called directly in code instead of using the - operator. A groovier way to express this: <em>a.minus(b)</em> is this: <em>a - b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToMultiplyMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Multiply Method]]></name>
-    <configKey><![CDATA[ExplicitCallToMultiplyMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>minus(Object)</em> method is called directly in code instead of using the * operator. A groovier way to express this: <em>a.multiply(b)</em> is this: <em>a * b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToModMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Mod Method]]></name>
-    <configKey><![CDATA[ExplicitCallToModMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>mod(Object)</em> method is called directly in code instead of using the % operator. A groovier way to express this: <em>a.mod(b)</em> is this: <em>a % b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToOrMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Or Method]]></name>
-    <configKey><![CDATA[ExplicitCallToOrMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>or(Object)</em> method is called directly in code instead of using the | operator. A groovier way to express this: <em>a.or(b)</em> is this: <em>a | b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToPlusMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Plus Method]]></name>
-    <configKey><![CDATA[ExplicitCallToPlusMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>plus(Object)</em> method is called directly in code instead of using the + operator. A groovier way to express this: <em>a.plus(b)</em> is this: <em>a + b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToPowerMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Power Method]]></name>
-    <configKey><![CDATA[ExplicitCallToPowerMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>power(Object)</em> method is called directly in code instead of using the ** operator. A groovier way to express this: <em>a.power(b)</em> is this: <em>a ** b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToRightShiftMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Right Shift Method]]></name>
-    <configKey><![CDATA[ExplicitCallToRightShiftMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>rightShift(Object)</em> method is called directly in code instead of using the >> operator. A groovier way to express this: <em>a.rightShift(b)</em> is this: <em>a >> b</em>]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitCallToXorMethodRule" priority="MINOR">
-    <name><![CDATA[Explicit Call To Xor Method]]></name>
-    <configKey><![CDATA[ExplicitCallToXorMethod]]></configKey>
-    <description><![CDATA[This rule detects when the <em>xor(Object)</em> method is called directly in code instead of using the ^ operator. A groovier way to express this: <em>a.xor(b)</em> is this: <em>a ^ b</em>]]></description>
-  </rule>
-
   <!-- since 0.12 -->
   <rule key="org.codenarc.rule.basic.ExplicitGarbageCollectionRule" priority="MINOR">
     <name><![CDATA[Explicit Garbage Collection]]></name>
@@ -304,67 +151,11 @@
     <description><![CDATA[Calls to System.gc(), Runtime.getRuntime().gc(), and System.runFinalization() are not advised. Code should have the same behavior whether the garbage collection is disabled using the option -Xdisableexplicitgc or not. Moreover, "modern" jvms do a very good job handling garbage collections. If memory usage issues unrelated to memory leaks develop within an application, it should be dealt with JVM options rather than within the code itself.]]></description>
   </rule>
 
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitHashMapInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Hash Map Instantiation]]></name>
-    <configKey><![CDATA[ExplicitHashMapInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>HashMap</em> using the no-arg constructor. In Groovy, it is best to write <em>new HashMap()</em> as <em>[:]</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitHashSetInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Hash Set Instantiation]]></name>
-    <configKey><![CDATA[ExplicitHashSetInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>HashSet</em> using the no-arg constructor. In Groovy, it is best to write <em>new HashSet()</em> as <em>[] as Set</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitLinkedListInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Linked List Instantiation]]></name>
-    <configKey><![CDATA[ExplicitLinkedListInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>LinkedList</em> using the no-arg constructor. In Groovy, it is best to write <em>new LinkedList()</em> as <em>[] as Queue</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitStackInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Stack Instantiation]]></name>
-    <configKey><![CDATA[ExplicitStackInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>Stack</em> using the no-arg constructor. In Groovy, it is best to write <em>new Stack()</em> as <em>[] as Stack</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ExplicitTreeSetInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Tree Set Instantiation]]></name>
-    <configKey><![CDATA[ExplicitTreeSetInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>TreeSet</em> using the no-arg constructor. In Groovy, it is best to write <em>new TreeSet()</em> as <em>[] as SortedSet</em>, which creates the same object.]]></description>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule key="org.codenarc.rule.basic.GroovyLangImmutableRule" priority="MINOR">
-    <name><![CDATA[Groovy Lang Immutable]]></name>
-    <configKey><![CDATA[GroovyLangImmutable]]></configKey>
-    <description><![CDATA[The groovy.lang.Immutable annotation has been deprecated and replaced by groovy.transform.Immutable. Do not use the Immutable in groovy.lang.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.GStringAsMapKeyRule" priority="MINOR">
-    <name><![CDATA[G String As Map Key]]></name>
-    <configKey><![CDATA[GStringAsMapKey]]></configKey>
-    <description><![CDATA[A GString should not be used as a map key since its hashcode is not guaranteed to be stable. Consider calling <em>key.toString()</em>.]]></description>
-  </rule>
-
   <!-- since 0.13 -->
   <rule key="org.codenarc.rule.basic.IntegerGetIntegerRule" priority="MINOR">
     <name><![CDATA[Integer Get Integer]]></name>
     <configKey><![CDATA[IntegerGetInteger]]></configKey>
     <description><![CDATA[This rule catches usages of java.lang.Integer.getInteger(String, ...) which reads an Integer from the System properties. It is often mistakenly used to attempt to read user input or parse a String into an Integer. It is a poor piece of API to use; replace it with System.properties['prop'].]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.InvertedIfElseRule" priority="MINOR">
-    <name><![CDATA[Inverted If Else]]></name>
-    <configKey><![CDATA[InvertedIfElse]]></configKey>
-    <description><![CDATA[An inverted if-else statement is one in which there is a single <em>if</em> statement with a single <em>else</em> branch and the boolean test of the if is negated. For instance <em>if (!x) false else true</em>. It is usually clearer to write this as <em>if (x) true else false</em>.]]></description>
   </rule>
 
   <!-- since 0.11 -->
@@ -380,38 +171,10 @@
     <description><![CDATA[Returning from a <em>finally</em> block is confusing and can hide the original exception.]]></description>
   </rule>
 
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ReturnsNullInsteadOfEmptyArrayRule" priority="MINOR">
-    <name><![CDATA[Returns Null Instead Of Empty Array]]></name>
-    <configKey><![CDATA[ReturnsNullInsteadOfEmptyArray]]></configKey>
-    <description><![CDATA[Consider returning a zero length array rather than null. It is often a better design to return a length zero array rather than a null reference to indicate that there are no results (i.e., an empty list of results). This way, no explicit check for null is needed by clients of the method.]]></description>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.basic.ReturnsNullInsteadOfEmptyCollectionRule" priority="MINOR">
-    <name><![CDATA[Returns Null Instead Of Empty Collection]]></name>
-    <configKey><![CDATA[ReturnsNullInsteadOfEmptyCollection]]></configKey>
-    <description><![CDATA[Consider returning a zero length collection rather than null. It is often a better design to return a length zero collection rather than a null reference to indicate that there are no results (i.e., an empty list of results). This way, no explicit check for null is needed by clients of the method.]]></description>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.basic.SimpleDateFormatMissingLocaleRule" priority="MINOR">
-    <name><![CDATA[Simple Date Format Missing Locale]]></name>
-    <configKey><![CDATA[SimpleDateFormatMissingLocale]]></configKey>
-    <description><![CDATA[Be sure to specify a Locale when creating a new instance of SimpleDateFormat; the class is locale-sensitive. If you instantiate SimpleDateFormat without a Locale parameter, it will format the date and time according to the default Locale. Both the pattern and the Locale determine the format. For the same pattern, SimpleDateFormat may format a date and time differently if the Locale varies.]]></description>
-  </rule>
-
   <rule key="org.codenarc.rule.basic.ThrowExceptionFromFinallyBlockRule" priority="MINOR">
     <name><![CDATA[Throw Exception From Finally Block]]></name>
     <configKey><![CDATA[ThrowExceptionFromFinallyBlock]]></configKey>
     <description><![CDATA[Throwing an exception from a <em>finally</em> block is confusing and can hide the original exception.]]></description>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule key="org.codenarc.rule.basic.ExplicitLinkedHashMapInstantiationRule" priority="MINOR">
-    <name><![CDATA[Explicit Linked Hash Map Instantiation]]></name>
-    <configKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></configKey>
-    <description><![CDATA[This rule checks for the explicit instantiation of a <em>LinkedHashMap</em> using the no-arg constructor. In Groovy, it is best to write <em>new LinkedHashMap()</em> as <em>[:]</em>, which creates the same object.]]></description>
   </rule>
 
   <!-- since 0.14 -->
@@ -443,13 +206,6 @@
   </rule>
 
   <!-- since 0.14 -->
-  <rule key="org.codenarc.rule.basic.ClosureAsLastMethodParameterRule" priority="MAJOR">
-    <name><![CDATA[Closure As Last Method Parameter]]></name>
-    <configKey><![CDATA[ClosureAsLastMethodParameter]]></configKey>
-    <description><![CDATA[If a method is called and the last parameter is an inline closure then it can be declared outside of the method call brackets.]]></description>
-  </rule>
-
-  <!-- since 0.14 -->
   <rule key="org.codenarc.rule.basic.ClassForNameRule" priority="MINOR">
     <name><![CDATA[Class For Name]]></name>
     <configKey><![CDATA[ClassForName]]></configKey>
@@ -471,31 +227,10 @@
   </rule>
 
   <!-- since 0.15 -->
-  <rule key="org.codenarc.rule.basic.AssignCollectionUniqueRule" priority="MINOR">
-    <name><![CDATA[Assign Collection Unique]]></name>
-    <configKey><![CDATA[AssignCollectionUnique]]></configKey>
-    <description><![CDATA[The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule key="org.codenarc.rule.basic.AssignCollectionSortRule" priority="MINOR">
-    <name><![CDATA[Assign Collection Sort]]></name>
-    <configKey><![CDATA[AssignCollectionSort]]></configKey>
-    <description><![CDATA[The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
-  </rule>
-
-  <!-- since 0.15 -->
   <rule key="org.codenarc.rule.basic.BitwiseOperatorInConditionalRule" priority="MINOR">
     <name><![CDATA[Bitwise Operator In Conditional]]></name>
     <configKey><![CDATA[BitwiseOperatorInConditional]]></configKey>
     <description><![CDATA[Checks for bitwise operations in conditionals, if you need to do a bitwise operation then it is best practive to extract a temp variable.]]></description>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule key="org.codenarc.rule.basic.HardcodedWindowsRootDirectoryRule" priority="MINOR">
-    <name><![CDATA[Hardcoded Windows Root Directory]]></name>
-    <configKey><![CDATA[HardcodedWindowsRootDirectory]]></configKey>
-    <description><![CDATA[This rule find cases where a File object is constructed with a windows-based path. This is not portable, and using the File.listRoots() method is a better alternative.]]></description>
   </rule>
 
   <!-- since 0.15 -->
@@ -510,6 +245,13 @@
     <name><![CDATA[Random Double Coerced To Zero]]></name>
     <configKey><![CDATA[RandomDoubleCoercedToZero]]></configKey>
     <description><![CDATA[The Math.random() method returns a double result greater than or equal to 0.0 and less than 1.0. If you coerce this result into an Integer or int, then it is coerced to zero. Casting the result to int, or assigning it to an int field is probably a bug.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.basic.HardCodedWindowsRootDirectoryRule" priority="MINOR">
+    <name><![CDATA[Hard Coded Windows Root Directory]]></name>
+    <configKey><![CDATA[HardCodedWindowsRootDirectory]]></configKey>
+    <description><![CDATA[This rule find cases where a <em>File</em> object is constructed with a windows-based path. This is not portable, and using the <em>File.listRoots()</em> method is a better alternative.]]></description>
   </rule>
 
   <!-- serialization rules -->
@@ -733,6 +475,47 @@
 
   <!-- design rules -->
 
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.design.BooleanMethodReturnsNullRule" priority="MINOR">
+    <name><![CDATA[Boolean Method Returns Null]]></name>
+    <configKey><![CDATA[BooleanMethodReturnsNull]]></configKey>
+    <description><![CDATA[Method with Boolean return type returns explicit null. A method that returns either Boolean.TRUE, Boolean.FALSE or null is an accident waiting to happen. This method can be invoked as though it returned a value of type boolean, and the compiler will insert automatic unboxing of the Boolean value. If a null value is returned, this will result in a NullPointerException.]]></description>
+  </rule>
+
+  <rule key="org.codenarc.rule.design.CloneableWithoutCloneRule" priority="MINOR">
+    <name><![CDATA[Cloneable Without Clone]]></name>
+    <configKey><![CDATA[CloneableWithoutClone]]></configKey>
+    <description><![CDATA[A class that implements <em>java.lang.Cloneable</em> should define a <em>clone()</em> method.]]></description>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule key="org.codenarc.rule.design.CompareToWithoutComparableRule" priority="MINOR">
+    <name><![CDATA[Compare To Without Comparable]]></name>
+    <configKey><![CDATA[CompareToWithoutComparable]]></configKey>
+    <description><![CDATA[If you implement a compareTo method then you should also implement the Comparable interface. If you don't then you could possibly get an exception if the Groovy == operator is invoked on your object. This is an issue fixed in Groovy 1.8 but present in previous versions.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.design.ReturnsNullInsteadOfEmptyArrayRule" priority="MINOR">
+    <name><![CDATA[Returns Null Instead Of Empty Array]]></name>
+    <configKey><![CDATA[ReturnsNullInsteadOfEmptyArray]]></configKey>
+    <description><![CDATA[Consider returning a zero length array rather than null. It is often a better design to return a length zero array rather than a null reference to indicate that there are no results (i.e., an empty list of results). This way, no explicit check for null is needed by clients of the method.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.design.ReturnsNullInsteadOfEmptyCollectionRule" priority="MINOR">
+    <name><![CDATA[Returns Null Instead Of Empty Collection]]></name>
+    <configKey><![CDATA[ReturnsNullInsteadOfEmptyCollection]]></configKey>
+    <description><![CDATA[Consider returning a zero length collection rather than null. It is often a better design to return a length zero collection rather than a null reference to indicate that there are no results (i.e., an empty list of results). This way, no explicit check for null is needed by clients of the method.]]></description>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule key="org.codenarc.rule.design.SimpleDateFormatMissingLocaleRule" priority="MINOR">
+    <name><![CDATA[Simple Date Format Missing Locale]]></name>
+    <configKey><![CDATA[SimpleDateFormatMissingLocale]]></configKey>
+    <description><![CDATA[Be sure to specify a Locale when creating a new instance of SimpleDateFormat; the class is locale-sensitive. If you instantiate SimpleDateFormat without a Locale parameter, it will format the date and time according to the default Locale. Both the pattern and the Locale determine the format. For the same pattern, SimpleDateFormat may format a date and time differently if the Locale varies.]]></description>
+  </rule>
+
   <!-- since 0.12 -->
   <rule key="org.codenarc.rule.design.AbstractClassWithoutAbstractMethodRule" priority="MINOR">
     <name><![CDATA[Abstract Class Without Abstract Method]]></name>
@@ -795,6 +578,13 @@
     <description><![CDATA[Checks for <em>abstract</em> classes that define a public constructor, which is useless and confusing.]]></description>
   </rule>
 
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.design.BuilderMethodWithSideEffectsRule" priority="MINOR">
+    <name><![CDATA[Builder Method With Side Effects]]></name>
+    <configKey><![CDATA[BuilderMethodWithSideEffects]]></configKey>
+    <description><![CDATA[A builder method is defined as one that creates objects. As such, they should never be of void return type. If a method is named build, create, or make, then it should always return a value.]]></description>
+  </rule>
+
   <!-- dry rules -->
 
   <!-- since 0.11 -->
@@ -811,6 +601,20 @@
     <configKey><![CDATA[DuplicateStringLiteral]]></configKey>
     <description><![CDATA[Code containing duplicate String literals can usually be improved by declaring the String as a constant field. The <em>ignoreStrings</em> property can optionally specify a comma-separated list of Strings to ignore.]]></description>
     <param key="ignoreStrings"/>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.dry.DuplicateMapLiteralRule" priority="MAJOR">
+    <name><![CDATA[Duplicate Map Literal]]></name>
+    <configKey><![CDATA[DuplicateMapLiteral]]></configKey>
+    <description><![CDATA[Code containing duplicate <em>Map</em> literals can usually be improved by declaring the <em>Map</em> as a constant field.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.dry.DuplicateListLiteralRule" priority="MAJOR">
+    <name><![CDATA[Duplicate List Literal]]></name>
+    <configKey><![CDATA[DuplicateListLiteral]]></configKey>
+    <description><![CDATA[Code containing duplicate <em>List</em> literals can usually be improved by declaring the <em>List</em> as a constant field.]]></description>
   </rule>
 
   <!-- exceptions rules -->
@@ -1341,6 +1145,13 @@
     <param key="regex"/>
   </rule>
 
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.naming.FactoryMethodNameRule" priority="MINOR">
+    <name><![CDATA[Factory Method Name]]></name>
+    <configKey><![CDATA[FactoryMethodName]]></configKey>
+    <description><![CDATA[A factory method is a method that creates objects, and they are typically named either buildFoo(), makeFoo(), or createFoo(). This rule enforces that only one naming convention is used. It defaults to makeFoo(), but that can be changed using the property 'regex'.]]></description>
+  </rule>
+
   <!-- size rules -->
 
   <rule key="org.codenarc.rule.size.AbcComplexityRule" priority="MINOR">
@@ -1388,6 +1199,27 @@
   </rule>
 
   <!-- unnecessary rules -->
+
+  <!-- since 0.13 -->
+  <rule key="org.codenarc.rule.unnecessary.AddEmptyStringRule" priority="MINOR">
+    <name><![CDATA[Add Empty String]]></name>
+    <configKey><![CDATA[AddEmptyString]]></configKey>
+    <description><![CDATA[Finds empty string literals which are being added. This is an inefficient way to convert any type to a String.]]></description>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule key="org.codenarc.rule.unnecessary.ConsecutiveLiteralAppendsRule" priority="MINOR">
+    <name><![CDATA[Consecutive Literal Appends]]></name>
+    <configKey><![CDATA[ConsecutiveLiteralAppends]]></configKey>
+    <description><![CDATA[Violations occur when method calls to append(Object) are chained together with literals as parameters. The chained calls can be joined into one invocation.]]></description>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule key="org.codenarc.rule.unnecessary.ConsecutiveStringConcatenationRule" priority="MAJOR">
+    <name><![CDATA[Consecutive String Concatenation]]></name>
+    <configKey><![CDATA[ConsecutiveStringConcatenation]]></configKey>
+    <description><![CDATA[Catches concatenation of two string literals on the same line. These can safely by joined.]]></description>
+  </rule>
 
   <!-- since 0.12 -->
   <rule key="org.codenarc.rule.unnecessary.UnnecessaryBigDecimalInstantiationRule" priority="MAJOR">
@@ -1659,6 +1491,13 @@
     <description><![CDATA[This rule finds usages of String.substring(int) and String.substring(int, int) that can be replaced by use of the subscript operator. For instance, var.substring(5) can be replaced with var[5..-1].]]></description>
   </rule>
 
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.unnecessary.UnnecessaryDefInFieldDeclarationRule" priority="MAJOR">
+    <name><![CDATA[Unnecessary Def In Field Declaration]]></name>
+    <configKey><![CDATA[UnnecessaryDefInFieldDeclaration]]></configKey>
+    <description><![CDATA[If a field has a visibility modifier or a type declaration, then the def keyword is unneeded. For instance, 'static def constraints = {}' is redundant and can be simplified to 'static constraints = {}.]]></description>
+  </rule>
+
   <!-- unused rules -->
 
   <rule key="org.codenarc.rule.unused.UnusedArrayRule" priority="MINOR">
@@ -1696,6 +1535,13 @@
     <name><![CDATA[Unused Variable]]></name>
     <configKey><![CDATA[UnusedVariable]]></configKey>
     <description><![CDATA[Checks for variables that are never referenced.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.unused.UnusedMethodParameterRule" priority="MINOR">
+    <name><![CDATA[Unused Method Parameter]]></name>
+    <configKey><![CDATA[UnusedMethodParameter]]></configKey>
+    <description><![CDATA[This rule finds instances of method parameters not being used. It does not analyze private methods (that is done by the UnusedPrivateMethodParameter rule) or methods marked @Override. ]]></description>
   </rule>
 
   <!-- jdbc rules -->
@@ -1848,6 +1694,255 @@
     <name><![CDATA[Class Javadoc]]></name>
     <configKey><![CDATA[ClassJavadoc]]></configKey>
     <description><![CDATA[Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST.]]></description>
+  </rule>
+
+  <!-- convention rules -->
+
+  <!-- since 0.12 -->
+  <rule key="org.codenarc.rule.convention.ConfusingTernaryRule" priority="MINOR">
+    <name><![CDATA[Confusing Ternary]]></name>
+    <configKey><![CDATA[ConfusingTernary]]></configKey>
+    <description><![CDATA[In a ternary expression avoid negation in the test. For example, rephrase: "(x != y) ? diff : same" as: "(x == y) ? same : diff". Consistent use of this rule makes the code easier to read. Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?".]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.convention.InvertedIfElseRule" priority="MINOR">
+    <name><![CDATA[Inverted If Else]]></name>
+    <configKey><![CDATA[InvertedIfElse]]></configKey>
+    <description><![CDATA[An inverted if-else statement is one in which there is a single <em>if</em> statement with a single <em>else</em> branch and the boolean test of the if is negated. For instance <em>if (!x) false else true</em>. It is usually clearer to write this as <em>if (x) true else false</em>.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.convention.CouldBeElvisRule" priority="MINOR">
+    <name><![CDATA[Could Be Elvis]]></name>
+    <configKey><![CDATA[CouldBeElvis]]></configKey>
+    <description><![CDATA[Catch an if block that could be written as an elvis expression.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule" priority="MINOR">
+    <name><![CDATA[Long Literal With Lower Case L]]></name>
+    <configKey><![CDATA[LongLiteralWithLowerCaseL]]></configKey>
+    <description><![CDATA[In Java and Groovy, you can specify long literals with the L or l character, for instance 55L or 24l. It is best practice to always use an uppercase L and never a lowercase l. This is because 11l rendered in some fonts may look like 111 instead of 11L.]]></description>
+  </rule>
+
+  <!-- groovyism rules -->
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.AssignCollectionSortRule" priority="MINOR">
+    <name><![CDATA[Assign Collection Sort]]></name>
+    <configKey><![CDATA[AssignCollectionSort]]></configKey>
+    <description><![CDATA[The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitArrayListInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Array List Instantiation]]></name>
+    <configKey><![CDATA[ExplicitArrayListInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of an <em>ArrayList</em> using the no-arg constructor. In Groovy, it is best to write <em>new ArrayList()</em> as <em>[]</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To And Method]]></name>
+    <configKey><![CDATA[ExplicitCallToAndMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>and(Object)</em> method is called directly in code instead of using the &amp; operator. A groovier way to express this: <em>a.and(b)</em> is this: <em>a &amp; b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Compare To Method]]></name>
+    <configKey><![CDATA[ExplicitCallToCompareToMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>compareTo(Object)</em> method is called directly in code instead of using the &lt;=&gt;, &gt;, &gt;=, &lt;, and &lt;= operators. A groovier way to express this: <em>a.compareTo(b)</em> is this: <em>a &lt;=&gt; b</em>, or using the other operators.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToDivMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Div Method]]></name>
+    <configKey><![CDATA[ExplicitCallToDivMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>div(Object)</em> method is called directly in code instead of using the / operator. A groovier way to express this: <em>a.div(b)</em> is this: <em>a / b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToEqualsMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Equals Method]]></name>
+    <configKey><![CDATA[ExplicitCallToEqualsMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>equals(Object)</em> method is called directly in code instead of using the == or != operator. A groovier way to express this: <em>a.equals(b)</em> is this: <em>a == b</em> and a groovier way to express : <em>!a.equals(b)</em> is : <em>a != b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToGetAtMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Get At Method]]></name>
+    <configKey><![CDATA[ExplicitCallToGetAtMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>getAt(Object)</em> method is called directly in code instead of using the [] index operator. A groovier way to express this: <em>a.getAt(b)</em> is this: <em>a[b]</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToLeftShiftMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Left Shift Method]]></name>
+    <configKey><![CDATA[ExplicitCallToLeftShiftMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>leftShift(Object)</em> method is called directly in code instead of using the &lt;&lt; operator. A groovier way to express this: <em>a.leftShift(b)</em> is this: <em>a &lt;&lt; b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToMinusMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Minus Method]]></name>
+    <configKey><![CDATA[ExplicitCallToMinusMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>minus(Object)</em> method is called directly in code instead of using the - operator. A groovier way to express this: <em>a.minus(b)</em> is this: <em>a - b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToMultiplyMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Multiply Method]]></name>
+    <configKey><![CDATA[ExplicitCallToMultiplyMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>minus(Object)</em> method is called directly in code instead of using the * operator. A groovier way to express this: <em>a.multiply(b)</em> is this: <em>a * b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToModMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Mod Method]]></name>
+    <configKey><![CDATA[ExplicitCallToModMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>mod(Object)</em> method is called directly in code instead of using the % operator. A groovier way to express this: <em>a.mod(b)</em> is this: <em>a % b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Or Method]]></name>
+    <configKey><![CDATA[ExplicitCallToOrMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>or(Object)</em> method is called directly in code instead of using the | operator. A groovier way to express this: <em>a.or(b)</em> is this: <em>a | b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToPlusMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Plus Method]]></name>
+    <configKey><![CDATA[ExplicitCallToPlusMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>plus(Object)</em> method is called directly in code instead of using the + operator. A groovier way to express this: <em>a.plus(b)</em> is this: <em>a + b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToPowerMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Power Method]]></name>
+    <configKey><![CDATA[ExplicitCallToPowerMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>power(Object)</em> method is called directly in code instead of using the ** operator. A groovier way to express this: <em>a.power(b)</em> is this: <em>a ** b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToRightShiftMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Right Shift Method]]></name>
+    <configKey><![CDATA[ExplicitCallToRightShiftMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>rightShift(Object)</em> method is called directly in code instead of using the >> operator. A groovier way to express this: <em>a.rightShift(b)</em> is this: <em>a >> b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitCallToXorMethodRule" priority="MINOR">
+    <name><![CDATA[Explicit Call To Xor Method]]></name>
+    <configKey><![CDATA[ExplicitCallToXorMethod]]></configKey>
+    <description><![CDATA[This rule detects when the <em>xor(Object)</em> method is called directly in code instead of using the ^ operator. A groovier way to express this: <em>a.xor(b)</em> is this: <em>a ^ b</em>]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitHashMapInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Hash Map Instantiation]]></name>
+    <configKey><![CDATA[ExplicitHashMapInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>HashMap</em> using the no-arg constructor. In Groovy, it is best to write <em>new HashMap()</em> as <em>[:]</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitHashSetInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Hash Set Instantiation]]></name>
+    <configKey><![CDATA[ExplicitHashSetInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>HashSet</em> using the no-arg constructor. In Groovy, it is best to write <em>new HashSet()</em> as <em>[] as Set</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitLinkedListInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Linked List Instantiation]]></name>
+    <configKey><![CDATA[ExplicitLinkedListInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>LinkedList</em> using the no-arg constructor. In Groovy, it is best to write <em>new LinkedList()</em> as <em>[] as Queue</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitStackInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Stack Instantiation]]></name>
+    <configKey><![CDATA[ExplicitStackInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>Stack</em> using the no-arg constructor. In Groovy, it is best to write <em>new Stack()</em> as <em>[] as Stack</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitTreeSetInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Tree Set Instantiation]]></name>
+    <configKey><![CDATA[ExplicitTreeSetInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>TreeSet</em> using the no-arg constructor. In Groovy, it is best to write <em>new TreeSet()</em> as <em>[] as SortedSet</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule key="org.codenarc.rule.groovyism.GroovyLangImmutableRule" priority="MINOR">
+    <name><![CDATA[Groovy Lang Immutable]]></name>
+    <configKey><![CDATA[GroovyLangImmutable]]></configKey>
+    <description><![CDATA[The groovy.lang.Immutable annotation has been deprecated and replaced by groovy.transform.Immutable. Do not use the Immutable in groovy.lang.]]></description>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule key="org.codenarc.rule.groovyism.GStringAsMapKeyRule" priority="MINOR">
+    <name><![CDATA[G String As Map Key]]></name>
+    <configKey><![CDATA[GStringAsMapKey]]></configKey>
+    <description><![CDATA[A GString should not be used as a map key since its hashcode is not guaranteed to be stable. Consider calling <em>key.toString()</em>.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.groovyism.ExplicitLinkedHashMapInstantiationRule" priority="MINOR">
+    <name><![CDATA[Explicit Linked Hash Map Instantiation]]></name>
+    <configKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></configKey>
+    <description><![CDATA[This rule checks for the explicit instantiation of a <em>LinkedHashMap</em> using the no-arg constructor. In Groovy, it is best to write <em>new LinkedHashMap()</em> as <em>[:]</em>, which creates the same object.]]></description>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule key="org.codenarc.rule.groovyism.ClosureAsLastMethodParameterRule" priority="MAJOR">
+    <name><![CDATA[Closure As Last Method Parameter]]></name>
+    <configKey><![CDATA[ClosureAsLastMethodParameter]]></configKey>
+    <description><![CDATA[If a method is called and the last parameter is an inline closure then it can be declared outside of the method call brackets.]]></description>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule key="org.codenarc.rule.groovyism.AssignCollectionUniqueRule" priority="MINOR">
+    <name><![CDATA[Assign Collection Unique]]></name>
+    <configKey><![CDATA[AssignCollectionUnique]]></configKey>
+    <description><![CDATA[The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.ConfusingMultipleReturnsRule" priority="MINOR">
+    <name><![CDATA[Confusing Multiple Returns]]></name>
+    <configKey><![CDATA[ConfusingMultipleReturns]]></configKey>
+    <description><![CDATA[Multiple return values can be used to set several variables at once. To use multiple return values, the left hand side of the assignment must be enclosed in parenthesis. If not, then you are not using multiple return values, you're only assigning the last element.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.GetterMethodCouldBePropertyRule" priority="MAJOR">
+    <name><![CDATA[Getter Method Could Be Property]]></name>
+    <configKey><![CDATA[GetterMethodCouldBeProperty]]></configKey>
+    <description><![CDATA[If a class defines a public method that follows the Java getter notation, and returns a constant, then it is cleaner to provide a Groovy property for the value rather than a Groovy method.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.UseCollectManyRule" priority="MINOR">
+    <name><![CDATA[Use Collect Many]]></name>
+    <configKey><![CDATA[UseCollectMany]]></configKey>
+    <description><![CDATA[In many case <em>collectMany()</em> yields the same result as <em>collect{}.flatten()</em>. It is easier to understand and more clearly conveys the intent.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.CollectAllIsDeprecatedRule" priority="MINOR">
+    <name><![CDATA[Collect All Is Deprecated]]></name>
+    <configKey><![CDATA[CollectAllIsDeprecated]]></configKey>
+    <description><![CDATA[collectAll{} is deprecated since Groovy 1.8.1. Use collectNested instead{}.]]></description>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule key="org.codenarc.rule.groovyism.UseCollectNestedRule" priority="MINOR">
+    <name><![CDATA[Use Collect Nested]]></name>
+    <configKey><![CDATA[UseCollectNested]]></configKey>
+    <description><![CDATA[Instead of nested collect{}-calls use collectNested{}]]></description>
   </rule>
 
 </rules>

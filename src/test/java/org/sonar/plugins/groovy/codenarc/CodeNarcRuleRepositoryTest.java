@@ -31,7 +31,7 @@ public class CodeNarcRuleRepositoryTest {
   @Test
   public void test() {
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    assertThat(repo.createRules().size(), is(264));
+    assertThat(repo.createRules().size(), is(277));
   }
 
 }
