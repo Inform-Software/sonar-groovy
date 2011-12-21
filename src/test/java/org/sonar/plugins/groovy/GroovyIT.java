@@ -87,8 +87,6 @@ public class GroovyIT {
     // with codenarc 0.9
     // assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
     // assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
-
-
   }
 
   @Test
@@ -101,8 +99,8 @@ public class GroovyIT {
         is(89.9) // java 1.6.0_20
     ));
     assertThat(getProjectMeasure("line_coverage").getValue(), anyOf(is(98.9), is(98.8)));
-    assertThat(getProjectMeasure("lines_to_cover").getValue(), anyOf(is(1802.0), is(1806.0), is(1809.0), is(1805.0)));
-    assertThat(getProjectMeasure("uncovered_lines").getValue(), anyOf(is(20.0), is(21.0), is(19.0)));
+    assertThat(getProjectMeasure("lines_to_cover").getValue(), closeTo(1805.0, 5.0));
+    assertThat(getProjectMeasure("uncovered_lines").getValue(), closeTo(20.0, 2.0));
 
     assertThat(getProjectMeasure("tests").getValue(), is(1201.0));
     assertThat(getProjectMeasure("test_success_density").getValue(), anyOf(is(99.8), is(99.9)));
@@ -114,7 +112,7 @@ public class GroovyIT {
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat(getPackageMeasure("coverage").getValue(), closeTo(89.0, 0.3));
     assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
-    assertThat(getPackageMeasure("lines_to_cover").getValue(), anyOf(is(304.0), is(303.0), is(305.0)));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), closeTo(304.0, 3.0));
     assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
 
     assertThat(getPackageMeasure("tests").getValue(), is(60.0));
