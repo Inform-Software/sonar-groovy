@@ -69,7 +69,10 @@ public class GroovyFile extends Resource<GroovyPackage> {
 
   public GroovyFile(String packageKey, String className, boolean unitTest) {
     super();
-    if (className != null && className.indexOf('$') >= 0) {
+    if (className == null) {
+      throw new IllegalArgumentException("className can't be null");
+    }
+    if (className.indexOf('$') >= 0) {
       throw new IllegalArgumentException("Groovy inner classes are not supported : " + className);
     }
     this.filename = className.trim();
@@ -137,7 +140,7 @@ public class GroovyFile extends Resource<GroovyPackage> {
 
   /**
    * Creates a {@link GroovyFile} from a file in the source directories.
-   * 
+   *
    * @param unitTest whether it is a unit test file or a source file
    * @return the {@link GroovyFile} created if exists, null otherwise
    */
