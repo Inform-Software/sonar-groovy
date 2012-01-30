@@ -61,6 +61,10 @@ public class GroovyIT {
 
   }
 
+  /*
+   * ====================== PROJECT LEVEL ======================
+   */
+
   @Test
   public void projectsMetrics() {
     assertThat(getProjectMeasure("ncloc").getIntValue(), is(4199));
@@ -72,11 +76,6 @@ public class GroovyIT {
     assertThat(getProjectMeasure("comment_lines_density").getValue(), is(40.5));
     assertThat(getProjectMeasure("comment_lines").getIntValue(), is(2856));
 
-    assertThat(getProjectMeasure("duplicated_lines").getIntValue(), is(54));
-    assertThat(getProjectMeasure("duplicated_blocks").getIntValue(), is(2));
-    assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.6));
-    assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
-
     assertThat(getProjectMeasure("complexity").getIntValue(), is(845)); // 816 with codenarc 0.9
     assertThat(getProjectMeasure("function_complexity").getValue(), is(2.2));
     assertThat(getProjectMeasure("class_complexity").getValue(), is(6.3)); // 6.0 with codenarc 0.9
@@ -84,13 +83,33 @@ public class GroovyIT {
     assertThat(getProjectMeasure("violations_density").getValue(), is(99.3));
     assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=135;5=33;10=19;20=8;30=1;60=0;90=0"));
     assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=203;2=134;4=38;6=11;8=1;10=4;12=1"));
-    // with codenarc 0.9
-    // assertThat(getProjectMeasure("class_complexity_distribution").getData(), is("0=138;5=31;10=19;20=7;30=1;60=0;90=0"));
-    // assertThat(getProjectMeasure("function_complexity_distribution").getData(), is("1=177;2=133;4=38;6=11;8=1;10=4;12=1"));
   }
 
   @Test
-  public void testProjectCoverageBeforeSonar27() {
+  public void testProjectDuplicationsBeforeSonar_2_14() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.14"))));
+
+    assertThat(getProjectMeasure("duplicated_lines").getIntValue(), is(54));
+    assertThat(getProjectMeasure("duplicated_blocks").getIntValue(), is(2));
+    assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.6));
+    assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
+  }
+
+  /**
+   * SONAR-3139
+   */
+  @Test
+  public void testProjectDuplicationsAfterSonar_2_14() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.14")));
+
+    assertThat(getProjectMeasure("duplicated_files").getIntValue(), is(2));
+    assertThat(getProjectMeasure("duplicated_lines").getIntValue(), is(50));
+    assertThat(getProjectMeasure("duplicated_blocks").getIntValue(), is(2));
+    assertThat(getProjectMeasure("duplicated_lines_density").getValue(), is(0.5));
+  }
+
+  @Test
+  public void testProjectCoverageBeforeSonar_2_7() {
     assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat("coverage", getProjectMeasure("coverage").getValue(), anyOf(
@@ -107,33 +126,7 @@ public class GroovyIT {
   }
 
   @Test
-  public void testPackageCoverageBeforeSonar27() {
-    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getPackageMeasure("coverage").getValue(), closeTo(89.0, 0.3));
-    assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
-    assertThat(getPackageMeasure("lines_to_cover").getValue(), closeTo(304.0, 3.0));
-    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
-
-    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
-    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
-  }
-
-  @Test
-  public void testFileCoverageBeforeSonar27() {
-    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getFileMeasure("coverage").getValue(), anyOf(is(87.1), is(87.7)));
-    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
-    assertThat(getFileMeasure("lines_to_cover").getValue(), anyOf(is(148.0), is(149.0)));
-    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
-
-    assertNull(getFileMeasure("tests"));
-    assertNull(getFileMeasure("test_success_density"));
-  }
-
-  @Test
-  public void testProjectCoverageAfterSonar27() {
+  public void testProjectCoverageAfterSonar_2_7() {
     assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat("coverage", getProjectMeasure("coverage").getValue(), closeTo(89.5, 0.2));
@@ -145,32 +138,9 @@ public class GroovyIT {
     assertThat(getProjectMeasure("test_success_density").getValue(), anyOf(is(99.8), is(99.9)));
   }
 
-  @Test
-  public void testPackageCoverageAfterSonar27() {
-    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getPackageMeasure("coverage").getValue(), closeTo(88.3, 0.3));
-    assertThat(getPackageMeasure("line_coverage").getValue(), closeTo(99.6, 0.2));
-    assertThat(getPackageMeasure("lines_to_cover").getValue(), closeTo(278.0, 2.0));
-    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
-
-    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
-    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
-  }
-
-  @Test
-  public void testFileCoverageAfterSonar27() {
-    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
-    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
-    assertThat(getFileMeasure("coverage").getValue(), closeTo(86.5, 0.2));
-    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
-    assertThat(getFileMeasure("lines_to_cover").getValue(), is(135.0));
-    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
-
-    assertNull(getFileMeasure("tests"));
-    assertNull(getFileMeasure("test_success_density"));
-  }
-
+  /*
+   * ====================== DIRECTORY LEVEL ======================
+   */
 
   @Test
   public void packagesMetrics() {
@@ -197,6 +167,37 @@ public class GroovyIT {
     assertThat(getPackageMeasure("function_complexity_distribution").getData(), is("1=31;2=20;4=5;6=0;8=0;10=0;12=0"));
   }
 
+
+  @Test
+  public void testPackageCoverageBeforeSonar_2_7() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getPackageMeasure("coverage").getValue(), closeTo(89.0, 0.3));
+    assertThat(getPackageMeasure("line_coverage").getValue(), anyOf(is(99.7), is(99.3)));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), closeTo(304.0, 3.0));
+    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
+
+    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
+    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
+  }
+
+  @Test
+  public void testPackageCoverageAfterSonar_2_7() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getPackageMeasure("coverage").getValue(), closeTo(88.3, 0.3));
+    assertThat(getPackageMeasure("line_coverage").getValue(), closeTo(99.6, 0.2));
+    assertThat(getPackageMeasure("lines_to_cover").getValue(), closeTo(278.0, 2.0));
+    assertThat(getPackageMeasure("uncovered_lines").getValue(), anyOf(is(1.0), is(2.0)));
+
+    assertThat(getPackageMeasure("tests").getValue(), is(60.0));
+    assertThat(getPackageMeasure("test_success_density").getValue(), is(100.0));
+  }
+
+  /*
+   * ====================== FILE LEVEL ======================
+   */
+
   @Test
   public void filesMetrics() {
     assertThat(getFileMeasure("ncloc").getIntValue(), is(238));
@@ -218,6 +219,32 @@ public class GroovyIT {
     assertThat(getFileMeasure("violations_density").getValue(), is(95.0));
     assertNull(getFileMeasure("class_complexity_distribution"));
     assertNull(getFileMeasure("function_complexity_distribution"));
+  }
+
+  @Test
+  public void testFileCoverageBeforeSonar_2_7() {
+    assumeThat(sonarVersion, not(greaterThanOrEqualTo(Version.create("2.7"))));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getFileMeasure("coverage").getValue(), anyOf(is(87.1), is(87.7)));
+    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), anyOf(is(148.0), is(149.0)));
+    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
+
+    assertNull(getFileMeasure("tests"));
+    assertNull(getFileMeasure("test_success_density"));
+  }
+
+  @Test
+  public void testFileCoverageAfterSonar_2_7() {
+    assumeThat(sonarVersion, greaterThanOrEqualTo(Version.create("2.7")));
+    // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
+    assertThat(getFileMeasure("coverage").getValue(), closeTo(86.5, 0.2));
+    assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), is(135.0));
+    assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
+
+    assertNull(getFileMeasure("tests"));
+    assertNull(getFileMeasure("test_success_density"));
   }
 
   private Measure getFileMeasure(String metricKey) {
