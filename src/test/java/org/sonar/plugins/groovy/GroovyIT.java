@@ -240,7 +240,7 @@ public class GroovyIT {
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat(getFileMeasure("coverage").getValue(), closeTo(86.5, 0.2));
     assertThat(getFileMeasure("line_coverage").getValue(), is(100.0));
-    assertThat(getFileMeasure("lines_to_cover").getValue(), is(135.0));
+    assertThat(getFileMeasure("lines_to_cover").getValue(), closeTo(135.0, 1.0));
     assertThat(getFileMeasure("uncovered_lines").getValue(), is(0.0));
 
     assertNull(getFileMeasure("tests"));
