@@ -42,9 +42,9 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/sonar-plugins/trunk/groovy</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/sonar-plugins/trunk/groovy</developerConnection>
-    <url>http://svn.codehaus.org/sonar-plugins</url>
+    <connection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</developerConnection>
+    <url>https://github.com/SonarCommunity/sonar-groovy</url>
   </scm>
   <issueManagement>
     <system>JIRA</system>
