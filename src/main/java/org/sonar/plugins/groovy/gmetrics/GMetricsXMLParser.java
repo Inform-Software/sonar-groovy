@@ -37,8 +37,8 @@ import javax.xml.stream.XMLStreamException;
 
 public class GMetricsXMLParser implements BatchExtension {
 
-  private final static Number[] METHODS_DISTRIB_BOTTOM_LIMITS = { 1, 2, 4, 6, 8, 10, 12 };
-  private final static Number[] CLASS_DISTRIB_BOTTOM_LIMITS = { 0, 5, 10, 20, 30, 60, 90 };
+  private static final Number[] METHODS_DISTRIB_BOTTOM_LIMITS = { 1, 2, 4, 6, 8, 10, 12 };
+  private static final Number[] CLASS_DISTRIB_BOTTOM_LIMITS = { 0, 5, 10, 20, 30, 60, 90 };
 
   public void parseAndProcessGMetricsResults(File xmlFile, final SensorContext context) {
     GroovyUtils.LOG.info("parsing {}", xmlFile);

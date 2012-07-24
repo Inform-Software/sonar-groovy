@@ -20,27 +20,15 @@
 
 package org.sonar.plugins.groovy;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author Evgeny Mandrikov
- */
 public class GroovyPluginTest {
-
-  private GroovyPlugin plugin;
-
-  @Before
-  public void setUp() {
-    plugin = new GroovyPlugin();
-  }
 
   @Test
   public void testExtensions() {
-    assertThat(plugin.getExtensions().size(), greaterThan(0));
+    assertThat(new GroovyPlugin().getExtensions()).isNotEmpty();
   }
 
 }

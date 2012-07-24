@@ -25,7 +25,7 @@ import org.sonar.api.resources.AbstractLanguage;
 public class Groovy extends AbstractLanguage {
 
   public static final String KEY = "grvy";
-  public static Groovy INSTANCE = new Groovy();
+  public static final Groovy INSTANCE = new Groovy();
 
   public Groovy() {
     super(KEY, "Groovy");

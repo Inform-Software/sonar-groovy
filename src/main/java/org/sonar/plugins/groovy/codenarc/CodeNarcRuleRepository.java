@@ -41,7 +41,7 @@ public class CodeNarcRuleRepository extends RuleRepository {
   @Override
   public List<Rule> createRules() {
     List<Rule> rules = Lists.newArrayList();
-    rules.addAll(xmlRuleParser.parse(getClass().getResourceAsStream("/org/sonar/plugins/groovy/rules.xml")));
+    rules.addAll(xmlRuleParser.parse(CodeNarcRuleRepository.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml")));
     return rules;
   }
 
