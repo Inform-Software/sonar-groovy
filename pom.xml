@@ -82,7 +82,7 @@
     <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
-      <version>0.16.1</version>
+      <version>0.17</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>

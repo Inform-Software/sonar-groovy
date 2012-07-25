@@ -20,18 +20,18 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.sonar.api.rules.XMLRuleParser;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class CodeNarcRuleRepositoryTest {
 
   @Test
   public void test() {
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    assertThat(repo.createRules().size(), is(277));
+    assertThat(repo.createRules().size(), is(286));
   }
 
 }

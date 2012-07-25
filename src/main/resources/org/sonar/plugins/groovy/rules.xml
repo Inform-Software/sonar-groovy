@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.16 -->
+<!-- Generated using CodeNarc 0.17 -->
 <rules>
 
   <!-- basic rules -->
@@ -252,6 +252,27 @@
     <name><![CDATA[Hard Coded Windows Root Directory]]></name>
     <configKey><![CDATA[HardCodedWindowsRootDirectory]]></configKey>
     <description><![CDATA[This rule find cases where a <em>File</em> object is constructed with a windows-based path. This is not portable, and using the <em>File.listRoots()</em> method is a better alternative.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.basic.AssertWithinFinallyBlockRule" priority="MINOR">
+    <name><![CDATA[Assert Within Finally Block]]></name>
+    <configKey><![CDATA[AssertWithinFinallyBlock]]></configKey>
+    <description><![CDATA[Checks for <em>assert</em> statements within a <em>finally</em> block. An <em>assert</em> can throw an exception, hiding the original exception, if there is one.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.basic.ConstantAssertExpressionRule" priority="MAJOR">
+    <name><![CDATA[Constant Assert Expression]]></name>
+    <configKey><![CDATA[ConstantAssertExpression]]></configKey>
+    <description><![CDATA[Checks for <em>assert</em> statements where the assert boolean condition expression is a constant or literal value.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.basic.BrokenNullCheckRule" priority="MINOR">
+    <name><![CDATA[Broken Null Check]]></name>
+    <configKey><![CDATA[BrokenNullCheck]]></configKey>
+    <description><![CDATA[Looks for faulty checks for null that can cause a <em>NullPointerException</em>.]]></description>
   </rule>
 
   <!-- serialization rules -->
@@ -583,6 +604,13 @@
     <name><![CDATA[Builder Method With Side Effects]]></name>
     <configKey><![CDATA[BuilderMethodWithSideEffects]]></configKey>
     <description><![CDATA[A builder method is defined as one that creates objects. As such, they should never be of void return type. If a method is named build, create, or make, then it should always return a value.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.design.PrivateFieldCouldBeFinalRule" priority="MAJOR">
+    <name><![CDATA[Private Field Could Be Final]]></name>
+    <configKey><![CDATA[PrivateFieldCouldBeFinal]]></configKey>
+    <description><![CDATA[Checks for <em>private</em> fields that are only set within a constructor or field initializer. Such fields can safely be made <em>final</em>.]]></description>
   </rule>
 
   <!-- dry rules -->
@@ -1198,6 +1226,15 @@
     <param key="maxNestedBlockDepth"/>
   </rule>
 
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.size.CrapMetricRule" priority="MINOR">
+    <name><![CDATA[Crap Metric]]></name>
+    <configKey><![CDATA[CrapMetric]]></configKey>
+    <description><![CDATA[Checks the CRAP (Change Risk Anti-Patterns) score for methods/classes. The CRAP metric score is based on the cyclomatic complexity and test coverage for individual methods. A method with a CRAP value greater than the <em>maxMethodCrapScore</em> property causes a violation. Likewise, a class that has an (average method) CRAP value greater than the <em>maxClassAverageMethodCrapScore</em> property causes a violation.]]></description>
+    <param key="maxClassAverageMethodCrapScore"/>
+    <param key="maxMethodCrapScore"/>
+  </rule>
+
   <!-- unnecessary rules -->
 
   <!-- since 0.13 -->
@@ -1699,21 +1736,21 @@
   <!-- convention rules -->
 
   <!-- since 0.12 -->
-  <rule key="org.codenarc.rule.convention.ConfusingTernaryRule" priority="MINOR">
+  <rule key="org.codenarc.rule.convention.ConfusingTernaryRule" priority="MAJOR">
     <name><![CDATA[Confusing Ternary]]></name>
     <configKey><![CDATA[ConfusingTernary]]></configKey>
     <description><![CDATA[In a ternary expression avoid negation in the test. For example, rephrase: "(x != y) ? diff : same" as: "(x == y) ? same : diff". Consistent use of this rule makes the code easier to read. Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?".]]></description>
   </rule>
 
   <!-- since 0.11 -->
-  <rule key="org.codenarc.rule.convention.InvertedIfElseRule" priority="MINOR">
+  <rule key="org.codenarc.rule.convention.InvertedIfElseRule" priority="MAJOR">
     <name><![CDATA[Inverted If Else]]></name>
     <configKey><![CDATA[InvertedIfElse]]></configKey>
     <description><![CDATA[An inverted if-else statement is one in which there is a single <em>if</em> statement with a single <em>else</em> branch and the boolean test of the if is negated. For instance <em>if (!x) false else true</em>. It is usually clearer to write this as <em>if (x) true else false</em>.]]></description>
   </rule>
 
   <!-- since 0.16 -->
-  <rule key="org.codenarc.rule.convention.CouldBeElvisRule" priority="MINOR">
+  <rule key="org.codenarc.rule.convention.CouldBeElvisRule" priority="MAJOR">
     <name><![CDATA[Could Be Elvis]]></name>
     <configKey><![CDATA[CouldBeElvis]]></configKey>
     <description><![CDATA[Catch an if block that could be written as an elvis expression.]]></description>
@@ -1724,6 +1761,34 @@
     <name><![CDATA[Long Literal With Lower Case L]]></name>
     <configKey><![CDATA[LongLiteralWithLowerCaseL]]></configKey>
     <description><![CDATA[In Java and Groovy, you can specify long literals with the L or l character, for instance 55L or 24l. It is best practice to always use an uppercase L and never a lowercase l. This is because 11l rendered in some fonts may look like 111 instead of 11L.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.convention.ParameterReassignmentRule" priority="MAJOR">
+    <name><![CDATA[Parameter Reassignment]]></name>
+    <configKey><![CDATA[ParameterReassignment]]></configKey>
+    <description><![CDATA[Checks for a method or closure parameter being reassigned to a new value within the body of the method/closure, which is a confusing and questionable practice. Use a temporary variable instead.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.convention.TernaryCouldBeElvisRule" priority="MAJOR">
+    <name><![CDATA[Ternary Could Be Elvis]]></name>
+    <configKey><![CDATA[TernaryCouldBeElvis]]></configKey>
+    <description><![CDATA[Checks for ternary expressions where the boolean and true expressions are the same. These can be simplified to an Elvis expression.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.convention.VectorIsObsoleteRule" priority="MINOR">
+    <name><![CDATA[Vector Is Obsolete]]></name>
+    <configKey><![CDATA[VectorIsObsolete]]></configKey>
+    <description><![CDATA[The <em>java.util.Vector</em> class is effectively obsolete. Use the <em>Java Collections Framework</em> classes instead, including <em>ArrayList</em> or <em>Collections.synchronizedList()</em>. See the JDK javadoc.]]></description>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule key="org.codenarc.rule.convention.HashtableIsObsoleteRule" priority="MINOR">
+    <name><![CDATA[Hashtable Is Obsolete]]></name>
+    <configKey><![CDATA[HashtableIsObsolete]]></configKey>
+    <description><![CDATA[The <em>java.util.Hashtable</em> class is effectively obsolete. Use the <em>Java Collections Framework</em> classes instead, including <em>HashMap</em> or <em>ConcurrentHashMap</em>. See the JDK javadoc.]]></description>
   </rule>
 
   <!-- groovyism rules -->
