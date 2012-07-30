@@ -33,11 +33,13 @@ import static org.mockito.Mockito.when;
 
 public class CoberturaSensorTest {
 
+  private CoberturaMavenPluginHandler mavenPluginHandler;
   private CoberturaSensor sensor;
 
   @Before
   public void setUp() throws Exception {
-    sensor = new CoberturaSensor(null);
+    mavenPluginHandler = mock(CoberturaMavenPluginHandler.class);
+    sensor = new CoberturaSensor(mavenPluginHandler);
   }
 
   /**
@@ -55,8 +57,10 @@ public class CoberturaSensorTest {
     when(project.getLanguageKey()).thenReturn(Groovy.KEY);
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.REUSE_REPORTS);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.getMavenPluginHandler(project)).isNull();
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.getMavenPluginHandler(project)).isSameAs(mavenPluginHandler);
   }
 
   @Test

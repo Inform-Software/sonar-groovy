@@ -17,15 +17,19 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
 package org.sonar.plugins.groovy.foundation;
 
-import org.sonar.squid.recognizer.CodeRecognizer;
+import org.junit.Test;
 
-public class GroovyRecognizer extends CodeRecognizer {
+import java.util.Collections;
 
-  public GroovyRecognizer() {
-    super(1.0, new GroovyFootPrint());
+import static org.fest.assertions.Assertions.assertThat;
+
+public class GroovyFootPrintTest {
+
+  @Test
+  public void test() {
+    assertThat(new GroovyFootPrint().getDetectors()).isSameAs(Collections.EMPTY_SET);
   }
 
 }
