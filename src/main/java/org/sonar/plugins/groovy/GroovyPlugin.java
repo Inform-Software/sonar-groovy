@@ -55,8 +55,8 @@ import java.util.List;
         global = false
     ) })
 public class GroovyPlugin implements Plugin {
-  public final static String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
-  public final static String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  public static final String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
+  public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
 
   public String getKey() {
     return Groovy.KEY;
