@@ -26,12 +26,16 @@ import org.gmetrics.GMetricsRunner;
 import org.gmetrics.metricset.DefaultMetricSet;
 import org.gmetrics.result.MetricResult;
 import org.gmetrics.result.NumberMetricResult;
+import org.gmetrics.result.SingleNumberMetricResult;
 import org.gmetrics.resultsnode.ClassResultsNode;
+import org.gmetrics.resultsnode.ResultsNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.PersistenceMode;
+import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -52,7 +56,10 @@ public class GroovySensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(GroovySensor.class);
 
-  private Groovy groovy;
+  private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
+  private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
+
+  private final Groovy groovy;
 
   public GroovySensor(Groovy groovy) {
     this.groovy = groovy;
@@ -92,8 +99,19 @@ public class GroovySensor implements Sensor {
     double methods = 0;
     double complexity = 0;
 
+    RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
+
     for (ClassResultsNode result : results) {
-      methods += result.getChildren().size();
+      for (ResultsNode resultsNode : result.getChildren().values()) {
+        methods += 1;
+        for (MetricResult metricResult : resultsNode.getMetricResults()) {
+          String metricName = metricResult.getMetric().getName();
+          if ("CyclomaticComplexity".equals(metricName)) {
+            int value = (Integer) ((SingleNumberMetricResult) metricResult).getNumber();
+            functionsComplexityDistribution.add(value);
+          }
+        }
+      }
 
       for (MetricResult metricResult : result.getMetricResults()) {
         String metricName = metricResult.getMetric().getName();
@@ -106,6 +124,11 @@ public class GroovySensor implements Sensor {
 
     context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, methods);
     context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
+
+    context.saveMeasure(sonarFile, functionsComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
+    RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
+    fileComplexityDistribution.add(complexity);
+    context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
   }
 
   public static File getReport(Project project, String reportProperty) {
