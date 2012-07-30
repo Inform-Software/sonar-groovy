@@ -17,35 +17,21 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
 package org.sonar.plugins.groovy.foundation;
 
-import net.sourceforge.pmd.cpd.Tokenizer;
-import org.sonar.api.batch.CpdMapping;
-import org.sonar.api.resources.Language;
-import org.sonar.api.resources.Resource;
+import org.junit.Test;
 
-import java.io.File;
-import java.util.List;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-public class GroovyCpdMapping implements CpdMapping {
+public class GroovyCpdMappingTest {
 
-  private final Groovy language;
-
-  public GroovyCpdMapping(Groovy language) {
-    this.language = language;
-  }
-
-  public Tokenizer getTokenizer() {
-    return new GroovyCpdTokenizer();
-  }
-
-  public Resource createResource(File file, List<File> sourceDirs) {
-    return GroovyFile.fromIOFile(file, sourceDirs);
-  }
-
-  public Language getLanguage() {
-    return language;
+  @Test
+  public void test() {
+    Groovy language = mock(Groovy.class);
+    GroovyCpdMapping mapping = new GroovyCpdMapping(language);
+    assertThat(mapping.getLanguage()).isSameAs(language);
+    assertThat(mapping.getTokenizer()).isInstanceOf(GroovyCpdTokenizer.class);
   }
 
 }

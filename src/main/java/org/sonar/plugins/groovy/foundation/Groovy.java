@@ -32,6 +32,6 @@ public class Groovy extends AbstractLanguage {
   }
 
   public String[] getFileSuffixes() {
-    return new String[]{"groovy"};
+    return new String[] {"groovy"};
   }
 }

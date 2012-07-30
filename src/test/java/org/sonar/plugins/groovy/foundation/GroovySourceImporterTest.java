@@ -58,6 +58,16 @@ public class GroovySourceImporterTest {
     assertThat(ResourceUtils.isUnitTestClass(resource)).isTrue();
   }
 
+  @Test
+  public void should_accept_null() {
+    assertThat(importer.createResource(null, Arrays.asList(newDir("source1")), false)).isNull();
+  }
+
+  @Test
+  public void test_toString() {
+    assertThat(importer.toString()).isEqualTo("GroovySourceImporter");
+  }
+
   private File newDir(String relativePath) {
     return new File("target", relativePath);
   }
