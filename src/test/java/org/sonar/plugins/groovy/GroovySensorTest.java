@@ -20,11 +20,13 @@
 package org.sonar.plugins.groovy;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.util.Arrays;
@@ -53,8 +55,14 @@ public class GroovySensorTest {
     File sonarFile = File.fromIOFile(new java.io.File(sourceDir, "Greeting.groovy"), sourceDirs);
     verify(context).saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.CLASSES, 2.0);
-    verify(context).saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, 1.0);
-    verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 2.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, 2.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 4.0);
+    verify(context).saveMeasure(
+        Mockito.eq(sonarFile),
+        Mockito.argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=0;2=2;4=0;6=0;8=0;10=0;12=0")));
+    verify(context).saveMeasure(
+        Mockito.eq(sonarFile),
+        Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
   }
 
 }

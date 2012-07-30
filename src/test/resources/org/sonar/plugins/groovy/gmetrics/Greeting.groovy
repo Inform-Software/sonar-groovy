@@ -1,6 +1,14 @@
 package example;
 
 class Greeting {
+
+  def void sayHello() {
+    if (true) {
+      print "Hello world!"
+    } else {
+    }
+  }
+
 }
 
 class OneMoreClass {
@@ -9,7 +17,6 @@ class OneMoreClass {
     if (true) {
       print "Hello world!"
     } else {
-      print "Hello world!"
     }
   }
 
