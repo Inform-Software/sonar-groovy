@@ -26,9 +26,14 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class GroovyPluginTest {
 
+  private GroovyPlugin plugin = new GroovyPlugin();
+
   @Test
   public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).isNotEmpty();
+    assertThat(plugin.getExtensions()).isNotEmpty();
+    assertThat(plugin.getKey()).isNotNull();
+    assertThat(plugin.getName()).isNotNull();
+    assertThat(plugin.getDescription()).isNotNull();
   }
 
 }

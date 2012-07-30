@@ -36,24 +36,17 @@ import org.sonar.plugins.groovy.surefire.SurefireSensor;
 import java.util.List;
 
 @Properties({
-    @Property(
-        key = GroovyPlugin.GMETRICS_REPORT_PATH,
-        name = "Report file",
-        description = "Path (absolute or relative) to GMetrics XML report in case generation is not handle by the plugin.",
-        module = true,
-        project = true,
-        global = false
-    ),
-    @Property(
-        key = GroovyPlugin.CODENARC_REPORT_PATH,
-        name = "Report file",
-        description = "Path (absolute or relative) to CodeNarc XML report in case generation is not handle by the plugin.",
-        module = true,
-        project = true,
-        global = false
-    ) })
+  @Property(
+    key = GroovyPlugin.CODENARC_REPORT_PATH,
+    name = "Report file",
+    description = "Path (absolute or relative) to CodeNarc XML report in case generation is not handle by the plugin.",
+    module = true,
+    project = true,
+    global = false
+  )
+})
 public class GroovyPlugin implements Plugin {
-  public static final String GMETRICS_REPORT_PATH = "sonar.groovy.gmetrics.reportPath";
+
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
 
   public String getKey() {
