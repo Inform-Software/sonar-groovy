@@ -75,6 +75,11 @@ public class GroovySensorTest {
     verify(context).saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.CLASSES, 2.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, 2.0);
+
+    verify(context).saveMeasure(sonarFile, CoreMetrics.LINES, 24.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.NCLOC, 17.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.COMMENT_LINES, 0.0);
+
     verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 4.0);
     verify(context).saveMeasure(
         Mockito.eq(sonarFile),
