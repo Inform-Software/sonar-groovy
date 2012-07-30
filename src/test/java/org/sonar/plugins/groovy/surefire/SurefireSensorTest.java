@@ -17,37 +17,20 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
+package org.sonar.plugins.groovy.surefire;
 
-package org.sonar.plugins.groovy.cobertura;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.AbstractCoverageExtension;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.test.TestUtils;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CoberturaSensorTest {
+public class SurefireSensorTest {
 
-  private CoberturaSensor sensor;
-
-  @Before
-  public void setUp() throws Exception {
-    sensor = new CoberturaSensor(null);
-  }
-
-  /**
-   * See SONARPLUGINS-696
-   */
-  @Test
-  public void should_parse_report() {
-    SensorContext context = mock(SensorContext.class);
-    sensor.parseReport(TestUtils.getResource(getClass(), "coverage.xml"), context);
-  }
+  private SurefireSensor sensor = new SurefireSensor();
 
   @Test
   public void should_execute_on_project() {
@@ -76,8 +59,13 @@ public class CoberturaSensorTest {
   }
 
   @Test
+  public void should_depend_on_coverage_sensors() {
+    assertThat(sensor.dependsUponCoverageSensors()).isEqualTo(AbstractCoverageExtension.class);
+  }
+
+  @Test
   public void test_toString() {
-    assertThat(sensor.toString()).isEqualTo("Groovy CoberturaSensor");
+    assertThat(sensor.toString()).isEqualTo("Groovy SurefireSensor");
   }
 
 }

@@ -34,9 +34,6 @@ import org.sonar.plugins.surefire.api.SurefireUtils;
 
 import java.io.File;
 
-/**
- * TODO copied from sonar-surefire-plugin with modifications: JavaFile replaced by GroovyFile
- */
 public class SurefireSensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(SurefireSensor.class);
@@ -74,4 +71,5 @@ public class SurefireSensor implements Sensor {
   public String toString() {
     return "Groovy SurefireSensor";
   }
+
 }

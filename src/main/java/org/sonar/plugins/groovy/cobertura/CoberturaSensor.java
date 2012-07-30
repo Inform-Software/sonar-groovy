@@ -35,9 +35,6 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
 
-/**
- * TODO copied from sonar-cobertura-plugin with modifications: JavaFile replaced by GroovyFile, fixed SONARPLUGINS-696
- */
 public class CoberturaSensor extends AbstractCoverageExtension implements Sensor, DependsUponMavenPlugin {
 
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);

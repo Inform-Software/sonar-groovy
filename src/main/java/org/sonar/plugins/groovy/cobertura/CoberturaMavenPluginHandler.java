@@ -28,9 +28,6 @@ import org.sonar.api.batch.maven.MavenSurefireUtils;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
 
-/**
- * TODO copied from sonar-cobertura-plugin with changes
- */
 public class CoberturaMavenPluginHandler implements MavenPluginHandler {
 
   public String getGroupId() {
@@ -71,4 +68,5 @@ public class CoberturaMavenPluginHandler implements MavenPluginHandler {
     }
     coberturaPlugin.setParameter("maxmem", project.getConfiguration().getString(CoreProperties.COBERTURA_MAXMEM_PROPERTY, CoreProperties.COBERTURA_MAXMEM_DEFAULT_VALUE));
   }
+
 }
