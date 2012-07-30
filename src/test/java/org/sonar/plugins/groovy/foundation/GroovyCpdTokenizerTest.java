@@ -19,20 +19,18 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import net.sourceforge.pmd.cpd.SourceCode;
+import net.sourceforge.pmd.cpd.TokenEntry;
+import net.sourceforge.pmd.cpd.Tokens;
+import org.junit.Test;
+import org.sonar.test.TestUtils;
 
 import java.io.File;
 import java.util.List;
 
-import net.sourceforge.pmd.cpd.SourceCode;
-import net.sourceforge.pmd.cpd.TokenEntry;
-import net.sourceforge.pmd.cpd.Tokens;
-
-import org.junit.Test;
-import org.sonar.test.TestUtils;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GroovyCpdTokenizerTest {
 
@@ -48,8 +46,8 @@ public class GroovyCpdTokenizerTest {
     new GroovyCpdTokenizer().tokenize(source, cpdTokens);
     List<TokenEntry> tokens = cpdTokens.getTokens();
 
-    assertThat(tokens.size(), is(31));
-    assertThat(tokens.get(tokens.size() - 1), is(TokenEntry.getEOF()));
+    assertThat(tokens.size()).isEqualTo(31);
+    assertThat(tokens.get(tokens.size() - 1)).isSameAs(TokenEntry.getEOF());
   }
 
 }

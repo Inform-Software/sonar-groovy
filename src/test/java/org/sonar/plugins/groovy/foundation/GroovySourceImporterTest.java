@@ -20,16 +20,15 @@
 
 package org.sonar.plugins.groovy.foundation;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.resources.ResourceUtils;
+
+import java.io.File;
+import java.util.Arrays;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * @author Evgeny Mandrikov
@@ -46,17 +45,17 @@ public class GroovySourceImporterTest {
   @Test
   public void shouldCreateResource() {
     Resource resource = importer.createResource(new File(newDir("source1"), "/Utils.groovy"), Arrays.asList(newDir("source1")), false);
-    assertThat(resource, is(GroovyFile.class));
-    assertThat(ResourceUtils.isUnitTestClass(resource), is(false));
-    assertThat(resource.getKey(), is(GroovyPackage.DEFAULT_PACKAGE_NAME + ".Utils"));
-    assertThat(resource.getName(), is("Utils"));
+    assertThat(resource).isInstanceOf(GroovyFile.class);
+    assertThat(ResourceUtils.isUnitTestClass(resource)).isFalse();
+    assertThat(resource.getKey()).isEqualTo(GroovyPackage.DEFAULT_PACKAGE_NAME + ".Utils");
+    assertThat(resource.getName()).isEqualTo("Utils");
   }
 
   @Test
   public void shouldCreateTestResource() {
     Resource resource = importer.createResource(new File(newDir("tests"), "UtilsTest.groovy"), Arrays.asList(newDir("tests")), true);
-    assertThat(resource, is(GroovyFile.class));
-    assertThat(ResourceUtils.isUnitTestClass(resource), is(true));
+    assertThat(resource).isInstanceOf(GroovyFile.class);
+    assertThat(ResourceUtils.isUnitTestClass(resource)).isTrue();
   }
 
   private File newDir(String relativePath) {

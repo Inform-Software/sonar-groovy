@@ -20,13 +20,6 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +34,11 @@ import org.sonar.test.TestUtils;
 
 import java.io.Reader;
 import java.io.StringReader;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CodeNarcProfileImporterTest {
 
@@ -59,10 +57,10 @@ public class CodeNarcProfileImporterTest {
         TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/CodeNarcProfileExporterTest/exportProfile.xml"));
     RulesProfile profile = importer.importProfile(reader, messages);
 
-    assertThat(messages.hasErrors(), is(false));
-    assertThat(profile.getActiveRules().size(), is(2));
-    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule"), notNullValue());
-    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule"), notNullValue());
+    assertThat(messages.hasErrors()).isFalse();
+    assertThat(profile.getActiveRules()).hasSize(2);
+    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule")).isNotNull();
+    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule")).isNotNull();
   }
 
   @Test
@@ -71,10 +69,10 @@ public class CodeNarcProfileImporterTest {
         TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/CodeNarcProfileExporterTest/exportParameters.xml"));
     RulesProfile profile = importer.importProfile(reader, messages);
 
-    assertThat(messages.hasErrors(), is(false));
+    assertThat(messages.hasErrors()).isFalse();
     ActiveRule activeRule = profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule");
-    assertThat(activeRule.getActiveRuleParams().size(), is(1));
-    assertThat(activeRule.getParameter("maxLines"), is("20"));
+    assertThat(activeRule.getActiveRuleParams()).hasSize(1);
+    assertThat(activeRule.getParameter("maxLines")).isEqualTo("20");
   }
 
   private RuleFinder newRuleFinder() {

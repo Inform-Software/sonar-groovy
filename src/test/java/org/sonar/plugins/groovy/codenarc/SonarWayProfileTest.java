@@ -30,8 +30,7 @@ import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.ValidationMessages;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,9 +43,9 @@ public class SonarWayProfileTest {
     ValidationMessages messages = ValidationMessages.create();
     RulesProfile profile = profileDefinition.createProfile(messages);
 
-    assertThat(profile.getName(), is("Sonar way"));
-    assertThat(profile.getActiveRules().size(), is(32));
-    assertThat(messages.hasErrors(), is(false));
+    assertThat(profile.getName()).isEqualTo("Sonar way");
+    assertThat(profile.getActiveRules()).hasSize(32);
+    assertThat(messages.hasErrors()).isFalse();
   }
 
   private RuleFinder newRuleFinder() {

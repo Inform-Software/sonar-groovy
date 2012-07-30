@@ -20,9 +20,6 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.profiles.RulesProfile;
@@ -32,6 +29,8 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
 import java.io.StringWriter;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class CodeNarcProfileExporterTest {
   private CodeNarcProfileExporter exporter;
@@ -43,7 +42,7 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldSetMimeType() {
-    assertThat(exporter.getMimeType(), is("application/xml"));
+    assertThat(exporter.getMimeType()).isEqualTo("application/xml");
   }
 
   @Test

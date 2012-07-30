@@ -20,11 +20,6 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
@@ -32,6 +27,10 @@ import org.junit.Test;
 import org.sonar.api.batch.maven.MavenPlugin;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CoberturaMavenPluginHandlerTest {
   protected CoberturaMavenPluginHandler handler;
@@ -43,11 +42,11 @@ public class CoberturaMavenPluginHandlerTest {
 
   @Test
   public void pluginDefinition() {
-    assertThat(handler.isFixedVersion(), is(false));
-    assertThat(handler.getGroupId(), is("org.codehaus.mojo"));
-    assertThat(handler.getArtifactId(), is("cobertura-maven-plugin"));
-    assertThat(handler.getVersion(), is("2.5.1"));
-    assertThat(handler.getGoals(), is(new String[] { "cobertura" }));
+    assertThat(handler.isFixedVersion()).isFalse();
+    assertThat(handler.getGroupId()).isEqualTo("org.codehaus.mojo");
+    assertThat(handler.getArtifactId()).isEqualTo("cobertura-maven-plugin");
+    assertThat(handler.getVersion()).isEqualTo("2.5.1");
+    assertThat(handler.getGoals()).isEqualTo(new String[] {"cobertura"});
   }
 
   @Test
@@ -60,9 +59,6 @@ public class CoberturaMavenPluginHandlerTest {
     MavenPlugin coberturaPlugin = new MavenPlugin(CoberturaUtils.COBERTURA_GROUP_ID, CoberturaUtils.COBERTURA_ARTIFACT_ID, null);
     handler.configure(project, coberturaPlugin);
 
-    assertThat(coberturaPlugin.getParameters("instrumentation/excludes/exclude")[0], is("**/Foo.class"));
-    assertThat(coberturaPlugin.getParameters("instrumentation/excludes/exclude")[1], is("com/*Test.*"));
-    assertThat(coberturaPlugin.getParameters("instrumentation/excludes/exclude")[2], is("com/*.class"));
-
+    assertThat(coberturaPlugin.getParameters("instrumentation/excludes/exclude")).containsOnly("**/Foo.class", "com/*Test.*", "com/*.class");
   }
 }
