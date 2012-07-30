@@ -29,9 +29,11 @@ import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,16 +43,33 @@ public class GroovySensorTest {
   private GroovySensor sensor = new GroovySensor(new Groovy());
 
   @Test
+  public void should_execute_on_project() {
+    Project project = mock(Project.class);
+    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+  }
+
+  @Test
+  public void should_not_execute_on_java_project() {
+    Project project = mock(Project.class);
+    when(project.getLanguageKey()).thenReturn("java");
+    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+  }
+
+  @Test
   public void test() {
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     ProjectFileSystem pfs = mock(ProjectFileSystem.class);
     java.io.File sourceDir = new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics");
+    java.io.File sourceFile = new java.io.File(sourceDir, "Greeting.groovy");
     List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
     when(pfs.getSourceDirs()).thenReturn(sourceDirs);
+    when(pfs.getSourceCharset()).thenReturn(Charset.forName("UTF-8"));
+    when(pfs.getSourceFiles(new Groovy())).thenReturn(Arrays.asList(sourceFile));
     when(project.getFileSystem()).thenReturn(pfs);
 
-    sensor.processDirectory(context, project, sourceDir);
+    sensor.analyse(project, context);
 
     File sonarFile = File.fromIOFile(new java.io.File(sourceDir, "Greeting.groovy"), sourceDirs);
     verify(context).saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
@@ -63,6 +82,11 @@ public class GroovySensorTest {
     verify(context).saveMeasure(
         Mockito.eq(sonarFile),
         Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
+  }
+
+  @Test
+  public void test_toString() {
+    assertThat(sensor.toString()).isEqualTo("GroovySensor");
   }
 
 }

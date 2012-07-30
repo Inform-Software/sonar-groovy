@@ -20,7 +20,6 @@
 
 package org.sonar.plugins.groovy;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gmetrics.GMetricsRunner;
@@ -72,17 +71,12 @@ public class GroovySensor implements Sensor {
 
   public void analyse(Project project, SensorContext context) {
     computeBaseMetrics(context, project);
-    computeGMetricsReport(project, context);
-  }
-
-  private void computeGMetricsReport(Project project, SensorContext context) {
     for (File sourceDir : project.getFileSystem().getSourceDirs()) {
       processDirectory(context, project, sourceDir);
     }
   }
 
-  @VisibleForTesting
-  void processDirectory(SensorContext context, Project project, File sourceDir) {
+  private void processDirectory(SensorContext context, Project project, File sourceDir) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
     CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(sourceDir.getAbsolutePath());
@@ -138,7 +132,7 @@ public class GroovySensor implements Sensor {
     context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
   }
 
-  protected void computeBaseMetrics(SensorContext sensorContext, Project project) {
+  private void computeBaseMetrics(SensorContext sensorContext, Project project) {
     Reader reader = null;
     ProjectFileSystem fileSystem = project.getFileSystem();
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
