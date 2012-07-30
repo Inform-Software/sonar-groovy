@@ -20,12 +20,6 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -36,13 +30,21 @@ import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.ValidationMessages;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class SonarWayProfileTest {
+
   @Test
   public void shouldCreateProfile() {
     ProfileDefinition profileDefinition = new SonarWayProfile(new XMLProfileParser(newRuleFinder()));
     ValidationMessages messages = ValidationMessages.create();
     RulesProfile profile = profileDefinition.createProfile(messages);
 
+    assertThat(profile.getName(), is("Sonar way"));
     assertThat(profile.getActiveRules().size(), is(32));
     assertThat(messages.hasErrors(), is(false));
   }
@@ -56,4 +58,5 @@ public class SonarWayProfileTest {
     });
     return ruleFinder;
   }
+
 }

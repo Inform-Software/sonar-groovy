@@ -1,5 +1,5 @@
 <profile>
-  <name>Sonar Groovy Way</name>
+  <name>Sonar way</name>
   <language>grvy</language>
   <rules>
     <rule>
