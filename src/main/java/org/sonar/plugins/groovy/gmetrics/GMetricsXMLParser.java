@@ -35,6 +35,10 @@ import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
 
+/**
+ * @deprecated
+ */
+@Deprecated
 public class GMetricsXMLParser implements BatchExtension {
 
   private static final Logger LOG = LoggerFactory.getLogger(GMetricsXMLParser.class);

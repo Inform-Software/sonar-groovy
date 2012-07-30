@@ -31,8 +31,6 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
-import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
-import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
 import org.sonar.plugins.groovy.surefire.SurefireSensor;
 
 import java.util.List;
@@ -78,9 +76,6 @@ public class GroovyPlugin implements Plugin {
         CodeNarcProfileImporter.class,
         CodeNarcSensor.class,
         SonarWayProfile.class,
-        // GMetrics
-        GMetricsExecutor.class,
-        GMetricsXMLParser.class,
         // Foundation
         Groovy.class,
         GroovyColorizerFormat.class,

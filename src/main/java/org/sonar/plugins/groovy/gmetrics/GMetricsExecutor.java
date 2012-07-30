@@ -21,7 +21,6 @@
 package org.sonar.plugins.groovy.gmetrics;
 
 import org.gmetrics.GMetricsRunner;
-import org.gmetrics.analyzer.FilesystemSourceAnalyzer;
 import org.gmetrics.metricset.DefaultMetricSet;
 import org.gmetrics.report.XmlReportWriter;
 import org.slf4j.Logger;
@@ -44,10 +43,7 @@ public class GMetricsExecutor implements BatchExtension {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
 
-    // sources
-    FilesystemSourceAnalyzer sources = new FilesystemSourceAnalyzer();
-    sources.setBaseDirectory(sourceDir.getAbsolutePath());
-    sources.setIncludes("**/*.groovy");
+    CustomSourceAnalyzer sources = new CustomSourceAnalyzer(sourceDir.getAbsolutePath());
     runner.setSourceAnalyzer(sources);
 
     // generated XML report

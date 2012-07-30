@@ -22,7 +22,11 @@ package org.sonar.plugins.groovy;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.gmetrics.GMetricsRunner;
+import org.gmetrics.metricset.DefaultMetricSet;
+import org.gmetrics.result.MetricResult;
+import org.gmetrics.result.NumberMetricResult;
+import org.gmetrics.resultsnode.ClassResultsNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -32,16 +36,16 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
-import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
-import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
+import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 import org.sonar.squid.measures.Metric;
 import org.sonar.squid.text.Source;
 
 import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class GroovySensor implements Sensor {
@@ -49,12 +53,8 @@ public class GroovySensor implements Sensor {
   private static final Logger LOG = LoggerFactory.getLogger(GroovySensor.class);
 
   private Groovy groovy;
-  private GMetricsExecutor gmetricsExecutor;
-  private GMetricsXMLParser gmetricsParser;
 
-  public GroovySensor(Groovy groovy, GMetricsExecutor gmetricsExecutor, GMetricsXMLParser gmetricsParser) {
-    this.gmetricsExecutor = gmetricsExecutor;
-    this.gmetricsParser = gmetricsParser;
+  public GroovySensor(Groovy groovy) {
     this.groovy = groovy;
   }
 
@@ -68,21 +68,44 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeGMetricsReport(Project project, SensorContext context) {
-    // Should we reuse existing report from GMetrics ?
-    if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.GMETRICS_REPORT_PATH))) {
-      // Yes
-      File gmetricsReport = getReport(project, GroovyPlugin.GMETRICS_REPORT_PATH);
-      if (gmetricsReport != null) {
-        gmetricsParser.parseAndProcessGMetricsResults(gmetricsReport, context);
-      }
-    } else {
-      // No, run GMetrics
-      List<File> listDirs = project.getFileSystem().getSourceDirs();
-      for (File sourceDir : listDirs) {
-        File report = gmetricsExecutor.execute(sourceDir, project);
-        gmetricsParser.parseAndProcessGMetricsResults(report, context);
+    for (File sourceDir : project.getFileSystem().getSourceDirs()) {
+      processDirectory(context, project, sourceDir);
+    }
+  }
+
+  private void processDirectory(SensorContext context, Project project, File sourceDir) {
+    GMetricsRunner runner = new GMetricsRunner();
+    runner.setMetricSet(new DefaultMetricSet());
+    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(sourceDir.getAbsolutePath());
+    runner.setSourceAnalyzer(analyzer);
+    runner.execute();
+
+    for (Entry<File, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
+      File file = entry.getKey();
+      Collection<ClassResultsNode> results = entry.getValue();
+      org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, project.getFileSystem().getSourceDirs());
+      processFile(context, sonarFile, results);
+    }
+  }
+
+  private void processFile(SensorContext context, org.sonar.api.resources.File sonarFile, Collection<ClassResultsNode> results) {
+    double methods = 0;
+    double complexity = 0;
+
+    for (ClassResultsNode result : results) {
+      methods += result.getChildren().size();
+
+      for (MetricResult metricResult : result.getMetricResults()) {
+        String metricName = metricResult.getMetric().getName();
+        if ("CyclomaticComplexity".equals(metricName)) {
+          int value = (Integer) ((NumberMetricResult) metricResult).getValues().get("total");
+          complexity += value;
+        }
       }
     }
+
+    context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, methods);
+    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
   }
 
   public static File getReport(Project project, String reportProperty) {
