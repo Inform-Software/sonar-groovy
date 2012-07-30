@@ -20,6 +20,7 @@
 
 package org.sonar.plugins.groovy;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gmetrics.GMetricsRunner;
@@ -80,7 +81,8 @@ public class GroovySensor implements Sensor {
     }
   }
 
-  private void processDirectory(SensorContext context, Project project, File sourceDir) {
+  @VisibleForTesting
+  void processDirectory(SensorContext context, Project project, File sourceDir) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
     CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(sourceDir.getAbsolutePath());
@@ -96,12 +98,15 @@ public class GroovySensor implements Sensor {
   }
 
   private void processFile(SensorContext context, org.sonar.api.resources.File sonarFile, Collection<ClassResultsNode> results) {
+    double classes = 0;
     double methods = 0;
     double complexity = 0;
 
     RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 
     for (ClassResultsNode result : results) {
+      classes += 1;
+
       for (ResultsNode resultsNode : result.getChildren().values()) {
         methods += 1;
         for (MetricResult metricResult : resultsNode.getMetricResults()) {
@@ -122,6 +127,8 @@ public class GroovySensor implements Sensor {
       }
     }
 
+    context.saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
+    context.saveMeasure(sonarFile, CoreMetrics.CLASSES, classes);
     context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, methods);
     context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
 
@@ -161,9 +168,6 @@ public class GroovySensor implements Sensor {
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
-        sensorContext.saveMeasure(resource, CoreMetrics.FILES, 1.0);
-        // TODO file can contain more than one class
-        sensorContext.saveMeasure(resource, CoreMetrics.CLASSES, 1.0);
       } catch (Exception e) {
         LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
       } finally {
