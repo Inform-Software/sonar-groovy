@@ -135,6 +135,7 @@ public class CodeNarcSensor implements Sensor {
 
       // TODO : might be possible to process results object to get violations
       runner.execute();
+      result.add(reportFile);
       i++;
     }
     return result.build();
