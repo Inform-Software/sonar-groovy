@@ -138,23 +138,6 @@ public class GroovySensor implements Sensor {
     context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
   }
 
-  public static File getReport(Project project, String reportProperty) {
-    File report = getReportFromProperty(project, reportProperty);
-    if (report == null || !report.exists() || !report.isFile()) {
-      LOG.warn("Groovy report " + reportProperty + " not found at {}", report);
-      report = null;
-    }
-    return report;
-  }
-
-  private static File getReportFromProperty(Project project, String reportProperty) {
-    String path = (String) project.getProperty(reportProperty);
-    if (path != null) {
-      return project.getFileSystem().resolvePath(path);
-    }
-    return null;
-  }
-
   protected void computeBaseMetrics(SensorContext sensorContext, Project project) {
     Reader reader = null;
     ProjectFileSystem fileSystem = project.getFileSystem();

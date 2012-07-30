@@ -37,7 +37,6 @@ import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.GroovyPlugin;
-import org.sonar.plugins.groovy.GroovySensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -72,10 +71,12 @@ public class CodeNarcSensor implements Sensor {
     // Should we reuse existing report from CodeNarc ?
     if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH))) {
       // Yes
-      File report = GroovySensor.getReport(project, GroovyPlugin.CODENARC_REPORT_PATH);
-      if (report != null) {
-        parse(Collections.singletonList(report), context);
+      File report = project.getFileSystem().resolvePath((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH));
+      if (report == null || !report.isFile()) {
+        LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATH + " not found at {}", report);
+        return;
       }
+      parse(Collections.singletonList(report), context);
     } else {
       // No, run CodeNarc
       List<File> reports = execute(project);
