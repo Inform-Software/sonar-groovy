@@ -20,6 +20,7 @@
 
 package org.sonar.plugins.groovy;
 
+import com.google.common.collect.ImmutableList;
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
@@ -34,7 +35,6 @@ import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
 import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
 import org.sonar.plugins.groovy.surefire.SurefireSensor;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Properties({
@@ -71,14 +71,13 @@ public class GroovyPlugin implements Plugin {
   }
 
   public List getExtensions() {
-    return Arrays.asList(
+    return ImmutableList.of(
         // CodeNarc
         CodeNarcRuleRepository.class,
         CodeNarcProfileExporter.class,
         CodeNarcProfileImporter.class,
+        CodeNarcSensor.class,
         SonarWayProfile.class,
-        CodeNarcExecutor.class,
-        CodeNarcXMLParser.class,
         // GMetrics
         GMetricsExecutor.class,
         GMetricsXMLParser.class,

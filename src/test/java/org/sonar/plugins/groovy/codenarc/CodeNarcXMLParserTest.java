@@ -22,55 +22,44 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
+import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 
-import java.io.File;
+import java.util.List;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.fest.assertions.Assertions.assertThat;
 
 public class CodeNarcXMLParserTest {
 
   @Test
-  public void testCodeNarcReportParser() {
-    File fileToParse = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml"));
+  public void should_parse_report() throws Exception {
+    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml")));
 
-    CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
-    parser = spy(parser);
-    doNothing().when(parser).log((SensorContext) anyObject(), anyString(), anyString(), anyInt(), anyString());
+    assertThat(violations.size()).isEqualTo(16);
 
-    SensorContext context = mock(SensorContext.class);
-    parser.parseAndLogCodeNarcResults(fileToParse, context);
+    CodeNarcViolation violation = violations.get(0);
+    assertThat(violation.getRuleName()).isEqualTo("EmptyElseBlock");
+    assertThat(violation.getFilename()).isEqualTo("org/codenarc/sample/domain/SampleDomain.groovy");
+    assertThat(violation.getLine()).isEqualTo(24);
+    assertThat(violation.getMessage()).isEqualTo("");
 
-    verify(parser).log(eq(context), eq("EmptyIfStatement"), eq("org/codenarc/sample/domain/SampleDomain.groovy"), eq(21), eq(""));
-    verify(parser).log(eq(context), eq("EmptyWhileStatement"), eq("org/codenarc/sample/service/NewService.groovy"), eq(18), eq(""));
-    verify(parser, times(2)).log(eq(context), anyString(), eq("org/codenarc/sample/service/NewService.groovy"), anyInt(), anyString());
-    verify(parser, times(16)).log(eq(context), anyString(), anyString(), anyInt(), anyString());
+    violation = violations.get(1);
+    assertThat(violation.getRuleName()).isEqualTo("EmptyIfStatement");
+    assertThat(violation.getFilename()).isEqualTo("org/codenarc/sample/domain/SampleDomain.groovy");
+    assertThat(violation.getLine()).isEqualTo(21);
+    assertThat(violation.getMessage()).isEqualTo("");
   }
 
-  /**
-   * See http://jira.codehaus.org/browse/SONARPLUGINS-620
-   */
   @Test
-  public void shouldNotFailWhenLineNumberNotSpecified() {
-    File fileToParse = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/line-number-not-specified.xml"));
+  public void should_not_fail_if_line_number_not_specified() throws Exception {
+    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/line-number-not-specified.xml")));
 
-    CodeNarcXMLParser parser = new CodeNarcXMLParser(null);
-    parser = spy(parser);
-    doNothing().when(parser).log((SensorContext) anyObject(), anyString(), anyString(), anyInt(), anyString());
+    assertThat(violations.size()).isEqualTo(1);
 
-    SensorContext context = mock(SensorContext.class);
-    parser.parseAndLogCodeNarcResults(fileToParse, context);
-
-    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example.groovy"), (Integer) eq(null),
-        eq("The cyclomatic complexity for class [org.example.Example] is [27.0]"));
+    CodeNarcViolation violation = violations.get(0);
+    assertThat(violation.getRuleName()).isEqualTo("CyclomaticComplexity");
+    assertThat(violation.getFilename()).isEqualTo("org/example/Example.groovy");
+    assertThat(violation.getLine()).isNull();
+    assertThat(violation.getMessage()).isEqualTo("The cyclomatic complexity for class [org.example.Example] is [27.0]");
   }
 
 }

@@ -32,10 +32,10 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.Reader;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+
+import java.io.Reader;
 
 public class CodeNarcProfileImporter extends ProfileImporter {
   private static final String RULE_NODE = "rule";
@@ -47,7 +47,7 @@ public class CodeNarcProfileImporter extends ProfileImporter {
   private RuleFinder ruleFinder;
 
   public CodeNarcProfileImporter(RuleFinder ruleFinder) {
-    super(CodeNarcConstants.REPOSITORY_KEY, CodeNarcConstants.REPOSITORY_NAME);
+    super(CodeNarcRuleRepository.REPOSITORY_KEY, CodeNarcRuleRepository.REPOSITORY_NAME);
     setSupportedLanguages(Groovy.KEY);
     this.ruleFinder = ruleFinder;
   }
@@ -63,7 +63,7 @@ public class CodeNarcProfileImporter extends ProfileImporter {
       SMInputCursor ruleCursor = rootC.childElementCursor(RULE_NODE);
       while (ruleCursor.getNext() != null) {
         String ruleKey = ruleCursor.getAttrValue(RULE_CLASS_ATTR);
-        Rule rule = ruleFinder.findByKey(CodeNarcConstants.REPOSITORY_KEY, ruleKey);
+        Rule rule = ruleFinder.findByKey(CodeNarcRuleRepository.REPOSITORY_KEY, ruleKey);
         if (rule == null) {
           messages.addWarningText("CodeNarc rule '" + ruleKey + "' not found");
         } else {

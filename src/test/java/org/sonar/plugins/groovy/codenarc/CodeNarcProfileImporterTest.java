@@ -59,8 +59,8 @@ public class CodeNarcProfileImporterTest {
 
     assertThat(messages.hasErrors()).isFalse();
     assertThat(profile.getActiveRules()).hasSize(2);
-    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule")).isNotNull();
-    assertThat(profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule")).isNotNull();
+    assertThat(profile.getActiveRule(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule")).isNotNull();
+    assertThat(profile.getActiveRule(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule")).isNotNull();
   }
 
   @Test
@@ -70,7 +70,7 @@ public class CodeNarcProfileImporterTest {
     RulesProfile profile = importer.importProfile(reader, messages);
 
     assertThat(messages.hasErrors()).isFalse();
-    ActiveRule activeRule = profile.getActiveRule(CodeNarcConstants.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule");
+    ActiveRule activeRule = profile.getActiveRule(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule");
     assertThat(activeRule.getActiveRuleParams()).hasSize(1);
     assertThat(activeRule.getParameter("maxLines")).isEqualTo("20");
   }

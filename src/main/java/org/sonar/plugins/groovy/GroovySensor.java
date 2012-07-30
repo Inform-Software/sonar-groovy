@@ -30,8 +30,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
-import org.sonar.plugins.groovy.codenarc.CodeNarcExecutor;
-import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
@@ -53,16 +51,10 @@ public class GroovySensor implements Sensor {
   private Groovy groovy;
   private GMetricsExecutor gmetricsExecutor;
   private GMetricsXMLParser gmetricsParser;
-  private CodeNarcExecutor codeNarcExecutor;
-  private CodeNarcXMLParser codeNarcParser;
 
-  public GroovySensor(Groovy groovy,
-      GMetricsExecutor gmetricsExecutor, GMetricsXMLParser gmetricsParser,
-      CodeNarcExecutor codeNarcExecutor, CodeNarcXMLParser codeNarcParser) {
+  public GroovySensor(Groovy groovy, GMetricsExecutor gmetricsExecutor, GMetricsXMLParser gmetricsParser) {
     this.gmetricsExecutor = gmetricsExecutor;
     this.gmetricsParser = gmetricsParser;
-    this.codeNarcExecutor = codeNarcExecutor;
-    this.codeNarcParser = codeNarcParser;
     this.groovy = groovy;
   }
 
@@ -73,7 +65,6 @@ public class GroovySensor implements Sensor {
   public void analyse(Project project, SensorContext context) {
     computeBaseMetrics(context, project);
     computeGMetricsReport(project, context);
-    computeCodeNarcReport(project, context);
   }
 
   private void computeGMetricsReport(Project project, SensorContext context) {
@@ -94,25 +85,7 @@ public class GroovySensor implements Sensor {
     }
   }
 
-  private void computeCodeNarcReport(Project project, SensorContext context) {
-    // Should we reuse existing report from CodeNarc ?
-    if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH))) {
-      // Yes
-      File codeNarcReport = getReport(project, GroovyPlugin.CODENARC_REPORT_PATH);
-      if (codeNarcReport != null) {
-        codeNarcParser.parseAndLogCodeNarcResults(codeNarcReport, context);
-      }
-    } else {
-      // No, run CodeNarc
-      List<File> listDirs = project.getFileSystem().getSourceDirs();
-      for (File sourceDir : listDirs) {
-        File report = codeNarcExecutor.execute(sourceDir);
-        codeNarcParser.parseAndLogCodeNarcResults(report, context);
-      }
-    }
-  }
-
-  protected File getReport(Project project, String reportProperty) {
+  public static File getReport(Project project, String reportProperty) {
     File report = getReportFromProperty(project, reportProperty);
     if (report == null || !report.exists() || !report.isFile()) {
       LOG.warn("Groovy report " + reportProperty + " not found at {}", report);
@@ -121,7 +94,7 @@ public class GroovySensor implements Sensor {
     return report;
   }
 
-  private File getReportFromProperty(Project project, String reportProperty) {
+  private static File getReportFromProperty(Project project, String reportProperty) {
     String path = (String) project.getProperty(reportProperty);
     if (path != null) {
       return project.getFileSystem().resolvePath(path);

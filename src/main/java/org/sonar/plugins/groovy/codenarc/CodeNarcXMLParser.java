@@ -20,81 +20,87 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.BatchExtension;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.RuleQuery;
-import org.sonar.api.rules.Violation;
+import org.sonar.api.utils.SonarException;
 import org.sonar.api.utils.StaxParser;
 
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
+import java.util.List;
 
-public class CodeNarcXMLParser implements BatchExtension {
+public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CodeNarcXMLParser.class);
-
-  private RuleFinder ruleFinder;
-
-  public CodeNarcXMLParser(RuleFinder ruleFinder) {
-    this.ruleFinder = ruleFinder;
+  public static List<CodeNarcViolation> parse(File file) {
+    CodeNarcXMLParser handler = new CodeNarcXMLParser();
+    try {
+      new StaxParser(handler).parse(file);
+    } catch (XMLStreamException e) {
+      throw new SonarException("Unabel to parse file: " + file, e);
+    }
+    return handler.result.build();
   }
 
-  public void parseAndLogCodeNarcResults(File xmlFile, final SensorContext context) {
-    LOG.info("Parsing {}", xmlFile);
+  private final ImmutableList.Builder<CodeNarcViolation> result = ImmutableList.builder();
 
-    StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-        rootCursor.advance();
-        SMInputCursor pack = rootCursor.descendantElementCursor("Package");
+  private CodeNarcXMLParser() {
+  }
 
-        while (pack.getNext() != null) {
-          String packPath = pack.getAttrValue("path");
-          SMInputCursor file = pack.descendantElementCursor("File");
-          while (file.getNext() != null) {
-            String fileName = packPath + "/" + file.getAttrValue("name");
-            SMInputCursor violation = file.childElementCursor("Violation");
-            while (violation.getNext() != null) {
-              String lineNumber = violation.getAttrValue("lineNumber");
-              String checkKey = violation.getAttrValue("ruleName");
+  public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+    rootCursor.advance();
+    SMInputCursor pack = rootCursor.descendantElementCursor("Package");
 
-              SMInputCursor messageCursor = violation.childElementCursor("Message");
-              String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
+    while (pack.getNext() != null) {
+      String packPath = pack.getAttrValue("path");
+      SMInputCursor file = pack.descendantElementCursor("File");
+      while (file.getNext() != null) {
+        String filename = packPath + "/" + file.getAttrValue("name");
+        SMInputCursor violation = file.childElementCursor("Violation");
+        while (violation.getNext() != null) {
+          String lineNumber = violation.getAttrValue("lineNumber");
+          String ruleName = violation.getAttrValue("ruleName");
 
-              log(context, checkKey, fileName, parseLineNumber(lineNumber), message);
-            }
-          }
+          SMInputCursor messageCursor = violation.childElementCursor("Message");
+          String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
+
+          result.add(new CodeNarcViolation(ruleName, filename, lineNumber, message));
         }
       }
-    });
-    try {
-      parser.parse(xmlFile);
-    } catch (XMLStreamException e) {
-      LOG.error("Error parsing file : " + xmlFile, e);
     }
   }
 
-  private Integer parseLineNumber(String lineNumber) {
-    return StringUtils.isBlank(lineNumber) ? null : Integer.parseInt(lineNumber);
-  }
+  public static class CodeNarcViolation {
+    private final String ruleName;
+    private final String filename;
+    private final Integer line;
+    private final String message;
 
-  void log(SensorContext context, String checkKey, String filename, Integer line, String message) {
-    RuleQuery ruleQuery = RuleQuery.create()
-        .withRepositoryKey(CodeNarcConstants.REPOSITORY_KEY)
-        .withConfigKey(checkKey);
-    Rule rule = ruleFinder.find(ruleQuery);
-    if (rule != null) {
-      org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
-      Violation violation = Violation.create(rule, sonarFile).setLineId(line).setMessage(message);
-      context.saveViolation(violation);
+    public CodeNarcViolation(String ruleName, String filename, String lineNumber, String message) {
+      this.ruleName = ruleName;
+      this.filename = filename;
+      this.line = StringUtils.isBlank(lineNumber) ? null : Integer.parseInt(lineNumber);
+      this.message = message;
     }
+
+    public String getRuleName() {
+      return ruleName;
+    }
+
+    public String getFilename() {
+      return filename;
+    }
+
+    public Integer getLine() {
+      return line;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
   }
 
 }

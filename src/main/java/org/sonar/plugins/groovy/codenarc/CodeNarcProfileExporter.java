@@ -34,7 +34,7 @@ import java.util.List;
 public class CodeNarcProfileExporter extends ProfileExporter {
 
   public CodeNarcProfileExporter() {
-    super(CodeNarcConstants.REPOSITORY_KEY, CodeNarcConstants.REPOSITORY_NAME);
+    super(CodeNarcRuleRepository.REPOSITORY_KEY, CodeNarcRuleRepository.REPOSITORY_NAME);
     setSupportedLanguages(Groovy.KEY);
     setMimeType("application/xml");
   }
@@ -42,7 +42,7 @@ public class CodeNarcProfileExporter extends ProfileExporter {
   @Override
   public void exportProfile(RulesProfile profile, Writer writer) {
     try {
-      generateXML(writer, profile.getActiveRulesByRepository(CodeNarcConstants.REPOSITORY_KEY));
+      generateXML(writer, profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY));
 
     } catch (IOException e) {
       throw new SonarException("Fail to export CodeNarc profile : " + profile, e);

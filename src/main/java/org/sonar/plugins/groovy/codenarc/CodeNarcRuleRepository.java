@@ -30,11 +30,14 @@ import java.util.List;
 
 public class CodeNarcRuleRepository extends RuleRepository {
 
+  public static final String REPOSITORY_KEY = Groovy.KEY;
+  public static final String REPOSITORY_NAME = "CodeNarc";
+
   private XMLRuleParser xmlRuleParser;
 
   public CodeNarcRuleRepository(XMLRuleParser xmlRuleParser) {
-    super(CodeNarcConstants.REPOSITORY_KEY, Groovy.KEY);
-    setName(CodeNarcConstants.REPOSITORY_NAME);
+    super(REPOSITORY_KEY, Groovy.KEY);
+    setName(REPOSITORY_NAME);
     this.xmlRuleParser = xmlRuleParser;
   }
 
