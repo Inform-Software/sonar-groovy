@@ -22,13 +22,14 @@ package org.sonar.plugins.groovy.gmetrics;
 
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -36,17 +37,19 @@ import java.io.File;
 
 public class GMetricsXMLParser implements BatchExtension {
 
+  private static final Logger LOG = LoggerFactory.getLogger(GMetricsXMLParser.class);
+
   private static final Number[] METHODS_DISTRIB_BOTTOM_LIMITS = { 1, 2, 4, 6, 8, 10, 12 };
   private static final Number[] CLASS_DISTRIB_BOTTOM_LIMITS = { 0, 5, 10, 20, 30, 60, 90 };
 
   public void parseAndProcessGMetricsResults(File xmlFile, final SensorContext context) {
-    GroovyUtils.LOG.info("parsing {}", xmlFile);
+    LOG.info("parsing {}", xmlFile);
 
     StaxParser parser = new StaxParser(new GMetricsStreamHandler(context));
     try {
       parser.parse(xmlFile);
     } catch (XMLStreamException e) {
-      GroovyUtils.LOG.error("Error parsing file : " + xmlFile);
+      LOG.error("Error parsing file : " + xmlFile);
     }
   }
 

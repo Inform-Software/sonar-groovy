@@ -23,6 +23,8 @@ package org.sonar.plugins.groovy;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
@@ -34,7 +36,6 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
 import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
 import org.sonar.squid.measures.Metric;
 import org.sonar.squid.text.Source;
 
@@ -46,6 +47,8 @@ import java.util.List;
 import java.util.Set;
 
 public class GroovySensor implements Sensor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(GroovySensor.class);
 
   private Groovy groovy;
   private GMetricsExecutor gmetricsExecutor;
@@ -112,7 +115,7 @@ public class GroovySensor implements Sensor {
   protected File getReport(Project project, String reportProperty) {
     File report = getReportFromProperty(project, reportProperty);
     if (report == null || !report.exists() || !report.isFile()) {
-      GroovyUtils.LOG.warn("Groovy report " + reportProperty + " not found at {}", report);
+      LOG.warn("Groovy report " + reportProperty + " not found at {}", report);
       report = null;
     }
     return report;
@@ -143,7 +146,7 @@ public class GroovySensor implements Sensor {
         // TODO file can contain more than one class
         sensorContext.saveMeasure(resource, CoreMetrics.CLASSES, 1.0);
       } catch (Exception e) {
-        GroovyUtils.LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
+        LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
       } finally {
         IOUtils.closeQuietly(reader);
       }

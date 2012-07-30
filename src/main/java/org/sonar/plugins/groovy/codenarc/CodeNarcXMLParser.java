@@ -23,6 +23,8 @@ package org.sonar.plugins.groovy.codenarc;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.rules.Rule;
@@ -30,13 +32,14 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
 
 public class CodeNarcXMLParser implements BatchExtension {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CodeNarcXMLParser.class);
 
   private RuleFinder ruleFinder;
 
@@ -45,7 +48,7 @@ public class CodeNarcXMLParser implements BatchExtension {
   }
 
   public void parseAndLogCodeNarcResults(File xmlFile, final SensorContext context) {
-    GroovyUtils.LOG.info("Parsing {}", xmlFile);
+    LOG.info("Parsing {}", xmlFile);
 
     StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
       public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
@@ -74,7 +77,7 @@ public class CodeNarcXMLParser implements BatchExtension {
     try {
       parser.parse(xmlFile);
     } catch (XMLStreamException e) {
-      GroovyUtils.LOG.error("Error parsing file : " + xmlFile, e);
+      LOG.error("Error parsing file : " + xmlFile, e);
     }
   }
 

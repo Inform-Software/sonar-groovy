@@ -24,19 +24,23 @@ import org.gmetrics.GMetricsRunner;
 import org.gmetrics.analyzer.FilesystemSourceAnalyzer;
 import org.gmetrics.metricset.DefaultMetricSet;
 import org.gmetrics.report.XmlReportWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.resources.Project;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import java.io.File;
 import java.util.Arrays;
 
 public class GMetricsExecutor implements BatchExtension {
+
+  private static final Logger LOG = LoggerFactory.getLogger(GMetricsExecutor.class);
+
   /**
    * @return generated XML report
    */
   public File execute(File sourceDir, Project project) {
-    GroovyUtils.LOG.info("Executing GMetrics");
+    LOG.info("Executing GMetrics");
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
 
@@ -57,4 +61,5 @@ public class GMetricsExecutor implements BatchExtension {
 
     return reportFile;
   }
+
 }

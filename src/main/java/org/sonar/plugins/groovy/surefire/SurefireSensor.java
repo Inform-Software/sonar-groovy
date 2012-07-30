@@ -65,7 +65,7 @@ public class SurefireSensor implements Sensor {
     protected Resource<?> getUnitTestResource(String classKey) {
       String filename = classKey.replace('.', '/') + ".groovy";
       org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
-      // TODO unitTest qualifier?
+      sonarFile.setQualifier(Resource.QUALIFIER_UNIT_TEST_CLASS);
       return sonarFile;
     }
   };

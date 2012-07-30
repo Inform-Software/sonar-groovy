@@ -28,11 +28,17 @@ import net.sourceforge.pmd.cpd.TokenEntry;
 import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class GroovyCpdTokenizer implements Tokenizer {
+
+  private static final Logger LOG = LoggerFactory.getLogger(GroovyCpdTokenizer.class);
+
   public final void tokenize(SourceCode source, Tokens cpdTokens) {
     String fileName = source.getFileName();
     Token token;
@@ -45,13 +51,12 @@ public class GroovyCpdTokenizer implements Tokenizer {
         cpdTokens.add(new TokenEntry(token.getText(), fileName, token.getLine()));
         token = tokenStream.nextToken();
       }
-    }
-    catch (TokenStreamException tse) {
-      GroovyUtils.LOG.error("Unexpected token when lexing file : " + fileName, tse);
-    }
-    catch (FileNotFoundException fnfe) {
-      GroovyUtils.LOG.error("Could not find : " + fileName, fnfe);
+    } catch (TokenStreamException tse) {
+      LOG.error("Unexpected token when lexing file : " + fileName, tse);
+    } catch (FileNotFoundException fnfe) {
+      LOG.error("Could not find : " + fileName, fnfe);
     }
     cpdTokens.add(TokenEntry.getEOF());
   }
+
 }

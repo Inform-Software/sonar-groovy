@@ -23,11 +23,12 @@ package org.sonar.plugins.groovy.codenarc;
 import org.codenarc.CodeNarcRunner;
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.report.XmlReportWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.SonarException;
-import org.sonar.plugins.groovy.utils.GroovyUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,8 @@ import java.io.StringWriter;
 import java.util.Arrays;
 
 public class CodeNarcExecutor implements BatchExtension {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CodeNarcExecutor.class);
 
   private RulesProfile rulesProfile;
   private CodeNarcProfileExporter profileExporter;
@@ -50,7 +53,7 @@ public class CodeNarcExecutor implements BatchExtension {
    * @return generated XML report
    */
   public File execute(File sourceDir) {
-    GroovyUtils.LOG.info("Executing CodeNarc");
+    LOG.info("Executing CodeNarc");
 
     CodeNarcRunner runner = new CodeNarcRunner();
     FilesystemSourceAnalyzer analyzer = new FilesystemSourceAnalyzer();
