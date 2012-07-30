@@ -22,54 +22,22 @@ package org.sonar.plugins.groovy.foundation;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.resources.ResourceUtils;
-
-import java.io.File;
-import java.util.Arrays;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-/**
- * @author Evgeny Mandrikov
- */
 public class GroovySourceImporterTest {
 
   private GroovySourceImporter importer;
 
   @Before
   public void setUp() throws Exception {
-    importer = new GroovySourceImporter(Groovy.INSTANCE);
-  }
-
-  @Test
-  public void shouldCreateResource() {
-    Resource resource = importer.createResource(new File(newDir("source1"), "/Utils.groovy"), Arrays.asList(newDir("source1")), false);
-    assertThat(resource).isInstanceOf(GroovyFile.class);
-    assertThat(ResourceUtils.isUnitTestClass(resource)).isFalse();
-    assertThat(resource.getKey()).isEqualTo(GroovyPackage.DEFAULT_PACKAGE_NAME + ".Utils");
-    assertThat(resource.getName()).isEqualTo("Utils");
-  }
-
-  @Test
-  public void shouldCreateTestResource() {
-    Resource resource = importer.createResource(new File(newDir("tests"), "UtilsTest.groovy"), Arrays.asList(newDir("tests")), true);
-    assertThat(resource).isInstanceOf(GroovyFile.class);
-    assertThat(ResourceUtils.isUnitTestClass(resource)).isTrue();
-  }
-
-  @Test
-  public void should_accept_null() {
-    assertThat(importer.createResource(null, Arrays.asList(newDir("source1")), false)).isNull();
+    importer = new GroovySourceImporter(mock(Groovy.class));
   }
 
   @Test
   public void test_toString() {
     assertThat(importer.toString()).isEqualTo("GroovySourceImporter");
-  }
-
-  private File newDir(String relativePath) {
-    return new File("target", relativePath);
   }
 
 }

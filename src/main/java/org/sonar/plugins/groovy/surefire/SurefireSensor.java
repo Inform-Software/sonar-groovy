@@ -29,7 +29,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.surefire.api.AbstractSurefireParser;
 import org.sonar.plugins.surefire.api.SurefireUtils;
 
@@ -64,7 +63,10 @@ public class SurefireSensor implements Sensor {
   private static final AbstractSurefireParser SUREFIRE_PARSER = new AbstractSurefireParser() {
     @Override
     protected Resource<?> getUnitTestResource(String classKey) {
-      return new GroovyFile(classKey, true);
+      String filename = classKey.replace('.', '/') + ".groovy";
+      org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
+      // TODO unitTest qualifier?
+      return sonarFile;
     }
   };
 

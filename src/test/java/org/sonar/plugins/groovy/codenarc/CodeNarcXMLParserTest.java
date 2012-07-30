@@ -20,6 +20,12 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import org.sonar.api.batch.SensorContext;
+
+import java.io.File;
+
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -29,12 +35,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
-
-import java.io.File;
 
 public class CodeNarcXMLParserTest {
 
@@ -49,9 +49,9 @@ public class CodeNarcXMLParserTest {
     SensorContext context = mock(SensorContext.class);
     parser.parseAndLogCodeNarcResults(fileToParse, context);
 
-    verify(parser).log(eq(context), eq("EmptyIfStatement"), eq("org/codenarc/sample/domain/SampleDomain"), eq(21), eq(""));
-    verify(parser).log(eq(context), eq("EmptyWhileStatement"), eq("org/codenarc/sample/service/NewService"), eq(18), eq(""));
-    verify(parser, times(2)).log(eq(context), anyString(), eq("org/codenarc/sample/service/NewService"), anyInt(), anyString());
+    verify(parser).log(eq(context), eq("EmptyIfStatement"), eq("org/codenarc/sample/domain/SampleDomain.groovy"), eq(21), eq(""));
+    verify(parser).log(eq(context), eq("EmptyWhileStatement"), eq("org/codenarc/sample/service/NewService.groovy"), eq(18), eq(""));
+    verify(parser, times(2)).log(eq(context), anyString(), eq("org/codenarc/sample/service/NewService.groovy"), anyInt(), anyString());
     verify(parser, times(16)).log(eq(context), anyString(), anyString(), anyInt(), anyString());
   }
 
@@ -69,7 +69,7 @@ public class CodeNarcXMLParserTest {
     SensorContext context = mock(SensorContext.class);
     parser.parseAndLogCodeNarcResults(fileToParse, context);
 
-    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example"), (Integer) eq(null),
+    verify(parser).log(eq(context), eq("CyclomaticComplexity"), eq("org/example/Example.groovy"), (Integer) eq(null),
         eq("The cyclomatic complexity for class [org.example.Example] is [27.0]"));
   }
 

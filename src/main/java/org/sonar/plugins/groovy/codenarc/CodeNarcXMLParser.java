@@ -20,7 +20,6 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
@@ -31,12 +30,11 @@ import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
-import java.io.File;
-
 import javax.xml.stream.XMLStreamException;
+
+import java.io.File;
 
 public class CodeNarcXMLParser implements BatchExtension {
 
@@ -58,7 +56,7 @@ public class CodeNarcXMLParser implements BatchExtension {
           String packPath = pack.getAttrValue("path");
           SMInputCursor file = pack.descendantElementCursor("File");
           while (file.getNext() != null) {
-            String fileName = packPath + "/" + FilenameUtils.removeExtension(file.getAttrValue("name"));
+            String fileName = packPath + "/" + file.getAttrValue("name");
             SMInputCursor violation = file.childElementCursor("Violation");
             while (violation.getNext() != null) {
               String lineNumber = violation.getAttrValue("lineNumber");
@@ -90,9 +88,10 @@ public class CodeNarcXMLParser implements BatchExtension {
         .withConfigKey(checkKey);
     Rule rule = ruleFinder.find(ruleQuery);
     if (rule != null) {
-      GroovyFile sonarFile = new GroovyFile(StringUtils.replace(filename, "/", "."));
+      org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
       Violation violation = Violation.create(rule, sonarFile).setLineId(line).setMessage(message);
       context.saveViolation(violation);
     }
   }
+
 }

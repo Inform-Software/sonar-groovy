@@ -21,14 +21,10 @@
 package org.sonar.plugins.groovy.foundation;
 
 import net.sourceforge.pmd.cpd.Tokenizer;
-import org.sonar.api.batch.CpdMapping;
+import org.sonar.api.batch.AbstractCpdMapping;
 import org.sonar.api.resources.Language;
-import org.sonar.api.resources.Resource;
 
-import java.io.File;
-import java.util.List;
-
-public class GroovyCpdMapping implements CpdMapping {
+public class GroovyCpdMapping extends AbstractCpdMapping {
 
   private final Groovy language;
 
@@ -38,10 +34,6 @@ public class GroovyCpdMapping implements CpdMapping {
 
   public Tokenizer getTokenizer() {
     return new GroovyCpdTokenizer();
-  }
-
-  public Resource createResource(File file, List<File> sourceDirs) {
-    return GroovyFile.fromIOFile(file, sourceDirs);
   }
 
   public Language getLanguage() {

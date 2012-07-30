@@ -25,7 +25,6 @@ import org.sonar.api.resources.AbstractLanguage;
 public class Groovy extends AbstractLanguage {
 
   public static final String KEY = "grvy";
-  public static final Groovy INSTANCE = new Groovy();
 
   public Groovy() {
     super(KEY, "Groovy");
@@ -34,4 +33,5 @@ public class Groovy extends AbstractLanguage {
   public String[] getFileSuffixes() {
     return new String[] {"groovy"};
   }
+
 }

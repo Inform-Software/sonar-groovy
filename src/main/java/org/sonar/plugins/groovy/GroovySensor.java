@@ -31,8 +31,6 @@ import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.groovy.codenarc.CodeNarcExecutor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.plugins.groovy.foundation.GroovyFile;
-import org.sonar.plugins.groovy.foundation.GroovyPackage;
 import org.sonar.plugins.groovy.foundation.GroovyRecognizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsExecutor;
 import org.sonar.plugins.groovy.gmetrics.GMetricsXMLParser;
@@ -66,7 +64,7 @@ public class GroovySensor implements Sensor {
   }
 
   public boolean shouldExecuteOnProject(Project project) {
-    return project.getLanguage().equals(Groovy.INSTANCE);
+    return Groovy.KEY.equals(project.getLanguageKey());
   }
 
   public void analyse(Project project, SensorContext context) {
@@ -131,17 +129,18 @@ public class GroovySensor implements Sensor {
   protected void computeBaseMetrics(SensorContext sensorContext, Project project) {
     Reader reader = null;
     ProjectFileSystem fileSystem = project.getFileSystem();
-    Set<GroovyPackage> packageList = new HashSet<GroovyPackage>();
+    Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : fileSystem.getSourceFiles(groovy)) {
       try {
         reader = new StringReader(FileUtils.readFileToString(groovyFile, fileSystem.getSourceCharset().name()));
-        GroovyFile resource = GroovyFile.fromIOFile(groovyFile, fileSystem.getSourceDirs());
+        org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, fileSystem.getSourceDirs());
         Source source = new Source(reader, new GroovyRecognizer());
-        packageList.add(new GroovyPackage(resource.getParent().getKey()));
+        packageList.add(new org.sonar.api.resources.Directory(resource.getParent().getKey()));
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.FILES, 1.0);
+        // TODO file can contain more than one class
         sensorContext.saveMeasure(resource, CoreMetrics.CLASSES, 1.0);
       } catch (Exception e) {
         GroovyUtils.LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
@@ -149,7 +148,7 @@ public class GroovySensor implements Sensor {
         IOUtils.closeQuietly(reader);
       }
     }
-    for (GroovyPackage pack : packageList) {
+    for (org.sonar.api.resources.Directory pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
     }
   }
@@ -158,4 +157,5 @@ public class GroovySensor implements Sensor {
   public String toString() {
     return getClass().getSimpleName();
   }
+
 }

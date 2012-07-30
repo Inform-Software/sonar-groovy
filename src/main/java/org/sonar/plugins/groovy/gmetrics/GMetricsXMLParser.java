@@ -28,12 +28,11 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.plugins.groovy.foundation.GroovyFile;
 import org.sonar.plugins.groovy.utils.GroovyUtils;
 
-import java.io.File;
-
 import javax.xml.stream.XMLStreamException;
+
+import java.io.File;
 
 public class GMetricsXMLParser implements BatchExtension {
 
@@ -63,7 +62,10 @@ public class GMetricsXMLParser implements BatchExtension {
       SMInputCursor clazz = rootCursor.descendantElementCursor("Class");
 
       while (clazz.getNext() != null) {
-        GroovyFile sonarFile = new GroovyFile(clazz.getAttrValue("name"));
+        String classKey = clazz.getAttrValue("name");
+        // TODO we assume that there is one file per class
+        String filename = classKey.replace('.', '/') + ".groovy";
+        org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
 
         double nbMethods = 0;
         double complexity = 0;

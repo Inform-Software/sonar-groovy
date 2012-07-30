@@ -36,10 +36,13 @@ public class CoberturaSensorTest {
     sensor = new CoberturaSensor(null);
   }
 
+  /**
+   * See SONARPLUGINS-696
+   */
   @Test
   public void shouldParseReport() {
-    // see SONARPLUGINS-696
     SensorContext context = mock(SensorContext.class);
     sensor.parseReport(TestUtils.getResource(getClass(), "coverage.xml"), context);
   }
+
 }

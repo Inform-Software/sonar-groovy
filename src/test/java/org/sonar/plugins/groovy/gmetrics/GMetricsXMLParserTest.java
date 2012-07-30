@@ -20,19 +20,18 @@
 
 package org.sonar.plugins.groovy.gmetrics;
 
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.test.IsMeasure;
-import org.sonar.plugins.groovy.foundation.GroovyFile;
 
 import java.io.File;
+
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class GMetricsXMLParserTest {
   @Test
@@ -42,7 +41,7 @@ public class GMetricsXMLParserTest {
     File fileToParse = FileUtils.toFile(getClass().getResource("/org/sonar/plugins/groovy/gmetrics/sample.xml"));
     new GMetricsXMLParser().parseAndProcessGMetricsResults(fileToParse, context);
 
-    GroovyFile file = new GroovyFile("org.gmetrics.analyzer.FilesystemSourceAnalyzer");
+    org.sonar.api.resources.File file = new org.sonar.api.resources.File("org/gmetrics/analyzer/FilesystemSourceAnalyzer.groovy");
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.FUNCTIONS), eq(7.0));
     verify(context).saveMeasure(eq(file), eq(CoreMetrics.COMPLEXITY), eq(13.0));
     verify(context).saveMeasure(
