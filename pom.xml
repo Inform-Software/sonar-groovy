@@ -6,8 +6,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>13</version>
-    <relativePath>../parent</relativePath>
+    <version>14</version>
   </parent>
 
   <artifactId>sonar-groovy-plugin</artifactId>
