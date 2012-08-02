@@ -20,15 +20,20 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
+import org.sonar.api.rules.XMLRuleParser;
 import org.sonar.api.utils.ValidationMessages;
+
+import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -46,6 +51,15 @@ public class SonarWayProfileTest {
     assertThat(profile.getName()).isEqualTo("Sonar way");
     assertThat(profile.getActiveRules()).hasSize(32);
     assertThat(messages.hasErrors()).isFalse();
+
+    CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
+    Map<String, Rule> rules = Maps.newHashMap();
+    for (Rule rule : repo.createRules()) {
+      rules.put(rule.getKey(), rule);
+    }
+    for (ActiveRule activeRule : profile.getActiveRules()) {
+      assertThat(rules.containsKey(activeRule.getConfigKey())).as("No such rule: " + activeRule.getConfigKey()).isTrue();
+    }
   }
 
   private RuleFinder newRuleFinder() {

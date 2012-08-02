@@ -24,7 +24,7 @@
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.basic.CloneableWithoutCloneRule</key>
+      <key>org.codenarc.rule.design.CloneableWithoutCloneRule</key>
       <priority>MINOR</priority>
     </rule>
     <rule>
