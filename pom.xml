@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>sonar-groovy-plugin</artifactId>
-  <version>0.6</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>sonar-plugin</packaging>
 
   <name>Sonar Groovy Plugin</name>
@@ -43,7 +43,7 @@
     <connection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</connection>
     <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</developerConnection>
     <url>https://github.com/SonarCommunity/sonar-groovy</url>
-    <tag>0.6</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>JIRA</system>
