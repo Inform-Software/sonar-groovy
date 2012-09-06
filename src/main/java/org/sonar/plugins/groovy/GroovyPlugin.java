@@ -63,6 +63,7 @@ public class GroovyPlugin implements Plugin {
 
   public List getExtensions() {
     return ImmutableList.of(
+        GroovyCommonRulesEngineProvider.class,
         // CodeNarc
         CodeNarcRuleRepository.class,
         CodeNarcProfileExporter.class,
