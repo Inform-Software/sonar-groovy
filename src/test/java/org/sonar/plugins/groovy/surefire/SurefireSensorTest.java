@@ -20,7 +20,7 @@
 package org.sonar.plugins.groovy.surefire;
 
 import org.junit.Test;
-import org.sonar.api.batch.AbstractCoverageExtension;
+import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -60,7 +60,7 @@ public class SurefireSensorTest {
 
   @Test
   public void should_depend_on_coverage_sensors() {
-    assertThat(sensor.dependsUponCoverageSensors()).isEqualTo(AbstractCoverageExtension.class);
+    assertThat(sensor.dependsUponCoverageSensors()).isEqualTo(CoverageExtension.class);
   }
 
   @Test

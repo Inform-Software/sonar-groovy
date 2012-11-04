@@ -51,7 +51,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>2.5</sonar.version>
+    <sonar.version>3.0</sonar.version>
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
   </properties>
@@ -66,14 +66,12 @@
     <dependency>
       <groupId>org.codehaus.sonar.plugins</groupId>
       <artifactId>sonar-surefire-plugin</artifactId>
-      <type>sonar-plugin</type>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.sonar.plugins</groupId>
       <artifactId>sonar-cobertura-plugin</artifactId>
-      <type>sonar-plugin</type>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>

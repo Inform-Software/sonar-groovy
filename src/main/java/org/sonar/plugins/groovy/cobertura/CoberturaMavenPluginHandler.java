@@ -25,10 +25,17 @@ import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.maven.MavenPlugin;
 import org.sonar.api.batch.maven.MavenPluginHandler;
 import org.sonar.api.batch.maven.MavenSurefireUtils;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
 
 public class CoberturaMavenPluginHandler implements MavenPluginHandler {
+
+  private Settings settings;
+
+  public CoberturaMavenPluginHandler(Settings settings) {
+    this.settings = settings;
+  }
 
   public String getGroupId() {
     return CoberturaUtils.COBERTURA_GROUP_ID;
@@ -66,7 +73,7 @@ public class CoberturaMavenPluginHandler implements MavenPluginHandler {
       }
       coberturaPlugin.addParameter("instrumentation/excludes/exclude", pattern);
     }
-    coberturaPlugin.setParameter("maxmem", project.getConfiguration().getString(CoreProperties.COBERTURA_MAXMEM_PROPERTY, CoreProperties.COBERTURA_MAXMEM_DEFAULT_VALUE));
+    coberturaPlugin.setParameter("maxmem", settings.getString(CoreProperties.COBERTURA_MAXMEM_PROPERTY));
   }
 
 }

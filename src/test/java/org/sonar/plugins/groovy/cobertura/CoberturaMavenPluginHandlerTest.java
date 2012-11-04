@@ -20,11 +20,11 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.maven.MavenPlugin;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.cobertura.api.CoberturaUtils;
 
@@ -33,11 +33,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CoberturaMavenPluginHandlerTest {
-  protected CoberturaMavenPluginHandler handler;
+  CoberturaMavenPluginHandler handler;
+  Settings settings;
 
   @Before
   public void before() {
-    handler = new CoberturaMavenPluginHandler();
+    settings = new Settings();
+    handler = new CoberturaMavenPluginHandler(settings);
   }
 
   @Test
@@ -52,7 +54,6 @@ public class CoberturaMavenPluginHandlerTest {
   @Test
   public void setCoberturaExclusions() {
     Project project = mock(Project.class);
-    when(project.getConfiguration()).thenReturn(new PropertiesConfiguration());
     when(project.getPom()).thenReturn(new MavenProject());
     when(project.getExclusionPatterns()).thenReturn(new String[] { "**/Foo.groovy", "com/*Test.*", "com/*" });
 

@@ -22,11 +22,12 @@ package org.sonar.plugins.groovy.surefire;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.AbstractCoverageExtension;
+import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.DependsUpon;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.Project;
+import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.surefire.api.AbstractSurefireParser;
@@ -40,7 +41,7 @@ public class SurefireSensor implements Sensor {
 
   @DependsUpon
   public Class<?> dependsUponCoverageSensors() {
-    return AbstractCoverageExtension.class;
+    return CoverageExtension.class;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -62,7 +63,7 @@ public class SurefireSensor implements Sensor {
     protected Resource<?> getUnitTestResource(String classKey) {
       String filename = classKey.replace('.', '/') + ".groovy";
       org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
-      sonarFile.setQualifier(Resource.QUALIFIER_UNIT_TEST_CLASS);
+      sonarFile.setQualifier(Qualifiers.UNIT_TEST_FILE);
       return sonarFile;
     }
   };

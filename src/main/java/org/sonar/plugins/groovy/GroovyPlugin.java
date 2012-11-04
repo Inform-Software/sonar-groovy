@@ -21,12 +21,16 @@
 package org.sonar.plugins.groovy;
 
 import com.google.common.collect.ImmutableList;
-import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
+import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.groovy.cobertura.CoberturaMavenPluginHandler;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
-import org.sonar.plugins.groovy.codenarc.*;
+import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
+import org.sonar.plugins.groovy.codenarc.CodeNarcProfileImporter;
+import org.sonar.plugins.groovy.codenarc.CodeNarcRuleRepository;
+import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
+import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
@@ -45,23 +49,11 @@ import java.util.List;
     global = false
   )
 })
-public class GroovyPlugin implements Plugin {
+public class GroovyPlugin extends SonarPlugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
 
-  public String getKey() {
-    return Groovy.KEY;
-  }
-
-  public String getName() {
-    return "Groovy";
-  }
-
-  public String getDescription() {
-    return "Analysis of Groovy projects";
-  }
-
-  public List getExtensions() {
+  public List<?> getExtensions() {
     return ImmutableList.of(
         GroovyCommonRulesEngineProvider.class,
         // CodeNarc

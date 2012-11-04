@@ -23,6 +23,7 @@ package org.sonar.plugins.groovy.cobertura;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.AbstractCoverageExtension;
+import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.maven.DependsUponMavenPlugin;
@@ -35,7 +36,7 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
 
-public class CoberturaSensor extends AbstractCoverageExtension implements Sensor, DependsUponMavenPlugin {
+public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, CoverageExtension {
 
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
@@ -45,7 +46,6 @@ public class CoberturaSensor extends AbstractCoverageExtension implements Sensor
     this.handler = handler;
   }
 
-  @Override
   public boolean shouldExecuteOnProject(Project project) {
     return project.getAnalysisType().isDynamic(true) && Groovy.KEY.equals(project.getLanguageKey());
   }
