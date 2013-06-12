@@ -13,7 +13,7 @@
   <packaging>sonar-plugin</packaging>
 
   <name>Sonar Groovy Plugin</name>
-  <description>Enables analysis of Groovy projects into Sonar.</description>
+  <description>Enables analysis of Groovy projects.</description>
   <url>http://docs.codehaus.org/display/SONAR/Groovy+Plugin</url>
   <inceptionYear>2010</inceptionYear>
   <organization>
