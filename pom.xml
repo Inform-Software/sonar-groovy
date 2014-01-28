@@ -37,6 +37,10 @@
       <id>godin</id>
       <name>Evgeny Mandrikov</name>
     </developer>
+    <developer>
+      <id>benzonico</id>
+      <name>Nicolas Peru</name>
+    </developer>
   </developers>
 
   <scm>
