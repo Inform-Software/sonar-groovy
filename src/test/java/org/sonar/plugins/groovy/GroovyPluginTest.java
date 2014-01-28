@@ -28,7 +28,7 @@ public class GroovyPluginTest {
 
   @Test
   public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(14);
+    assertThat(new GroovyPlugin().getExtensions()).hasSize(13);
   }
 
 }
