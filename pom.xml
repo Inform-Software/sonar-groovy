@@ -64,12 +64,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.sonar.plugins</groupId>
-      <artifactId>sonar-cobertura-plugin</artifactId>
-      <version>${sonar.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
       <version>0.17</version>

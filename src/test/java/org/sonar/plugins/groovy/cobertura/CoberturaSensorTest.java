@@ -20,26 +20,29 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
+import com.google.common.collect.ImmutableMap;
+
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.test.TestUtils;
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CoberturaSensorTest {
 
-  private CoberturaMavenPluginHandler mavenPluginHandler;
+  private Settings settings ;
   private CoberturaSensor sensor;
 
   @Before
   public void setUp() throws Exception {
-    mavenPluginHandler = mock(CoberturaMavenPluginHandler.class);
-    sensor = new CoberturaSensor(mavenPluginHandler);
+    settings = new Settings();
+    settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml"));
+    sensor = new CoberturaSensor(settings);
   }
 
   /**
@@ -48,7 +51,8 @@ public class CoberturaSensorTest {
   @Test
   public void should_parse_report() {
     SensorContext context = mock(SensorContext.class);
-    sensor.parseReport(TestUtils.getResource(getClass(), "coverage.xml"), context);
+    Project project = mock(Project.class);
+    sensor.analyse(project, context);
   }
 
   @Test
@@ -57,10 +61,8 @@ public class CoberturaSensorTest {
     when(project.getLanguageKey()).thenReturn(Groovy.KEY);
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.REUSE_REPORTS);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
-    assertThat(sensor.getMavenPluginHandler(project)).isNull();
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
-    assertThat(sensor.getMavenPluginHandler(project)).isSameAs(mavenPluginHandler);
   }
 
   @Test

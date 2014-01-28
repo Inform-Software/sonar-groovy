@@ -22,28 +22,24 @@ package org.sonar.plugins.groovy.cobertura;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.AbstractCoverageExtension;
 import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.maven.DependsUponMavenPlugin;
-import org.sonar.api.batch.maven.MavenPluginHandler;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.plugins.cobertura.api.AbstractCoberturaParser;
-import org.sonar.plugins.cobertura.api.CoberturaUtils;
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
 
-public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, CoverageExtension {
+public class CoberturaSensor implements Sensor, CoverageExtension {
 
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
-  private CoberturaMavenPluginHandler handler;
+  private final Settings settings;
 
-  public CoberturaSensor(CoberturaMavenPluginHandler handler) {
-    this.handler = handler;
+  public CoberturaSensor(Settings settings) {
+    this.settings = settings;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -51,31 +47,21 @@ public class CoberturaSensor implements Sensor, DependsUponMavenPlugin, Coverage
   }
 
   public void analyse(Project project, SensorContext context) {
-    File report = CoberturaUtils.getReport(project);
-    if (report != null) {
-      parseReport(report, context);
+    String reportPath = settings.getString(GroovyPlugin.COBERTURA_REPORT_PATH);
+
+    if (reportPath != null) {
+      File xmlFile = new File(reportPath);
+
+      if (xmlFile.exists()) {
+        LOG.info("Analyzing Cobertura report: " + reportPath);
+        new CoberturaReportParser(context).parseReport(xmlFile);
+      } else {
+        LOG.info("Cobertura xml report not found: " + reportPath);
+      }
+    } else {
+      LOG.info("No Cobertura report provided (see '" + GroovyPlugin.COBERTURA_REPORT_PATH + "' property)");
     }
   }
-
-  public MavenPluginHandler getMavenPluginHandler(Project project) {
-    if (project.getAnalysisType().equals(Project.AnalysisType.DYNAMIC)) {
-      return handler;
-    }
-    return null;
-  }
-
-  protected void parseReport(File xmlFile, final SensorContext context) {
-    LOG.info("parsing {}", xmlFile);
-    COBERTURA_PARSER.parseReport(xmlFile, context);
-  }
-
-  private static final AbstractCoberturaParser COBERTURA_PARSER = new AbstractCoberturaParser() {
-    @Override
-    protected Resource<?> getResource(String fileName) {
-      fileName = fileName.replace(".", "/") + ".groovy";
-      return new org.sonar.api.resources.File(fileName);
-    }
-  };
 
   @Override
   public String toString() {

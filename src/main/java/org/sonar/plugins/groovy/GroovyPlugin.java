@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.groovy.cobertura.CoberturaMavenPluginHandler;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
 import org.sonar.plugins.groovy.codenarc.CodeNarcProfileImporter;
@@ -46,32 +45,39 @@ import java.util.List;
     module = true,
     project = true,
     global = false
-  )
+  ),
+  @Property(
+    key = GroovyPlugin.COBERTURA_REPORT_PATH,
+    name = "Cobertura xml report path",
+    description = "",
+    global = true,
+    project = true)
 })
 public class GroovyPlugin extends SonarPlugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
 
   public List<?> getExtensions() {
     return ImmutableList.of(
-        GroovyCommonRulesEngineProvider.class,
-        // CodeNarc
-        CodeNarcRuleRepository.class,
-        CodeNarcProfileExporter.class,
-        CodeNarcProfileImporter.class,
-        CodeNarcSensor.class,
-        SonarWayProfile.class,
-        // Foundation
-        Groovy.class,
-        GroovyColorizerFormat.class,
-        GroovySourceImporter.class,
-        GroovyCpdMapping.class,
-        // Main sensor
-        GroovySensor.class,
+      GroovyCommonRulesEngineProvider.class,
+      // CodeNarc
+      CodeNarcRuleRepository.class,
+      CodeNarcProfileExporter.class,
+      CodeNarcProfileImporter.class,
+      CodeNarcSensor.class,
+      SonarWayProfile.class,
+      // Foundation
+      Groovy.class,
+      GroovyColorizerFormat.class,
+      GroovySourceImporter.class,
+      GroovyCpdMapping.class,
+      // Main sensor
+      GroovySensor.class,
 
-        // Cobertura
-        CoberturaSensor.class,
-        CoberturaMavenPluginHandler.class);
+      // Cobertura
+      CoberturaSensor.class
+      );
   }
 
 }
