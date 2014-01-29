@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -68,6 +69,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.gmetrics</groupId>
+      <artifactId>GMetrics</artifactId>
+      <version>0.6</version>
+    </dependency>
+    <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
       <version>0.20</version>
@@ -75,6 +81,10 @@
         <exclusion>
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gmetrics</groupId>
+          <artifactId>GMetrics</artifactId>
         </exclusion>
         <exclusion>
           <groupId>junit</groupId>
@@ -108,11 +118,9 @@
       <version>${sonar.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- TODO http://jira.codehaus.org/browse/SONAR-2011
-    We need following dependency, otherwise we will receive
-    java.lang.NoClassDefFoundError: org/apache/maven/project/MavenProject
-    during call mock(org.sonar.api.resources.Project.class)
-    -->
+    <!-- TODO http://jira.codehaus.org/browse/SONAR-2011 We need following
+      dependency, otherwise we will receive java.lang.NoClassDefFoundError: org/apache/maven/project/MavenProject
+      during call mock(org.sonar.api.resources.Project.class) -->
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
@@ -148,7 +156,7 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>9600000</maxsize>
+                  <maxsize>12000000</maxsize>
                   <minsize>8500000</minsize>
                   <files>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>

@@ -53,7 +53,7 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
     return resultsByFile;
   }
 
-  public List getSourceDirectories() {
+  public List<String> getSourceDirectories() {
     return Collections.singletonList(baseDirectory);
   }
 
@@ -63,7 +63,8 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
   }
 
   private PackageResultsNode processDirectory(File dir, String path, MetricSet metricSet) {
-    PackageResultsNode packageResults = new PackageResultsNode(path.length() == 0 ? "" : dir.getName());
+    String packageName = path.length() == 0 ? "" : dir.getName();
+    PackageResultsNode packageResults = new PackageResultsNode(packageName, packageName, path);
     for (File file : dir.listFiles()) {
       if (file.isDirectory()) {
         String filePath = path + "/" + file.getName();
