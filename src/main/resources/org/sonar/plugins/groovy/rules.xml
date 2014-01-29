@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.17 -->
+<!-- Generated using CodeNarc 0.20 -->
 <rules>
 
   <!-- basic rules -->
@@ -275,6 +275,13 @@
     <description><![CDATA[Looks for faulty checks for null that can cause a <em>NullPointerException</em>.]]></description>
   </rule>
 
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.basic.EmptyClassRule" priority="MINOR">
+    <name><![CDATA[Empty Class]]></name>
+    <configKey><![CDATA[EmptyClass]]></configKey>
+    <description><![CDATA[Reports classes without methods, fields or properties. Why would you need a class like this?]]></description>
+  </rule>
+
   <!-- serialization rules -->
 
   <!-- since 0.14 -->
@@ -296,6 +303,13 @@
     <name><![CDATA[Serial Persistent Fields]]></name>
     <configKey><![CDATA[SerialPersistentFields]]></configKey>
     <description><![CDATA[To use a Serializable object's serialPersistentFields correctly, it must be declared private, static, and final.]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.serialization.EnumCustomSerializationIgnoredRule" priority="MINOR">
+    <name><![CDATA[Enum Custom Serialization Ignored]]></name>
+    <configKey><![CDATA[EnumCustomSerializationIgnored]]></configKey>
+    <description><![CDATA[Checks for enums that define writeObject() or writeReplace() methods, or declare serialPersistentFields or serialVersionUID fields, all of which are ignored for enums.]]></description>
   </rule>
 
   <!-- braces rules -->
@@ -494,6 +508,13 @@
     <description><![CDATA[<em>SimpleDateFormat</em> objects should not be used as <em>static</em> fields. <em>SimpleDateFormat</em> are inherently unsafe for multi-threaded use. Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the application.]]></description>
   </rule>
 
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.concurrency.ThisReferenceEscapesConstructorRule" priority="MINOR">
+    <name><![CDATA[This Reference Escapes Constructor]]></name>
+    <configKey><![CDATA[ThisReferenceEscapesConstructor]]></configKey>
+    <description><![CDATA[Reports constructors passing the 'this' reference to other methods. This equals exposing a half-baked objects and can lead to race conditions during initialization. For reference, see <a href='http://www.slideshare.net/alexmiller/java-concurrency-gotchas-3666977/38'>Java Concurrency Gotchas</a> by Alex Miller and <a href='http://www.ibm.com/developerworks/java/library/j-jtp0618/index.html'>Java theory and practice: Safe construction techniques</a> by Brian Goetz.]]></description>
+  </rule>
+
   <!-- design rules -->
 
   <!-- since 0.11 -->
@@ -611,6 +632,20 @@
     <name><![CDATA[Private Field Could Be Final]]></name>
     <configKey><![CDATA[PrivateFieldCouldBeFinal]]></configKey>
     <description><![CDATA[Checks for <em>private</em> fields that are only set within a constructor or field initializer. Such fields can safely be made <em>final</em>.]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.design.CloneWithoutCloneableRule" priority="MINOR">
+    <name><![CDATA[Clone Without Cloneable]]></name>
+    <configKey><![CDATA[CloneWithoutCloneable]]></configKey>
+    <description><![CDATA[The method clone() should only be declared if the class implements the Cloneable interface.]]></description>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule key="org.codenarc.rule.design.LocaleSetDefaultRule" priority="MINOR">
+    <name><![CDATA[Locale Set Default]]></name>
+    <configKey><![CDATA[LocaleSetDefault]]></configKey>
+    <description><![CDATA[Checks for calls to <em>Locale.setDefault()</em>, which sets the Locale across the entire JVM.]]></description>
   </rule>
 
   <!-- dry rules -->
@@ -763,6 +798,13 @@
     <description><![CDATA[Checks for code that catches ThreadDeath without re-throwing it.]]></description>
   </rule>
 
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.exceptions.ExceptionNotThrownRule" priority="MINOR">
+    <name><![CDATA[Exception Not Thrown]]></name>
+    <configKey><![CDATA[ExceptionNotThrown]]></configKey>
+    <description><![CDATA[Checks for an exception constructor call without a <em>throw</em> as the last statement within a catch block.]]></description>
+  </rule>
+
   <!-- generic rules -->
 
   <rule key="org.codenarc.rule.generic.IllegalRegexRule" priority="MAJOR">
@@ -810,6 +852,20 @@
     <param key="classNames"/>
   </rule>
 
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.generic.IllegalClassMemberRule" priority="MINOR">
+    <name><![CDATA[Illegal Class Member]]></name>
+    <configKey><![CDATA[IllegalClassMember]]></configKey>
+    <description><![CDATA[Checks for classes containing fields/properties/methods matching configured illegal member modifiers or not matching any of the configured allowed member modifiers.]]></description>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule key="org.codenarc.rule.generic.IllegalStringRule" priority="MINOR">
+    <name><![CDATA[Illegal String]]></name>
+    <configKey><![CDATA[IllegalString]]></configKey>
+    <description><![CDATA[Checks for a specified illegal string within the source code.]]></description>
+  </rule>
+
   <!-- grails rules -->
 
   <rule key="org.codenarc.rule.grails.GrailsPublicControllerMethodRule" priority="MINOR">
@@ -821,7 +877,7 @@
   <rule key="org.codenarc.rule.grails.GrailsSessionReferenceRule" priority="MINOR">
     <name><![CDATA[Grails Session Reference]]></name>
     <configKey><![CDATA[GrailsSessionReference]]></configKey>
-    <description><![CDATA[Checks for references to the <em>session</em> object from within Grails controller and taglib classes.]]></description>
+    <description><![CDATA[Checks for references to the <em>session</em> object from within Grails controller and taglib classes. [DEPRECATED]]]></description>
   </rule>
 
   <rule key="org.codenarc.rule.grails.GrailsServletContextReferenceRule" priority="MINOR">
@@ -850,6 +906,34 @@
     <name><![CDATA[Grails Domain Has Equals]]></name>
     <configKey><![CDATA[GrailsDomainHasEquals]]></configKey>
     <description><![CDATA[Checks that Grails domain classes redefine equals().]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.grails.GrailsDuplicateMappingRule" priority="MINOR">
+    <name><![CDATA[Grails Duplicate Mapping]]></name>
+    <configKey><![CDATA[GrailsDuplicateMapping]]></configKey>
+    <description><![CDATA[Check for duplicate name in a domain class mapping]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.grails.GrailsDuplicateConstraintRule" priority="MINOR">
+    <name><![CDATA[Grails Duplicate Constraint]]></name>
+    <configKey><![CDATA[GrailsDuplicateConstraint]]></configKey>
+    <description><![CDATA[Check for duplicate entry in domain class constraints]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.grails.GrailsDomainReservedSqlKeywordNameRule" priority="MINOR">
+    <name><![CDATA[Grails Domain Reserved Sql Keyword Name]]></name>
+    <configKey><![CDATA[GrailsDomainReservedSqlKeywordName]]></configKey>
+    <description><![CDATA[Forbids usage of SQL reserved keywords as class or field names in Grails domain classes. Naming a domain class (or its field) with such a keyword causes SQL schema creation errors and/or redundant table/column name mappings.]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.grails.GrailsDomainWithServiceReferenceRule" priority="MINOR">
+    <name><![CDATA[Grails Domain With Service Reference]]></name>
+    <configKey><![CDATA[GrailsDomainWithServiceReference]]></configKey>
+    <description><![CDATA[Checks that Grails domain classes do not have service classes injected.]]></description>
   </rule>
 
   <!-- imports rules -->
@@ -1027,6 +1111,34 @@
     <description><![CDATA[If Spock's @IgnoreRest appears on any method, all non-annotated test methods are not executed. This behaviour is almost always unintended. It's fine to use @IgnoreRest locally during development, but when committing code, it should be removed.]]></description>
   </rule>
 
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.junit.JUnitLostTestRule" priority="MINOR">
+    <name><![CDATA[J Unit Lost Test]]></name>
+    <configKey><![CDATA[JUnitLostTest]]></configKey>
+    <description><![CDATA[Checks for classes that import JUnit 4 classes and contain a public, instance, void, no-arg method named test* that is not annotated with @Test.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.junit.JUnitUnnecessaryThrowsExceptionRule" priority="MAJOR">
+    <name><![CDATA[J Unit Unnecessary Throws Exception]]></name>
+    <configKey><![CDATA[JUnitUnnecessaryThrowsException]]></configKey>
+    <description><![CDATA[Check for <em>throws</em> clauses on JUnit test methods. That is not necessary in Groovy.]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.junit.JUnitPublicFieldRule" priority="MAJOR">
+    <name><![CDATA[J Unit Public Field]]></name>
+    <configKey><![CDATA[JUnitPublicField]]></configKey>
+    <description><![CDATA[Checks for public field on a JUnit test class]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.junit.JUnitAssertEqualsConstantActualValueRule" priority="MINOR">
+    <name><![CDATA[J Unit Assert Equals Constant Actual Value]]></name>
+    <configKey><![CDATA[JUnitAssertEqualsConstantActualValue]]></configKey>
+    <description><![CDATA[Reports usages of org.junit.Assert.assertEquals([message,] expected, actual) where the 'actual' parameter is a constant or a literal. Most likely it was intended to be the 'expected' value.]]></description>
+  </rule>
+
   <!-- logging rules -->
 
   <!-- since 0.12 -->
@@ -1180,14 +1292,24 @@
     <description><![CDATA[A factory method is a method that creates objects, and they are typically named either buildFoo(), makeFoo(), or createFoo(). This rule enforces that only one naming convention is used. It defaults to makeFoo(), but that can be changed using the property 'regex'.]]></description>
   </rule>
 
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.naming.ClassNameSameAsFilenameRule" priority="MINOR">
+    <name><![CDATA[Class Name Same As Filename]]></name>
+    <configKey><![CDATA[ClassNameSameAsFilename]]></configKey>
+    <description><![CDATA[Reports files containing only one top level class / enum / interface which is named differently than the file.]]></description>
+  </rule>
+
   <!-- size rules -->
 
-  <rule key="org.codenarc.rule.size.AbcComplexityRule" priority="MINOR">
-    <name><![CDATA[Abc Complexity]]></name>
-    <configKey><![CDATA[AbcComplexity]]></configKey>
-    <description><![CDATA[Checks the ABC metric of size/complexity for methods/classes.A method (or "closure field") with an ABC complexity value (score) greater than the <em>maxMethodComplexity</em> property causes a violation. Likewise, a class that has an (average method) ABC complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property causes a violation.]]></description>
-    <param key="maxClassAverageMethodComplexity"/>
-    <param key="maxMethodComplexity"/>
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.size.AbcMetricRule" priority="MINOR">
+    <name><![CDATA[Abc Metric]]></name>
+    <configKey><![CDATA[AbcMetric]]></configKey>
+    <description><![CDATA[Checks the ABC size metric for methods/classes. A method (or "closure field") with an ABC score greater than the <em>maxMethodAbcScore</em> property causes a violation. Likewise, a class that has an (average method) ABC score greater than the <em>maxClassAverageMethodAbcScore</em> property causes a violation.]]></description>
+    <param key="maxClassAverageMethodAbcScore"/>
+    <param key="maxMethodAbcScore"/>
+    <param key="maxClassAbcScore"/>
+    <param key="ignoreMethodNames"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.ClassSizeRule" priority="MAJOR">
@@ -1365,7 +1487,7 @@
   <rule key="org.codenarc.rule.unnecessary.UnnecessaryIfStatementRule" priority="MAJOR">
     <name><![CDATA[Unnecessary If Statement]]></name>
     <configKey><![CDATA[UnnecessaryIfStatement]]></configKey>
-    <description><![CDATA[Checks for <em>if</em> statements where the if and else blocks are merely returning <em>true</em> and <em>false</em> constants. These cases can be replaced by a simple return statement.]]></description>
+    <description><![CDATA[Checks for <em>if</em> statements where the if and else blocks (or subsequent fall-through to a <em>return</em>) are merely returning <em>true</em> and <em>false</em> constants. These cases can be replaced by a simple return statement.]]></description>
   </rule>
 
   <!-- since 0.12 -->
@@ -1571,7 +1693,8 @@
   <rule key="org.codenarc.rule.unused.UnusedVariableRule" priority="MINOR">
     <name><![CDATA[Unused Variable]]></name>
     <configKey><![CDATA[UnusedVariable]]></configKey>
-    <description><![CDATA[Checks for variables that are never referenced.]]></description>
+    <description><![CDATA[Checks for variables that are never referenced. The <em>ignoreVariableNames</em> property specifies one or more variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
+    <param key="ignoreVariableNames"/>
   </rule>
 
   <!-- since 0.16 -->
@@ -1676,6 +1799,13 @@
     <description><![CDATA[Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final.]]></description>
   </rule>
 
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.security.UnsafeImplementationAsMapRule" priority="MINOR">
+    <name><![CDATA[Unsafe Implementation As Map]]></name>
+    <configKey><![CDATA[UnsafeImplementationAsMap]]></configKey>
+    <description><![CDATA[Reports incomplete interface implementations created by map-to-interface coercions. Example: [hasNext: { ... }] as Iterator (Not all Iterator methods are implemented. An UnsupportedOperationException will be thrown upon call to e.g. next().) By default, this rule does not apply to test files.]]></description>
+  </rule>
+
   <!-- formatting rules -->
 
   <!-- since 0.15 -->
@@ -1731,6 +1861,111 @@
     <name><![CDATA[Class Javadoc]]></name>
     <configKey><![CDATA[ClassJavadoc]]></configKey>
     <description><![CDATA[Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterCommaRule" priority="MAJOR">
+    <name><![CDATA[Space After Comma]]></name>
+    <configKey><![CDATA[SpaceAfterComma]]></configKey>
+    <description><![CDATA[Checks that there is at least one space or whitespace following each comma. That includes checks for method and closure declaration parameter lists, method call parameter lists, Map literals and List literals.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterSemicolonRule" priority="MAJOR">
+    <name><![CDATA[Space After Semicolon]]></name>
+    <configKey><![CDATA[SpaceAfterSemicolon]]></configKey>
+    <description><![CDATA[Checks that there is at least one space or whitespace following each semicolon separating multiple statements on a single line or the clauses within a classic for loop.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAroundOperatorRule" priority="MAJOR">
+    <name><![CDATA[Space Around Operator]]></name>
+    <configKey><![CDATA[SpaceAroundOperator]]></configKey>
+    <description><![CDATA[Check that there is at least one space (blank) or whitespace around each binary operator.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceBeforeOpeningBraceRule" priority="MAJOR">
+    <name><![CDATA[Space Before Opening Brace]]></name>
+    <configKey><![CDATA[SpaceBeforeOpeningBrace]]></configKey>
+    <description><![CDATA[Check that there is at least one space (blank) or whitespace before each opening brace ("{") for method/class/interface declarations, closure expressions and block statements.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterOpeningBraceRule" priority="MAJOR">
+    <name><![CDATA[Space After Opening Brace]]></name>
+    <configKey><![CDATA[SpaceAfterOpeningBrace]]></configKey>
+    <description><![CDATA[Check that there is at least one space (blank) or whitespace after each opening brace ("{") for method/class/interface declarations, closure expressions and block statements.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterClosingBraceRule" priority="MAJOR">
+    <name><![CDATA[Space After Closing Brace]]></name>
+    <configKey><![CDATA[SpaceAfterClosingBrace]]></configKey>
+    <description><![CDATA[Check that there is at least one space (blank) or whitespace after each closing brace ("}") for method/class/interface declarations, closure expressions and block statements.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceBeforeClosingBraceRule" priority="MAJOR">
+    <name><![CDATA[Space Before Closing Brace]]></name>
+    <configKey><![CDATA[SpaceBeforeClosingBrace]]></configKey>
+    <description><![CDATA[Check that there is at least one space (blank) or whitespace before each closing brace ("}") for method/class/interface declarations, closure expressions and block statements.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterIfRule" priority="MAJOR">
+    <name><![CDATA[Space After If]]></name>
+    <configKey><![CDATA[SpaceAfterIf]]></configKey>
+    <description><![CDATA[Check that there is exactly one space (blank) after the <em>if</em> keyword and before the opening parenthesis.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterWhileRule" priority="MAJOR">
+    <name><![CDATA[Space After While]]></name>
+    <configKey><![CDATA[SpaceAfterWhile]]></configKey>
+    <description><![CDATA[Check that there is exactly one space (blank) after the <em>while</em> keyword and before the opening parenthesis.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterForRule" priority="MAJOR">
+    <name><![CDATA[Space After For]]></name>
+    <configKey><![CDATA[SpaceAfterFor]]></configKey>
+    <description><![CDATA[Check that there is exactly one space (blank) after the <em>for</em> keyword and before the opening parenthesis.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterSwitchRule" priority="MAJOR">
+    <name><![CDATA[Space After Switch]]></name>
+    <configKey><![CDATA[SpaceAfterSwitch]]></configKey>
+    <description><![CDATA[Check that there is exactly one space (blank) after the <em>switch</em> keyword and before the opening parenthesis.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAfterCatchRule" priority="MAJOR">
+    <name><![CDATA[Space After Catch]]></name>
+    <configKey><![CDATA[SpaceAfterCatch]]></configKey>
+    <description><![CDATA[Check that there is exactly one space (blank) after the <em>catch</em> keyword and before the opening parenthesis.]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAroundClosureArrowRule" priority="MAJOR">
+    <name><![CDATA[Space Around Closure Arrow]]></name>
+    <configKey><![CDATA[SpaceAroundClosureArrow]]></configKey>
+    <description><![CDATA[Checks that there is whitespace around the closure arrow (->) symbol]]></description>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule key="org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule" priority="MAJOR">
+    <name><![CDATA[Space Around Map Entry Colon]]></name>
+    <configKey><![CDATA[SpaceAroundMapEntryColon]]></configKey>
+    <description><![CDATA[Check for configured formatting of whitespace around colons for literal Map entries. The <em>characterBeforeColonRegex</em> and <em>characterAfterColonRegex</em> properties specify a regular expression that must match the character before/after the colon.]]></description>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule key="org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule" priority="MAJOR">
+    <name><![CDATA[Closure Statement On Opening Line Of Multiple Line Closure]]></name>
+    <configKey><![CDATA[ClosureStatementOnOpeningLineOfMultipleLineClosure]]></configKey>
+    <description><![CDATA[Checks for closure logic on first line (after ->) for a multi-line closure.]]></description>
   </rule>
 
   <!-- convention rules -->
@@ -1789,6 +2024,13 @@
     <name><![CDATA[Hashtable Is Obsolete]]></name>
     <configKey><![CDATA[HashtableIsObsolete]]></configKey>
     <description><![CDATA[The <em>java.util.Hashtable</em> class is effectively obsolete. Use the <em>Java Collections Framework</em> classes instead, including <em>HashMap</em> or <em>ConcurrentHashMap</em>. See the JDK javadoc.]]></description>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule key="org.codenarc.rule.convention.IfStatementCouldBeTernaryRule" priority="MINOR">
+    <name><![CDATA[If Statement Could Be Ternary]]></name>
+    <configKey><![CDATA[IfStatementCouldBeTernary]]></configKey>
+    <description><![CDATA[Checks for <em>if</em> statements where both the <em>if</em> and <em>else</em> blocks contain only a single <em>return</em> statement with a constant or literal value]]></description>
   </rule>
 
   <!-- groovyism rules -->
@@ -2008,6 +2250,14 @@
     <name><![CDATA[Use Collect Nested]]></name>
     <configKey><![CDATA[UseCollectNested]]></configKey>
     <description><![CDATA[Instead of nested collect{}-calls use collectNested{}]]></description>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule key="org.codenarc.rule.groovyism.GStringExpressionWithinStringRule" priority="MINOR">
+    <name><![CDATA[G String Expression Within String]]></name>
+    <configKey><![CDATA[GStringExpressionWithinString]]></configKey>
+    <description><![CDATA[Check for regular (single quote) strings containing a GString-type expression (\${...}).]]></description>
+    <param key="..."/>
   </rule>
 
 </rules>

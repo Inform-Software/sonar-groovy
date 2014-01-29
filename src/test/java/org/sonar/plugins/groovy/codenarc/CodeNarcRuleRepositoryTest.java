@@ -30,7 +30,7 @@ public class CodeNarcRuleRepositoryTest {
   @Test
   public void test() {
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    assertThat(repo.createRules().size()).isEqualTo(286);
+    assertThat(repo.createRules().size()).isEqualTo(321);
   }
 
 }
