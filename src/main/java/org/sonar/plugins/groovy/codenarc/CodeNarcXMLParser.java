@@ -34,6 +34,11 @@ import java.util.List;
 
 public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
 
+  private final ImmutableList.Builder<CodeNarcViolation> result = ImmutableList.builder();
+
+  private CodeNarcXMLParser() {
+  }
+
   public static List<CodeNarcViolation> parse(File file) {
     CodeNarcXMLParser handler = new CodeNarcXMLParser();
     try {
@@ -42,11 +47,6 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
       throw new SonarException("Unabel to parse file: " + file, e);
     }
     return handler.result.build();
-  }
-
-  private final ImmutableList.Builder<CodeNarcViolation> result = ImmutableList.builder();
-
-  private CodeNarcXMLParser() {
   }
 
   public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
