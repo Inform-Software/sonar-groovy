@@ -118,7 +118,6 @@ public class CodeNarcSensorTest {
 
     Project project = mock(Project.class);
     ProjectFileSystem pfs = mock(ProjectFileSystem.class);
-//    File report = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml"));
     ActiveRule rule = mock(ActiveRule.class);
     when(rule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
