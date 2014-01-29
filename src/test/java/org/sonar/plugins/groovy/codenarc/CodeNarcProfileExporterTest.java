@@ -21,6 +21,7 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import org.junit.Before;
+
 import org.junit.Test;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.Rule;
@@ -30,49 +31,42 @@ import org.sonar.test.TestUtils;
 
 import java.io.StringWriter;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 public class CodeNarcProfileExporterTest {
+
+  private StringWriter writer;
   private CodeNarcProfileExporter exporter;
+  private RulesProfile profile;
 
   @Before
-  public void setUp() {
-    exporter = new CodeNarcProfileExporter();
-  }
-
-  @Test
-  public void shouldSetMimeType() {
-    assertThat(exporter.getMimeType()).isEqualTo("application/xml");
+  public void setUp(){
+    writer = new StringWriter();
+    exporter = new CodeNarcProfileExporter(writer);
+    profile = RulesProfile.create("Sonar Groovy way", Groovy.KEY);
   }
 
   @Test
   public void shouldExportProfile() throws Exception {
-    RulesProfile profile = RulesProfile.create("Sonar Groovy way", Groovy.KEY);
     Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule", "Add Empty String");
     profile.activateRule(rule, RulePriority.MAJOR);
     rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     profile.activateRule(rule, RulePriority.MAJOR);
-
-    StringWriter writer = new StringWriter();
-    exporter.exportProfile(profile, writer);
+    exporter.exportProfile(profile);
 
     TestUtils.assertSimilarXml(
-        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/CodeNarcProfileExporterTest/exportProfile.xml"),
+        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportProfile.xml"),
         writer.toString());
   }
 
   @Test
   public void shouldExportParameters() throws Exception {
-    RulesProfile profile = RulesProfile.create("Sonar Groovy way", Groovy.KEY);
     Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", "20");
 
-    StringWriter writer = new StringWriter();
-    exporter.exportProfile(profile, writer);
+    exporter.exportProfile(profile);
 
     TestUtils.assertSimilarXml(
-        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/CodeNarcProfileExporterTest/exportParameters.xml"),
+        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportParameters.xml"),
         writer.toString());
   }
 }

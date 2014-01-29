@@ -54,12 +54,10 @@ public class CodeNarcSensor implements Sensor {
 
   private final RulesProfile rulesProfile;
   private final RuleFinder ruleFinder;
-  private final CodeNarcProfileExporter profileExporter;
 
-  public CodeNarcSensor(RulesProfile profile, RuleFinder ruleFinder, CodeNarcProfileExporter profileExporter) {
+  public CodeNarcSensor(RulesProfile profile, RuleFinder ruleFinder) {
     this.rulesProfile = profile;
     this.ruleFinder = ruleFinder;
-    this.profileExporter = profileExporter;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -144,7 +142,7 @@ public class CodeNarcSensor implements Sensor {
   private void exportCodeNarcConfiguration(File file) {
     try {
       StringWriter writer = new StringWriter();
-      profileExporter.exportProfile(rulesProfile, writer);
+      new CodeNarcProfileExporter(writer).exportProfile(rulesProfile);
       FileUtils.writeStringToFile(file, writer.toString());
     } catch (IOException e) {
       throw new SonarException("Can not generate CodeNarc configuration file", e);

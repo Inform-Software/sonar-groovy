@@ -25,8 +25,6 @@ import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
-import org.sonar.plugins.groovy.codenarc.CodeNarcProfileExporter;
-import org.sonar.plugins.groovy.codenarc.CodeNarcProfileImporter;
 import org.sonar.plugins.groovy.codenarc.CodeNarcRuleRepository;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
@@ -63,8 +61,6 @@ public class GroovyPlugin extends SonarPlugin {
       GroovyCommonRulesEngineProvider.class,
       // CodeNarc
       CodeNarcRuleRepository.class,
-      CodeNarcProfileExporter.class,
-      CodeNarcProfileImporter.class,
       CodeNarcSensor.class,
       SonarWayProfile.class,
       // Foundation

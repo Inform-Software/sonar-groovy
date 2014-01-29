@@ -51,8 +51,7 @@ public class CodeNarcSensorTest {
   public void setUp() {
     ruleFinder = mock(RuleFinder.class);
     profile = mock(RulesProfile.class);
-    CodeNarcProfileExporter exporter = mock(CodeNarcProfileExporter.class);
-    sensor = new CodeNarcSensor(profile, ruleFinder, exporter);
+    sensor = new CodeNarcSensor(profile, ruleFinder);
   }
 
   @Test
