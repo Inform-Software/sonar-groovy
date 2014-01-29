@@ -60,18 +60,21 @@
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
   </properties>
-
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.gmetrics</groupId>
+        <artifactId>GMetrics</artifactId>
+        <version>0.6</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.version}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.gmetrics</groupId>
-      <artifactId>GMetrics</artifactId>
-      <version>0.6</version>
     </dependency>
     <dependency>
       <groupId>org.codenarc</groupId>
@@ -81,10 +84,6 @@
         <exclusion>
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.gmetrics</groupId>
-          <artifactId>GMetrics</artifactId>
         </exclusion>
         <exclusion>
           <groupId>junit</groupId>
