@@ -57,7 +57,15 @@ public class GroovySensorTest {
   }
 
   @Test
-  public void test() {
+  public void compute_metrics(){
+    testMetrics(false, 2.0);
+  }
+  @Test
+  public void compute_metrics_ignoring_header_comment() {
+    testMetrics(true, 1.0);
+  }
+
+  public void testMetrics(boolean headerComment, double expectedCommentMetric) {
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     ProjectFileSystem pfs = mock(ProjectFileSystem.class);
@@ -68,6 +76,7 @@ public class GroovySensorTest {
     when(pfs.getSourceCharset()).thenReturn(Charset.forName("UTF-8"));
     when(pfs.getSourceFiles(new Groovy())).thenReturn(Arrays.asList(sourceFile));
     when(project.getFileSystem()).thenReturn(pfs);
+    when(project.getProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS)).thenReturn(headerComment);
 
     sensor.analyse(project, context);
 
@@ -76,9 +85,9 @@ public class GroovySensorTest {
     verify(context).saveMeasure(sonarFile, CoreMetrics.CLASSES, 2.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, 2.0);
 
-    verify(context).saveMeasure(sonarFile, CoreMetrics.LINES, 23.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.LINES, 27.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.NCLOC, 17.0);
-    verify(context).saveMeasure(sonarFile, CoreMetrics.COMMENT_LINES, 0.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.COMMENT_LINES, expectedCommentMetric);
 
     verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 4.0);
     verify(context).saveMeasure(

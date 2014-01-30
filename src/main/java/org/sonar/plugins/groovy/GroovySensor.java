@@ -144,7 +144,11 @@ public class GroovySensor implements Sensor {
         packageList.add(new org.sonar.api.resources.Directory(resource.getParent().getKey()));
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
-        sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, (double) source.getMeasure(Metric.COMMENT_LINES));
+        double commentLinesMetric = (double) source.getMeasure(Metric.COMMENT_LINES);
+        if((Boolean)project.getProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS)){
+          commentLinesMetric -= source.getMeasure(Metric.HEADER_COMMENT_LINES);
+        }
+        sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, commentLinesMetric);
       } catch (Exception e) {
         LOG.error("Can not analyze the file " + groovyFile.getAbsolutePath(), e);
       } finally {

@@ -20,6 +20,8 @@
 
 package org.sonar.plugins.groovy;
 
+import org.sonar.api.PropertyType;
+
 import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
@@ -49,12 +51,23 @@ import java.util.List;
     name = "Cobertura xml report path",
     description = "",
     global = true,
-    project = true)
+    project = true),
+  @Property(
+    key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
+    defaultValue = "true",
+    name = "Ignore Header Comments",
+    description =
+    "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. " +
+      "Thus metrics such as \"Comment lines\" do not get incremented. " +
+      "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
+    project = true, global = true,
+    type = PropertyType.BOOLEAN)
 })
 public class GroovyPlugin extends SonarPlugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
+  public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
   public List<?> getExtensions() {
     return ImmutableList.of(

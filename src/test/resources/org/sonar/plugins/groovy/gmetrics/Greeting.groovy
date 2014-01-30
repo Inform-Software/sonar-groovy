@@ -1,3 +1,6 @@
+/**
+* Header Comment
+*/
 package example;
 
 class Greeting {
@@ -10,7 +13,7 @@ class Greeting {
   }
 
 }
-
+//comment line
 class OneMoreClass {
 
   def void sayHello() {
