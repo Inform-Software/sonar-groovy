@@ -20,6 +20,8 @@
 
 package org.sonar.plugins.groovy;
 
+import org.sonar.api.config.Settings;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gmetrics.GMetricsRunner;
@@ -61,8 +63,11 @@ public class GroovySensor implements Sensor {
 
   private final Groovy groovy;
 
-  public GroovySensor(Groovy groovy) {
+  private Settings settings;
+
+  public GroovySensor(Groovy groovy, Settings settings) {
     this.groovy = groovy;
+    this.settings = settings;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -145,7 +150,7 @@ public class GroovySensor implements Sensor {
         sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) source.getMeasure(Metric.LINES));
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, (double) source.getMeasure(Metric.LINES_OF_CODE));
         double commentLinesMetric = (double) source.getMeasure(Metric.COMMENT_LINES);
-        if((Boolean)project.getProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS)){
+        if (settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS)) {
           commentLinesMetric -= source.getMeasure(Metric.HEADER_COMMENT_LINES);
         }
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, commentLinesMetric);

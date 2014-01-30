@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.groovy;
 
+import org.sonar.api.config.Settings;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
@@ -40,7 +42,8 @@ import static org.mockito.Mockito.when;
 
 public class GroovySensorTest {
 
-  private GroovySensor sensor = new GroovySensor(new Groovy());
+  private Settings settings = new Settings();
+  private GroovySensor sensor = new GroovySensor(new Groovy(), settings);
 
   @Test
   public void should_execute_on_project() {
@@ -66,6 +69,7 @@ public class GroovySensorTest {
   }
 
   public void testMetrics(boolean headerComment, double expectedCommentMetric) {
+    settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, ""+headerComment);
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     ProjectFileSystem pfs = mock(ProjectFileSystem.class);
