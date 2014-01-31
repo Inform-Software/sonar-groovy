@@ -146,6 +146,7 @@ public class GroovySensor implements Sensor {
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : fileSystem.getSourceFiles(groovy)) {
       org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, fileSystem.getSourceDirs());
+      packageList.add(new org.sonar.api.resources.Directory(resource.getParent().getKey()));
       loc = 0;
       comments = 0;
       currentLine = 0;
