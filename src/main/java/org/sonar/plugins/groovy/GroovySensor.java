@@ -48,7 +48,6 @@ import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -154,15 +153,15 @@ public class GroovySensor implements Sensor {
         GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
         groovyLexer.setWhitespaceIncluded(true);
         TokenStream tokenStream = groovyLexer.plumb();
-        Token previousToken = tokenStream.nextToken();
         Token token = tokenStream.nextToken();
-        while (token.getType() != Token.EOF_TYPE) {
-          handleToken(token,previousToken);
-          previousToken = token;
-          token = tokenStream.nextToken();
+        Token nextToken = tokenStream.nextToken();
+        while (nextToken.getType() != Token.EOF_TYPE) {
+          handleToken(token, nextToken.getLine());
+          token = nextToken;
+          nextToken = tokenStream.nextToken();
         }
-        handleToken(token,previousToken);
-        sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) token.getLine());
+        handleToken(token, nextToken.getLine());
+        sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
         sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
         sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
       } catch (TokenStreamException tse) {
@@ -176,28 +175,31 @@ public class GroovySensor implements Sensor {
     }
   }
 
-
-  private void handleToken(Token token, Token previousToken){
-    switch (previousToken.getType()) {
-      case GroovyTokenTypes.WS:
-      case GroovyTokenTypes.STRING_NL:
-      case GroovyTokenTypes.ONE_NL:
-      case GroovyTokenTypes.NLS:
-        break;
-      case GroovyTokenTypes.SL_COMMENT:
-      case GroovyTokenTypes.SH_COMMENT:
-      case GroovyTokenTypes.ML_COMMENT:
-        if(!(previousToken.getLine()==1 && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS))){
-          comments+=token.getLine()-previousToken.getLine()+1;
-        }
-        break;
-      default:
-        if(previousToken.getLine()!=currentLine){
-          loc++;
-          currentLine = previousToken.getLine();
-        }
-        break;
+  private void handleToken(Token token, int nextTokenLine) {
+    int tokenType = token.getType();
+    int tokenLine = token.getLine();
+    if (isComment(tokenType)) {
+      if(isNotHeaderComment(tokenLine)){
+        comments += nextTokenLine - tokenLine + 1;
+      }
+    } else if (isNotWhitespace(tokenType) && tokenLine != currentLine) {
+      loc++;
+      currentLine = tokenLine;
     }
+  }
+
+  private boolean isNotHeaderComment(int tokenLine) {
+    return !(tokenLine == 1 && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS));
+  }
+
+  private boolean isNotWhitespace(int tokenType) {
+    return !(tokenType == GroovyTokenTypes.WS ||
+      tokenType == GroovyTokenTypes.STRING_NL ||
+      tokenType == GroovyTokenTypes.ONE_NL || tokenType == GroovyTokenTypes.NLS);
+  }
+
+  private boolean isComment(int tokenType) {
+    return tokenType == GroovyTokenTypes.SL_COMMENT || tokenType == GroovyTokenTypes.SH_COMMENT || tokenType == GroovyTokenTypes.ML_COMMENT;
   }
 
   @Override
