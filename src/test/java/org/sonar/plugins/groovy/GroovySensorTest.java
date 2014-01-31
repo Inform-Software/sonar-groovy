@@ -19,8 +19,12 @@
  */
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.config.Settings;
+import org.sonar.api.measures.FileLinesContext;
 
+import org.sonar.api.resources.Resource;
+import org.hamcrest.core.AnyOf;
+import org.sonar.api.measures.FileLinesContextFactory;
+import org.sonar.api.config.Settings;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
@@ -43,7 +47,8 @@ import static org.mockito.Mockito.when;
 public class GroovySensorTest {
 
   private Settings settings = new Settings();
-  private GroovySensor sensor = new GroovySensor(new Groovy(), settings);
+  private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
+  private GroovySensor sensor = new GroovySensor(new Groovy(), settings, fileLinesContextFactory);
 
   @Test
   public void should_execute_on_project() {
@@ -76,6 +81,8 @@ public class GroovySensorTest {
     java.io.File sourceDir = new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics");
     java.io.File sourceFile = new java.io.File(sourceDir, "Greeting.groovy");
     List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
+    FileLinesContext fileLinesContext = mock(FileLinesContext.class);
+    when(fileLinesContextFactory.createFor(Mockito.any(Resource.class))).thenReturn(fileLinesContext );
     when(pfs.getSourceDirs()).thenReturn(sourceDirs);
     when(pfs.getSourceCharset()).thenReturn(Charset.forName("UTF-8"));
     when(pfs.getSourceFiles(new Groovy())).thenReturn(Arrays.asList(sourceFile));
@@ -100,6 +107,10 @@ public class GroovySensorTest {
     verify(context).saveMeasure(
         Mockito.eq(sonarFile),
         Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
+    //5 times for comment because we register comment even when ignoring header comment
+    verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
+    verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
+    verify(fileLinesContext).save();
   }
 
   @Test

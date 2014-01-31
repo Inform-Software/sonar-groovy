@@ -20,6 +20,8 @@
 
 package org.sonar.plugins.groovy;
 
+import org.sonar.api.measures.FileLinesContext;
+
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
@@ -38,6 +40,7 @@ import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.resources.Project;
@@ -63,14 +66,17 @@ public class GroovySensor implements Sensor {
   private final Groovy groovy;
 
   private Settings settings;
+  private FileLinesContextFactory fileLinesContextFactory;
 
   private double loc = 0;
   private double comments = 0;
   private int currentLine = 0;
+  private FileLinesContext fileLinesContext;
 
-  public GroovySensor(Groovy groovy, Settings settings) {
+  public GroovySensor(Groovy groovy, Settings settings, FileLinesContextFactory fileLinesContextFactory) {
     this.groovy = groovy;
     this.settings = settings;
+    this.fileLinesContextFactory = fileLinesContextFactory;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -149,6 +155,7 @@ public class GroovySensor implements Sensor {
       loc = 0;
       comments = 0;
       currentLine = 0;
+      fileLinesContext = fileLinesContextFactory.createFor(resource);
       try {
         GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
         groovyLexer.setWhitespaceIncluded(true);
@@ -169,6 +176,7 @@ public class GroovySensor implements Sensor {
       } catch (FileNotFoundException fnfe) {
         LOG.error("Could not find : " + groovyFile.getName(), fnfe);
       }
+      fileLinesContext.save();
     }
     for (org.sonar.api.resources.Directory pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
@@ -179,12 +187,23 @@ public class GroovySensor implements Sensor {
     int tokenType = token.getType();
     int tokenLine = token.getLine();
     if (isComment(tokenType)) {
-      if(isNotHeaderComment(tokenLine)){
+      if (isNotHeaderComment(tokenLine)) {
         comments += nextTokenLine - tokenLine + 1;
+      }
+      for (int commentLineNb = tokenLine; commentLineNb <= nextTokenLine; commentLineNb++) {
+        fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, commentLineNb, 1);
+        if (fileLinesContext.getIntValue(CoreMetrics.NCLOC_DATA_KEY, commentLineNb) == null) {
+          fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, commentLineNb, 0);
+        }
       }
     } else if (isNotWhitespace(tokenType) && tokenLine != currentLine) {
       loc++;
+      fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 1);
+      fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, tokenLine, 0);
       currentLine = tokenLine;
+    } else {
+      fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 0);
+      fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, tokenLine, 0);
     }
   }
 

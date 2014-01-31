@@ -14,8 +14,8 @@ class Greeting {
   }
 
 }
-//comment line
-class OneMoreClass {
+
+class OneMoreClass { //comment line
 
   def void sayHello() {
     if (true) {
