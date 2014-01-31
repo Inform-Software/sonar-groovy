@@ -110,6 +110,8 @@ public class GroovySensorTest {
     //5 times for comment because we register comment even when ignoring header comment
     verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
     verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
+    verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
+    verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
     verify(fileLinesContext).save();
   }
 
