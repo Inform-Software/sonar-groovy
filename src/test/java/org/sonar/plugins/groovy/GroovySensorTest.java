@@ -61,7 +61,7 @@ public class GroovySensorTest {
 
   @Test
   public void compute_metrics(){
-    testMetrics(false, 2.0);
+    testMetrics(false, 5.0);
   }
   @Test
   public void compute_metrics_ignoring_header_comment() {

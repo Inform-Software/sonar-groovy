@@ -1,5 +1,6 @@
 /**
 * Header Comment
+* plop
 */
 package example;
 
@@ -22,5 +23,4 @@ class OneMoreClass {
     } else {
     }
   }
-
 }
