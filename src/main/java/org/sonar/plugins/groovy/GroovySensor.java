@@ -20,7 +20,8 @@
 
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.measures.FileLinesContext;
+import org.sonar.api.scan.filesystem.FileQuery;
+
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
@@ -39,11 +40,12 @@ import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 
@@ -64,8 +66,6 @@ public class GroovySensor implements Sensor {
   private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
   private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
-  private final Groovy groovy;
-
   private Settings settings;
   private FileLinesContextFactory fileLinesContextFactory;
 
@@ -74,10 +74,12 @@ public class GroovySensor implements Sensor {
   private int currentLine = 0;
   private FileLinesContext fileLinesContext;
 
-  public GroovySensor(Groovy groovy, Settings settings, FileLinesContextFactory fileLinesContextFactory) {
-    this.groovy = groovy;
+  private ModuleFileSystem moduleFileSystem;
+
+  public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, ModuleFileSystem moduleFileSystem) {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
+    this.moduleFileSystem = moduleFileSystem;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -86,7 +88,7 @@ public class GroovySensor implements Sensor {
 
   public void analyse(Project project, SensorContext context) {
     computeBaseMetrics(context, project);
-    for (File sourceDir : project.getFileSystem().getSourceDirs()) {
+    for (File sourceDir : moduleFileSystem.sourceDirs()) {
       processDirectory(context, project, sourceDir);
     }
   }
@@ -101,7 +103,7 @@ public class GroovySensor implements Sensor {
     for (Entry<File, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
       File file = entry.getKey();
       Collection<ClassResultsNode> results = entry.getValue();
-      org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, project.getFileSystem().getSourceDirs());
+      org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, moduleFileSystem.sourceDirs());
       processFile(context, sonarFile, results);
     }
   }
@@ -148,10 +150,9 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeBaseMetrics(SensorContext sensorContext, Project project) {
-    ProjectFileSystem fileSystem = project.getFileSystem();
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
-    for (File groovyFile : fileSystem.getSourceFiles(groovy)) {
-      org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, fileSystem.getSourceDirs());
+    for (File groovyFile : moduleFileSystem.files(FileQuery.onSource().onLanguage(Groovy.KEY))) {
+      org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, moduleFileSystem.sourceDirs());
       packageList.add(new org.sonar.api.resources.Directory(resource.getParent().getKey()));
       loc = 0;
       comments = 0;
