@@ -193,18 +193,11 @@ public class GroovySensor implements Sensor {
       }
       for (int commentLineNb = tokenLine; commentLineNb <= nextTokenLine; commentLineNb++) {
         fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, commentLineNb, 1);
-        if (fileLinesContext.getIntValue(CoreMetrics.NCLOC_DATA_KEY, commentLineNb) == null) {
-          fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, commentLineNb, 0);
-        }
       }
     } else if (isNotWhitespace(tokenType) && tokenLine != currentLine) {
       loc++;
       fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 1);
-      fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, tokenLine, 0);
       currentLine = tokenLine;
-    } else {
-      fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 0);
-      fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, tokenLine, 0);
     }
   }
 
