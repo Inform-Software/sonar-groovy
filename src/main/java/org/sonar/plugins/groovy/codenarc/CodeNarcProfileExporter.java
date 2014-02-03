@@ -31,6 +31,7 @@ import java.util.List;
 
 public class CodeNarcProfileExporter{
 
+  private static final String AUTO_CLOSING_TAG = "\"/>\n";
   private  Writer writer;
   public CodeNarcProfileExporter( Writer writer) {
     this.writer = writer;
@@ -70,7 +71,7 @@ public class CodeNarcProfileExporter{
     writer.append("<rule class=\"")
         .append(activeRule.getRuleKey());
     if (activeRule.getActiveRuleParams().isEmpty()) {
-      writer.append("\"/>\n");
+      writer.append(AUTO_CLOSING_TAG);
     } else {
       writer.append("\">\n");
       for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
@@ -78,7 +79,7 @@ public class CodeNarcProfileExporter{
             .append(activeRuleParam.getKey())
             .append("\" value=\"")
             .append(activeRuleParam.getValue())
-            .append("\"/>\n");
+            .append(AUTO_CLOSING_TAG);
       }
       writer.append("</rule>\n");
     }

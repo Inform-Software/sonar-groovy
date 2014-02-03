@@ -21,7 +21,6 @@
 package org.sonar.plugins.groovy;
 
 import org.sonar.api.measures.FileLinesContext;
-
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
@@ -57,6 +56,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class GroovySensor implements Sensor {
+
+  private static final String CYCLOMATIC_COMPLEXITY_METRIC_NAME = "CyclomaticComplexity";
 
   private static final Logger LOG = LoggerFactory.getLogger(GroovySensor.class);
 
@@ -119,7 +120,7 @@ public class GroovySensor implements Sensor {
         methods += 1;
         for (MetricResult metricResult : resultsNode.getMetricResults()) {
           String metricName = metricResult.getMetric().getName();
-          if ("CyclomaticComplexity".equals(metricName)) {
+          if (CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricName)) {
             int value = (Integer) ((SingleNumberMetricResult) metricResult).getNumber();
             functionsComplexityDistribution.add(value);
           }
@@ -128,7 +129,7 @@ public class GroovySensor implements Sensor {
 
       for (MetricResult metricResult : result.getMetricResults()) {
         String metricName = metricResult.getMetric().getName();
-        if ("CyclomaticComplexity".equals(metricName)) {
+        if (CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricName)) {
           int value = (Integer) ((NumberMetricResult) metricResult).getValues().get("total");
           complexity += value;
         }
