@@ -29,12 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
@@ -52,10 +54,14 @@ public class CodeNarcSensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(CodeNarcSensor.class);
 
+  private final Settings settings;
+  private final ModuleFileSystem moduleFileSystem;
   private final RulesProfile rulesProfile;
   private final RuleFinder ruleFinder;
 
-  public CodeNarcSensor(RulesProfile profile, RuleFinder ruleFinder) {
+  public CodeNarcSensor(Settings settings, ModuleFileSystem moduleFileSystem, RulesProfile profile, RuleFinder ruleFinder) {
+    this.settings = settings;
+    this.moduleFileSystem = moduleFileSystem;
     this.rulesProfile = profile;
     this.ruleFinder = ruleFinder;
   }
@@ -67,9 +73,13 @@ public class CodeNarcSensor implements Sensor {
 
   public void analyse(Project project, SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (StringUtils.isNotBlank((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH))) {
+    String codeNarcReportPath = settings.getString(GroovyPlugin.CODENARC_REPORT_PATH);
+    if (StringUtils.isNotBlank(codeNarcReportPath)) {
       // Yes
-      File report = project.getFileSystem().resolvePath((String) project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH));
+      File report =  new File(codeNarcReportPath);
+      if(!report.isAbsolute()){
+        report = new File(moduleFileSystem.baseDir(), codeNarcReportPath);
+      }
       if (report == null || !report.isFile()) {
         LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATH + " not found at {}", report);
         return;
@@ -77,7 +87,7 @@ public class CodeNarcSensor implements Sensor {
       parse(Collections.singletonList(report), context);
     } else {
       // No, run CodeNarc
-      List<File> reports = execute(project);
+      List<File> reports = executeCodeNarc();
       parse(reports, context);
     }
   }
@@ -103,17 +113,17 @@ public class CodeNarcSensor implements Sensor {
   /**
    * @return list of files with generated reports
    */
-  private List<File> execute(Project project) {
+  private List<File> executeCodeNarc() {
     LOG.info("Executing CodeNarc");
 
-    File workdir = new File(project.getFileSystem().getSonarWorkingDirectory(), "/codenarc/");
+    File workdir = new File(moduleFileSystem.baseDir(), "/codenarc/");
     prepareWorkDir(workdir);
 
     File codeNarcConfiguration = new File(workdir, "profile.xml");
     exportCodeNarcConfiguration(codeNarcConfiguration);
     ImmutableList.Builder<File> result = ImmutableList.builder();
     int i = 1;
-    for (File sourceDir : project.getFileSystem().getSourceDirs()) {
+    for (File sourceDir : moduleFileSystem.sourceDirs()) {
       CodeNarcRunner runner = new CodeNarcRunner();
       FilesystemSourceAnalyzer analyzer = new FilesystemSourceAnalyzer();
 

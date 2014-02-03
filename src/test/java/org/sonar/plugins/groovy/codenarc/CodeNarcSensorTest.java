@@ -19,6 +19,9 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import org.sonar.api.config.Settings;
+
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -54,6 +57,8 @@ public class CodeNarcSensorTest {
   private RuleFinder ruleFinder;
   private RulesProfile profile;
   private CodeNarcSensor sensor;
+  private Settings settings;
+  private ModuleFileSystem moduleFileSystem;
 
   @org.junit.Rule
   public TemporaryFolder projectdir = new TemporaryFolder();
@@ -63,7 +68,9 @@ public class CodeNarcSensorTest {
   public void setUp() {
     ruleFinder = mock(RuleFinder.class);
     profile = mock(RulesProfile.class);
-    sensor = new CodeNarcSensor(profile, ruleFinder);
+    settings = mock(Settings.class);
+    moduleFileSystem = mock(ModuleFileSystem.class);
+    sensor = new CodeNarcSensor(settings, moduleFileSystem, profile, ruleFinder);
   }
 
   @Test
@@ -96,11 +103,8 @@ public class CodeNarcSensorTest {
     when(ruleFinder.find(Mockito.any(RuleQuery.class))).thenReturn(Rule.create());
 
     Project project = mock(Project.class);
-    ProjectFileSystem pfs = mock(ProjectFileSystem.class);
     File report = FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml"));
-    when(project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
-    when(pfs.resolvePath(report.getAbsolutePath())).thenReturn(report);
-    when(project.getFileSystem()).thenReturn(pfs);
+    when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
     SensorContext context = mock(SensorContext.class);
     sensor.analyse(project, context);
@@ -117,15 +121,13 @@ public class CodeNarcSensorTest {
     when(ruleFinder.find(Mockito.any(RuleQuery.class))).thenReturn(Rule.create());
 
     Project project = mock(Project.class);
-    ProjectFileSystem pfs = mock(ProjectFileSystem.class);
     ActiveRule rule = mock(ActiveRule.class);
     when(rule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
     .thenReturn(Arrays.asList(rule));
-    when(project.getProperty(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
-    when(pfs.getSonarWorkingDirectory()).thenReturn(sonarhome);
-    when(pfs.getSourceDirs()).thenReturn(Lists.newArrayList(sonarhome));
-    when(project.getFileSystem()).thenReturn(pfs);
+    when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
+    when(moduleFileSystem.baseDir()).thenReturn(sonarhome);
+    when(moduleFileSystem.sourceDirs()).thenReturn(Lists.newArrayList(sonarhome));
 
     SensorContext context = mock(SensorContext.class);
     sensor.analyse(project, context);
