@@ -87,13 +87,13 @@ public class GroovySensor implements Sensor {
   }
 
   public void analyse(Project project, SensorContext context) {
-    computeBaseMetrics(context, project);
+    computeBaseMetrics(context);
     for (File sourceDir : moduleFileSystem.sourceDirs()) {
-      processDirectory(context, project, sourceDir);
+      processDirectory(context, sourceDir);
     }
   }
 
-  private void processDirectory(SensorContext context, Project project, File sourceDir) {
+  private void processDirectory(SensorContext context, File sourceDir) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
     CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(sourceDir.getAbsolutePath());
@@ -149,7 +149,7 @@ public class GroovySensor implements Sensor {
     context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
   }
 
-  private void computeBaseMetrics(SensorContext sensorContext, Project project) {
+  private void computeBaseMetrics(SensorContext sensorContext) {
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : moduleFileSystem.files(FileQuery.onSource().onLanguage(Groovy.KEY))) {
       org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, moduleFileSystem.sourceDirs());
