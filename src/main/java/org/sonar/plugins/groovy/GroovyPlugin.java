@@ -46,6 +46,13 @@ import java.util.List;
     global = false
   ),
   @Property(
+    key = GroovyPlugin.COBERTURA_REPORT_PATH,
+    name = "Cobertura xml report path",
+    description = "Path (absolute or relative) to Cobertura XML report.",
+    module = true,
+    global = false,
+    project = true),
+  @Property(
     key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
     defaultValue = "true",
     name = "Ignore Header Comments",
