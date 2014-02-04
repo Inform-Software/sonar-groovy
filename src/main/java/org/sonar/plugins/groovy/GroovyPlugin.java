@@ -20,12 +20,10 @@
 
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.Extension;
-
-import org.sonar.api.PropertyType;
 import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
+import org.sonar.api.PropertyType;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcRuleRepository;
@@ -64,7 +62,7 @@ public class GroovyPlugin extends SonarPlugin {
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
-  public List<Class<? extends Extension>> getExtensions() {
+  public List getExtensions() {
     return ImmutableList.of(
       GroovyCommonRulesEngineProvider.class,
       // CodeNarc
