@@ -21,28 +21,36 @@
 package org.sonar.plugins.groovy.cobertura;
 
 import com.google.common.collect.ImmutableMap;
-
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
+import org.sonar.api.measures.Measure;
+import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
+
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CoberturaSensorTest {
 
   private Settings settings ;
   private CoberturaSensor sensor;
+  private ModuleFileSystem moduleFileSystem;
 
   @Before
   public void setUp() throws Exception {
     settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml"));
-    sensor = new CoberturaSensor(settings);
+    moduleFileSystem = mock(ModuleFileSystem.class);
+    sensor = new CoberturaSensor(settings, moduleFileSystem);
   }
 
   /**
@@ -52,7 +60,9 @@ public class CoberturaSensorTest {
   public void should_parse_report() {
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
+    when(context.getResource(any(File.class))).thenReturn(mock(File.class));
     sensor.analyse(project, context);
+    verify(context, times(298)).saveMeasure(any(File.class), any(Measure.class));
   }
 
   @Test

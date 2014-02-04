@@ -20,6 +20,8 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.CoverageExtension;
@@ -37,9 +39,11 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
   private final Settings settings;
+  private final ModuleFileSystem moduleFileSystem;
 
-  public CoberturaSensor(Settings settings) {
+  public CoberturaSensor(Settings settings, ModuleFileSystem moduleFileSystem) {
     this.settings = settings;
+    this.moduleFileSystem = moduleFileSystem;
   }
 
   public boolean shouldExecuteOnProject(Project project) {
@@ -51,7 +55,9 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
 
     if (reportPath != null) {
       File xmlFile = new File(reportPath);
-
+      if (!xmlFile.isAbsolute()) {
+        xmlFile = new File(moduleFileSystem.baseDir(), reportPath);
+      }
       if (xmlFile.exists()) {
         LOG.info("Analyzing Cobertura report: " + reportPath);
         new CoberturaReportParser(context).parseReport(xmlFile);
