@@ -116,7 +116,7 @@ public class CodeNarcSensor implements Sensor {
   private List<File> executeCodeNarc() {
     LOG.info("Executing CodeNarc");
 
-    File workdir = new File(moduleFileSystem.baseDir(), "/codenarc/");
+    File workdir = new File(moduleFileSystem.workingDir(), "/codenarc/");
     prepareWorkDir(workdir);
 
     File codeNarcConfiguration = new File(workdir, "profile.xml");

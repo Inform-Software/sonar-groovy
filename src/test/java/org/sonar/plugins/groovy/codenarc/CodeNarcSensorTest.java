@@ -126,7 +126,7 @@ public class CodeNarcSensorTest {
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
     .thenReturn(Arrays.asList(rule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
-    when(moduleFileSystem.baseDir()).thenReturn(sonarhome);
+    when(moduleFileSystem.workingDir()).thenReturn(sonarhome);
     when(moduleFileSystem.sourceDirs()).thenReturn(Lists.newArrayList(sonarhome));
 
     SensorContext context = mock(SensorContext.class);
