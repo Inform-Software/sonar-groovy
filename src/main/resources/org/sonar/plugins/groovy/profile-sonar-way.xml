@@ -4,6 +4,11 @@
   <rules>
     <rule>
       <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.AssignmentInConditionalRule</key>
+      <priority>MAJOR</priority>
+    </rule>
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.exceptions.CatchErrorRule</key>
       <priority>MAJOR</priority>
     </rule>
@@ -162,5 +167,128 @@
       <key>org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule</key>
       <priority>MAJOR</priority>
     </rule>
+
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.DuplicateCaseStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyCatchBlockRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyElseBlockRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyFinallyBlockRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyForStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyIfStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyInstanceInitializerRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyMethodRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyStaticInitializerRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptySwitchStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptySynchronizedStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyTryBlockRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyWhileStatementRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EqualsAndHashCodeRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EqualsOverloadedRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.basic.EmptyClassRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.imports.DuplicateImportRule</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.imports.ImportFromSamePackageRule</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.imports.ImportFromSunPackagesRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.naming.ClassNameSameAsFilenameRule</key>
+      <priority>MINOR</priority>
+    </rule>
+
+
   </rules>
 </profile>
