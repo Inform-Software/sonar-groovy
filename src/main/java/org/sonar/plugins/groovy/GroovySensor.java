@@ -83,7 +83,7 @@ public class GroovySensor implements Sensor {
   }
 
   public boolean shouldExecuteOnProject(Project project) {
-    return Groovy.KEY.equals(project.getLanguageKey());
+    return Groovy.isEnabled(moduleFileSystem);
   }
 
   public void analyse(Project project, SensorContext context) {

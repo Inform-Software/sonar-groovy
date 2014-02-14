@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.sonar.api.config.Settings;
 
+import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
@@ -47,7 +48,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,7 +79,7 @@ public class CodeNarcSensorTest {
   @Test
   public void should_execute_on_project() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    doReturn(Collections.singletonList(new org.sonar.api.resources.File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
         .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
@@ -85,16 +88,18 @@ public class CodeNarcSensorTest {
   @Test
   public void should_not_execute_when_no_active_rules() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    doReturn(Collections.singletonList(new org.sonar.api.resources.File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
         .thenReturn(Collections.EMPTY_LIST);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 
   @Test
-  public void should_not_execute_on_java_project() {
+  public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn("java");
+    doReturn(Collections.emptyList()).when(moduleFileSystem).files(any(FileQuery.class));
+    when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
+      .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 

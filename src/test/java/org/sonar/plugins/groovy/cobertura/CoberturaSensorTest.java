@@ -28,12 +28,16 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
+import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.util.Collections;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -68,7 +72,7 @@ public class CoberturaSensorTest {
   @Test
   public void should_execute_on_project() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    doReturn(Collections.singletonList(new File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.REUSE_REPORTS);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
@@ -78,15 +82,15 @@ public class CoberturaSensorTest {
   @Test
   public void should_not_execute_if_static_analysis() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    doReturn(Collections.singletonList(new File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.STATIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 
   @Test
-  public void should_not_execute_on_java_project() {
+  public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn("java");
+    doReturn(Collections.emptyList()).when(moduleFileSystem).files(any(FileQuery.class));
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }

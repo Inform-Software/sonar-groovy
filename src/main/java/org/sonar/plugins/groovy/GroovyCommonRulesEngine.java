@@ -17,18 +17,25 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
 package org.sonar.plugins.groovy;
 
-import org.junit.Test;
+import org.sonar.commonrules.api.CommonRulesEngine;
+import org.sonar.commonrules.api.CommonRulesRepository;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.fest.assertions.Assertions.assertThat;
+public class GroovyCommonRulesEngine extends CommonRulesEngine {
 
-public class GroovyPluginTest {
+  public GroovyCommonRulesEngine() {
+    super(Groovy.KEY);
+  }
 
-  @Test
-  public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(11);
+  @Override
+  protected void doEnableRules(CommonRulesRepository repository) {
+    repository
+      .enableDuplicatedBlocksRule()
+      .enableInsufficientCommentDensityRule(null)
+      .enableInsufficientLineCoverageRule(null)
+      .enableInsufficientBranchCoverageRule(null);
   }
 
 }

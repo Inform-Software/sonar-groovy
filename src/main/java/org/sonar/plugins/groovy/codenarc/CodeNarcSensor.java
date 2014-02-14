@@ -67,7 +67,7 @@ public class CodeNarcSensor implements Sensor {
   }
 
   public boolean shouldExecuteOnProject(Project project) {
-    return Groovy.KEY.equals(project.getLanguageKey())
+    return Groovy.isEnabled(moduleFileSystem)
         && !rulesProfile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY).isEmpty();
   }
 

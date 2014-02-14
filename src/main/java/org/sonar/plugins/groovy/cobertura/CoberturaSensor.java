@@ -47,7 +47,7 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
   }
 
   public boolean shouldExecuteOnProject(Project project) {
-    return project.getAnalysisType().isDynamic(true) && Groovy.KEY.equals(project.getLanguageKey());
+    return project.getAnalysisType().isDynamic(true) && Groovy.isEnabled(moduleFileSystem);
   }
 
   public void analyse(Project project, SensorContext context) {

@@ -71,7 +71,8 @@ public class GroovyPlugin extends SonarPlugin {
 
   public List getExtensions() {
     return ImmutableList.of(
-      GroovyCommonRulesEngineProvider.class,
+      GroovyCommonRulesDecorator.class,
+      GroovyCommonRulesEngine.class,
       // CodeNarc
       CodeNarcRuleRepository.class,
       CodeNarcSensor.class,

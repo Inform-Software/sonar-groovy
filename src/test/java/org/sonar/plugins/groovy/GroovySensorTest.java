@@ -35,10 +35,12 @@ import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,14 +55,14 @@ public class GroovySensorTest {
   @Test
   public void should_execute_on_project() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn(Groovy.KEY);
+    doReturn(Collections.singletonList(new File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
   }
 
   @Test
-  public void should_not_execute_on_java_project() {
+  public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    when(project.getLanguageKey()).thenReturn("java");
+    doReturn(Collections.emptyList()).when(moduleFileSystem).files(any(FileQuery.class));
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 

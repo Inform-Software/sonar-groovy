@@ -17,18 +17,15 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
 package org.sonar.plugins.groovy;
 
-import org.junit.Test;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.commonrules.api.CommonRulesDecorator;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-public class GroovyPluginTest {
-
-  @Test
-  public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(11);
+public class GroovyCommonRulesDecorator extends CommonRulesDecorator {
+  public GroovyCommonRulesDecorator(ProjectFileSystem fs, RulesProfile qProfile) {
+    super(Groovy.KEY, fs, qProfile);
   }
-
 }

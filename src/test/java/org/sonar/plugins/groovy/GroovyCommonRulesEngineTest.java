@@ -19,32 +19,25 @@
  */
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.resources.Project;
-import org.sonar.commonrules.api.CommonRulesEngine;
-import org.sonar.commonrules.api.CommonRulesEngineProvider;
-import org.sonar.plugins.groovy.foundation.Groovy;
+import org.junit.Test;
+import org.sonar.commonrules.api.CommonRulesRepository;
 
-public class GroovyCommonRulesEngineProvider extends CommonRulesEngineProvider {
+import static org.fest.assertions.Assertions.assertThat;
 
-  public GroovyCommonRulesEngineProvider() {
-    super();
+public class GroovyCommonRulesEngineTest {
+
+  @Test
+  public void provide_extensions() {
+    GroovyCommonRulesEngine engine = new GroovyCommonRulesEngine();
+    assertThat(engine.provide()).isNotEmpty();
   }
 
-  public GroovyCommonRulesEngineProvider(Project project) {
-    super(project);
-  }
-
-  @Override
-  protected void doActivation(CommonRulesEngine engine) {
-    engine.activateRule("DuplicatedBlocks");
-    engine.activateRule("InsufficientCommentDensity");
-    engine.activateRule("InsufficientLineCoverage");
-    engine.activateRule("InsufficientBranchCoverage");
-  }
-
-  @Override
-  protected String getLanguageKey() {
-    return Groovy.KEY;
+  @Test
+  public void enable_common_rules() {
+    GroovyCommonRulesEngine engine = new GroovyCommonRulesEngine();
+    CommonRulesRepository repo = engine.newRepository();
+    assertThat(repo.rules()).hasSize(4);
+    assertThat(repo.rule(CommonRulesRepository.RULE_INSUFFICIENT_COMMENT_DENSITY)).isNotNull();
   }
 
 }

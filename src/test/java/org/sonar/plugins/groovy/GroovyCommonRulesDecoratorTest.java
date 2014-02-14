@@ -20,18 +20,19 @@
 package org.sonar.plugins.groovy;
 
 import org.junit.Test;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-public class GroovyCommonRulesEngineProviderTest {
+public class GroovyCommonRulesDecoratorTest {
 
   @Test
-  public void shouldProvideExpectedExtensions() {
-    GroovyCommonRulesEngineProvider provider = new GroovyCommonRulesEngineProvider();
-    assertThat(provider.provide().size()).isGreaterThan(1);
-
-    provider = new GroovyCommonRulesEngineProvider(null);
-    assertThat(provider.provide().size()).isGreaterThan(1);
+  public void test_declaration() throws Exception {
+    GroovyCommonRulesDecorator decorator = new GroovyCommonRulesDecorator(mock(ProjectFileSystem.class), mock(RulesProfile.class));
+    assertThat(decorator.language()).isEqualTo(Groovy.KEY);
   }
 
 }
