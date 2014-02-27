@@ -49,7 +49,7 @@ public class SonarWayProfileTest {
     RulesProfile profile = profileDefinition.createProfile(messages);
 
     assertThat(profile.getName()).isEqualTo("Sonar way");
-    assertThat(profile.getActiveRules()).hasSize(61);
+    assertThat(profile.getActiveRules()).hasSize(59);
     assertThat(messages.hasErrors()).isFalse();
 
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
