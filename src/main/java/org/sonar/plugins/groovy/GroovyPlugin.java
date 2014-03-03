@@ -39,11 +39,11 @@ import java.util.List;
 @Properties({
   @Property(
     key = GroovyPlugin.CODENARC_REPORT_PATH,
-    name = "Report file",
-    description = "Path (absolute or relative) to CodeNarc XML report in case generation is not handle by the plugin.",
+    name = "CodeNarc Report",
+    description = "Path to the CodeNarc XML report. Path may be absolute or relative to the project base directory.",
     module = true,
     project = true,
-    global = false
+    global = true
   ),
   @Property(
     key = GroovyPlugin.COBERTURA_REPORT_PATH,
