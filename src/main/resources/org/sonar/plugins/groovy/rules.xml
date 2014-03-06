@@ -634,13 +634,6 @@
     <description><![CDATA[Checks for <em>private</em> fields that are only set within a constructor or field initializer. Such fields can safely be made <em>final</em>.]]></description>
   </rule>
 
-  <!-- since 0.19 -->
-  <rule key="org.codenarc.rule.design.CloneWithoutCloneableRule" priority="MINOR">
-    <name><![CDATA[Clone Without Cloneable]]></name>
-    <configKey><![CDATA[CloneWithoutCloneable]]></configKey>
-    <description><![CDATA[The method clone() should only be declared if the class implements the Cloneable interface.]]></description>
-  </rule>
-
   <!-- since 0.20 -->
   <rule key="org.codenarc.rule.design.LocaleSetDefaultRule" priority="MINOR">
     <name><![CDATA[Locale Set Default]]></name>
@@ -1130,13 +1123,6 @@
     <name><![CDATA[J Unit Public Field]]></name>
     <configKey><![CDATA[JUnitPublicField]]></configKey>
     <description><![CDATA[Checks for public field on a JUnit test class]]></description>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule key="org.codenarc.rule.junit.JUnitAssertEqualsConstantActualValueRule" priority="MINOR">
-    <name><![CDATA[J Unit Assert Equals Constant Actual Value]]></name>
-    <configKey><![CDATA[JUnitAssertEqualsConstantActualValue]]></configKey>
-    <description><![CDATA[Reports usages of org.junit.Assert.assertEquals([message,] expected, actual) where the 'actual' parameter is a constant or a literal. Most likely it was intended to be the 'expected' value.]]></description>
   </rule>
 
   <!-- logging rules -->
@@ -1797,13 +1783,6 @@
     <name><![CDATA[Non Final Public Field]]></name>
     <configKey><![CDATA[NonFinalPublicField]]></configKey>
     <description><![CDATA[Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final.]]></description>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule key="org.codenarc.rule.security.UnsafeImplementationAsMapRule" priority="MINOR">
-    <name><![CDATA[Unsafe Implementation As Map]]></name>
-    <configKey><![CDATA[UnsafeImplementationAsMap]]></configKey>
-    <description><![CDATA[Reports incomplete interface implementations created by map-to-interface coercions. Example: [hasNext: { ... }] as Iterator (Not all Iterator methods are implemented. An UnsupportedOperationException will be thrown upon call to e.g. next().) By default, this rule does not apply to test files.]]></description>
   </rule>
 
   <!-- formatting rules -->
