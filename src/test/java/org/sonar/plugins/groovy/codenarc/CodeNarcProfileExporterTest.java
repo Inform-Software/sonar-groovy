@@ -69,4 +69,18 @@ public class CodeNarcProfileExporterTest {
         TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportParameters.xml"),
         writer.toString());
   }
+
+  @Test
+  public void shouldNotExportUnsetParameters() throws Exception {
+    Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
+    rule.createParameter("maxLines");
+    profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", null);
+
+    exporter.exportProfile(profile);
+
+    TestUtils.assertSimilarXml(
+        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportNullParameters.xml"),
+        writer.toString());
+  }
+
 }

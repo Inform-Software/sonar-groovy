@@ -20,6 +20,7 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import org.apache.commons.lang.StringUtils;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.rules.ActiveRuleParam;
@@ -29,11 +30,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class CodeNarcProfileExporter{
+public class CodeNarcProfileExporter {
 
   private static final String AUTO_CLOSING_TAG = "\"/>\n";
-  private  Writer writer;
-  public CodeNarcProfileExporter( Writer writer) {
+  private Writer writer;
+
+  public CodeNarcProfileExporter(Writer writer) {
     this.writer = writer;
   }
 
@@ -75,11 +77,13 @@ public class CodeNarcProfileExporter{
     } else {
       writer.append("\">\n");
       for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
-        writer.append("<property name=\"")
-            .append(activeRuleParam.getKey())
-            .append("\" value=\"")
-            .append(activeRuleParam.getValue())
-            .append(AUTO_CLOSING_TAG);
+        if (StringUtils.isNotBlank(activeRuleParam.getValue())) {
+          writer.append("<property name=\"")
+              .append(activeRuleParam.getKey())
+              .append("\" value=\"")
+              .append(activeRuleParam.getValue())
+              .append(AUTO_CLOSING_TAG);
+        }
       }
       writer.append("</rule>\n");
     }

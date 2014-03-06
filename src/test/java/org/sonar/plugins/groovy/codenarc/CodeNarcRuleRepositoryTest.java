@@ -21,7 +21,11 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import org.junit.Test;
+import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.XMLRuleParser;
+
+import java.util.Iterator;
+import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -30,7 +34,7 @@ public class CodeNarcRuleRepositoryTest {
   @Test
   public void test() {
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    assertThat(repo.createRules().size()).isEqualTo(321);
+    List<Rule> rules = repo.createRules();
+    assertThat(rules.size()).isEqualTo(318);
   }
-
 }
