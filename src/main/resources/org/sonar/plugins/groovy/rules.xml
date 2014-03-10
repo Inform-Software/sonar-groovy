@@ -324,7 +324,7 @@
     <name><![CDATA[Else Block Braces]]></name>
     <configKey><![CDATA[ElseBlockBraces]]></configKey>
     <description><![CDATA[Use braces for <em>else</em> blocks, even for a single statement. By default, braces are not required for an <em>else</em> if it is followed immediately by an <em>if</em>. Set the <em>bracesRequiredForElseIf</em> property to true to require braces is that situation as well.]]></description>
-    <param key="bracesRequiredForElseIf"/>
+    <param key="bracesRequiredForElseIf" defaultValue="false" description="Set to true to require braces for an else block followed immediately by an if statement." />
   </rule>
 
   <rule key="org.codenarc.rule.braces.ForStatementBracesRule" priority="MINOR">
@@ -648,7 +648,7 @@
     <name><![CDATA[Duplicate Number Literal]]></name>
     <configKey><![CDATA[DuplicateNumberLiteral]]></configKey>
     <description><![CDATA[Code containing number String literals can usually be improved by declaring the number as a constant field.  The <em>ignoreNumbers</em> property can optionally specify a comma-separated list of numbers to ignore.]]></description>
-    <param key="ignoreNumbers"/>
+    <param key="ignoreNumbers" defaultValue="0,1" description="The optional comma-separated list of numbers that should be ignored (i.e., not cause a violation)."/>
   </rule>
 
   <!-- since 0.11 -->
@@ -656,7 +656,7 @@
     <name><![CDATA[Duplicate String Literal]]></name>
     <configKey><![CDATA[DuplicateStringLiteral]]></configKey>
     <description><![CDATA[Code containing duplicate String literals can usually be improved by declaring the String as a constant field. The <em>ignoreStrings</em> property can optionally specify a comma-separated list of Strings to ignore.]]></description>
-    <param key="ignoreStrings"/>
+    <param key="ignoreStrings" defaultValue="" description="The optional comma-separated list of Strings that should be ignored (i.e., not cause a violation)."/>
   </rule>
 
   <!-- since 0.16 -->
@@ -804,29 +804,29 @@
     <name><![CDATA[Illegal Regex]]></name>
     <configKey><![CDATA[IllegalRegex]]></configKey>
     <description><![CDATA[Checks for a specified illegal regular expression within the source code. The <em>regex</em> property specifies the regular expression to check for. It is required and cannot be null or empty.]]></description>
-    <param key="regex"/>
+    <param key="regex" description="The regular expression to check for. If null or empty then do nothing."/>
   </rule>
 
   <rule key="org.codenarc.rule.generic.RequiredRegexRule" priority="MAJOR">
     <name><![CDATA[Required Regex]]></name>
     <configKey><![CDATA[RequiredRegex]]></configKey>
     <description><![CDATA[Checks for a specified regular expression that must exist within the source code. The <em>regex</em> property specifies the regular expression to check for. It is required and cannot be null or empty.]]></description>
-    <param key="regex"/>
+    <param key="regex" description="The regular expression to check for. If null or empty then do nothing."/>
   </rule>
 
   <rule key="org.codenarc.rule.generic.RequiredStringRule" priority="MAJOR">
     <name><![CDATA[Required String]]></name>
     <configKey><![CDATA[RequiredString]]></configKey>
     <description><![CDATA[Checks for a specified text string that must exist within the source code. The <em>string</em> property specifies the String to check for. It is required and cannot be null or empty.]]></description>
-    <param key="string"/>
+    <param key="string" description="The String to check for. If null or empty then do nothing."/>
   </rule>
 
   <rule key="org.codenarc.rule.generic.StatelessClassRule" priority="MINOR">
     <name><![CDATA[Stateless Class]]></name>
     <configKey><![CDATA[StatelessClass]]></configKey>
     <description><![CDATA[Checks for fields on classes that should remain "stateless" and reentrant. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
-    <param key="ignoreFieldNames"/>
-    <param key="ignoreFieldTypes"/>
+    <param key="ignoreFieldNames" description="Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="ignoreFieldTypes" description="Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
   </rule>
 
   <!-- since 0.14 -->
@@ -834,7 +834,7 @@
     <name><![CDATA[Illegal Package Reference]]></name>
     <configKey><![CDATA[IllegalPackageReference]]></configKey>
     <description><![CDATA[Checks for reference to any of the packages configured in <em>packageNames</em>.]]></description>
-    <param key="packageNames"/>
+    <param key="packageNames" description="Specifies the comma-separated list of package names. The package name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the package name, e.g. 'a.*' matches 'a.b' as well as 'a.b.c.d'. If packageNames is null or empty, do nothing."/>
   </rule>
 
   <!-- since 0.15 -->
@@ -842,7 +842,7 @@
     <name><![CDATA[Illegal Class Reference]]></name>
     <configKey><![CDATA[IllegalClassReference]]></configKey>
     <description><![CDATA[Checks for reference to any of the classes configured in <em>classNames</em>.]]></description>
-    <param key="classNames"/>
+    <param key="classNames" description="Specifies the comma-separated list of (fully-qualified) class names. The class name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the class/package name, e.g. 'a.*.MyClass' matches a.b.MyClass as well as a.b.c.d.MyClass. If classNames is null or empty, do nothing."/>
   </rule>
 
   <!-- since 0.19 -->
@@ -883,8 +883,8 @@
     <name><![CDATA[Grails Stateless Service]]></name>
     <configKey><![CDATA[GrailsStatelessService]]></configKey>
     <description><![CDATA[Checks for fields on Grails service classes. Grails service classes are singletons, by default, and so they should be reentrant and typically stateless. The <em>ignoreFieldNames</em> property specifies one or more field names that should be ignored. The <em>ignoreFieldTypes</em> property specifies one or more field type names that should be ignored. Both can optionally contain wildcard characters ('*' or '?').]]></description>
-    <param key="ignoreFieldNames"/>
-    <param key="ignoreFieldTypes"/>
+    <param key="ignoreFieldNames" defaultValue="dataSource,scope,sessionFactory, transactional,*Service" description="Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="ignoreFieldTypes" description="Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
   </rule>
 
   <!-- since 0.15 -->
@@ -1185,14 +1185,14 @@
     <name><![CDATA[Abstract Class Name]]></name>
     <configKey><![CDATA[AbstractClassName]]></configKey>
     <description><![CDATA[Verifies that the name of an abstract class matches a regular expression specified in the <em>regex</em> property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active. This rule ignores interfaces.]]></description>
-    <param key="regex"/>
+    <param key="regex" description="Specifies the regular expression used to validate the abstract class name. If null or empty, then this rule does nothing."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.ClassNameRule" priority="MINOR">
     <name><![CDATA[Class Name]]></name>
     <configKey><![CDATA[ClassName]]></configKey>
     <description><![CDATA[Verifies that the name of a class matches a regular expression. By default it checks that the class name starts with an uppercase letter and is followed by zero or more word characters (letters, numbers or underscores). The <em>regex</em> property specifies the regular expression used to validate the class name.]]></description>
-    <param key="regex"/>
+    <param key="regex" description="Specifies the regular expression used to validate the class name. It is required and cannot be null or empty." defaultValue="/([A-Z]\w*\$?)*/"/>
   </rule>
 
   <!-- since 0.11 -->
@@ -1206,26 +1206,26 @@
     <name><![CDATA[Field Name]]></name>
     <configKey><![CDATA[FieldName]]></configKey>
     <description><![CDATA[Verifies that the name of each field matches a regular expression. By default it checks that non-'final' field names start with a lowercase letter and contains only letters or numbers, and 'final' field names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate field names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' field names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' field names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' field names.  The <em>ignoreFieldNames</em> propertycan specify field names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="finalRegex"/>
-    <param key="ignoreFieldNames"/>
-    <param key="regex"/>
-    <param key="staticFinalRegex"/>
-    <param key="staticRegex"/>
+    <param key="finalRegex" description="Specifies the regular expression used to validate final field names. It is optional. If not set, then final fields that are non-static are validated using regex."/>
+    <param key="ignoreFieldNames" description="Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="regex" defaultValue="/[a-z][a-zA-Z0-9]*/" description="Specifies the default regular expression used to validate the field name. It is required and cannot be null or empty."/>
+    <param key="staticFinalRegex" defaultValue="/[A-Z][A-Z0-9_]*/" description="Specifies the regular expression used to validate static final field names. It is optional. If not set, then static final fields are validated using finalRegex, staticRegex or regex."/>
+    <param key="staticRegex" description="Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.InterfaceNameRule" priority="MINOR">
     <name><![CDATA[Interface Name]]></name>
     <configKey><![CDATA[InterfaceName]]></configKey>
     <description><![CDATA[Verifies that the name of an interface matches a regular expression specified in the <em>regex</em> property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active.]]></description>
-    <param key="regex"/>
+    <param key="regex" description="Specifies the regular expression used to validate the name of an interface. If null or empty, then this rule does nothing."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.MethodNameRule" priority="MINOR">
     <name><![CDATA[Method Name]]></name>
     <configKey><![CDATA[MethodName]]></configKey>
     <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that the method name starts with a lowercase letter. The <em>regex</em> property specifies the regular expression to check the method name against.  The <em>ignoreMethodNames</em> property can specify method names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="ignoreMethodNames"/>
-    <param key="regex"/>
+    <param key="ignoreMethodNames" description="Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="regex" defaultValue="/[a-z]\w*/" description="Specifies the regular expression used to validate the method name. It is required and cannot be null or empty."/>
   </rule>
 
   <!-- since 0.11 -->
@@ -1239,36 +1239,36 @@
     <name><![CDATA[Package Name]]></name>
     <configKey><![CDATA[PackageName]]></configKey>
     <description><![CDATA[Verifies that the package name for a class matches a regular expression. By default it checks that the package name consists of only lowercase letters, separated by periods. The <em>regex</em> property specifies the regular expression used to validate the package name. The <em>packageNameRequired</em> property indicates whether a package name declaration is required for all classes.]]></description>
-    <param key="packageNameRequired"/>
-    <param key="regex"/>
+    <param key="packageNameRequired" description="Indicates whether a package name declaration is required for all classes." defaultValue="false"/>
+    <param key="regex" defaultValue="/[a-z]+(\.[a-z0-9]+)*/" description="Specifies the regular expression used to validate the package name. It is required and cannot be null or empty."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.ParameterNameRule" priority="MINOR">
     <name><![CDATA[Parameter Name]]></name>
     <configKey><![CDATA[ParameterName]]></configKey>
     <description><![CDATA[Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. The <em>regex</em> property specifies the default regular expression used to validate the parameter name.  The <em>ignoreParameterNames</em> property can specify parameter names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="ignoreParameterNames"/>
-    <param key="regex"/>
+    <param key="ignoreParameterNames" description="Specifies one or more (comma-separated) parameter names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="regex" defaultValue="/[a-z][a-zA-Z0-9]*/" description="Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.PropertyNameRule" priority="MINOR">
     <name><![CDATA[Property Name]]></name>
     <configKey><![CDATA[PropertyName]]></configKey>
     <description><![CDATA[Verifies that the name of each property matches a regular expression. By default it checks that property names other than 'static final' start with a lowercase letter and contains only letters or numbers, and 'static final' property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate property names. The <em>finalRegex</em> property specifies the regular expression to validate 'final' property names. The <em>staticRegex</em> property specifies the regular expression to validate 'static' property names. The <em>staticFinalRegex</em> property specifies the regular expression to validate 'static final' property names.  The <em>ignorePropertyNames</em> property can specify property names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="finalRegex"/>
-    <param key="ignorePropertyNames"/>
-    <param key="regex"/>
-    <param key="staticFinalRegex"/>
-    <param key="staticRegex"/>
+    <param key="finalRegex" description="Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex."/>
+    <param key="ignorePropertyNames" description="Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="regex" defaultValue="/[a-z][a-zA-Z0-9]*/" description="Specifies the default regular expression used to validate the property name. It is required and cannot be null or empty."/>
+    <param key="staticFinalRegex" defaultValue="/[A-Z][A-Z0-9_]*/" description="Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex."/>
+    <param key="staticRegex" description="Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex."/>
   </rule>
 
   <rule key="org.codenarc.rule.naming.VariableNameRule" priority="MINOR">
     <name><![CDATA[Variable Name]]></name>
     <configKey><![CDATA[VariableName]]></configKey>
     <description><![CDATA[Verifies that the name of each method matches a regular expression. By default it checks that non-'final' variable names start with a lowercase letter and contains only letters or numbers, and 'final' variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. The <em>regex</em> property specifies the default regular expression used to validate a non-'final' variable name. The <em>finalRegex</em> property specifies the regular expression used to validate 'final' variable names. The <em>ignoreVariableNames</em> property can specify variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="finalRegex"/>
-    <param key="ignoreVariableNames"/>
-    <param key="regex"/>
+    <param key="finalRegex" defaultValue="/[A-Z][A-Z0-9_]*/" description="Specifies the regular expression used to validate final variable names. It is optional. If not set, then regex is used to validate final variable names."/>
+    <param key="ignoreVariableNames" description="Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
+    <param key="regex" defaultValue="/[a-z][a-zA-Z0-9]*/" description="Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty."/>
   </rule>
 
   <!-- since 0.16 -->
@@ -1292,46 +1292,48 @@
     <name><![CDATA[Abc Metric]]></name>
     <configKey><![CDATA[AbcMetric]]></configKey>
     <description><![CDATA[Checks the ABC size metric for methods/classes. A method (or "closure field") with an ABC score greater than the <em>maxMethodAbcScore</em> property causes a violation. Likewise, a class that has an (average method) ABC score greater than the <em>maxClassAverageMethodAbcScore</em> property causes a violation.]]></description>
-    <param key="maxClassAverageMethodAbcScore"/>
-    <param key="maxMethodAbcScore"/>
-    <param key="maxClassAbcScore"/>
-    <param key="ignoreMethodNames"/>
+    <param key="maxClassAverageMethodAbcScore" defaultValue="60" description='The maximum average ABC score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or null, then do not check class-level average scores.'/>
+    <param key="maxMethodAbcScore" defaultValue="60" description='The maximum ABC complexity value (score) allowed for a single method (or "closure field"). If zero or null, then do not check method-level complexity.'/>
+    <param key="maxClassAbcScore" defaultValue="0" description='The maximum ABC score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or null, then do not check class-level scores.'/>
+    <param key="ignoreMethodNames" description="Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value."/>
   </rule>
 
   <rule key="org.codenarc.rule.size.ClassSizeRule" priority="MAJOR">
     <name><![CDATA[Class Size]]></name>
     <configKey><![CDATA[ClassSize]]></configKey>
     <description><![CDATA[Checks if the size of a class exceeds the number of lines specified by the <em>maxLines</em> property.]]></description>
-    <param key="maxLines"/>
+    <param key="maxLines" defaultValue="1000"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.CyclomaticComplexityRule" priority="MINOR">
     <name><![CDATA[Cyclomatic Complexity]]></name>
     <configKey><![CDATA[CyclomaticComplexity]]></configKey>
     <description><![CDATA[Checks the cyclomatic complexity for methods/classes.A method (or "closure field") with a cyclomatic complexity value greater than the <em>maxMethodComplexity</em> property causes a violation. Likewise, a class that has an (average method) cyclomatic complexityvalue greater than the <em>maxClassAverageMethodComplexity</em> property causes a violation.]]></description>
-    <param key="maxClassAverageMethodComplexity"/>
-    <param key="maxMethodComplexity"/>
+    <param key="maxClassAverageMethodComplexity" defaultValue="20" description='The maximum average cyclomatic complexity value allowed for a class, calculated as the average complexity of its methods or "closure fields". If zero or null, then do not check average class-level complexity.'/>
+    <param key="maxMethodComplexity" defaultValue="20" description='The maximum cyclomatic complexity value allowed for a single method (or "closure field"). If zero or null, then do not check method-level complexity.'/>
+    <param key="maxClassComplexity" defaultValue="0" description='The maximum total cyclomatic complexity value allowed for a class, calculated as the total complexity of its methods or "closure fields". If zero or null, then do not check total class-level complexity.'/>
   </rule>
 
   <rule key="org.codenarc.rule.size.MethodCountRule" priority="MINOR">
     <name><![CDATA[Method Count]]></name>
     <configKey><![CDATA[MethodCount]]></configKey>
     <description><![CDATA[A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to have more fine grained objects.The <em>maxMethods</em> property specifies the threshold.]]></description>
-    <param key="maxMethods"/>
+    <param key="maxMethods" defaultValue="30"/>
   </rule>
 
   <rule key="org.codenarc.rule.size.MethodSizeRule" priority="MAJOR">
     <name><![CDATA[Method Size]]></name>
     <configKey><![CDATA[MethodSize]]></configKey>
     <description><![CDATA[Checks if the size of a method exceeds the number of lines specified by the <em>maxLines</em> property.]]></description>
-    <param key="maxLines"/>
+    <param key="maxLines" defaultValue="100"/>
+    <param key="ignoreMethodNames" description="Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
   </rule>
 
   <rule key="org.codenarc.rule.size.NestedBlockDepthRule" priority="MINOR">
     <name><![CDATA[Nested Block Depth]]></name>
     <configKey><![CDATA[NestedBlockDepth]]></configKey>
     <description><![CDATA[Checks for blocks or closures nested more than <em>maxNestedBlockDepth</em> levels deep.]]></description>
-    <param key="maxNestedBlockDepth"/>
+    <param key="maxNestedBlockDepth" defaultValue="5"/>
   </rule>
 
   <!-- since 0.17 -->
@@ -1339,8 +1341,8 @@
     <name><![CDATA[Crap Metric]]></name>
     <configKey><![CDATA[CrapMetric]]></configKey>
     <description><![CDATA[Checks the CRAP (Change Risk Anti-Patterns) score for methods/classes. The CRAP metric score is based on the cyclomatic complexity and test coverage for individual methods. A method with a CRAP value greater than the <em>maxMethodCrapScore</em> property causes a violation. Likewise, a class that has an (average method) CRAP value greater than the <em>maxClassAverageMethodCrapScore</em> property causes a violation.]]></description>
-    <param key="maxClassAverageMethodCrapScore"/>
-    <param key="maxMethodCrapScore"/>
+    <param key="maxClassAverageMethodCrapScore" defaultValue="30"/>
+    <param key="maxMethodCrapScore" defaultValue="30"/>
   </rule>
 
   <!-- unnecessary rules -->
@@ -1680,7 +1682,7 @@
     <name><![CDATA[Unused Variable]]></name>
     <configKey><![CDATA[UnusedVariable]]></configKey>
     <description><![CDATA[Checks for variables that are never referenced. The <em>ignoreVariableNames</em> property specifies one or more variable names that should be ignored, optionally containing wildcard characters ('*' or '?').]]></description>
-    <param key="ignoreVariableNames"/>
+    <param key="ignoreVariableNames" description="Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?)."/>
   </rule>
 
   <!-- since 0.16 -->
@@ -1792,7 +1794,7 @@
     <name><![CDATA[Braces For Class]]></name>
     <configKey><![CDATA[BracesForClass]]></configKey>
     <description><![CDATA[Checks the location of the opening brace ({) for classes. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
-    <param key="sameLine"/>
+    <param key="sameLine" defaultValue="true" />
   </rule>
 
   <!-- since 0.15 -->
@@ -1800,7 +1802,7 @@
     <name><![CDATA[Line Length]]></name>
     <configKey><![CDATA[LineLength]]></configKey>
     <description><![CDATA[Checks the maximum length for each line of source code. It checks for number of characters, so lines that include tabs may appear longer than the allowed number when viewing the file. The maximum line length can be configured by setting the length property, which defaults to 120.]]></description>
-    <param key="length"/>
+    <param key="length" defaultValue="120"/>
   </rule>
 
   <!-- since 0.15 -->
@@ -1808,7 +1810,7 @@
     <name><![CDATA[Braces For For Loop]]></name>
     <configKey><![CDATA[BracesForForLoop]]></configKey>
     <description><![CDATA[Checks the location of the opening brace ({) for for loops. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
-    <param key="sameLine"/>
+    <param key="sameLine" defaultValue="true" />
   </rule>
 
   <!-- since 0.15 -->
@@ -1816,7 +1818,7 @@
     <name><![CDATA[Braces For If Else]]></name>
     <configKey><![CDATA[BracesForIfElse]]></configKey>
     <description><![CDATA[Checks the location of the opening brace ({) for if statements. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
-    <param key="sameLine"/>
+    <param key="sameLine" defaultValue="true"/>
   </rule>
 
   <!-- since 0.15 -->
@@ -1824,7 +1826,7 @@
     <name><![CDATA[Braces For Method]]></name>
     <configKey><![CDATA[BracesForMethod]]></configKey>
     <description><![CDATA[Checks the location of the opening brace ({) for constructors and methods. By default, requires them on the same line, but the sameLine property can be set to false to override this.]]></description>
-    <param key="sameLine"/>
+    <param key="sameLine" defaultValue="true"/>
   </rule>
 
   <!-- since 0.15 -->
@@ -1832,7 +1834,7 @@
     <name><![CDATA[Braces For Try Catch Finally]]></name>
     <configKey><![CDATA[BracesForTryCatchFinally]]></configKey>
     <description><![CDATA[Checks the location of the opening brace ({) for try statements. By default, requires them on the line, but the sameLine property can be set to false to override this.]]></description>
-    <param key="sameLine"/>
+    <param key="sameLine" defaultValue="true"/>
   </rule>
 
   <!-- since 0.15 -->
@@ -2236,7 +2238,6 @@
     <name><![CDATA[G String Expression Within String]]></name>
     <configKey><![CDATA[GStringExpressionWithinString]]></configKey>
     <description><![CDATA[Check for regular (single quote) strings containing a GString-type expression (\${...}).]]></description>
-    <param key="..."/>
   </rule>
 
 </rules>
