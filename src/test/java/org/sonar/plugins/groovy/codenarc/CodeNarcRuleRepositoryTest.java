@@ -36,5 +36,7 @@ public class CodeNarcRuleRepositoryTest {
     CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
     List<Rule> rules = repo.createRules();
     assertThat(rules.size()).isEqualTo(318);
+    assertThat(rules.get(47).getParams()).hasSize(1);
+    assertThat(rules.get(47).getParams().get(0).getDefaultValue()).isEqualToIgnoringCase("false");
   }
 }
