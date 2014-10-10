@@ -32,6 +32,7 @@ public class Groovy extends AbstractLanguage {
     super(KEY, "Groovy");
   }
 
+  @Override
   public String[] getFileSuffixes() {
     return new String[] {"groovy"};
   }

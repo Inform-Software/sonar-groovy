@@ -82,10 +82,12 @@ public class GroovySensor implements Sensor {
     this.moduleFileSystem = moduleFileSystem;
   }
 
+  @Override
   public boolean shouldExecuteOnProject(Project project) {
     return Groovy.isEnabled(moduleFileSystem);
   }
 
+  @Override
   public void analyse(Project project, SensorContext context) {
     computeBaseMetrics(context);
     for (File sourceDir : moduleFileSystem.sourceDirs()) {

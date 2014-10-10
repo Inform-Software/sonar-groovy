@@ -46,10 +46,12 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
     this.moduleFileSystem = moduleFileSystem;
   }
 
+  @Override
   public boolean shouldExecuteOnProject(Project project) {
     return project.getAnalysisType().isDynamic(true) && Groovy.isEnabled(moduleFileSystem);
   }
 
+  @Override
   public void analyse(Project project, SensorContext context) {
     String reportPath = settings.getString(GroovyPlugin.COBERTURA_REPORT_PATH);
 

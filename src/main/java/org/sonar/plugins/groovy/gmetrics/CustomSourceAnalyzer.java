@@ -53,10 +53,12 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
     return resultsByFile;
   }
 
+  @Override
   public List<String> getSourceDirectories() {
     return Collections.singletonList(baseDirectory);
   }
 
+  @Override
   public ResultsNode analyze(MetricSet metricSet) {
     File dir = new File(baseDirectory);
     return processDirectory(dir, "", metricSet);

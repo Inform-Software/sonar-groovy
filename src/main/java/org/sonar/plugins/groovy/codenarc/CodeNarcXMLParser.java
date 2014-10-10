@@ -49,6 +49,7 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
     return handler.result.build();
   }
 
+  @Override
   public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
     rootCursor.advance();
     SMInputCursor pack = rootCursor.descendantElementCursor("Package");

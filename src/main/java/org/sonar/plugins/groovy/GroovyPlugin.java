@@ -69,6 +69,7 @@ public class GroovyPlugin extends SonarPlugin {
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
+  @Override
   public List getExtensions() {
     return ImmutableList.of(
       GroovyCommonRulesDecorator.class,

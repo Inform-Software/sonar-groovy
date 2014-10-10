@@ -66,11 +66,13 @@ public class CodeNarcSensor implements Sensor {
     this.ruleFinder = ruleFinder;
   }
 
+  @Override
   public boolean shouldExecuteOnProject(Project project) {
     return Groovy.isEnabled(moduleFileSystem)
         && !rulesProfile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY).isEmpty();
   }
 
+  @Override
   public void analyse(Project project, SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
     String codeNarcReportPath = settings.getString(GroovyPlugin.CODENARC_REPORT_PATH);

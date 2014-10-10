@@ -39,6 +39,7 @@ public class GroovyCpdTokenizer implements Tokenizer {
 
   private static final Logger LOG = LoggerFactory.getLogger(GroovyCpdTokenizer.class);
 
+  @Override
   public final void tokenize(SourceCode source, Tokens cpdTokens) {
     String fileName = source.getFileName();
     Token token;

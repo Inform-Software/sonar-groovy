@@ -32,10 +32,12 @@ public class GroovyCpdMapping extends AbstractCpdMapping {
     this.language = language;
   }
 
+  @Override
   public Tokenizer getTokenizer() {
     return new GroovyCpdTokenizer();
   }
 
+  @Override
   public Language getLanguage() {
     return language;
   }
