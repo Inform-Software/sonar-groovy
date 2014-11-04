@@ -22,6 +22,7 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.junit.Before;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.Rule;
@@ -58,7 +59,7 @@ public class CodeNarcProfileExporterTest {
   }
 
   @Test
-  public void shouldExportParameters() throws Exception {
+  public void shouldNotExportParameters() throws Exception {
     Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", "20");

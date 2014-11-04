@@ -76,15 +76,6 @@ public class CodeNarcProfileExporter {
       writer.append(AUTO_CLOSING_TAG);
     } else {
       writer.append("\">\n");
-      for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
-        if (StringUtils.isNotBlank(activeRuleParam.getValue())) {
-          writer.append("<property name=\"")
-              .append(activeRuleParam.getKey())
-              .append("\" value=\"")
-              .append(activeRuleParam.getValue())
-              .append(AUTO_CLOSING_TAG);
-        }
-      }
       writer.append("</rule>\n");
     }
   }
