@@ -20,8 +20,6 @@
 
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.scan.filesystem.FileQuery;
-
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
@@ -44,7 +42,9 @@ import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
+import org.sonar.api.resources.Directory;
 import org.sonar.api.resources.Project;
+import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
@@ -155,7 +155,10 @@ public class GroovySensor implements Sensor {
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : moduleFileSystem.files(FileQuery.onSource().onLanguage(Groovy.KEY))) {
       org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, moduleFileSystem.sourceDirs());
-      packageList.add(resource.getParent());
+      Directory owner = resource.getParent();
+      if (owner != null) {
+        packageList.add(owner);
+      }
       loc = 0;
       comments = 0;
       currentLine = 0;
