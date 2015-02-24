@@ -20,8 +20,6 @@
 
 package org.sonar.plugins.groovy.cobertura;
 
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.CoverageExtension;
@@ -29,6 +27,7 @@ import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 

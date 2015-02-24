@@ -19,8 +19,6 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import org.sonar.api.resources.Directory;
-
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
@@ -56,6 +54,7 @@ public class CoberturaReportParser {
     try {
       StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
 
+        @Override
         public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
           rootCursor.advance();
           collectPackageMeasures(rootCursor.descendantElementCursor("package"));
@@ -82,7 +81,7 @@ public class CoberturaReportParser {
     }
   }
 
-  private boolean fileExists(Resource<Directory> file) {
+  private boolean fileExists(Resource file) {
     return context.getResource(file) != null;
   }
 

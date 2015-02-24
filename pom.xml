@@ -55,7 +55,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>3.7</sonar.version>
+    <sonar.version>4.5.2</sonar.version>
     <sonar.pluginName>Groovy</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
   </properties>
@@ -85,6 +85,12 @@
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-deprecated</artifactId>
+      <version>${sonar.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
@@ -120,6 +126,19 @@
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-testing-harness</artifactId>
       <version>${sonar.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar</groupId>
+      <artifactId>sonar-plugin-api</artifactId>
+      <version>${sonar.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>1.6</version>
       <scope>test</scope>
     </dependency>
     <!-- TODO http://jira.codehaus.org/browse/SONAR-2011 We need following

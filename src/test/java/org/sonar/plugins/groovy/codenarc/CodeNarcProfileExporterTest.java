@@ -20,9 +20,11 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import org.apache.commons.lang.CharUtils;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
 import org.junit.Before;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.Rule;
@@ -30,6 +32,9 @@ import org.sonar.api.rules.RulePriority;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.io.StringWriter;
 
 public class CodeNarcProfileExporterTest {
@@ -39,7 +44,7 @@ public class CodeNarcProfileExporterTest {
   private RulesProfile profile;
 
   @Before
-  public void setUp(){
+  public void setUp() {
     writer = new StringWriter();
     exporter = new CodeNarcProfileExporter(writer);
     profile = RulesProfile.create("Sonar Groovy way", Groovy.KEY);
@@ -53,9 +58,10 @@ public class CodeNarcProfileExporterTest {
     profile.activateRule(rule, RulePriority.MAJOR);
     exporter.exportProfile(profile);
 
-    TestUtils.assertSimilarXml(
-        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportProfile.xml"),
-        writer.toString());
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportProfile.xml"),
+      writer.toString());
+
   }
 
   @Test
@@ -66,9 +72,9 @@ public class CodeNarcProfileExporterTest {
 
     exporter.exportProfile(profile);
 
-    TestUtils.assertSimilarXml(
-        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportParameters.xml"),
-        writer.toString());
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportParameters.xml"),
+      writer.toString());
   }
 
   @Test
@@ -79,9 +85,16 @@ public class CodeNarcProfileExporterTest {
 
     exporter.exportProfile(profile);
 
-    TestUtils.assertSimilarXml(
-        TestUtils.getResourceContent("/org/sonar/plugins/groovy/codenarc/exportProfile/exportNullParameters.xml"),
-        writer.toString());
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportNullParameters.xml"),
+      writer.toString());
   }
 
+  private void assertSimilarXml(File expectedFile, String xml) throws Exception {
+    XMLUnit.setIgnoreWhitespace(true);
+    Reader reader = new FileReader(expectedFile);
+    Diff diff = XMLUnit.compareXML(reader, xml);
+    String message = "Diff: " + diff.toString() + CharUtils.LF + "XML: " + xml;
+    Assert.assertTrue(message, diff.similar());
+  }
 }

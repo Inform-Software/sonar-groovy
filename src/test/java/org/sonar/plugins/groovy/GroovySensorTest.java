@@ -32,7 +32,6 @@ import org.sonar.api.resources.Resource;
 import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.test.IsMeasure;
-import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,23 +66,24 @@ public class GroovySensorTest {
   }
 
   @Test
-  public void compute_metrics(){
+  public void compute_metrics() {
     testMetrics(false, 5.0);
   }
+
   @Test
   public void compute_metrics_ignoring_header_comment() {
     testMetrics(true, 1.0);
   }
 
   public void testMetrics(boolean headerComment, double expectedCommentMetric) {
-    settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, ""+headerComment);
+    settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, "" + headerComment);
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     java.io.File sourceDir = new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics");
     java.io.File sourceFile = new java.io.File(sourceDir, "Greeting.groovy");
     List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
-    when(fileLinesContextFactory.createFor(Mockito.any(Resource.class))).thenReturn(fileLinesContext );
+    when(fileLinesContextFactory.createFor(Mockito.any(Resource.class))).thenReturn(fileLinesContext);
     when(moduleFileSystem.sourceDirs()).thenReturn(sourceDirs);
     when(moduleFileSystem.files(any(FileQuery.class))).thenReturn(Arrays.asList(sourceFile));
 
@@ -100,12 +100,12 @@ public class GroovySensorTest {
 
     verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 4.0);
     verify(context).saveMeasure(
-        Mockito.eq(sonarFile),
-        Mockito.argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=0;2=2;4=0;6=0;8=0;10=0;12=0")));
+      Mockito.eq(sonarFile),
+      Mockito.argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=0;2=2;4=0;6=0;8=0;10=0;12=0")));
     verify(context).saveMeasure(
-        Mockito.eq(sonarFile),
-        Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
-    //5 times for comment because we register comment even when ignoring header comment
+      Mockito.eq(sonarFile),
+      Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
+    // 5 times for comment because we register comment even when ignoring header comment
     verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
     verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
     verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
