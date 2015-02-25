@@ -32,7 +32,6 @@ import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
-import org.sonar.plugins.groovy.foundation.GroovySourceImporter;
 
 import java.util.List;
 
@@ -81,7 +80,6 @@ public class GroovyPlugin extends SonarPlugin {
       // Foundation
       Groovy.class,
       GroovyColorizerFormat.class,
-      GroovySourceImporter.class,
       GroovyCpdMapping.class,
       // Main sensor
       GroovySensor.class,
