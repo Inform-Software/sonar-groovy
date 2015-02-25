@@ -52,9 +52,9 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldExportProfile() throws Exception {
-    Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule", "Add Empty String");
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.basic.AddEmptyStringRule", "Add Empty String");
     profile.activateRule(rule, RulePriority.MAJOR);
-    rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
+    rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     profile.activateRule(rule, RulePriority.MAJOR);
     exporter.exportProfile(profile);
 
@@ -66,7 +66,7 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldNotExportParameters() throws Exception {
-    Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", "20");
 
@@ -79,7 +79,7 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldNotExportUnsetParameters() throws Exception {
-    Rule rule = Rule.create(CodeNarcRuleRepository.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", null);
 

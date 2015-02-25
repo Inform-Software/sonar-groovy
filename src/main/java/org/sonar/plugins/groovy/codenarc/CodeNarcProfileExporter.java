@@ -39,7 +39,7 @@ public class CodeNarcProfileExporter {
 
   public void exportProfile(RulesProfile profile) {
     try {
-      generateXML(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY));
+      generateXML(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY));
 
     } catch (IOException e) {
       throw new SonarException("Fail to export CodeNarc profile : " + profile, e);

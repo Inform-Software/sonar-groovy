@@ -30,8 +30,9 @@ import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.XMLRuleParser;
+import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.ValidationMessages;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.util.Map;
 
@@ -49,13 +50,18 @@ public class SonarWayProfileTest {
     RulesProfile profile = profileDefinition.createProfile(messages);
 
     assertThat(profile.getName()).isEqualTo("Sonar way");
+    assertThat(profile.getLanguage()).isEqualTo(Groovy.KEY);
     assertThat(profile.getActiveRules()).hasSize(59);
     assertThat(messages.hasErrors()).isFalse();
 
-    CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    Map<String, Rule> rules = Maps.newHashMap();
-    for (Rule rule : repo.createRules()) {
-      rules.put(rule.getKey(), rule);
+    CodeNarcRulesDefinition definition = new CodeNarcRulesDefinition();
+    RulesDefinition.Context context = new RulesDefinition.Context();
+    definition.define(context);
+    RulesDefinition.Repository repository = context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
+
+    Map<String, RulesDefinition.Rule> rules = Maps.newHashMap();
+    for (RulesDefinition.Rule rule : repository.rules()) {
+      rules.put(rule.key(), rule);
     }
     for (ActiveRule activeRule : profile.getActiveRules()) {
       assertThat(rules.containsKey(activeRule.getConfigKey())).as("No such rule: " + activeRule.getConfigKey()).isTrue();
@@ -71,5 +77,4 @@ public class SonarWayProfileTest {
     });
     return ruleFinder;
   }
-
 }

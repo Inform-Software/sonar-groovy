@@ -21,22 +21,31 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import org.junit.Test;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.XMLRuleParser;
+import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinition.Rule;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.util.Iterator;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class CodeNarcRuleRepositoryTest {
+public class CodeNarcRulesDefinitionTest {
 
   @Test
   public void test() {
-    CodeNarcRuleRepository repo = new CodeNarcRuleRepository(new XMLRuleParser());
-    List<Rule> rules = repo.createRules();
-    assertThat(rules.size()).isEqualTo(318);
-    assertThat(rules.get(47).getParams()).hasSize(1);
-    assertThat(rules.get(47).getParams().get(0).getDefaultValue()).isEqualToIgnoringCase("false");
+    CodeNarcRulesDefinition definition = new CodeNarcRulesDefinition();
+    RulesDefinition.Context context = new RulesDefinition.Context();
+    definition.define(context);
+    RulesDefinition.Repository repository = context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
+
+    assertThat(repository.name()).isEqualTo(CodeNarcRulesDefinition.REPOSITORY_NAME);
+    assertThat(repository.language()).isEqualTo(Groovy.KEY);
+
+    List<Rule> rules = repository.rules();
+    assertThat(rules).hasSize(318);
+
+    Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
+    assertThat(rule.params()).hasSize(1);
+    assertThat(rule.params().get(0).defaultValue()).isEqualToIgnoringCase("false");
   }
 }

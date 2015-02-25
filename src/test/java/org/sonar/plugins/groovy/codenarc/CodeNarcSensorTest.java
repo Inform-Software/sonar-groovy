@@ -78,7 +78,7 @@ public class CodeNarcSensorTest {
   public void should_execute_on_project() {
     Project project = mock(Project.class);
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
+    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
       .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
   }
@@ -87,7 +87,7 @@ public class CodeNarcSensorTest {
   public void should_not_execute_when_no_active_rules() {
     Project project = mock(Project.class);
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
+    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
       .thenReturn(Collections.EMPTY_LIST);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
@@ -95,7 +95,7 @@ public class CodeNarcSensorTest {
   @Test
   public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
+    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
       .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
@@ -125,7 +125,7 @@ public class CodeNarcSensorTest {
     Project project = mock(Project.class);
     ActiveRule rule = mock(ActiveRule.class);
     when(rule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
-    when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
+    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
       .thenReturn(Arrays.asList(rule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
     when(moduleFileSystem.workingDir()).thenReturn(sonarhome);

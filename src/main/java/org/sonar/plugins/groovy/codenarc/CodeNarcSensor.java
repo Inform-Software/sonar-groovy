@@ -71,7 +71,7 @@ public class CodeNarcSensor implements Sensor {
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return Groovy.isEnabled(fileSystem) && !rulesProfile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY).isEmpty();
+    return Groovy.isEnabled(fileSystem) && !rulesProfile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
   }
 
   @Override
@@ -101,7 +101,7 @@ public class CodeNarcSensor implements Sensor {
       Collection<CodeNarcViolation> violations = CodeNarcXMLParser.parse(report);
       for (CodeNarcViolation violation : violations) {
         RuleQuery ruleQuery = RuleQuery.create()
-          .withRepositoryKey(CodeNarcRuleRepository.REPOSITORY_KEY)
+          .withRepositoryKey(CodeNarcRulesDefinition.REPOSITORY_KEY)
           .withConfigKey(violation.getRuleName());
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {

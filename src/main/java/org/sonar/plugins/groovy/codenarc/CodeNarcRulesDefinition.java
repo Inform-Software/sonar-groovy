@@ -20,32 +20,23 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.collect.Lists;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleRepository;
-import org.sonar.api.rules.XMLRuleParser;
+import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.util.List;
-
-public class CodeNarcRuleRepository extends RuleRepository {
+public class CodeNarcRulesDefinition implements RulesDefinition {
 
   public static final String REPOSITORY_KEY = Groovy.KEY;
   public static final String REPOSITORY_NAME = "CodeNarc";
 
-  private XMLRuleParser xmlRuleParser;
-
-  public CodeNarcRuleRepository(XMLRuleParser xmlRuleParser) {
-    super(REPOSITORY_KEY, Groovy.KEY);
-    setName(REPOSITORY_NAME);
-    this.xmlRuleParser = xmlRuleParser;
-  }
-
   @Override
-  public List<Rule> createRules() {
-    List<Rule> rules = Lists.newArrayList();
-    rules.addAll(xmlRuleParser.parse(CodeNarcRuleRepository.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml")));
-    return rules;
-  }
+  public void define(Context context) {
+    NewRepository repository = context
+      .createRepository(REPOSITORY_KEY, Groovy.KEY)
+      .setName(REPOSITORY_NAME);
 
+    RulesDefinitionXmlLoader ruleLoader = new RulesDefinitionXmlLoader();
+    ruleLoader.load(repository, CodeNarcRulesDefinition.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml"), "UTF-8");
+    repository.done();
+  }
 }
