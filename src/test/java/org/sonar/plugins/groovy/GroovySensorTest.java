@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultInputDir;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
@@ -31,7 +32,6 @@ import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -41,6 +41,7 @@ import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,9 +86,23 @@ public class GroovySensorTest {
     java.io.File noDirFile = new java.io.File("fake.groovy");
     List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
-    when(fileLinesContextFactory.createFor(Mockito.any(Resource.class))).thenReturn(fileLinesContext);
+    fileSystem.setBaseDir(new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics/"));
+    fileSystem.add(
+      new DefaultInputDir(sourceDir.getPath())
+        .setFile(sourceDir)
+        .setAbsolutePath(sourceDir.getAbsolutePath()));
+    fileSystem.add(
+      new DefaultInputFile(sourceFile.getPath())
+        .setLanguage(Groovy.KEY)
+        .setFile(sourceFile)
+        .setAbsolutePath(sourceFile.getAbsolutePath()));
+    fileSystem.add(
+      new DefaultInputFile(noDirFile.getPath())
+        .setLanguage(Groovy.KEY)
+        .setFile(noDirFile)
+        .setAbsolutePath(noDirFile.getAbsolutePath()));
+    when(fileLinesContextFactory.createFor(any(Resource.class))).thenReturn(fileLinesContext);
     when(moduleFileSystem.sourceDirs()).thenReturn(sourceDirs);
-    when(moduleFileSystem.files(any(FileQuery.class))).thenReturn(Arrays.asList(sourceFile, noDirFile));
 
     sensor.analyse(project, context);
 
@@ -108,8 +123,8 @@ public class GroovySensorTest {
       Mockito.eq(sonarFile),
       Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
     // 5 times for comment because we register comment even when ignoring header comment
-    verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
-    verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Mockito.anyInt(), Mockito.eq(1));
+    verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), anyInt(), Mockito.eq(1));
+    verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), anyInt(), Mockito.eq(1));
     verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
     verify(fileLinesContext).save();

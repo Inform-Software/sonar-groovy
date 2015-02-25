@@ -20,8 +20,6 @@
 package org.sonar.plugins.groovy.foundation;
 
 import org.junit.Test;
-import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -34,17 +32,4 @@ public class GroovyTest {
     assertThat(language.getName()).isEqualTo("Groovy");
     assertThat(language.getFileSuffixes()).isEqualTo(new String[] {"groovy"});
   }
-
-  @Test
-  public void isEnabled() {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    assertThat(Groovy.isEnabled(fileSystem)).isFalse();
-
-    fileSystem.add(new DefaultInputFile("fake.file"));
-    assertThat(Groovy.isEnabled(fileSystem)).isFalse();
-
-    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    assertThat(Groovy.isEnabled(fileSystem)).isTrue();
-  }
-
 }

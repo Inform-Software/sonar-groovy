@@ -29,7 +29,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.GroovyPlugin;
-import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
 
@@ -47,7 +47,7 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return project.getAnalysisType().isDynamic(true) && Groovy.isEnabled(fileSystem);
+    return project.getAnalysisType().isDynamic(true) && GroovyFileSystem.hasGroovyFiles(fileSystem);
   }
 
   @Override

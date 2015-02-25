@@ -17,21 +17,29 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
 package org.sonar.plugins.groovy.foundation;
 
-import org.sonar.api.resources.AbstractLanguage;
+import com.google.common.collect.Lists;
+import org.sonar.api.batch.fs.FilePredicates;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile.Type;
 
-public class Groovy extends AbstractLanguage {
+import java.io.File;
+import java.util.List;
 
-  public static final String KEY = "grvy";
+public class GroovyFileSystem {
 
-  public Groovy() {
-    super(KEY, "Groovy");
+  private GroovyFileSystem() {
   }
 
-  @Override
-  public String[] getFileSuffixes() {
-    return new String[] {"groovy"};
+  public static boolean hasGroovyFiles(FileSystem fileSystem) {
+    return fileSystem.hasFiles(fileSystem.predicates().hasLanguage(Groovy.KEY));
   }
+
+  public static List<File> sourceFiles(FileSystem fileSystem) {
+    FilePredicates predicates = fileSystem.predicates();
+    Iterable<File> files = fileSystem.files(predicates.and(predicates.hasLanguage(Groovy.KEY), predicates.hasType(Type.MAIN)));
+    return Lists.<File>newArrayList(files);
+  }
+
 }

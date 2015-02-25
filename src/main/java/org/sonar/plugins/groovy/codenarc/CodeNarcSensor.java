@@ -41,7 +41,7 @@ import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
-import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class CodeNarcSensor implements Sensor {
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return Groovy.isEnabled(fileSystem) && !rulesProfile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
+    return GroovyFileSystem.hasGroovyFiles(fileSystem) && !rulesProfile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
   }
 
   @Override

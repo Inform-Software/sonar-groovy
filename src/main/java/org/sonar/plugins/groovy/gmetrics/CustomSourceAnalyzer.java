@@ -32,6 +32,8 @@ import org.gmetrics.resultsnode.PackageResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.gmetrics.source.SourceCode;
 import org.gmetrics.source.SourceFile;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
 import java.util.Collections;
@@ -42,11 +44,11 @@ import java.util.List;
  */
 public class CustomSourceAnalyzer implements SourceAnalyzer {
 
-  private final String baseDirectory;
   private final Multimap<File, ClassResultsNode> resultsByFile = ArrayListMultimap.create();
+  private final FileSystem fileSystem;
 
-  public CustomSourceAnalyzer(String baseDirectory) {
-    this.baseDirectory = baseDirectory;
+  public CustomSourceAnalyzer(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   public Multimap<File, ClassResultsNode> getResultsByFile() {
@@ -55,53 +57,31 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
 
   @Override
   public List<String> getSourceDirectories() {
-    return Collections.singletonList(baseDirectory);
+    return Collections.singletonList(fileSystem.baseDir().getAbsolutePath());
   }
 
   @Override
   public ResultsNode analyze(MetricSet metricSet) {
-    File dir = new File(baseDirectory);
-    return processDirectory(dir, "", metricSet);
+    return processFiles(metricSet);
   }
 
-  private PackageResultsNode processDirectory(File dir, String path, MetricSet metricSet) {
-    String packageName = path.length() == 0 ? "" : dir.getName();
-    PackageResultsNode packageResults = new PackageResultsNode(packageName, packageName, path);
-    for (File file : dir.listFiles()) {
-      if (file.isDirectory()) {
-        String filePath = path + "/" + file.getName();
-        PackageResultsNode subpackageResults = processDirectory(file, filePath, metricSet);
-        if (subpackageResults.containsClassResults()) {
-          packageResults.addChildIfNotEmpty(filePath, subpackageResults);
+  private PackageResultsNode processFiles(MetricSet metricSet) {
+    for (File file : GroovyFileSystem.sourceFiles(fileSystem)) {
+      SourceCode sourceCode = new SourceFile(file);
+      ModuleNode ast = sourceCode.getAst();
+      if (ast != null) {
+        for (ClassNode classNode : ast.getClasses()) {
+          String className = classNode.getName();
+          ClassResultsNode classResults = new ClassResultsNode(className);
+          for (Object metric : metricSet.getMetrics()) {
+            ClassMetricResult classMetricResult = ((Metric) metric).applyToClass(classNode, sourceCode);
+            classResults.addClassMetricResult(classMetricResult);
+          }
+          resultsByFile.put(file, classResults);
         }
-      } else {
-        processFile(file, packageResults, metricSet);
       }
     }
-    for (Object metric : metricSet.getMetrics()) {
-      packageResults.applyMetric((Metric) metric);
-    }
-    return packageResults;
+    // Only file results are used
+    return null;
   }
-
-  private void processFile(File file, PackageResultsNode packageResults, MetricSet metricSet) {
-    if (!file.getPath().endsWith(".groovy")) {
-      return;
-    }
-    SourceCode sourceCode = new SourceFile(file);
-    ModuleNode ast = sourceCode.getAst();
-    if (ast != null) {
-      for (ClassNode classNode : ast.getClasses()) {
-        String className = classNode.getName();
-        ClassResultsNode classResults = new ClassResultsNode(className);
-        for (Object metric : metricSet.getMetrics()) {
-          ClassMetricResult classMetricResult = ((Metric) metric).applyToClass(classNode, sourceCode);
-          classResults.addClassMetricResult(classMetricResult);
-        }
-        packageResults.addChildIfNotEmpty(className, classResults);
-        resultsByFile.put(file, classResults);
-      }
-    }
-  }
-
 }
