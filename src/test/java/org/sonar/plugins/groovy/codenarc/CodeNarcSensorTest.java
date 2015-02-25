@@ -19,10 +19,6 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import org.sonar.api.config.Settings;
-
-import org.sonar.api.scan.filesystem.FileQuery;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -30,14 +26,17 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.rules.Violation;
+import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -48,9 +47,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,10 +59,10 @@ public class CodeNarcSensorTest {
   private CodeNarcSensor sensor;
   private Settings settings;
   private ModuleFileSystem moduleFileSystem;
+  private DefaultFileSystem fileSystem;
 
   @org.junit.Rule
   public TemporaryFolder projectdir = new TemporaryFolder();
-
 
   @Before
   public void setUp() {
@@ -73,31 +70,31 @@ public class CodeNarcSensorTest {
     profile = mock(RulesProfile.class);
     settings = mock(Settings.class);
     moduleFileSystem = mock(ModuleFileSystem.class);
-    sensor = new CodeNarcSensor(settings, moduleFileSystem, profile, ruleFinder);
+    fileSystem = new DefaultFileSystem();
+    sensor = new CodeNarcSensor(settings, moduleFileSystem, fileSystem, profile, ruleFinder);
   }
 
   @Test
   public void should_execute_on_project() {
     Project project = mock(Project.class);
-    doReturn(Collections.singletonList(new org.sonar.api.resources.File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
+    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
-        .thenReturn(Arrays.asList(new ActiveRule()));
+      .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
   }
 
   @Test
   public void should_not_execute_when_no_active_rules() {
     Project project = mock(Project.class);
-    doReturn(Collections.singletonList(new org.sonar.api.resources.File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
+    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
-        .thenReturn(Collections.EMPTY_LIST);
+      .thenReturn(Collections.EMPTY_LIST);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 
   @Test
   public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    doReturn(Collections.emptyList()).when(moduleFileSystem).files(any(FileQuery.class));
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
       .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
@@ -129,7 +126,7 @@ public class CodeNarcSensorTest {
     ActiveRule rule = mock(ActiveRule.class);
     when(rule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
     when(profile.getActiveRulesByRepository(CodeNarcRuleRepository.REPOSITORY_KEY))
-    .thenReturn(Arrays.asList(rule));
+      .thenReturn(Arrays.asList(rule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
     when(moduleFileSystem.workingDir()).thenReturn(sonarhome);
     when(moduleFileSystem.sourceDirs()).thenReturn(Lists.newArrayList(sonarhome));

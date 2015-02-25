@@ -20,9 +20,8 @@
 
 package org.sonar.plugins.groovy.foundation;
 
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.AbstractLanguage;
-import org.sonar.api.scan.filesystem.FileQuery;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 
 public class Groovy extends AbstractLanguage {
 
@@ -37,8 +36,8 @@ public class Groovy extends AbstractLanguage {
     return new String[] {"groovy"};
   }
 
-  public static boolean isEnabled(ModuleFileSystem moduleFileSystem) {
-    return !moduleFileSystem.files(FileQuery.onSource().onLanguage(KEY)).isEmpty();
+  public static boolean isEnabled(FileSystem fileSystem) {
+    return fileSystem.hasFiles(fileSystem.predicates().hasLanguage(KEY));
   }
 
 }

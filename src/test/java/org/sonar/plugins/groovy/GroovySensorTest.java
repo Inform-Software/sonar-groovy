@@ -22,6 +22,8 @@ package org.sonar.plugins.groovy;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
@@ -32,14 +34,13 @@ import org.sonar.api.resources.Resource;
 import org.sonar.api.scan.filesystem.FileQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.test.IsMeasure;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,19 +50,19 @@ public class GroovySensorTest {
   private Settings settings = new Settings();
   private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
   private ModuleFileSystem moduleFileSystem = mock(ModuleFileSystem.class);
-  private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, moduleFileSystem);
+  private DefaultFileSystem fileSystem = new DefaultFileSystem();
+  private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, moduleFileSystem, fileSystem);
 
   @Test
   public void should_execute_on_project() {
     Project project = mock(Project.class);
-    doReturn(Collections.singletonList(new File("fake.groovy"))).when(moduleFileSystem).files(any(FileQuery.class));
+    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
   }
 
   @Test
   public void should_not_execute_if_no_groovy_files() {
     Project project = mock(Project.class);
-    doReturn(Collections.emptyList()).when(moduleFileSystem).files(any(FileQuery.class));
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 

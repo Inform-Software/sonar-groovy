@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -38,16 +38,16 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
   private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
 
   private final Settings settings;
-  private final ModuleFileSystem moduleFileSystem;
+  private final FileSystem fileSystem;
 
-  public CoberturaSensor(Settings settings, ModuleFileSystem moduleFileSystem) {
+  public CoberturaSensor(Settings settings, FileSystem fileSystem) {
     this.settings = settings;
-    this.moduleFileSystem = moduleFileSystem;
+    this.fileSystem = fileSystem;
   }
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return project.getAnalysisType().isDynamic(true) && Groovy.isEnabled(moduleFileSystem);
+    return project.getAnalysisType().isDynamic(true) && Groovy.isEnabled(fileSystem);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
     if (reportPath != null) {
       File xmlFile = new File(reportPath);
       if (!xmlFile.isAbsolute()) {
-        xmlFile = new File(moduleFileSystem.baseDir(), reportPath);
+        xmlFile = new File(fileSystem.baseDir(), reportPath);
       }
       if (xmlFile.exists()) {
         LOG.info("Analyzing Cobertura report: " + reportPath);

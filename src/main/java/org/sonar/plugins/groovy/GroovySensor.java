@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
@@ -74,16 +75,18 @@ public class GroovySensor implements Sensor {
   private FileLinesContext fileLinesContext;
 
   private ModuleFileSystem moduleFileSystem;
+  private FileSystem fileSystem;
 
-  public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, ModuleFileSystem moduleFileSystem) {
+  public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, ModuleFileSystem moduleFileSystem, FileSystem fileSystem) {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.moduleFileSystem = moduleFileSystem;
+    this.fileSystem = fileSystem;
   }
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return Groovy.isEnabled(moduleFileSystem);
+    return Groovy.isEnabled(fileSystem);
   }
 
   @Override
