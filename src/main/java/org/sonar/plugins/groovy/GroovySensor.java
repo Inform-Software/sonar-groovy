@@ -159,32 +159,32 @@ public class GroovySensor implements Sensor {
       org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, moduleFileSystem.sourceDirs());
       if (resource != null) {
         packageList.add(resource.getParent());
-      }
-      loc = 0;
-      comments = 0;
-      currentLine = 0;
-      fileLinesContext = fileLinesContextFactory.createFor(resource);
-      try {
-        GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
-        groovyLexer.setWhitespaceIncluded(true);
-        TokenStream tokenStream = groovyLexer.plumb();
-        Token token = tokenStream.nextToken();
-        Token nextToken = tokenStream.nextToken();
-        while (nextToken.getType() != Token.EOF_TYPE) {
+        loc = 0;
+        comments = 0;
+        currentLine = 0;
+        fileLinesContext = fileLinesContextFactory.createFor(resource);
+        try {
+          GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
+          groovyLexer.setWhitespaceIncluded(true);
+          TokenStream tokenStream = groovyLexer.plumb();
+          Token token = tokenStream.nextToken();
+          Token nextToken = tokenStream.nextToken();
+          while (nextToken.getType() != Token.EOF_TYPE) {
+            handleToken(token, nextToken.getLine());
+            token = nextToken;
+            nextToken = tokenStream.nextToken();
+          }
           handleToken(token, nextToken.getLine());
-          token = nextToken;
-          nextToken = tokenStream.nextToken();
+          sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
+          sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
+          sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
+        } catch (TokenStreamException tse) {
+          LOG.error("Unexpected token when lexing file : " + groovyFile.getName(), tse);
+        } catch (FileNotFoundException fnfe) {
+          LOG.error("Could not find : " + groovyFile.getName(), fnfe);
         }
-        handleToken(token, nextToken.getLine());
-        sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
-        sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
-        sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
-      } catch (TokenStreamException tse) {
-        LOG.error("Unexpected token when lexing file : " + groovyFile.getName(), tse);
-      } catch (FileNotFoundException fnfe) {
-        LOG.error("Could not find : " + groovyFile.getName(), fnfe);
+        fileLinesContext.save();
       }
-      fileLinesContext.save();
     }
     for (org.sonar.api.resources.Directory pack : packageList) {
       sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);

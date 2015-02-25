@@ -76,17 +76,18 @@ public class GroovySensorTest {
     testMetrics(true, 1.0);
   }
 
-  public void testMetrics(boolean headerComment, double expectedCommentMetric) {
+  private void testMetrics(boolean headerComment, double expectedCommentMetric) {
     settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, "" + headerComment);
     SensorContext context = mock(SensorContext.class);
     Project project = mock(Project.class);
     java.io.File sourceDir = new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics");
     java.io.File sourceFile = new java.io.File(sourceDir, "Greeting.groovy");
+    java.io.File noDirFile = new java.io.File("fake.groovy");
     List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
     when(fileLinesContextFactory.createFor(Mockito.any(Resource.class))).thenReturn(fileLinesContext);
     when(moduleFileSystem.sourceDirs()).thenReturn(sourceDirs);
-    when(moduleFileSystem.files(any(FileQuery.class))).thenReturn(Arrays.asList(sourceFile));
+    when(moduleFileSystem.files(any(FileQuery.class))).thenReturn(Arrays.asList(sourceFile, noDirFile));
 
     sensor.analyse(project, context);
 
