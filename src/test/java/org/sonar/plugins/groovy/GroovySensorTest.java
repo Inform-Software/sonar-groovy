@@ -31,7 +31,6 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -92,10 +91,6 @@ public class GroovySensorTest {
     when(fileLinesContextFactory.createFor(any(DefaultInputFile.class))).thenReturn(fileLinesContext);
 
     Project project = mock(Project.class);
-    ProjectFileSystem projectFileSystem = mock(ProjectFileSystem.class);
-    when(projectFileSystem.getBasedir()).thenReturn(new java.io.File(""));
-    when(project.getFileSystem()).thenReturn(projectFileSystem);
-
     sensor.analyse(project, context);
 
     InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(sourceFile.getAbsolutePath()));

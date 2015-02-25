@@ -44,7 +44,6 @@ import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
-import org.sonar.api.resources.Directory;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
@@ -53,9 +52,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class GroovySensor implements Sensor {
 
@@ -149,11 +146,8 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeBaseMetrics(Project project, SensorContext sensorContext) {
-    Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : GroovyFileSystem.sourceFiles(fileSystem)) {
       InputFile resource = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(groovyFile.getAbsolutePath()));
-      Directory directory = Directory.fromIOFile(groovyFile.getParentFile(), project);
-      packageList.add(directory);
       loc = 0;
       comments = 0;
       currentLine = 0;
@@ -179,9 +173,6 @@ public class GroovySensor implements Sensor {
         LOG.error("Could not find : " + groovyFile.getName(), fnfe);
       }
       fileLinesContext.save();
-    }
-    for (org.sonar.api.resources.Directory pack : packageList) {
-      sensorContext.saveMeasure(pack, CoreMetrics.DIRECTORIES, 1.0);
     }
   }
 
