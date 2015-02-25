@@ -117,6 +117,8 @@ public class CodeNarcSensorTest {
   @Test
   public void should_run_code_narc() throws IOException {
     File sonarhome = projectdir.newFolder("sonarhome");
+    fileSystem.setWorkDir(sonarhome);
+
     PrintWriter pw = new PrintWriter(new File(sonarhome, "sample.groovy"));
     pw.write("package source\nclass SourceFile1 {\n}");
     pw.close();
@@ -128,7 +130,6 @@ public class CodeNarcSensorTest {
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
       .thenReturn(Arrays.asList(rule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
-    when(moduleFileSystem.workingDir()).thenReturn(sonarhome);
     when(moduleFileSystem.sourceDirs()).thenReturn(Lists.newArrayList(sonarhome));
 
     SensorContext context = mock(SensorContext.class);
