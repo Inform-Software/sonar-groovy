@@ -88,6 +88,10 @@ public class GroovySensorTest {
         .setLanguage(Groovy.KEY)
         .setFile(sourceFile)
         .setAbsolutePath(sourceFile.getAbsolutePath()));
+    fileSystem.add(
+      new DefaultInputFile("unknownFile.groovy")
+        .setLanguage(Groovy.KEY)
+        .setAbsolutePath("unknownFile.groovy"));
     when(fileLinesContextFactory.createFor(any(DefaultInputFile.class))).thenReturn(fileLinesContext);
 
     Project project = mock(Project.class);
