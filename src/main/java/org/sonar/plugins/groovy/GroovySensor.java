@@ -37,14 +37,15 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
+import org.sonar.api.resources.Directory;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 
@@ -67,7 +68,6 @@ public class GroovySensor implements Sensor {
 
   private final Settings settings;
   private final FileLinesContextFactory fileLinesContextFactory;
-  private final ModuleFileSystem moduleFileSystem;
   private final FileSystem fileSystem;
 
   private double loc = 0;
@@ -75,10 +75,9 @@ public class GroovySensor implements Sensor {
   private int currentLine = 0;
   private FileLinesContext fileLinesContext;
 
-  public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, ModuleFileSystem moduleFileSystem, FileSystem fileSystem) {
+  public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, FileSystem fileSystem) {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
-    this.moduleFileSystem = moduleFileSystem;
     this.fileSystem = fileSystem;
   }
 
@@ -89,7 +88,7 @@ public class GroovySensor implements Sensor {
 
   @Override
   public void analyse(Project project, SensorContext context) {
-    computeBaseMetrics(context);
+    computeBaseMetrics(project, context);
     processFiles(context);
   }
 
@@ -103,12 +102,12 @@ public class GroovySensor implements Sensor {
     for (Entry<File, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
       File file = entry.getKey();
       Collection<ClassResultsNode> results = entry.getValue();
-      org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, moduleFileSystem.sourceDirs());
+      InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
       processFile(context, sonarFile, results);
     }
   }
 
-  private void processFile(SensorContext context, org.sonar.api.resources.File sonarFile, Collection<ClassResultsNode> results) {
+  private void processFile(SensorContext context, InputFile sonarFile, Collection<ClassResultsNode> results) {
     double classes = 0;
     double methods = 0;
     double complexity = 0;
@@ -149,41 +148,40 @@ public class GroovySensor implements Sensor {
     context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
   }
 
-  private void computeBaseMetrics(SensorContext sensorContext) {
+  private void computeBaseMetrics(Project project, SensorContext sensorContext) {
     Set<org.sonar.api.resources.Directory> packageList = new HashSet<org.sonar.api.resources.Directory>();
     for (File groovyFile : GroovyFileSystem.sourceFiles(fileSystem)) {
-      org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(groovyFile, moduleFileSystem.sourceDirs());
-      if (resource != null) {
-        packageList.add(resource.getParent());
-        loc = 0;
-        comments = 0;
-        currentLine = 0;
-        fileLinesContext = fileLinesContextFactory.createFor(resource);
-        try {
-          GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
-          groovyLexer.setWhitespaceIncluded(true);
-          TokenStream tokenStream = groovyLexer.plumb();
-          Token token = tokenStream.nextToken();
-          Token nextToken = tokenStream.nextToken();
-          while (nextToken.getType() != Token.EOF_TYPE) {
-            handleToken(token, nextToken.getLine());
-            token = nextToken;
-            nextToken = tokenStream.nextToken();
-          }
+      InputFile resource = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(groovyFile.getAbsolutePath()));
+      Directory directory = Directory.fromIOFile(groovyFile.getParentFile(), project);
+      packageList.add(directory);
+      loc = 0;
+      comments = 0;
+      currentLine = 0;
+      fileLinesContext = fileLinesContextFactory.createFor(resource);
+      try {
+        GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
+        groovyLexer.setWhitespaceIncluded(true);
+        TokenStream tokenStream = groovyLexer.plumb();
+        Token token = tokenStream.nextToken();
+        Token nextToken = tokenStream.nextToken();
+        while (nextToken.getType() != Token.EOF_TYPE) {
           handleToken(token, nextToken.getLine());
-          sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
-          sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
-          sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
-        } catch (TokenStreamException tse) {
-          LOG.error("Unexpected token when lexing file : " + groovyFile.getName(), tse);
-        } catch (FileNotFoundException fnfe) {
-          LOG.error("Could not find : " + groovyFile.getName(), fnfe);
+          token = nextToken;
+          nextToken = tokenStream.nextToken();
         }
-        fileLinesContext.save();
+        handleToken(token, nextToken.getLine());
+        sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
+        sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
+        sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
+      } catch (TokenStreamException tse) {
+        LOG.error("Unexpected token when lexing file : " + groovyFile.getName(), tse);
+      } catch (FileNotFoundException fnfe) {
+        LOG.error("Could not find : " + groovyFile.getName(), fnfe);
       }
+      fileLinesContext.save();
     }
     for (org.sonar.api.resources.Directory pack : packageList) {
-      sensorContext.saveMeasure(pack, CoreMetrics.PACKAGES, 1.0);
+      sensorContext.saveMeasure(pack, CoreMetrics.DIRECTORIES, 1.0);
     }
   }
 

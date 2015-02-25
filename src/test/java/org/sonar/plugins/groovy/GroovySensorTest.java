@@ -22,6 +22,7 @@ package org.sonar.plugins.groovy;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputDir;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
@@ -29,15 +30,10 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
+import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -50,9 +46,8 @@ public class GroovySensorTest {
 
   private Settings settings = new Settings();
   private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
-  private ModuleFileSystem moduleFileSystem = mock(ModuleFileSystem.class);
   private DefaultFileSystem fileSystem = new DefaultFileSystem();
-  private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, moduleFileSystem, fileSystem);
+  private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
 
   @Test
   public void should_execute_on_project() {
@@ -80,11 +75,9 @@ public class GroovySensorTest {
   private void testMetrics(boolean headerComment, double expectedCommentMetric) {
     settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, "" + headerComment);
     SensorContext context = mock(SensorContext.class);
-    Project project = mock(Project.class);
+
     java.io.File sourceDir = new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics");
     java.io.File sourceFile = new java.io.File(sourceDir, "Greeting.groovy");
-    java.io.File noDirFile = new java.io.File("fake.groovy");
-    List<java.io.File> sourceDirs = Arrays.asList(sourceDir);
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
     fileSystem.setBaseDir(new java.io.File("src/test/resources/org/sonar/plugins/groovy/gmetrics/"));
     fileSystem.add(
@@ -96,17 +89,16 @@ public class GroovySensorTest {
         .setLanguage(Groovy.KEY)
         .setFile(sourceFile)
         .setAbsolutePath(sourceFile.getAbsolutePath()));
-    fileSystem.add(
-      new DefaultInputFile(noDirFile.getPath())
-        .setLanguage(Groovy.KEY)
-        .setFile(noDirFile)
-        .setAbsolutePath(noDirFile.getAbsolutePath()));
-    when(fileLinesContextFactory.createFor(any(Resource.class))).thenReturn(fileLinesContext);
-    when(moduleFileSystem.sourceDirs()).thenReturn(sourceDirs);
+    when(fileLinesContextFactory.createFor(any(DefaultInputFile.class))).thenReturn(fileLinesContext);
+
+    Project project = mock(Project.class);
+    ProjectFileSystem projectFileSystem = mock(ProjectFileSystem.class);
+    when(projectFileSystem.getBasedir()).thenReturn(new java.io.File(""));
+    when(project.getFileSystem()).thenReturn(projectFileSystem);
 
     sensor.analyse(project, context);
 
-    File sonarFile = File.fromIOFile(new java.io.File(sourceDir, "Greeting.groovy"), sourceDirs);
+    InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(sourceFile.getAbsolutePath()));
     verify(context).saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.CLASSES, 2.0);
     verify(context).saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, 2.0);
