@@ -61,7 +61,7 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
       }
       if (xmlFile.exists()) {
         LOG.info("Analyzing Cobertura report: " + reportPath);
-        new CoberturaReportParser(context).parseReport(xmlFile);
+        new CoberturaReportParser(context, fileSystem).parseReport(xmlFile);
       } else {
         LOG.info("Cobertura xml report not found: " + reportPath);
       }

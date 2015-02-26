@@ -24,13 +24,14 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.File;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -45,8 +46,9 @@ public class CoberturaSensorTest {
 
   private Settings settings;
   private CoberturaSensor sensor;
-  private ModuleFileSystem moduleFileSystem;
   private DefaultFileSystem fileSystem;
+  private Project project;
+  private SensorContext context;
 
   @Before
   public void setUp() throws Exception {
@@ -54,6 +56,8 @@ public class CoberturaSensorTest {
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml"));
     fileSystem = new DefaultFileSystem();
     sensor = new CoberturaSensor(settings, fileSystem);
+    project = mock(Project.class);
+    context = mock(SensorContext.class);
   }
 
   /**
@@ -61,16 +65,26 @@ public class CoberturaSensorTest {
    */
   @Test
   public void should_parse_report() {
-    SensorContext context = mock(SensorContext.class);
-    Project project = mock(Project.class);
-    when(context.getResource(any(File.class))).thenReturn(mock(File.class));
+    FileSystem mockfileSystem = mock(FileSystem.class);
+    when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
+    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(mock(InputFile.class));
+    sensor = new CoberturaSensor(settings, mockfileSystem);
     sensor.analyse(project, context);
-    verify(context, times(298)).saveMeasure(any(File.class), any(Measure.class));
+    verify(context, times(298)).saveMeasure(any(InputFile.class), any(Measure.class));
+  }
+
+  @Test
+  public void should_parse_report_null_file() {
+    FileSystem mockfileSystem = mock(FileSystem.class);
+    when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
+    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(null);
+    sensor = new CoberturaSensor(settings, mockfileSystem);
+    sensor.analyse(project, context);
+    verify(context, times(0)).saveMeasure(any(InputFile.class), any(Measure.class));
   }
 
   @Test
   public void should_execute_on_project() {
-    Project project = mock(Project.class);
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.REUSE_REPORTS);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
@@ -80,7 +94,6 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_execute_if_static_analysis() {
-    Project project = mock(Project.class);
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.STATIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
@@ -88,7 +101,6 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_execute_if_no_groovy_files() {
-    Project project = mock(Project.class);
     when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }

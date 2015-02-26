@@ -18,6 +18,10 @@
     <source>
       /Users/cpicat/myproject/src/groovy
     </source>
+    <source>
+      --source
+    </source>
+    <source></source>
   </sources>
   <packages>
     <package name="" line-rate="0.06451612903225806" branch-rate="0.0" complexity="0.0">

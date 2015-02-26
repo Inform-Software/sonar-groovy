@@ -19,21 +19,25 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.StaxParser;
 import org.sonar.api.utils.XmlParserException;
 
+import javax.annotation.CheckForNull;
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Locale.ENGLISH;
@@ -42,9 +46,12 @@ import static org.sonar.api.utils.ParsingUtils.parseNumber;
 public class CoberturaReportParser {
 
   private final SensorContext context;
+  private final FileSystem fileSystem;
+  private List<String> sourceDirs = Lists.newArrayList();
 
-  public CoberturaReportParser(final SensorContext context) {
+  public CoberturaReportParser(final SensorContext context, final FileSystem fileSystem) {
     this.context = context;
+    this.fileSystem = fileSystem;
   }
 
   /**
@@ -52,27 +59,60 @@ public class CoberturaReportParser {
    */
   public void parseReport(File xmlFile) {
     try {
-      StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-
-        @Override
-        public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-          rootCursor.advance();
-          collectPackageMeasures(rootCursor.descendantElementCursor("package"));
-        }
-      });
-      parser.parse(xmlFile);
+      parseSources(xmlFile);
+      parsePackages(xmlFile);
     } catch (XMLStreamException e) {
       throw new XmlParserException(e);
     }
   }
 
-  private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
+  private void parseSources(File xmlFile) throws XMLStreamException {
+    StaxParser sourceParser = new StaxParser(new StaxParser.XmlStreamHandler() {
+      @Override
+      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+        rootCursor.advance();
+        sourceDirs = collectSourceDirs(rootCursor.descendantElementCursor("source"));
+      }
+    });
+    sourceParser.parse(xmlFile);
+  }
+
+  private List<String> collectSourceDirs(SMInputCursor source) throws XMLStreamException {
+    List<String> sourceDirs = Lists.newLinkedList();
+    while (source.getNext() != null) {
+      String sourceDir = cleanSourceDir(source.getElemStringValue());
+      if (StringUtils.isNotBlank(sourceDir) && !"--source".equals(sourceDir)) {
+        sourceDirs.add(sourceDir);
+      }
+    }
+    return sourceDirs;
+  }
+
+  private String cleanSourceDir(String sourceDir) {
+    if (StringUtils.isNotBlank(sourceDir)) {
+      return sourceDir.trim();
+    }
+    return sourceDir;
+  }
+
+  private void parsePackages(File xmlFile) throws XMLStreamException {
+    StaxParser fileParser = new StaxParser(new StaxParser.XmlStreamHandler() {
+      @Override
+      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+        rootCursor.advance();
+        collectPackageMeasures(rootCursor.descendantElementCursor("package"), sourceDirs);
+      }
+    });
+    fileParser.parse(xmlFile);
+  }
+
+  private void collectPackageMeasures(SMInputCursor pack, List<String> sourceDirs) throws XMLStreamException {
     while (pack.getNext() != null) {
       Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
       collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
       for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-        org.sonar.api.resources.File file = new org.sonar.api.resources.File(entry.getKey());
-        if (fileExists(file)) {
+        InputFile file = getInputFile(entry.getKey(), sourceDirs);
+        if (file != null) {
           for (Measure measure : entry.getValue().createMeasures()) {
             context.saveMeasure(file, measure);
           }
@@ -81,8 +121,16 @@ public class CoberturaReportParser {
     }
   }
 
-  private boolean fileExists(Resource file) {
-    return context.getResource(file) != null;
+  @CheckForNull
+  private InputFile getInputFile(String filename, List<String> sourceDirs) {
+    for (String sourceDir : sourceDirs) {
+      String fileAbsolutePath = sourceDir + "/" + filename;
+      InputFile file = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(fileAbsolutePath));
+      if (file != null) {
+        return file;
+      }
+    }
+    return null;
   }
 
   private void collectFileMeasures(SMInputCursor clazz, Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
