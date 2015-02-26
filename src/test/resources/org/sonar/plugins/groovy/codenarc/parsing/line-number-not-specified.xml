@@ -1,5 +1,8 @@
 <?xml version='1.0'?>
 <CodeNarc url='http://www.codenarc.org' version='0.12'>
+  <Project title='Sample Project'>
+    <SourceDirectory></SourceDirectory>
+  </Project>
   <Package path='org/example' totalFiles='1' filesWithViolations='1' priority1='0' priority2='28' priority3='0'>
     <File name='Example.groovy'>
       <Violation ruleName='CyclomaticComplexity' priority='2' lineNumber=''>

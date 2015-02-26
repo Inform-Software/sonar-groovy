@@ -22,6 +22,12 @@ package org.sonar.plugins.groovy.codenarc;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.FilePredicates;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 
 import java.util.List;
@@ -32,26 +38,32 @@ public class CodeNarcXMLParserTest {
 
   @Test
   public void should_parse_report() throws Exception {
-    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/sample.xml")));
+    FileSystem fileSystem = Mockito.mock(FileSystem.class);
+    Mockito.when(fileSystem.predicates()).thenReturn(Mockito.mock(FilePredicates.class));
+    Mockito.when(fileSystem.inputFile(Matchers.any(FilePredicate.class))).thenReturn(Mockito.mock(InputFile.class));
+    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("parsing/sample.xml")), fileSystem);
 
     assertThat(violations.size()).isEqualTo(16);
 
     CodeNarcViolation violation = violations.get(0);
     assertThat(violation.getRuleName()).isEqualTo("EmptyElseBlock");
-    assertThat(violation.getFilename()).isEqualTo("org/codenarc/sample/domain/SampleDomain.groovy");
+    assertThat(violation.getFilename()).isEqualTo("samples/src/org/codenarc/sample/domain/SampleDomain.groovy");
     assertThat(violation.getLine()).isEqualTo(24);
     assertThat(violation.getMessage()).isEqualTo("");
 
     violation = violations.get(1);
     assertThat(violation.getRuleName()).isEqualTo("EmptyIfStatement");
-    assertThat(violation.getFilename()).isEqualTo("org/codenarc/sample/domain/SampleDomain.groovy");
+    assertThat(violation.getFilename()).isEqualTo("samples/src/org/codenarc/sample/domain/SampleDomain.groovy");
     assertThat(violation.getLine()).isEqualTo(21);
     assertThat(violation.getMessage()).isEqualTo("");
   }
 
   @Test
   public void should_not_fail_if_line_number_not_specified() throws Exception {
-    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("CodeNarcXMLParserTest/line-number-not-specified.xml")));
+    FileSystem fileSystem = Mockito.mock(FileSystem.class);
+    Mockito.when(fileSystem.predicates()).thenReturn(Mockito.mock(FilePredicates.class));
+    Mockito.when(fileSystem.inputFile(Matchers.any(FilePredicate.class))).thenReturn(Mockito.mock(InputFile.class));
+    List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("parsing/line-number-not-specified.xml")), fileSystem);
 
     assertThat(violations.size()).isEqualTo(1);
 

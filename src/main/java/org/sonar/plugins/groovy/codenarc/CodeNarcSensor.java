@@ -30,15 +30,17 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
+import org.sonar.api.issue.Issuable;
+import org.sonar.api.issue.Issue;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
-import org.sonar.api.rules.Violation;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
-import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
@@ -56,13 +58,15 @@ public class CodeNarcSensor implements Sensor {
   private static final Logger LOG = LoggerFactory.getLogger(CodeNarcSensor.class);
 
   private final Settings settings;
+  private final ResourcePerspectives perspectives;
   private final ModuleFileSystem moduleFileSystem;
   private final FileSystem fileSystem;
   private final RulesProfile rulesProfile;
   private final RuleFinder ruleFinder;
 
-  public CodeNarcSensor(Settings settings, ModuleFileSystem moduleFileSystem, FileSystem fileSystem, RulesProfile profile, RuleFinder ruleFinder) {
+  public CodeNarcSensor(Settings settings, ResourcePerspectives perspectives, ModuleFileSystem moduleFileSystem, FileSystem fileSystem, RulesProfile profile, RuleFinder ruleFinder) {
     this.settings = settings;
+    this.perspectives = perspectives;
     this.moduleFileSystem = moduleFileSystem;
     this.fileSystem = fileSystem;
     this.rulesProfile = profile;
@@ -98,19 +102,33 @@ public class CodeNarcSensor implements Sensor {
 
   private void parse(List<File> reports, SensorContext context) {
     for (File report : reports) {
-      Collection<CodeNarcViolation> violations = CodeNarcXMLParser.parse(report);
+      Collection<CodeNarcViolation> violations = CodeNarcXMLParser.parse(report, fileSystem);
       for (CodeNarcViolation violation : violations) {
         RuleQuery ruleQuery = RuleQuery.create()
           .withRepositoryKey(CodeNarcRulesDefinition.REPOSITORY_KEY)
           .withConfigKey(violation.getRuleName());
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-          org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(violation.getFilename());
-          context.saveViolation(Violation.create(rule, sonarFile).setLineId(violation.getLine()).setMessage(violation.getMessage()));
+          InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(violation.getFilename()));
+          if (sonarFile != null) {
+            insertIssue(violation, rule, sonarFile);
+          }
         } else {
           LOG.warn("No such rule in Sonar, so violation from CodeNarc will be ignored: ", violation.getRuleName());
         }
       }
+    }
+  }
+
+  private void insertIssue(CodeNarcViolation violation, Rule rule, InputFile sonarFile) {
+    Issuable issuable = perspectives.as(Issuable.class, sonarFile);
+    if (issuable != null) {
+      Issue issue = issuable.newIssueBuilder()
+        .ruleKey(rule.ruleKey())
+        .line(violation.getLine())
+        .message(violation.getMessage())
+        .build();
+      issuable.addIssue(issue);
     }
   }
 
@@ -159,7 +177,7 @@ public class CodeNarcSensor implements Sensor {
       new CodeNarcProfileExporter(writer).exportProfile(rulesProfile);
       FileUtils.writeStringToFile(file, writer.toString());
     } catch (IOException e) {
-      throw new SonarException("Can not generate CodeNarc configuration file", e);
+      throw new IllegalStateException("Can not generate CodeNarc configuration file", e);
     }
   }
 
@@ -169,7 +187,7 @@ public class CodeNarcSensor implements Sensor {
       // directory is cleaned, because Sonar 3.0 will not do this for us
       FileUtils.cleanDirectory(dir);
     } catch (IOException e) {
-      throw new SonarException("Cannot create directory: " + dir, e);
+      throw new IllegalStateException("Cannot create directory: " + dir, e);
     }
   }
 

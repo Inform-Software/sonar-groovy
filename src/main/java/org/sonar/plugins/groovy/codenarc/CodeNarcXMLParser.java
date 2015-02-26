@@ -21,10 +21,14 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
-import org.sonar.api.utils.SonarException;
+import org.sonar.api.batch.fs.FilePredicates;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.utils.StaxParser;
 
 import javax.xml.stream.XMLStreamException;
@@ -35,16 +39,18 @@ import java.util.List;
 public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
 
   private final ImmutableList.Builder<CodeNarcViolation> result = ImmutableList.builder();
+  private final FileSystem fileSystem;
 
-  private CodeNarcXMLParser() {
+  private CodeNarcXMLParser(final FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
-  public static List<CodeNarcViolation> parse(File file) {
-    CodeNarcXMLParser handler = new CodeNarcXMLParser();
+  public static List<CodeNarcViolation> parse(File file, FileSystem fileSystem) {
+    CodeNarcXMLParser handler = new CodeNarcXMLParser(fileSystem);
     try {
       new StaxParser(handler).parse(file);
     } catch (XMLStreamException e) {
-      throw new SonarException("Unabel to parse file: " + file, e);
+      throw new IllegalStateException("Unabel to parse file: " + file, e);
     }
     return handler.result.build();
   }
@@ -52,25 +58,49 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
   @Override
   public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
     rootCursor.advance();
-    SMInputCursor pack = rootCursor.descendantElementCursor("Package");
+    SMInputCursor items = rootCursor.descendantElementCursor();
+    List<String> sourceDirectories = Lists.newLinkedList();
+    while (items.getNext() != null) {
+      String localName = items.getLocalName();
+      if ("Project".equals(localName)) {
+        SMInputCursor sourceDirectoryCursor = items.descendantElementCursor("SourceDirectory");
+        while (sourceDirectoryCursor.getNext() != null) {
+          String value = sourceDirectoryCursor.getElemStringValue();
+          if (StringUtils.isNotBlank(value)) {
+            sourceDirectories.add(value.trim().replaceAll("\\\\", "/") + "/");
+          }
+        }
+      } else if ("Package".equals(localName)) {
+        sourceDirectories.add(""); // default directory
+        String packPath = items.getAttrValue("path");
+        SMInputCursor file = items.descendantElementCursor("File");
+        while (file.getNext() != null) {
+          String filename = getFilename(sourceDirectories, packPath, file.getAttrValue("name"));
+          SMInputCursor violation = file.childElementCursor("Violation");
+          while (violation.getNext() != null) {
+            String lineNumber = violation.getAttrValue("lineNumber");
+            String ruleName = violation.getAttrValue("ruleName");
 
-    while (pack.getNext() != null) {
-      String packPath = pack.getAttrValue("path");
-      SMInputCursor file = pack.descendantElementCursor("File");
-      while (file.getNext() != null) {
-        String filename = packPath + "/" + file.getAttrValue("name");
-        SMInputCursor violation = file.childElementCursor("Violation");
-        while (violation.getNext() != null) {
-          String lineNumber = violation.getAttrValue("lineNumber");
-          String ruleName = violation.getAttrValue("ruleName");
+            SMInputCursor messageCursor = violation.childElementCursor("Message");
+            String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
 
-          SMInputCursor messageCursor = violation.childElementCursor("Message");
-          String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
-
-          result.add(new CodeNarcViolation(ruleName, filename, lineNumber, message));
+            result.add(new CodeNarcViolation(ruleName, filename, lineNumber, message));
+          }
         }
       }
     }
+  }
+
+  private String getFilename(List<String> sourceDirectories, String packPath, String attrFilename) throws XMLStreamException {
+    FilePredicates pred = fileSystem.predicates();
+    for (String directory : sourceDirectories) {
+      String path = directory + packPath + "/" + attrFilename;
+      InputFile inputFile = fileSystem.inputFile(pred.and(pred.hasType(Type.MAIN), pred.hasAbsolutePath(path)));
+      if (inputFile != null) {
+        return path;
+      }
+    }
+    return attrFilename;
   }
 
   public static class CodeNarcViolation {
