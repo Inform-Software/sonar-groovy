@@ -190,8 +190,6 @@ public class CodeNarcSensorTest {
   @Test
   public void should_run_code_narc() throws IOException {
     File sonarhome = projectdir.newFolder("sonarhome");
-    fileSystem.setWorkDir(sonarhome);
-
     PrintWriter pw = new PrintWriter(new File(sonarhome, "sample.groovy"));
     pw.write("package source\nclass SourceFile1 {\n}");
     pw.close();
@@ -204,6 +202,7 @@ public class CodeNarcSensorTest {
     FileSystem fileSystem = mock(FileSystem.class);
     when(fileSystem.predicates()).thenReturn(mock(FilePredicates.class));
     when(fileSystem.inputFile(any(FilePredicate.class))).thenReturn(mock(InputFile.class));
+    when(fileSystem.workDir()).thenReturn(sonarhome);
 
     ActiveRule activeRule = mock(ActiveRule.class);
     when(activeRule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
