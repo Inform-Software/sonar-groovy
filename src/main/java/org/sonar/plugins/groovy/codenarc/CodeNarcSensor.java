@@ -64,7 +64,13 @@ public class CodeNarcSensor implements Sensor {
   private final RulesProfile rulesProfile;
   private final RuleFinder ruleFinder;
 
-  public CodeNarcSensor(Settings settings, ResourcePerspectives perspectives, ModuleFileSystem moduleFileSystem, FileSystem fileSystem, RulesProfile profile, RuleFinder ruleFinder) {
+  public CodeNarcSensor(
+    Settings settings,
+    ResourcePerspectives perspectives,
+    ModuleFileSystem moduleFileSystem,
+    FileSystem fileSystem,
+    RulesProfile profile,
+    RuleFinder ruleFinder) {
     this.settings = settings;
     this.perspectives = perspectives;
     this.moduleFileSystem = moduleFileSystem;

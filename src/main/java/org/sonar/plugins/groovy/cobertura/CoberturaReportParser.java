@@ -78,14 +78,14 @@ public class CoberturaReportParser {
   }
 
   private List<String> collectSourceDirs(SMInputCursor source) throws XMLStreamException {
-    List<String> sourceDirs = Lists.newLinkedList();
+    List<String> directories = Lists.newLinkedList();
     while (source.getNext() != null) {
       String sourceDir = cleanSourceDir(source.getElemStringValue());
       if (StringUtils.isNotBlank(sourceDir) && !"--source".equals(sourceDir)) {
-        sourceDirs.add(sourceDir);
+        directories.add(sourceDir);
       }
     }
-    return sourceDirs;
+    return directories;
   }
 
   private String cleanSourceDir(String sourceDir) {

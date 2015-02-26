@@ -27,7 +27,6 @@ import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.utils.StaxParser;
 
@@ -71,7 +70,6 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
           }
         }
       } else if ("Package".equals(localName)) {
-        sourceDirectories.add(""); // default directory
         String packPath = items.getAttrValue("path");
         SMInputCursor file = items.descendantElementCursor("File");
         while (file.getNext() != null) {
@@ -95,12 +93,11 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
     FilePredicates pred = fileSystem.predicates();
     for (String directory : sourceDirectories) {
       String path = directory + packPath + "/" + attrFilename;
-      InputFile inputFile = fileSystem.inputFile(pred.and(pred.hasType(Type.MAIN), pred.hasAbsolutePath(path)));
-      if (inputFile != null) {
+      if (fileSystem.hasFiles(pred.and(pred.hasType(Type.MAIN), pred.hasAbsolutePath(path)))) {
         return path;
       }
     }
-    return attrFilename;
+    return packPath + "/" + attrFilename;
   }
 
   public static class CodeNarcViolation {
