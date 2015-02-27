@@ -32,6 +32,7 @@ import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
+import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 
 import java.util.List;
 
@@ -70,7 +71,8 @@ public class GroovyPlugin extends SonarPlugin {
 
   @Override
   public List getExtensions() {
-    return ImmutableList.of(
+    ImmutableList.Builder<Object> builder = ImmutableList.builder();
+    builder.add(
       GroovyCommonRulesDecorator.class,
       GroovyCommonRulesEngine.class,
       // CodeNarc
@@ -87,6 +89,7 @@ public class GroovyPlugin extends SonarPlugin {
       // Cobertura
       CoberturaSensor.class
       );
+    builder.addAll(JaCoCoExtensions.getExtensions());
+    return builder.build();
   }
-
 }

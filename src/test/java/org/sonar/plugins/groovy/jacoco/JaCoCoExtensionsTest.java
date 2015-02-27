@@ -17,18 +17,17 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-
-package org.sonar.plugins.groovy;
+package org.sonar.plugins.groovy.jacoco;
 
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class GroovyPluginTest {
+public class JaCoCoExtensionsTest {
 
   @Test
   public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(17);
+    assertThat(JaCoCoExtensions.getExtensions().size()).isEqualTo(7);
   }
 
 }

@@ -17,18 +17,34 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
+package org.sonar.plugins.groovy.jacoco;
 
-package org.sonar.plugins.groovy;
+import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.junit.Test;
+import java.util.List;
 
-import static org.fest.assertions.Assertions.assertThat;
+public class JaCoCoExtensions {
 
-public class GroovyPluginTest {
+  public static final Logger LOG = LoggerFactory.getLogger(JaCoCoExtensions.class.getName());
 
-  @Test
-  public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(17);
+  private JaCoCoExtensions() {
+  }
+
+  public static List<Object> getExtensions() {
+    ImmutableList.Builder<Object> extensions = ImmutableList.builder();
+
+    extensions.addAll(JaCoCoConfiguration.getPropertyDefinitions());
+    extensions.add(
+      JaCoCoConfiguration.class,
+      // Unit tests
+      JaCoCoSensor.class,
+      // Integration tests
+      JaCoCoItSensor.class,
+      JaCoCoOverallSensor.class);
+
+    return extensions.build();
   }
 
 }

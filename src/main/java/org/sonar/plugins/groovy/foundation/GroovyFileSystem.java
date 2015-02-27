@@ -22,7 +22,10 @@ package org.sonar.plugins.groovy.foundation;
 import com.google.common.collect.Lists;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
+
+import javax.annotation.CheckForNull;
 
 import java.io.File;
 import java.util.List;
@@ -40,6 +43,12 @@ public class GroovyFileSystem {
     FilePredicates predicates = fileSystem.predicates();
     Iterable<File> files = fileSystem.files(predicates.and(predicates.hasLanguage(Groovy.KEY), predicates.hasType(Type.MAIN)));
     return Lists.<File>newArrayList(files);
+  }
+
+  @CheckForNull
+  public static InputFile sourceInputFileFromRelativePath(String relativePath, FileSystem fileSystem) {
+    FilePredicates predicates = fileSystem.predicates();
+    return fileSystem.inputFile(predicates.and(predicates.matchesPathPattern("**/" + relativePath), predicates.hasType(Type.MAIN)));
   }
 
 }
