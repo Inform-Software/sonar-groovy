@@ -81,7 +81,7 @@ public class CoberturaReportParser {
     List<String> directories = Lists.newLinkedList();
     while (source.getNext() != null) {
       String sourceDir = cleanSourceDir(source.getElemStringValue());
-      if (StringUtils.isNotBlank(sourceDir) && !"--source".equals(sourceDir)) {
+      if (StringUtils.isNotBlank(sourceDir)) {
         directories.add(sourceDir);
       }
     }

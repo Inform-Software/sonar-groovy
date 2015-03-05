@@ -38,6 +38,7 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,13 +75,13 @@ public class CoberturaSensorTest {
   }
 
   @Test
-  public void should_parse_report_null_file() {
+  public void should_not_save_any_measure_when_can_not_find_report() {
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
     when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(null);
     sensor = new CoberturaSensor(settings, mockfileSystem);
     sensor.analyse(project, context);
-    verify(context, times(0)).saveMeasure(any(InputFile.class), any(Measure.class));
+    verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
 
   @Test

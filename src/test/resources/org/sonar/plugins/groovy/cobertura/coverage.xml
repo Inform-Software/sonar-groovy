@@ -15,12 +15,7 @@
     <source>
       /Users/cpicat/myproject/grails-app/services
     </source>
-    <source>
-      /Users/cpicat/myproject/src/groovy
-    </source>
-    <source>
-      --source
-    </source>
+    <source>/Users/cpicat/myproject/src/groovy</source>
     <source></source>
   </sources>
   <packages>
