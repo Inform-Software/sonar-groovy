@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class GroovySensor implements Sensor {
@@ -92,7 +93,10 @@ public class GroovySensor implements Sensor {
   private void processFiles(SensorContext context) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
-    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(fileSystem);
+    List<File> sourceFiles = GroovyFileSystem.sourceFiles(fileSystem);
+    String baseDirAbsolutePath = fileSystem.baseDir().getAbsolutePath();
+
+    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(baseDirAbsolutePath, sourceFiles);
     runner.setSourceAnalyzer(analyzer);
     runner.execute();
 

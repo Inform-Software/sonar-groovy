@@ -32,8 +32,6 @@ import org.gmetrics.resultsnode.PackageResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.gmetrics.source.SourceCode;
 import org.gmetrics.source.SourceFile;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
 import java.util.Collections;
@@ -45,10 +43,12 @@ import java.util.List;
 public class CustomSourceAnalyzer implements SourceAnalyzer {
 
   private final Multimap<File, ClassResultsNode> resultsByFile = ArrayListMultimap.create();
-  private final FileSystem fileSystem;
+  private final String baseDirAbsolutePath;
+  private final List<File> sourceFiles;
 
-  public CustomSourceAnalyzer(FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public CustomSourceAnalyzer(String baseDirAbsolutePath, List<File> sourceFiles) {
+    this.baseDirAbsolutePath = baseDirAbsolutePath;
+    this.sourceFiles = sourceFiles;
   }
 
   public Multimap<File, ClassResultsNode> getResultsByFile() {
@@ -57,7 +57,7 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
 
   @Override
   public List<String> getSourceDirectories() {
-    return Collections.singletonList(fileSystem.baseDir().getAbsolutePath());
+    return Collections.singletonList(baseDirAbsolutePath);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
   }
 
   private PackageResultsNode processFiles(MetricSet metricSet) {
-    for (File file : GroovyFileSystem.sourceFiles(fileSystem)) {
+    for (File file : sourceFiles) {
       SourceCode sourceCode = new SourceFile(file);
       ModuleNode ast = sourceCode.getAst();
       if (ast != null) {
