@@ -42,7 +42,7 @@ public class CodeNarcRulesDefinitionTest {
     assertThat(repository.language()).isEqualTo(Groovy.KEY);
 
     List<Rule> rules = repository.rules();
-    assertThat(rules).hasSize(318);
+    assertThat(rules).hasSize(342);
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
     assertThat(rule.params()).hasSize(1);
