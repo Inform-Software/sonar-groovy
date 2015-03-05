@@ -25,6 +25,7 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.Measure;
+import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.scan.filesystem.PathResolver;
@@ -62,7 +63,7 @@ public class JaCoCoSensor implements Sensor {
     boolean foundReport = report.exists() && report.isFile();
     boolean shouldExecute = configuration.shouldExecuteOnProject(foundReport);
     if (!foundReport && shouldExecute) {
-      JaCoCoExtensions.LOG.info("JaCoCoSensor: JaCoCo report not found.");
+      JaCoCoExtensions.logger().info("JaCoCoSensor: JaCoCo report not found.");
     }
     return shouldExecute;
   }
@@ -83,6 +84,18 @@ public class JaCoCoSensor implements Sensor {
         context.saveMeasure(inputFile, measure);
       }
     }
+  }
+
+  protected static Measure getMeasureBasedOnValue(Metric metric, Measure measure) {
+    return new Measure(metric, measure.getValue());
+  }
+
+  protected static Measure getMeasureBasedOnData(Metric metric, Measure measure) {
+    String data = measure.getData();
+    if (data != null) {
+      return new Measure(metric, data);
+    }
+    return null;
   }
 
   @Override

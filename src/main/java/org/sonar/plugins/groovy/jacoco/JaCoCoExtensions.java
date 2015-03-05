@@ -27,7 +27,7 @@ import java.util.List;
 
 public class JaCoCoExtensions {
 
-  public static final Logger LOG = LoggerFactory.getLogger(JaCoCoExtensions.class.getName());
+  private static final Logger LOG = LoggerFactory.getLogger(JaCoCoExtensions.class.getName());
 
   private JaCoCoExtensions() {
   }
@@ -45,6 +45,10 @@ public class JaCoCoExtensions {
       JaCoCoOverallSensor.class);
 
     return extensions.build();
+  }
+
+  public static Logger logger() {
+    return LOG;
   }
 
 }

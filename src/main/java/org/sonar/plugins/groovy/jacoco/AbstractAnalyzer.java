@@ -72,12 +72,12 @@ public abstract class AbstractAnalyzer {
 
   public final void analyse(Project project, SensorContext context) {
     if (!atLeastOneBinaryDirectoryExists(project)) {
-      JaCoCoExtensions.LOG.warn("Project coverage is set to 0% since there is no directories with classes.");
+      JaCoCoExtensions.logger().warn("Project coverage is set to 0% since there is no directories with classes.");
       return;
     }
     String path = getReportPath(project);
     if (path == null) {
-      JaCoCoExtensions.LOG.warn("No jacoco coverage execution file found for project " + project.getName() + ".");
+      JaCoCoExtensions.logger().warn("No jacoco coverage execution file found for project " + project.getName() + ".");
       return;
     }
     File jacocoExecutionData = pathResolver.relativeFile(fileSystem.baseDir(), path);
@@ -92,12 +92,14 @@ public abstract class AbstractAnalyzer {
   private boolean atLeastOneBinaryDirectoryExists(Project project) {
     List<File> binaryDirs = moduleFileSystem.binaryDirs();
     if (binaryDirs == null || binaryDirs.isEmpty()) {
-      JaCoCoExtensions.LOG.warn("No binary directories defined for project " + project.getName() + ".");
+      JaCoCoExtensions.logger().warn("No binary directories defined for project " + project.getName() + ".");
     }
-    for (File binaryDir : binaryDirs) {
-      JaCoCoExtensions.LOG.info("\tChecking binary directory: {}", binaryDir.toString());
-      if (binaryDir.exists()) {
-        return true;
+    if (binaryDirs != null) {
+      for (File binaryDir : binaryDirs) {
+        JaCoCoExtensions.logger().info("\tChecking binary directory: {}", binaryDir.toString());
+        if (binaryDir.exists()) {
+          return true;
+        }
       }
     }
     return false;
@@ -107,9 +109,9 @@ public abstract class AbstractAnalyzer {
     ExecutionDataVisitor executionDataVisitor = new ExecutionDataVisitor();
 
     if (jacocoExecutionData == null || !jacocoExecutionData.isFile()) {
-      JaCoCoExtensions.LOG.warn("Project coverage is set to 0% as no JaCoCo execution data has been dumped: {}", jacocoExecutionData);
+      JaCoCoExtensions.logger().warn("Project coverage is set to 0% as no JaCoCo execution data has been dumped: {}", jacocoExecutionData);
     } else {
-      JaCoCoExtensions.LOG.info("Analysing {}", jacocoExecutionData);
+      JaCoCoExtensions.logger().info("Analysing {}", jacocoExecutionData);
 
       InputStream inputStream = null;
       try {
@@ -134,9 +136,9 @@ public abstract class AbstractAnalyzer {
       }
     }
     if (analyzedResources == 0) {
-      JaCoCoExtensions.LOG.warn("Coverage information was not collected. Perhaps you forget to include debug information into compiled classes?");
+      JaCoCoExtensions.logger().warn("Coverage information was not collected. Perhaps you forget to include debug information into compiled classes?");
     } else {
-      JaCoCoExtensions.LOG.info("No information about coverage per test.");
+      JaCoCoExtensions.logger().info("No information about coverage per test.");
     }
   }
 
@@ -161,7 +163,7 @@ public abstract class AbstractAnalyzer {
       try {
         analyzer.analyzeAll(file);
       } catch (Exception e) {
-        JaCoCoExtensions.LOG.warn("Exception during analysis of file " + file.getAbsolutePath(), e);
+        JaCoCoExtensions.logger().warn("Exception during analysis of file " + file.getAbsolutePath(), e);
       }
     }
   }
@@ -182,7 +184,7 @@ public abstract class AbstractAnalyzer {
         case ICounter.EMPTY:
           continue;
         default:
-          JaCoCoExtensions.LOG.warn("Unknown status for line {} in {}", lineId, getFileRelativePath(coverage));
+          JaCoCoExtensions.logger().warn("Unknown status for line {} in {}", lineId, getFileRelativePath(coverage));
           continue;
       }
       builder.setHits(lineId, hits);

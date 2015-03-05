@@ -68,7 +68,7 @@ public class JaCoCoOverallSensor implements Sensor {
     boolean foundOneReport = reportUTs.exists() || reportITs.exists();
     boolean shouldExecute = configuration.shouldExecuteOnProject(foundOneReport);
     if (!foundOneReport && shouldExecute) {
-      JaCoCoExtensions.LOG.info("JaCoCoOverallSensor: JaCoCo reports not found.");
+      JaCoCoExtensions.logger().info("JaCoCoOverallSensor: JaCoCo reports not found.");
     }
     return shouldExecute;
   }
@@ -152,19 +152,19 @@ public class JaCoCoOverallSensor implements Sensor {
     private Measure convertForOverall(Measure measure) {
       Measure itMeasure = null;
       if (CoreMetrics.LINES_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_LINES_TO_COVER, measure.getValue());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_LINES_TO_COVER, measure);
       } else if (CoreMetrics.UNCOVERED_LINES.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_UNCOVERED_LINES, measure.getValue());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_UNCOVERED_LINES, measure);
       } else if (CoreMetrics.COVERAGE_LINE_HITS_DATA.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, measure.getData());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, measure);
       } else if (CoreMetrics.CONDITIONS_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, measure.getValue());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, measure);
       } else if (CoreMetrics.UNCOVERED_CONDITIONS.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, measure.getValue());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, measure);
       } else if (CoreMetrics.COVERED_CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, measure.getData());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, measure);
       } else if (CoreMetrics.CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = new Measure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, measure.getData());
+        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, measure);
       }
       return itMeasure;
     }
