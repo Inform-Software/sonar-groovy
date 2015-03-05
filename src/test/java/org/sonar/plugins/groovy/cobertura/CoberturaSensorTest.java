@@ -87,22 +87,11 @@ public class CoberturaSensorTest {
   @Test
   public void should_execute_on_project() {
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    when(project.getAnalysisType()).thenReturn(Project.AnalysisType.REUSE_REPORTS);
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
-    when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
-  }
-
-  @Test
-  public void should_not_execute_if_static_analysis() {
-    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    when(project.getAnalysisType()).thenReturn(Project.AnalysisType.STATIC);
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 
   @Test
   public void should_not_execute_if_no_groovy_files() {
-    when(project.getAnalysisType()).thenReturn(Project.AnalysisType.DYNAMIC);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
   }
 
