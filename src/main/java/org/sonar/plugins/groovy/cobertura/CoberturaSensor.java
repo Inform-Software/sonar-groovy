@@ -39,15 +39,17 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
 
   private final Settings settings;
   private final FileSystem fileSystem;
+  private final GroovyFileSystem groovyFileSystem;
 
   public CoberturaSensor(Settings settings, FileSystem fileSystem) {
     this.settings = settings;
     this.fileSystem = fileSystem;
+    this.groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return GroovyFileSystem.hasGroovyFiles(fileSystem);
+    return groovyFileSystem.hasGroovyFiles();
   }
 
   @Override

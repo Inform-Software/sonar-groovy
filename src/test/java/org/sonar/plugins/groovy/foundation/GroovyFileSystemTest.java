@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
@@ -26,39 +27,46 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class GroovyFileSystemTest {
+
+  private DefaultFileSystem fileSystem;
+  private GroovyFileSystem groovyFileSystem;
+
+  @Before
+  public void setUp() {
+    fileSystem = new DefaultFileSystem();
+    groovyFileSystem = new GroovyFileSystem(fileSystem);
+  }
+
   @Test
   public void isEnabled() {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    assertThat(GroovyFileSystem.hasGroovyFiles(fileSystem)).isFalse();
+    assertThat(groovyFileSystem.hasGroovyFiles()).isFalse();
 
     fileSystem.add(new DefaultInputFile("fake.file"));
-    assertThat(GroovyFileSystem.hasGroovyFiles(fileSystem)).isFalse();
+    assertThat(groovyFileSystem.hasGroovyFiles()).isFalse();
 
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
-    assertThat(GroovyFileSystem.hasGroovyFiles(fileSystem)).isTrue();
+    assertThat(groovyFileSystem.hasGroovyFiles()).isTrue();
   }
 
   @Test
   public void getSourceFile() {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    assertThat(GroovyFileSystem.sourceFiles(fileSystem)).isEmpty();
+    assertThat(groovyFileSystem.sourceFiles()).isEmpty();
 
     fileSystem.add(new DefaultInputFile("fake.file"));
-    assertThat(GroovyFileSystem.sourceFiles(fileSystem)).isEmpty();
+    assertThat(groovyFileSystem.sourceFiles()).isEmpty();
 
     fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY).setAbsolutePath("fake.groovy"));
-    assertThat(GroovyFileSystem.sourceFiles(fileSystem)).hasSize(1);
+    assertThat(groovyFileSystem.sourceFiles()).hasSize(1);
   }
 
   @Test
   public void inputFileFromRelativePath() {
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    assertThat(GroovyFileSystem.sourceInputFileFromRelativePath(null, fileSystem)).isNull();
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath(null)).isNull();
 
     fileSystem.add(new DefaultInputFile("fake1.file"));
-    assertThat(GroovyFileSystem.sourceInputFileFromRelativePath("fake1.file", fileSystem)).isNotNull();
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake1.file")).isNotNull();
 
     fileSystem.add(new DefaultInputFile("org/sample/foo/fake2.file"));
-    assertThat(GroovyFileSystem.sourceInputFileFromRelativePath("foo/fake2.file", fileSystem)).isNotNull();
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("foo/fake2.file")).isNotNull();
   }
 }

@@ -67,6 +67,7 @@ public class GroovySensor implements Sensor {
   private final Settings settings;
   private final FileLinesContextFactory fileLinesContextFactory;
   private final FileSystem fileSystem;
+  private final GroovyFileSystem groovyFileSystem;
 
   private double loc = 0;
   private double comments = 0;
@@ -77,11 +78,12 @@ public class GroovySensor implements Sensor {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.fileSystem = fileSystem;
+    this.groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return GroovyFileSystem.hasGroovyFiles(fileSystem);
+    return groovyFileSystem.hasGroovyFiles();
   }
 
   @Override
@@ -93,7 +95,7 @@ public class GroovySensor implements Sensor {
   private void processFiles(SensorContext context) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
-    List<File> sourceFiles = GroovyFileSystem.sourceFiles(fileSystem);
+    List<File> sourceFiles = groovyFileSystem.sourceFiles();
     String baseDirAbsolutePath = fileSystem.baseDir().getAbsolutePath();
 
     CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(baseDirAbsolutePath, sourceFiles);
@@ -150,7 +152,7 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeBaseMetrics(Project project, SensorContext sensorContext) {
-    for (File groovyFile : GroovyFileSystem.sourceFiles(fileSystem)) {
+    for (File groovyFile : groovyFileSystem.sourceFiles()) {
       InputFile resource = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(groovyFile.getAbsolutePath()));
       if (resource != null) {
         loc = 0;

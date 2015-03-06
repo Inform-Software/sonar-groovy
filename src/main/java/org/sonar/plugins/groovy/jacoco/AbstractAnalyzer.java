@@ -63,7 +63,7 @@ public abstract class AbstractAnalyzer {
   @CheckForNull
   private InputFile getInputFile(ISourceFileCoverage coverage) {
     String path = getFileRelativePath(coverage);
-    return GroovyFileSystem.sourceInputFileFromRelativePath(path, fileSystem);
+    return new GroovyFileSystem(fileSystem).sourceInputFileFromRelativePath(path);
   }
 
   private String getFileRelativePath(ISourceFileCoverage coverage) {

@@ -63,6 +63,7 @@ public class CodeNarcSensor implements Sensor {
   private final FileSystem fileSystem;
   private final RulesProfile rulesProfile;
   private final RuleFinder ruleFinder;
+  private final GroovyFileSystem groovyFileSystem;
 
   public CodeNarcSensor(
     Settings settings,
@@ -77,11 +78,12 @@ public class CodeNarcSensor implements Sensor {
     this.fileSystem = fileSystem;
     this.rulesProfile = profile;
     this.ruleFinder = ruleFinder;
+    this.groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 
   @Override
   public boolean shouldExecuteOnProject(Project project) {
-    return GroovyFileSystem.hasGroovyFiles(fileSystem) && !rulesProfile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
+    return groovyFileSystem.hasGroovyFiles() && !rulesProfile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
   }
 
   @Override

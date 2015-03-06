@@ -86,7 +86,7 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_parse_report_if_settings_does_not_contain_report_path() {
-    sensor = new CoberturaSensor(new Settings(), mock(FileSystem.class));
+    sensor = new CoberturaSensor(new Settings(), new DefaultFileSystem());
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
@@ -95,7 +95,7 @@ public class CoberturaSensorTest {
   public void should_not_parse_report_if_report_does_not_exist() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, mock(FileSystem.class));
+    sensor = new CoberturaSensor(settings, new DefaultFileSystem());
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
@@ -104,7 +104,7 @@ public class CoberturaSensorTest {
   public void should_use_relative_path_to_get_report() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, mock(FileSystem.class));
+    sensor = new CoberturaSensor(settings, new DefaultFileSystem());
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
