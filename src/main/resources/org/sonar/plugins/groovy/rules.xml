@@ -31,7 +31,7 @@
     value == true ?: x
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -47,7 +47,7 @@
     def b2 = new java.math.BigDecimal(23.45d)  // violation
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -67,7 +67,7 @@
     Boolean.getBoolean()
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -86,7 +86,7 @@
     if (x % 2 != 0) { }             // OK
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -110,7 +110,7 @@
     if ([a, b, c]) { .. }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -142,7 +142,7 @@
     [a, b, c] ?: y
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -153,7 +153,7 @@
     <internalKey><![CDATA[DeadCode]]></internalKey>
     <description><![CDATA[<p>Dead code appears after a <code>return</code> statement or an exception is thrown. If code appears after one of these statements then it will never be executed and can be safely deleted. </p>
  ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -164,7 +164,7 @@
     <internalKey><![CDATA[DoubleNegative]]></internalKey>
     <description><![CDATA[<p>There is no point in using a double negative, it is always positive. For instance <code>!!x</code> can always be simplified to <code>x</code>. And <code>!(!x)</code> can as well. </p>
  ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -190,7 +190,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -219,7 +219,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
     <param>
       <key>ignoreRegex</key>
       <description><![CDATA[Regular expression - exception parameter names matching this regular expression are ignored and no volations are produced. ]]></description>
@@ -244,7 +244,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -264,7 +264,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -282,7 +282,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -300,7 +300,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -316,7 +316,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -347,7 +347,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -363,7 +363,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -381,7 +381,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -400,7 +400,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -420,7 +420,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -438,7 +438,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <rule>
@@ -463,7 +463,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>pitfall</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -474,7 +474,7 @@
     <internalKey><![CDATA[ExplicitGarbageCollection]]></internalKey>
     <description><![CDATA[<p>Calls to <code>System.gc()</code>, <code>Runtime.getRuntime().gc()</code>, and <code>System.runFinalization()</code> are not advised. Code should have the same behavior whether the garbage collection is disabled using the option <code>-Xdisableexplicitgc</code> or not. Moreover, "modern" JVMs do a very good job handling garbage collections. If memory usage issues unrelated to memory leaks develop within an application, it should be dealt with JVM options rather than within the code itself. </p>
  ]]></description>
-    <tag>basic</tag>
+    <tag>unpredictable</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -495,7 +495,7 @@
     Integer.getInteger(value, radix, locale)
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -506,7 +506,7 @@
     <internalKey><![CDATA[RemoveAllOnSelf]]></internalKey>
     <description><![CDATA[<p>Don't use <code>removeAll</code> to clear a collection. If you want to remove all elements from a collection <code>c</code>, use <code>c.clear</code>, not <code>c.removeAll(c)</code>. Calling <code>c.removeAll(c)</code> to clear a collection is less clear, susceptible to errors from typos, less efficient and for some collections, might throw a <code>ConcurrentModificationException</code>. </p>
  ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -529,7 +529,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -551,7 +551,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -573,7 +573,7 @@
     def var6 = ["a":1, "b":1, "c":1]
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -600,7 +600,7 @@
     def c = [1, '1'] as Set
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -647,7 +647,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>pitfall</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -680,7 +680,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -699,7 +699,8 @@
     Class.forName(aClassName, true, aClassLoader)
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>leak</tag>
+    <tag>owasp-a1</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -726,7 +727,7 @@
     [a:false, b:true].compareTo(['a':34.5, b:Boolean.TRUE]  // violation
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -749,7 +750,7 @@
     println x.compareTo(x)          // violation
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -765,7 +766,7 @@
     if (a & b) { }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -782,7 +783,7 @@
    new File('../foo\\')
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>pitfall</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -804,7 +805,7 @@
     (Math.random()) as Integer
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -821,7 +822,7 @@
    new File('E:\\dir')
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>pitfall</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -842,7 +843,7 @@
     }
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -867,7 +868,7 @@
     assert [a, b, c]
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -892,7 +893,7 @@
     return name != null || !name.size()                 // violation
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -904,7 +905,7 @@
     <description><![CDATA[<p>Reports classes without methods, fields or properties. Why would you need a class like this? </p>
 <p>This rule ignores interfaces, enums, anonymous inner classes, subclasses (extends), and classes with annotations. </p>
  ]]></description>
-    <tag>basic</tag>
+    <tag>unused</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -923,7 +924,7 @@
     int k = +~8             // violation
 </pre>
 ]]></description>
-    <tag>basic</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- serialization rules -->
@@ -937,7 +938,7 @@
     <description><![CDATA[<p> A <code>serialVersionUID</code> is normally intended to be used with Serialization. It needs to be of type <code>long</code>, <code>static</code>, and <code>final</code>. Also, it should be declared <code>private</code>. Providing no modifier creates a <Property> and Groovy generates a <getter>, which is probably not intended. </p>
 <p>From API javadoc for <code>java.io.Serializable</code>: <It is also strongly advised that explicit serialVersionUID declarations use the private modifier where possible, since such declarations apply only to the immediately declaring class--serialVersionUID fields are not useful as inherited members.> </p>
  ]]></description>
-    <tag>serialization</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -954,7 +955,7 @@
     }
 </pre>
 ]]></description>
-    <tag>serialization</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -967,7 +968,7 @@
 <p>The Java Object Serialization Specification allows developers to manually define <code>Serializable</code> fields for a class by specifying them in the <code>serialPersistentFields</code> array. This feature will only work if <code>serialPersistentFields</code> is declared as <code>private</code>, <code>static</code>, and <code>final</code>. Also, specific to Groovy, the field must be of type <code>ObjectStreamField[]</code>, and cannot be <code>Object</code>. </p>
 <p>References: </p>
 ]]></description>
-    <tag>serialization</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -993,7 +994,7 @@
     }
 </pre>
 ]]></description>
-    <tag>serialization</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- braces rules -->
@@ -1005,7 +1006,7 @@
     <internalKey><![CDATA[IfStatementBraces]]></internalKey>
     <description><![CDATA[<p>Checks that <if> statements use braces, even for a single statement. </p>
  ]]></description>
-    <tag>braces</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -1016,7 +1017,7 @@
     <description><![CDATA[<p>Checks that <else> blocks use braces, even for a single statement. </p>
 <p>By default, braces are not required for an <else> if it is followed immediately by an <if>. Set the <bracesRequiredForElseIf> property to true to require braces is that situation as well. </p>
  ]]></description>
-    <tag>braces</tag>
+    <tag>bug</tag>
     <param>
       <key>bracesRequiredForElseIf</key>
       <description><![CDATA[Set to true to require braces for an <else> block followed immediately by an <if> statement. ]]></description>
@@ -1031,7 +1032,7 @@
     <internalKey><![CDATA[ForStatementBraces]]></internalKey>
     <description><![CDATA[<p>Checks that <for> statements use braces, even for a single statement. </p>
  ]]></description>
-    <tag>braces</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -1041,7 +1042,7 @@
     <internalKey><![CDATA[WhileStatementBraces]]></internalKey>
     <description><![CDATA[<p>Checks that while statements use braces, even for a single statement. </p>
 ]]></description>
-    <tag>braces</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- concurrency rules -->
@@ -1077,7 +1078,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1121,7 +1122,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1176,7 +1177,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1238,7 +1239,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1261,7 +1262,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1292,7 +1293,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1330,7 +1331,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1355,7 +1356,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1371,7 +1372,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -1382,7 +1383,7 @@
     <internalKey><![CDATA[SynchronizedOnGetClass]]></internalKey>
     <description><![CDATA[<p>Checks for synchronization on <code>getClass()</code> rather than class literal. This instance method synchronizes on <code>this.getClass()</code>. If this class is subclassed, subclasses will synchronize on the class object for the subclass, which isn't likely what was intended. </p>
  ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1558,7 +1559,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1632,7 +1633,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1650,7 +1651,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1702,7 +1703,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1790,7 +1791,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1807,7 +1808,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1824,7 +1825,7 @@
     System.getSecurityManager().getThreadGroup()
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1842,7 +1843,7 @@
     ThreadLocal local4 = new ThreadLocal()
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1859,7 +1860,7 @@
      }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -1871,7 +1872,7 @@
     <description><![CDATA[<p>Checks for code that calls <code>notify()</code> rather than <code>notifyAll()</code>. Java monitors are often used for multiple conditions. Calling <code>notify()</code> only wakes up one thread, meaning that the awakened thread might not be the one waiting for the condition that the caller just satisfied. </p>
 <p>Also see <a href="http://www.javaconcurrencyinpractice.com/"><code>Java_Concurrency_in_Practice</code></a>, Brian Goetz, p 303. </p>
  ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1891,7 +1892,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <rule>
@@ -1909,7 +1910,7 @@
      }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -1950,7 +1951,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -1963,7 +1964,7 @@
 <p>A transactional resource object such as database connection can only be associated with one transaction at a time. For this reason, a connection should not be shared between threads and should not be stored in a static field. See Section 4.2.3 of the <J2EE Specification> for more details. </p>
 <p>References: </p>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -1995,7 +1996,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -2016,7 +2017,7 @@
     }
 </pre>
 ]]></description>
-    <tag>concurrency</tag>
+    <tag>multi-threading</tag>
   </rule>
 
   <!-- design rules -->
@@ -2472,7 +2473,7 @@ for (int i = 0; i < 100; ++i) {
 <p>Code containing duplicate <Number> literals can usually be improved by declaring the <Number> as a constant field. </p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <doNotApplyToFilesMatching> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. </p>
  ]]></description>
-    <tag>dry</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreNumbers</key>
       <description><![CDATA[The optional comma-separated list of numbers that should be ignored (i.e., not cause a violation). ]]></description>
@@ -2490,7 +2491,7 @@ for (int i = 0; i < 100; ++i) {
 <p>Code containing duplicate <String> literals can usually be improved by declaring the <String> as a constant field. </p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <doNotApplyToFilesMatching> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. </p>
  ]]></description>
-    <tag>dry</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreStrings</key>
       <description><![CDATA[The optional comma-separated list of Strings that should be ignored (i.e., not cause a violation). ]]></description>
@@ -2533,7 +2534,7 @@ for (int i = 0; i < 100; ++i) {
     def var2 = [a:7+5]      // not a violation; contains a non-constant/literal expression
 </pre>
 ]]></description>
-    <tag>dry</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -2565,7 +2566,7 @@ for (int i = 0; i < 100; ++i) {
     def var2 = [1, 7+5]      // not a violation; contains a non-constant/literal expression
 </pre>
 ]]></description>
-    <tag>dry</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- exceptions rules -->
@@ -2578,7 +2579,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchArrayIndexOutOfBoundsException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>ArrayIndexOutOfBoundsException</code>. Catching <code>ArrayIndexOutOfBoundsException</code> should be avoided in the first place by checking the array size before accessing an array element. Catching the exception may mask underlying errors. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2588,7 +2589,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchError]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>Error</code>. In most cases that is much too broad, and is also dangerous because it can catch exceptions such as <code>ThreadDeath</code> and <code>OutOfMemoryError</code>. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2598,7 +2599,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>Exception</code>. In most cases that is too broad or general. It should usually be restricted to framework or infrastructure code, rather than application code. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -2609,7 +2610,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchIllegalMonitorStateException]]></internalKey>
     <description><![CDATA[<p>Dubious catching of IllegalMonitorStateException. IllegalMonitorStateException is generally only thrown in case of a design flaw in your code (calling wait or notify on an object you do not hold a lock on). </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -2620,7 +2621,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchIndexOutOfBoundsException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>IndexOutOfBoundsException</code>. Catching <code>IndexOutOfBoundsException</code> should be avoided in the first place by checking for a valid index before accessing an indexed element. Catching the exception may mask underlying errors. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2630,7 +2631,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchNullPointerException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>NullPointerException</code>. Catching <code>NullPointerException</code> is never appropriate. It should be avoided in the first place with proper null checking, and it can mask underlying errors. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2640,7 +2641,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchRuntimeException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>RuntimeException</code>. In most cases that is too broad or general. It should usually be restricted to framework or infrastructure code, rather than application code. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2650,7 +2651,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[CatchThrowable]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>Throwable</code>. In most cases that is much too broad, and is also dangerous because it can catch exceptions such as <code>ThreadDeath</code> and <code>OutOfMemoryError</code>. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -2661,7 +2662,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ConfusingClassNamedException]]></internalKey>
     <description><![CDATA[<p>This class is not derived from another exception, but ends with 'Exception'. This will be confusing to users of this class. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -2679,7 +2680,7 @@ for (int i = 0; i < 100; ++i) {
     class MyException extends Exception { }  // OK
 </pre>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -2700,7 +2701,7 @@ for (int i = 0; i < 100; ++i) {
     throw runtimeFailure()      // first letter lowercase, assumed to be method call
 </pre>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -2711,7 +2712,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ReturnNullFromCatchBlock]]></internalKey>
     <description><![CDATA[<p>Returning null from a catch block often masks errors and requires the client to handle error codes. In some coding styles this is discouraged. This rule ignores methods with <code>void</code> return type. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2721,7 +2722,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ThrowError]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.Error</code>. This is not appropriate within normal application code. Throw an instance of a more specific exception subclass instead. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2731,7 +2732,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ThrowException]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.Exception</code>. Throw an instance of a more specific exception subclass instead. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2741,7 +2742,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ThrowNullPointerException]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.NullPointerException</code>. Applications should never throw a <code>NullPointerException</code>. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2751,7 +2752,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ThrowRuntimeException]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.RuntimeException</code>. Throw an instance of a more specific exception subclass instead. </p>
  ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <rule>
@@ -2761,7 +2762,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ThrowThrowable]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.Throwable</code>. Throw an instance of a more specific exception subclass instead. </p>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -2780,7 +2781,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -2810,7 +2811,7 @@ for (int i = 0; i < 100; ++i) {
     } catch(Exception e) { throw new DaoException(e) }      // ok
 </pre>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -2825,7 +2826,7 @@ for (int i = 0; i < 100; ++i) {
     class MyException extends Throwable { }   // violation
 </pre>
 ]]></description>
-    <tag>exceptions</tag>
+    <tag>error-handling</tag>
   </rule>
 
   <!-- generic rules -->
@@ -2839,7 +2840,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <name> and <regex>, and (optionally) customized <violationMessage> and <priority>. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of an entire <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
  ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[The regular expression to check for. If null or empty then do nothing. ]]></description>
@@ -2856,7 +2857,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <name> and <regex>, and (optionally) customized <violationMessage> and <priority>. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of an entire <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
  ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[The regular expression to check for. If null or empty then do nothing. ]]></description>
@@ -2873,7 +2874,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <name> and <string>, and (optionally) customized <violationMessage> and <priority>. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of an entire <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
  ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>string</key>
       <description><![CDATA[The String to check for. If null or empty then do nothing. ]]></description>
@@ -2897,10 +2898,10 @@ for (int i = 0; i < 100; ++i) {
 <p>[[3]] At least one of the (standard) <code>applyToClassNames</code>, <code>applyToFileNames</code> or <code>applyToFilesMatching</code> properties must be set (i.e., not null or empty) or else this rule does nothing. In other words, you must configure this rule to apply to a specific set of classes or files. </p>
 <p>[[4]] This rule will not catch violations of true <statelessness>/<reentrancy> if you define a <code>final</code> field whose value is itself mutable, e.g. a <code>final HashMap</code>. </p>
 ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
-      <key>ignoreFieldNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <key>ignoreFieldTypes</key>
+      <description><![CDATA[Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
@@ -2909,8 +2910,8 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>ignoreFieldTypes</key>
-      <description><![CDATA[Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <key>ignoreFieldNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
   </rule>
@@ -2941,7 +2942,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>packageNames</key>
       <description><![CDATA[Specifies the comma-separated list of package names. The package name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the package name, e.g. 'a.*' matches 'a.b' as well as 'a.b.c.d'. If packageNames is null or empty, do nothing. ]]></description>
@@ -2975,7 +2976,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>classNames</key>
       <description><![CDATA[Specifies the comma-separated list of (fully-qualified) class names. The class name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the class/package name, e.g. 'a.*.MyClass' matches a.b.MyClass as well as a.b.c.d.MyClass. If classNames is null or empty, do nothing. ]]></description>
@@ -2992,35 +2993,15 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for classes containing fields/properties/methods matching configured illegal member modifiers or not matching any of the configured allowed member modifiers. </p>
 <p>Modifiers for fields and methods include: </p>
 ]]></description>
-    <tag>generic</tag>
-    <param>
-      <key>illegalMethodModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>ignoreMethodsWithAnnotationNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) annotation names that should be ignored (i.e., methods with those annotations should not cause a rule violation). The names may optionally contain wildcards (*,?). (Do not include the "@" in the annotation name ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>allowedMethodModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>allowedFieldModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
+    <tag>bug</tag>
     <param>
       <key>allowedPropertyModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>ignoreMethodNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <key>illegalFieldModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
@@ -3029,8 +3010,28 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>illegalFieldModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <key>ignoreMethodsWithAnnotationNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names that should be ignored (i.e., methods with those annotations should not cause a rule violation). The names may optionally contain wildcards (*,?). (Do not include the "@" in the annotation name ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>allowedFieldModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>allowedMethodModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>illegalMethodModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>ignoreMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
   </rule>
@@ -3045,7 +3046,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <name> and <string>, and (optionally) customized <violationMessage> and <priority>. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of an entire <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
  ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>string</key>
       <description><![CDATA[The String to check for. If null or empty then do nothing. ]]></description>
@@ -3062,7 +3063,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for classes that extend one of the specified set of illegal superclasses. </p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <name> and <string>, and (optionally) customized <violationMessage> and <priority>. </p>
  ]]></description>
-    <tag>generic</tag>
+    <tag>bug</tag>
     <param>
       <key>superclassNames</key>
       <description><![CDATA[Specifies the comma-separated list of (fully-qualified) class names. The class name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the class/package name, e.g. 'a.*.MyClass' matches a.b.MyClass as well as a.b.c.d.MyClass. If classNames is null or empty, do nothing. ]]></description>
@@ -3224,12 +3225,12 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>grails</tag>
     <param>
-      <key>additionalHibernateBasicTypes</key>
-      <description><![CDATA[Comma-separated list of simple class names of additional classes that Hibernate maps as basic types (creates a column for a field of such class). Add your custom basic types here. ]]></description>
-    </param>
-    <param>
       <key>additionalReservedSqlKeywords</key>
       <description><![CDATA[Comma-separated list of additional reserved SQL keywords (just in case the 337 keywords of nowadays SQL-* standards weren't enough). ]]></description>
+    </param>
+    <param>
+      <key>additionalHibernateBasicTypes</key>
+      <description><![CDATA[Comma-separated list of simple class names of additional classes that Hibernate maps as basic types (creates a column for a field of such class). Add your custom basic types here. ]]></description>
     </param>
   </rule>
 
@@ -3276,7 +3277,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[DuplicateImport]]></internalKey>
     <description><![CDATA[<p>Checks for a duplicate <import> statements. </p>
  ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3286,7 +3287,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ImportFromSamePackage]]></internalKey>
     <description><![CDATA[<p>Checks for an <import> of a class that is within the same package as the importing class. </p>
  ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3296,7 +3297,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryGroovyImport]]></internalKey>
     <description><![CDATA[<p>Checks for an <import> from any package that is already automatically imported for Groovy files. A Groovy file does not need to include an import for classes from <java.lang>, <java.util>, <java.io>, <java.net>, <groovy.lang> and <groovy.util>, as well as the classes <java.math.BigDecimal> and <java.math.BigInteger>. </p>
  ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3307,7 +3308,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for <import> statements for classes that are never referenced within the source file. Also checks static imports. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -3325,7 +3326,7 @@ for (int i = 0; i < 100; ++i) {
     public class MyClass{}
 </pre>
 ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -3344,7 +3345,7 @@ for (int i = 0; i < 100; ++i) {
     public class MyClass{}
 </pre>
 ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -3362,7 +3363,7 @@ for (int i = 0; i < 100; ++i) {
     public class MyClass{}
 </pre>
 ]]></description>
-    <tag>imports</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- junit rules -->
@@ -3430,7 +3431,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitAssertAlwaysFailsRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Assert Always Fails]]></name>
+    <name><![CDATA[JUnit Assert Always Fails]]></name>
     <internalKey><![CDATA[JUnitAssertAlwaysFails]]></internalKey>
     <description><![CDATA[<p>Rule that checks for JUnit <<<assert()>>> method calls with constant or literal arguments such that theassertion always fails. This includes: </p>
 ]]></description>
@@ -3440,7 +3441,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitAssertAlwaysSucceedsRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Assert Always Succeeds]]></name>
+    <name><![CDATA[JUnit Assert Always Succeeds]]></name>
     <internalKey><![CDATA[JUnitAssertAlwaysSucceeds]]></internalKey>
     <description><![CDATA[<p>Rule that checks for JUnit <code>assert()</code> method calls with constant arguments such that the assertion always succeeds. This includes: </p>
 ]]></description>
@@ -3450,7 +3451,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitPublicNonTestMethodRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Public Non Test Method]]></name>
+    <name><![CDATA[JUnit Public Non Test Method]]></name>
     <internalKey><![CDATA[JUnitPublicNonTestMethod]]></internalKey>
     <description><![CDATA[<p>Rule that checks if a JUnit test class contains public methods other than standard test methods, JUnit framework methods or methods with JUnit annotations. </p>
 <p>The following public methods are ignored by this rule: </p>
@@ -3461,7 +3462,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitSetUpCallsSuperRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Set Up Calls Super]]></name>
+    <name><![CDATA[JUnit Set Up Calls Super]]></name>
     <internalKey><![CDATA[JUnitSetUpCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>setUp</code> method is defined, that it includes a call to <code>super.setUp()</code>. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3473,7 +3474,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitStyleAssertionsRule</key>
     <severity>MAJOR</severity>
-    <name><![CDATA[J Unit Style Assertions]]></name>
+    <name><![CDATA[JUnit Style Assertions]]></name>
     <internalKey><![CDATA[JUnitStyleAssertions]]></internalKey>
     <description><![CDATA[<p>This rule detects calling JUnit style assertions like <code>assertEquals</code>, <code>assertTrue</code>, <code>assertFalse</code>, <code>assertNull</code>, <code>assertNotNull</code>. Groovy 1.7 ships with a feature called the "power assert", which is an assert statement with better error reporting. This is preferable to the JUnit assertions. </p>
  ]]></description>
@@ -3483,7 +3484,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitTearDownCallsSuperRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Tear Down Calls Super]]></name>
+    <name><![CDATA[JUnit Tear Down Calls Super]]></name>
     <internalKey><![CDATA[JUnitTearDownCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>tearDown</code> method is defined, that it includes a call to <code>super.tearDown()</code>. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3494,7 +3495,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitUnnecessarySetUpRule</key>
     <severity>MAJOR</severity>
-    <name><![CDATA[J Unit Unnecessary Set Up]]></name>
+    <name><![CDATA[JUnit Unnecessary Set Up]]></name>
     <internalKey><![CDATA[JUnitUnnecessarySetUp]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>setUp()</code> methods that contain only a call to <code>super.setUp()</code>. The method is then unnecessary. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3513,7 +3514,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitUnnecessaryTearDownRule</key>
     <severity>MAJOR</severity>
-    <name><![CDATA[J Unit Unnecessary Tear Down]]></name>
+    <name><![CDATA[JUnit Unnecessary Tear Down]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryTearDown]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>tearDown()</code> methods that contain only a call to <code>super.tearDown()</code>. The method is then unnecessary. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3626,7 +3627,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitFailWithoutMessageRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Fail Without Message]]></name>
+    <name><![CDATA[JUnit Fail Without Message]]></name>
     <internalKey><![CDATA[JUnitFailWithoutMessage]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling the <code>fail()</code> method without an argument. For better error reporting you should always provide a message. </p>
  ]]></description>
@@ -3637,7 +3638,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitTestMethodWithoutAssertRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Test Method Without Assert]]></name>
+    <name><![CDATA[JUnit Test Method Without Assert]]></name>
     <internalKey><![CDATA[JUnitTestMethodWithoutAssert]]></internalKey>
     <description><![CDATA[<p>This rule searches for test methods that do not contain assert statements. Either the test method is missing assert statements, which is an error, or the test method contains custom assert statements that do not follow a proper assert naming convention. Test methods are defined as public void methods that begin with the work test or have a @Test annotation. By default this rule applies to the default test class names, but this can be changed using the rule's applyToClassNames property. An assertion is defined as either using the <code>assert</code> keyword or invoking a method that starts with the work assert, like assertEquals, assertNull, or assertMyClassIsSimilar. Also, any method named <code>should.*</code> also counts as an assertion so that <code>shouldFail</code> methods do not trigger an assertion, any method that starts with <code>fail</code> counts as an assertion, and any method that starts with <code>verify</code> counts as an assertion. Since version 0.23 CodeNarc has support for JUnit's ExpectedException. </p>
 <p>What counts as an assertion method can be overridden using the assertMethodPatterns property of the rule. The default value is this comma separated list of regular expressions: </p>
@@ -3707,14 +3708,14 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>junit</tag>
     <param>
-      <key>specificationSuperclassNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification superclasses. In other words, a class that extends a matching class name is considered a Spock Specification . The class names may optionally contain wildcards (*,?), e.g. "*Spec". ]]></description>
-      <defaultValue>"*Specification"</defaultValue>
-    </param>
-    <param>
       <key>specificationClassNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification classes. The class names may optionally contain wildcards (*,?), e.g. "*Spec". ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>specificationSuperclassNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification superclasses. In other words, a class that extends a matching class name is considered a Spock Specification . The class names may optionally contain wildcards (*,?), e.g. "*Spec". ]]></description>
+      <defaultValue>"*Specification"</defaultValue>
     </param>
   </rule>
 
@@ -3722,7 +3723,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitLostTestRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Lost Test]]></name>
+    <name><![CDATA[JUnit Lost Test]]></name>
     <internalKey><![CDATA[JUnitLostTest]]></internalKey>
     <description><![CDATA[<p>This rule checks for classes that import JUnit 4 classes and contain a <code>public</code>, instance, <code>void</code>, no-arg method named <test>* that is not annotated with the JUnit 4 <code>@Test</code> annotation. </p>
 <p>Note: This rule should be disabled for Grails 2.x projects, since the Grails test framework can use AST Transformations to automatically annotate test methods. </p>
@@ -3743,7 +3744,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitUnnecessaryThrowsExceptionRule</key>
     <severity>MAJOR</severity>
-    <name><![CDATA[J Unit Unnecessary Throws Exception]]></name>
+    <name><![CDATA[JUnit Unnecessary Throws Exception]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryThrowsException]]></internalKey>
     <description><![CDATA[<p> Check for <code>throws</code> clauses on JUnit test methods. That is not necessary in Groovy. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3772,7 +3773,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitPublicFieldRule</key>
     <severity>MAJOR</severity>
-    <name><![CDATA[J Unit Public Field]]></name>
+    <name><![CDATA[JUnit Public Field]]></name>
     <internalKey><![CDATA[JUnitPublicField]]></internalKey>
     <description><![CDATA[<p>Checks for public fields on a JUnit test class.  There is usually no reason to have a public field (even a constant) on a test class. </p>
 <p>Fields within interfaces and fields annotated with @Rule are ignored. </p>
@@ -3796,7 +3797,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitAssertEqualsConstantActualValueRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Assert Equals Constant Actual Value]]></name>
+    <name><![CDATA[JUnit Assert Equals Constant Actual Value]]></name>
     <internalKey><![CDATA[JUnitAssertEqualsConstantActualValue]]></internalKey>
     <description><![CDATA[<p>Reports usages of <code>org.junit.Assert.assertEquals([message,] expected, actual)</code> where the <code>actual</code> parameter is a constant or a literal. Most likely it was intended to be the <code>expected</code> value. </p>
 <p>NOTE: This is a <a href="http://codenarc.sourceforge.net/codenarc-enhanced-classpath-rules.html">CodeNarc Enhanced Classpath Rule</a>. It requires <code>CodeNarc</code> to have the application classes being analyzed, as well as any referenced classes, on the classpath. </p>
@@ -3815,7 +3816,7 @@ for (int i = 0; i < 100; ++i) {
   <rule>
     <key>org.codenarc.rule.junit.JUnitPublicPropertyRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[J Unit Public Property]]></name>
+    <name><![CDATA[JUnit Public Property]]></name>
     <internalKey><![CDATA[JUnitPublicProperty]]></internalKey>
     <description><![CDATA[<p>Checks for public properties defined on JUnit test classes. There is typically no need to expose a public property (with public <getter> and <setter> methods) on a test class. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
@@ -3852,7 +3853,7 @@ for (int i = 0; i < 100; ++i) {
 <p>This rule contains a parameter <code>allowDerivedClasses</code>. When set, a logger may be created about this.getClass(). </p>
 <p>Limitations: </p>
 ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -3863,7 +3864,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[LoggingSwallowsStacktrace]]></internalKey>
     <description><![CDATA[<p>If you are logging an exception then the proper API is to call error(Object, Throwable), which will log the message and the exception stack trace. If you call error(Object) then the stacktrace may not be logged. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -3876,7 +3877,7 @@ for (int i = 0; i < 100; ++i) {
 <p>This rule has a property: <code>allowProtectedLogger</code>, which defaults to false. Set it to true if you believe subclasses should have access to a Logger in a parent class and that Logger should be declared protected or public. </p>
 <p>This rule has a property: <code>allowNonStaticLogger</code>, which defaults to false. Set it to true if you believe a logger should be allowed to be non-static. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -3887,7 +3888,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[MultipleLoggers]]></internalKey>
     <description><![CDATA[<p>This rule catches classes that have more than one logger object defined. Typically, a class has zero or one logger objects. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3897,7 +3898,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[Println]]></internalKey>
     <description><![CDATA[<p>Checks for calls to <code>this.print()</code>, <code>this.println()</code> or <code>this.printf()</code>. Consider using a standard logging facility instead. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3907,7 +3908,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[PrintStackTrace]]></internalKey>
     <description><![CDATA[<p>Checks for calls to <code>Throwable.printStackTrace()</code> or <code>StackTraceUtils.printSanitizedStackTrace(Throwable)</code>. Consider using a standard logging facility instead. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3917,7 +3918,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[SystemErrPrint]]></internalKey>
     <description><![CDATA[<p>Checks for calls to <code>System.err.print()</code>, <code>System.err.println()</code> or <code>System.err.printf()</code>. Consider using a standard logging facility instead. </p>
  ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3927,7 +3928,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[SystemOutPrint]]></internalKey>
     <description><![CDATA[<p>Checks for calls to <code>System.out.print()</code>, <code>System.out.println()</code> or <code>System.out.printf()</code>. Consider using a standard logging facility instead. </p>
 ]]></description>
-    <tag>logging</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- naming rules -->
@@ -3939,7 +3940,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[AbstractClassName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of an abstract class matches the regular expression specified in the <code>regex</code> property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active. This rule ignores interfaces and is applied only to abstract classes. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the abstract class name. If null or empty, then this rule does nothing. ]]></description>
@@ -3954,7 +3955,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ClassName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of a class matches a regular expression. By default it checks that the class name starts with an uppercase letter and is followed by zero or more word characters (letters, numbers or underscores) or dollar signs ($). </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the class name. It is required and cannot be null or empty. ]]></description>
@@ -3979,7 +3980,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -3991,16 +3992,16 @@ for (int i = 0; i < 100; ++i) {
 <p><code>NOTE:</code> This rule checks only regular <fields> of a class, not <properties>. In Groovy, <properties> are fields declared with no access modifier (public, protected, private). Thus, this rule only checks fields that specify an access modifier. For naming of <properties>, see <code>PropertyNameRule</code>. </p>
 <p>The order of precedence for the regular expression properties is: <code>staticFinalRegex</code>, <code>finalRegex</code>, <code>staticRegex</code> and finally <code>regex</code>. In other words, the first regex in that list matching the modifiers for the field is the one that is applied for the field name validation. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
+    <param>
+      <key>staticRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the field name. It is required and cannot be null or empty. ]]></description>
       <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
-    <param>
-      <key>staticFinalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static final field names. It is optional. If not set, then static final fields are validated using finalRegex, staticRegex or regex. ]]></description>
-      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
     </param>
     <param>
       <key>ignoreFieldNames</key>
@@ -4008,14 +4009,14 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>serialVersionUID</defaultValue>
     </param>
     <param>
-      <key>staticRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
       <key>finalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate final field names. It is optional. If not set, then final fields that are non-static are validated using regex. ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>staticFinalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static final field names. It is optional. If not set, then static final fields are validated using finalRegex, staticRegex or regex. ]]></description>
+      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
     </param>
   </rule>
 
@@ -4026,7 +4027,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[InterfaceName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of an interface matches the regular expression specified in the <code>regex</code> property. If that property is null or empty, then this rule is not applied (i.e., it does nothing). It defaults to null, so this rule must be explicitly configured to be active. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the name of an interface. If null or empty, then this rule does nothing. ]]></description>
@@ -4041,7 +4042,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[MethodName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of each method matches a regular expression. By default it checks that the method name starts with a lowercase letter. Implicit method names are ignored (i.e., 'main' and 'run' methods automatically created for Groovy scripts). </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
@@ -4078,7 +4079,7 @@ for (int i = 0; i < 100; ++i) {
     String tostring(int value) {}               // ok; not empty params
 </pre>
 ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -4088,7 +4089,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[PackageName]]></internalKey>
     <description><![CDATA[<p>Verifies that the package name of a class matches a regular expression. By default it checks that the package name consists of only lowercase letters and numbers, separated by periods. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>packageNameRequired</key>
       <description><![CDATA[Indicates whether a package name declaration is required for all classes. ]]></description>
@@ -4108,7 +4109,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ParameterName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty. ]]></description>
@@ -4130,7 +4131,12 @@ for (int i = 0; i < 100; ++i) {
 <p><code>NOTE:</code> This rule checks only <properties> of a class, not regular <fields>. In Groovy, <properties> are fields declared with no access modifier (public, protected, private). For naming of regular <fields>, see <code>FieldNameRule</code>. </p>
 <p>The order of precedence for the regular expression properties is: <code>staticFinalRegex</code>, <code>finalRegex</code>, <code>staticRegex</code> and finally <code>regex</code>. In other words, the first regex in that list matching the modifiers for the property is the one that is applied for the field name validation. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
+    <param>
+      <key>finalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
     <param>
       <key>staticFinalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex. ]]></description>
@@ -4142,19 +4148,14 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>ignorePropertyNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>finalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the property name. It is required and cannot be null or empty. ]]></description>
       <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
+    </param>
+    <param>
+      <key>ignorePropertyNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4165,12 +4166,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[VariableName]]></internalKey>
     <description><![CDATA[<p>Verifies that the name of each variable matches a regular expression. By default it checks that non-<code>final</code> variable names start with a lowercase letter and contains only letters or numbers. By default, <code>final</code> variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. </p>
 ]]></description>
-    <tag>naming</tag>
-    <param>
-      <key>ignoreVariableNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty. ]]></description>
@@ -4180,6 +4176,11 @@ for (int i = 0; i < 100; ++i) {
       <key>finalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate final variable names. It is optional. If not set, then regex is used to validate final variable names. ]]></description>
       <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
+    </param>
+    <param>
+      <key>ignoreVariableNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4233,7 +4234,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the method name. It is required and cannot be null or empty. ]]></description>
@@ -4249,7 +4250,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ClassNameSameAsFilename]]></internalKey>
     <description><![CDATA[<p>Reports files containing only one top level class / enum / interface which is named differently than the file. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.22 -->
@@ -4260,7 +4261,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[PackageNameMatchesFilePath]]></internalKey>
     <description><![CDATA[<p> A package source file's path should match the package declaration. </p>
  ]]></description>
-    <tag>naming</tag>
+    <tag>bug</tag>
     <param>
       <key>groupId</key>
       <description><![CDATA[Specifies the common <group id> part of a package name, that will appear within all checked package names. It must also map to the file path for the correspondin source file. For instance, a <groupId> of <"org.sample"> means that for all classes that specify a package, that package name must include <"org.sample">, and the source file must exist under an "org/sample" directory. Then, a MyClass class in a org.sample.util package must be defined in a "MyClass.groovy" file within a <"org/sample/util"> directory. That directory can be the child of any arbitrary <root path>, e.g. "src/main/groovy". To find the sub-path relevant for the package the rule searches for the first appearance of <groupId> in the file path. It's <required> to configure this. If groupId is null or empty, this rule does nothing. ]]></description>
@@ -4285,16 +4286,11 @@ for (int i = 0; i < 100; ++i) {
 <p><code> |ABC| = sqrt((A*A)+(B*B)+(C*C)) </code> </p>
 <p>The <ABC Metric> calculation rules for Groovy: </p>
 ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
       <key>maxClassAbcScore</key>
       <description><![CDATA[The maximum <ABC> score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or <null>, then do not check class-level scores. ]]></description>
       <defaultValue>0</defaultValue>
-    </param>
-    <param>
-      <key>maxClassAverageMethodAbcScore</key>
-      <description><![CDATA[The maximum average <ABC> score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or <null>, then do not check class-level average scores. ]]></description>
-      <defaultValue>60</defaultValue>
     </param>
     <param>
       <key>ignoreMethodNames</key>
@@ -4306,6 +4302,11 @@ for (int i = 0; i < 100; ++i) {
       <description><![CDATA[The maximum <ABC> score allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level scores. ]]></description>
       <defaultValue>60</defaultValue>
     </param>
+    <param>
+      <key>maxClassAverageMethodAbcScore</key>
+      <description><![CDATA[The maximum average <ABC> score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or <null>, then do not check class-level average scores. ]]></description>
+      <defaultValue>60</defaultValue>
+    </param>
   </rule>
 
   <rule>
@@ -4315,7 +4316,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ClassSize]]></internalKey>
     <description><![CDATA[<p>Checks if the size of a class exceeds the number of lines specified by the <code>maxLines</code> property. </p>
  ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
       <key>maxLines</key>
       <description><![CDATA[The maximum number of lines allowed in a class definition. ]]></description>
@@ -4335,11 +4336,11 @@ for (int i = 0; i < 100; ++i) {
  The <cyclomatic complexity> value is calculated as follows: </p>
 <p><Start with a initial (default) value of one (1). Add one (1) for each occurrence of each of the following:> </p>
 ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
-      <key>maxMethodComplexity</key>
-      <description><![CDATA[The maximum <cyclomatic complexity> value allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level complexity. ]]></description>
-      <defaultValue>20</defaultValue>
+      <key>ignoreMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
+      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxClassAverageMethodComplexity</key>
@@ -4347,9 +4348,9 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>20</defaultValue>
     </param>
     <param>
-      <key>ignoreMethodNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
-      <defaultValue>null</defaultValue>
+      <key>maxMethodComplexity</key>
+      <description><![CDATA[The maximum <cyclomatic complexity> value allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level complexity. ]]></description>
+      <defaultValue>20</defaultValue>
     </param>
     <param>
       <key>maxClassComplexity</key>
@@ -4366,7 +4367,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks if the number of methods within a class exceeds the number of lines specified by the <code>maxMethod</code> property. </p>
 <p>A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to have more fine grained objects. </p>
  ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
       <key>maxMethods</key>
       <description><![CDATA[The maximum number of methods allowed in a class definition. ]]></description>
@@ -4382,16 +4383,16 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks if the size of a method exceeds the number of lines specified by the <code>maxLines</code> property. </p>
 <p>Known Limitations: </p>
 ]]></description>
-    <tag>size</tag>
-    <param>
-      <key>maxLines</key>
-      <description><![CDATA[The maximum number of lines allowed in a method definition. ]]></description>
-      <defaultValue>100</defaultValue>
-    </param>
+    <tag>bug</tag>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>maxLines</key>
+      <description><![CDATA[The maximum number of lines allowed in a method definition. ]]></description>
+      <defaultValue>100</defaultValue>
     </param>
   </rule>
 
@@ -4419,7 +4420,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreRegex</key>
       <description><![CDATA[Determines what is a builder call. For instance, closures nested on a method named createBuilder, a property named myBuilder, or a constructor call to object MyBuilder() do not produce violations. ]]></description>
@@ -4445,21 +4446,11 @@ for (int i = 0; i < 100; ++i) {
 <p>The <code>maxClassAverageMethodCrapScore</code> property holds the threshold value for the average CRAP value for each class. If this value is non-zero, a class with an average cyclomatic complexity value greater than this value is considered a violation. </p>
 <p>NOTE: This rule does NOT treat <closure fields> as methods (unlike some of the other size/complexity rules). </p>
 ]]></description>
-    <tag>size</tag>
-    <param>
-      <key>maxMethodCrapScore</key>
-      <description><![CDATA[The maximum <CRAP> metric value allowed for a single method. If zero or <null>, then do not check method-level complexity. ]]></description>
-      <defaultValue>30</defaultValue>
-    </param>
+    <tag>bug</tag>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
       <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>maxClassAverageMethodCrapScore</key>
-      <description><![CDATA[The maximum <CRAP> average metric value allowed for a class, calculated as the average CRAP value of its methods. If zero or <null>, then do not check the average class-level CRAP value. ]]></description>
-      <defaultValue>30</defaultValue>
     </param>
     <param>
       <key>maxClassCrapScore</key>
@@ -4470,6 +4461,16 @@ for (int i = 0; i < 100; ++i) {
       <key>coberturaXmlFile</key>
       <description><![CDATA[The path to the Cobertura XML coverage file for the Groovy code By default, the path is relative to the classpath. But the path may be optionally prefixed by any of the valid java.net.URL prefixes, such as "file:" (to load from a relative or absolute path on the filesystem), or "http:". This property is REQUIRED. ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>maxClassAverageMethodCrapScore</key>
+      <description><![CDATA[The maximum <CRAP> average metric value allowed for a class, calculated as the average CRAP value of its methods. If zero or <null>, then do not check the average class-level CRAP value. ]]></description>
+      <defaultValue>30</defaultValue>
+    </param>
+    <param>
+      <key>maxMethodCrapScore</key>
+      <description><![CDATA[The maximum <CRAP> metric value allowed for a single method. If zero or <null>, then do not check method-level complexity. ]]></description>
+      <defaultValue>30</defaultValue>
     </param>
   </rule>
 
@@ -4491,7 +4492,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>size</tag>
+    <tag>bug</tag>
     <param>
       <key>maxParameters</key>
       <description><![CDATA[The maximum number of parameters in method/constructor ]]></description>
@@ -4519,7 +4520,7 @@ for (int i = 0; i < 100; ++i) {
     def d = property?.toString() ?: ""
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -4546,7 +4547,7 @@ for (int i = 0; i < 100; ++i) {
     writer.append('a', 'b').append('Hello')     // two arg append is unknown
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -4578,7 +4579,7 @@ for (int i = 0; i < 100; ++i) {
     def j = 'Hello' - "$World"  // OK because not +
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4591,7 +4592,7 @@ for (int i = 0; i < 100; ++i) {
 <p>This rule does not produce violations when the parameter evaluates to an integer/long, e.g. <code>new BigDecimal(42)</code>, <code>new BigDecimal(42L)</code> or <code>new BigDecimal("42")</code>, because using the "G" suffix on an integer value produces a <code>BigInteger</code>, rather than a <code>BigDecimal</code>, e.g. <code>45G</code>. So that means there is no way to produce a <code>BigDecimal</code> with exactly that value using a literal. </p>
 <p>This rule also does not produce violations when the parameter is a double, e.g. <code>new BigDecimal(12.3)</code>. That scenario is covered by the <a href="http://codenarc.sourceforge.net/codenarc-rules-basic.html#BigDecimalInstantiation">BigDecimalInstantiation</a> rule, because that produces an unpredictable (double) value (and so it is <unsafe>, rather than <unnecessary>). </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4602,7 +4603,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryBigIntegerInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>BigInteger</code> objects. Instead just use the literal with the 'G' identifier to force the type, such as <code>8G</code> or <code>42G</code>. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <rule>
@@ -4642,7 +4643,7 @@ for (int i = 0; i < 100; ++i) {
     result = ![a,b]                     // Negation of List literal
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4661,7 +4662,7 @@ for (int i = 0; i < 100; ++i) {
     def b4 = Boolean.valueOf(false)        // violation
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4691,7 +4692,7 @@ for (int i = 0; i < 100; ++i) {
     def f = x.getAt(z.size() -1)   // different objects
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -4710,7 +4711,7 @@ for (int i = 0; i < 100; ++i) {
     prop.substring(0, 1)        // OK, end is specified
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4721,7 +4722,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryCatchBlock]]></internalKey>
     <description><![CDATA[<p>Violations are triggered when a <catch> block does nothing but throw the original exception. In this scenario there is usually no need for a <catch> block, just let the exception be thrown from the original code. This condition frequently occurs when catching an exception for debugging purposes but then forgetting to take the <code>catch</code> statement out. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4765,7 +4766,7 @@ for (int i = 0; i < 100; ++i) {
     ["1", "2", "3"]*.bytes
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4776,7 +4777,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryCollectionCall]]></internalKey>
     <description><![CDATA[<p>Checks for useless calls to collections. For any collection <code>c</code>, calling <code>c.containsAll(c)</code> should always be <code>true</code>, and <code>c.retainAll(c)</code> should have no effect. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4800,7 +4801,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -4832,7 +4833,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4843,7 +4844,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryDoubleInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>Double</code> objects. Instead just use the double literal with 'D' identifier to force the type, such as <code>123.45d</code> or <code>0.42d</code>. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4854,7 +4855,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryFloatInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>Float</code> objects. Instead just use the float literal with the 'F' identifier to force the type, such as <code>123.45F</code> or <code>0.42f</code>. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4881,7 +4882,7 @@ for (int i = 0; i < 100; ++i) {
     x.getProperty('key')
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4924,7 +4925,7 @@ for (int i = 0; i < 100; ++i) {
     '''
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <rule>
@@ -4976,7 +4977,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -4996,7 +4997,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5007,7 +5008,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryIntegerInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>Integer</code> objects. Instead just use the literal with the 'I' identifier to force the type, such as <code>8I</code> or <code>42i</code>. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5018,7 +5019,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryLongInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>Long</code> objects. Instead just use the literal with the 'L' identifier to force the type, such as <code>8L</code> or <code>42L</code>. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -5037,7 +5038,7 @@ for (int i = 0; i < 100; ++i) {
     if (exp % 2) {}     // ok
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5085,7 +5086,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5131,7 +5132,7 @@ for (int i = 0; i < 100; ++i) {
     (obj != null && obj.prop && obj.method()) ? x : y
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5159,7 +5160,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5170,7 +5171,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryOverridingMethod]]></internalKey>
     <description><![CDATA[<p>Checks for an overriding method that merely calls the same method defined in a superclass. Remove it. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -5192,7 +5193,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5203,7 +5204,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryReturnKeyword]]></internalKey>
     <description><![CDATA[<p>In Groovy, the <code>return</code> keyword is often optional. If a statement is the last line in a method or closure then you do not need to have the <code>return</code> keyword. </p>
  ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -5226,7 +5227,7 @@ for (int i = 0; i < 100; ++i) {
     a.b = a().b         // acceptable
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -5252,7 +5253,7 @@ for (int i = 0; i < 100; ++i) {
     println(value); println (otherValue)
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.12 -->
@@ -5267,7 +5268,7 @@ for (int i = 0; i < 100; ++i) {
     def s = new String('abc')
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <rule>
@@ -5292,7 +5293,7 @@ for (int i = 0; i < 100; ++i) {
     ready ? minValue : minValue    // can be replaced by: minValue
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -5316,7 +5317,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5331,7 +5332,7 @@ for (int i = 0; i < 100; ++i) {
     private final method() {}
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5359,7 +5360,7 @@ for (int i = 0; i < 100; ++i) {
     println 'Executing else logic...'
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5374,7 +5375,7 @@ for (int i = 0; i < 100; ++i) {
     [1,2,3].each() { println it }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5432,7 +5433,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5463,7 +5464,7 @@ for (int i = 0; i < 100; ++i) {
     def String string6 = 'example'
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5482,7 +5483,7 @@ for (int i = 0; i < 100; ++i) {
     def x = String
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5504,7 +5505,7 @@ for (int i = 0; i < 100; ++i) {
     if (!(variable instanceof String)) { ... }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5521,7 +5522,7 @@ for (int i = 0; i < 100; ++i) {
     myVar.substring(1, 5)       // can use myVar[1..4] instead
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -5554,7 +5555,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -5574,7 +5575,7 @@ for (int i = 0; i < 100; ++i) {
     def map = (Map)[a:1]                    // violation
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -5585,7 +5586,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryToString]]></internalKey>
     <description><![CDATA[<p>Checks for unnecessary calls to <code>toString()</code>. This includes: </p>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- since 0.22 -->
@@ -5612,7 +5613,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>unnecessary</tag>
+    <tag>clumsy</tag>
   </rule>
 
   <!-- unused rules -->
@@ -5642,7 +5643,7 @@ for (int i = 0; i < 100; ++i) {
     def closure = { new Date[3] }   // OK (last statement in block)
 </pre>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -5671,7 +5672,7 @@ for (int i = 0; i < 100; ++i) {
     def closure = { new Date() }    // OK (last statement in block)
 </pre>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -5682,7 +5683,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for private fields that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). By default, fields named <code>serialVersionUID</code> are ignored. The rule has a property named ignoreFieldNames, which can be set to ignore other field names as well. For instance, to ignore fields named 'fieldx', set the property to the 'fieldx, serialVersionUID' </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
@@ -5699,7 +5700,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for parameters to private methods that are not referenced within the method body. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -5710,7 +5711,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks for private methods that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -5722,7 +5723,7 @@ for (int i = 0; i < 100; ++i) {
 <p>The rule has a property named ignoreVariableNames, which can be set to ignore some variable names. For instance, to ignore fields named 'unused', set the property to 'unused'. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
     <param>
       <key>ignoreVariableNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
@@ -5738,7 +5739,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnusedMethodParameter]]></internalKey>
     <description><![CDATA[<p>This rule finds instances of method parameters not being used. It does not analyze private methods (that is done by the UnusedPrivateMethodParameter rule) or methods marked @Override. </p>
 ]]></description>
-    <tag>unused</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- jdbc rules -->
@@ -5757,7 +5758,7 @@ for (int i = 0; i < 100; ++i) {
     java.sql.DriverManager.getConnection()
 </pre>
 ]]></description>
-    <tag>jdbc</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5770,7 +5771,7 @@ for (int i = 0; i < 100; ++i) {
 <p>For a more <Groovy> alternative, see <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
 <p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
  ]]></description>
-    <tag>jdbc</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5783,7 +5784,7 @@ for (int i = 0; i < 100; ++i) {
 <p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
 <p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
  ]]></description>
-    <tag>jdbc</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -5796,7 +5797,7 @@ for (int i = 0; i < 100; ++i) {
 <p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
 <p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
 ]]></description>
-    <tag>jdbc</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- security rules -->
@@ -5832,7 +5833,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5856,7 +5857,7 @@ for (int i = 0; i < 100; ++i) {
      new SecureRandom()
 </pre>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5868,7 +5869,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>The File.createTempFile() method is insecure, and has been deprecated by the ESAPI secure coding library. It has been replaced by the ESAPI Randomizer.getRandomFilename(String) method. </p>
 <p>For more information see the ESAPI website: http://code.google.com/p/owasp-esapi-java/ and the Randomizer Javadoc: <a>http://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/Randomizer.html</a> </p>
  ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5883,7 +5884,7 @@ for (int i = 0; i < 100; ++i) {
 <p>[[3]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 382 </p>
 <p>[[4]] Standards Mapping - Payment Card Industry Data Security Standard Version 1.1 - (PCI 1.1) Requirement 6.5.9 </p>
  ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5896,7 +5897,7 @@ for (int i = 0; i < 100; ++i) {
 <p>While the Java Language Specification allows an object's finalize() method to be called from outside the finalizer, doing so is usually a bad idea. For example, calling finalize() explicitly means that finalize() will be called more than once: the first time will be the explicit call and the last time will be the call that is made after the object is garbage collected. </p>
 <p>References: Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 586 </p>
  ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5933,7 +5934,7 @@ for (int i = 0; i < 100; ++i) {
     new RandomAccessFile(name, parent)
 </pre>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5952,7 +5953,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5965,7 +5966,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A program should never call finalize explicitly, except to call super.finalize() inside an implementation of <code>finalize()</code>. In mobile code situations, the otherwise error prone practice of manual garbage collection can become a security threat if an attacker can maliciously invoke one of your finalize() methods because it is declared with public access. If you are using <code>finalize()</code> as it was designed, there is no reason to declare <code>finalize()</code> with anything other than protected access. </p>
 <p>References: </p>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -5978,7 +5979,7 @@ for (int i = 0; i < 100; ++i) {
 <p>All public member variables in an Applet and in classes used by an Applet should be declared final to prevent an attacker from manipulating or gaining unauthorized access to the internal state of the Applet. </p>
 <p>References: </p>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -5996,7 +5997,7 @@ for (int i = 0; i < 100; ++i) {
     //not all MouseListener methods are implemented which can lead to UnsupportedOperationException-s
 </pre>
 ]]></description>
-    <tag>security</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- formatting rules -->
@@ -6010,7 +6011,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for classes. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
 <p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>sameLine</key>
       <defaultValue>true</defaultValue>
@@ -6026,7 +6027,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks the maximum length for each line of source code. It checks for number of characters, so lines that include tabs may appear longer than the allowed number when viewing the file. The maximum line length can be configured by setting the length property, which defaults to 120. </p>
 <p>NOTE: This rule does not support the @SuppressAnnotations annotation or the classname-based rule properties (applyToClassNames, doNotApplyToClassNames) to enable/disable the rule. If you want to specify or restrict where this rule is applied, you must use the file-based rule properties: applyToFileNames, doNotApplyToFileNames, applyToFilesMatching and doNotApplyToFilesMatching. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>length</key>
       <defaultValue>120</defaultValue>
@@ -6041,7 +6042,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[BracesForForLoop]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for for loops. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>sameLine</key>
       <defaultValue>true</defaultValue>
@@ -6056,7 +6057,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[BracesForIfElse]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for if statements. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>sameLine</key>
       <defaultValue>true</defaultValue>
@@ -6071,7 +6072,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[BracesForMethod]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for constructors and methods. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>sameLine</key>
       <defaultValue>true</defaultValue>
@@ -6086,7 +6087,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[BracesForTryCatchFinally]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for try statements. By default, requires them on the line, but the <code>sameLine</code> property can be set to false to override this. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>sameLine</key>
       <defaultValue>true</defaultValue>
@@ -6101,7 +6102,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ClassJavadoc]]></internalKey>
     <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6113,7 +6114,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks that there is at least one space or whitespace following each comma. That includes checks for method and closure declaration parameter lists, method call parameter lists, Map literals and List literals. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6124,7 +6125,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[SpaceAfterSemicolon]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace following a semicolon that separates: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6137,7 +6138,7 @@ for (int i = 0; i < 100; ++i) {
 <p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.). Do not check array ('[') operator. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6149,7 +6150,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
       <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
@@ -6196,7 +6197,7 @@ for (int i = 0; i < 100; ++i) {
     shouldFail(Exception) {doStuff() }          // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
       <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
@@ -6219,7 +6220,7 @@ for (int i = 0; i < 100; ++i) {
 <p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation. </p>
  Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
       <description><![CDATA[If false, then do not check for whitespace after closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
@@ -6236,7 +6237,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each closing brace ("\}") for method/class/interface declarations, closure expressions and block statements. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>ignoreEmptyBlock</key>
       <description><![CDATA[If true, then allow for [{}] in code ]]></description>
@@ -6262,7 +6263,7 @@ for (int i = 0; i < 100; ++i) {
     if  (true) { }                          // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6278,7 +6279,7 @@ for (int i = 0; i < 100; ++i) {
     while  (true) { }           // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6294,7 +6295,7 @@ for (int i = 0; i < 100; ++i) {
     for  (int i=0; i < 10; i++) { }         // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6314,7 +6315,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6330,7 +6331,7 @@ for (int i = 0; i < 100; ++i) {
     try { } catch  (Exception e) { }        // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -6342,7 +6343,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>Checks that there is at least one space (blank) or whitespace around each closure arrow (->) symbol. </p>
 <p>Known limitations: </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.20 -->
@@ -6359,7 +6360,7 @@ for (int i = 0; i < 100; ++i) {
                 b:[(Integer): 33]]      // violation on Integer (after colon)
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
     <param>
       <key>characterBeforeColonRegex</key>
       <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
@@ -6386,7 +6387,7 @@ for (int i = 0; i < 100; ++i) {
         println “done” }
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6408,7 +6409,7 @@ for (int i = 0; i < 100; ++i) {
     def id
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6419,7 +6420,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[BlankLineBeforePackage]]></internalKey>
     <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6430,7 +6431,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[FileEndsWithoutNewline]]></internalKey>
     <description><![CDATA[<p>Makes sure each source file ends with a newline character. </p>
  ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6446,7 +6447,7 @@ for (int i = 0; i < 100; ++i) {
     class MyClass { }                       // violation
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6466,7 +6467,7 @@ for (int i = 0; i < 100; ++i) {
   }
 </pre>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- since 0.21 -->
@@ -6477,7 +6478,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[TrailingWhitespace]]></internalKey>
     <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters. </p>
 ]]></description>
-    <tag>formatting</tag>
+    <tag>convention</tag>
   </rule>
 
   <!-- convention rules -->
@@ -6507,7 +6508,7 @@ for (int i = 0; i < 100; ++i) {
     (x != false) ? diff : same
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6518,7 +6519,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[InvertedIfElse]]></internalKey>
     <description><![CDATA[<p>An inverted <if-else> statement is one in which there is a single <code>if</code> statement with a single <code>else</code> branch and the boolean test of the <code>if</code> is negated. For instance <code>if (!x) false else true</code>. It is usually clearer to write this as <code>if (x) true else false</code>. </p>
  ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -6544,7 +6545,7 @@ for (int i = 0; i < 100; ++i) {
     x ?: 'some value'           // OK
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -6560,7 +6561,7 @@ for (int i = 0; i < 100; ++i) {
     def y = 55l
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -6582,7 +6583,7 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -6612,7 +6613,7 @@ for (int i = 0; i < 100; ++i) {
     foo(1) ? foo(2) : 123       // OK
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -6627,7 +6628,7 @@ for (int i = 0; i < 100; ++i) {
     def myList = new Vector()           // violation
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.17 -->
@@ -6642,7 +6643,7 @@ for (int i = 0; i < 100; ++i) {
     def myMap = new Hashtable()           // violation
 </pre>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.18 -->
@@ -6653,7 +6654,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[IfStatementCouldBeTernary]]></internalKey>
     <description><![CDATA[<p>Checks for: </p>
 ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.22 -->
@@ -6665,7 +6666,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p> Do not allow using the <code>def</code> keyword in code. Use a specific type instead. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of a <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
  ]]></description>
-    <tag>convention</tag>
+    <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
       <description><![CDATA[Regular expression describing names of attributes, parameters or methods that could be precede by the def keyword. ]]></description>
@@ -6688,7 +6689,7 @@ for (int i = 0; i < 100; ++i) {
   def c = myList.sort().findAll { x < 1 }
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6699,7 +6700,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitArrayListInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>ArrayList</code>. In Groovy, it is best to write <code>new ArrayList() as []</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6711,7 +6712,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>and(Object)</code> method is called directly in code instead of using the <code>&</code> operator. A groovier way to express this: <code>a.and(b)</code> is this: <code>a & b</code>. This rule can be configured to ignore <code>this.and(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>and(x)</code> will not trigger a violation. The default is <true> because <code>and</code> appears commonly in Grails criteria. </p>
 <p>This rule also ignores all calls to <code>super.and(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6730,7 +6731,7 @@ for (int i = 0; i < 100; ++i) {
     a.compareTo(b) <= 0               // can be replaced by: a <= b
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6742,7 +6743,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>div(Object)</code> method is called directly in code instead of using the <code>/</code> operator. A groovier way to express this: <code>a.div(b)</code> is this: <code>a / b</code>. This rule can be configured to ignore <code>div.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>div(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.div(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6754,7 +6755,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>equals(Object)</code> method is called directly in code instead of using the <code>==</code> or <code>!=</code> operator. A groovier way to express this: <code>a.equals(b)</code> is this: <code>a == b</code> and a groovier way to express : <code>!a.equals(b)</code> is: <code>a != b</code>. This rule can be configured to ignore <code>this.equals(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>equals(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.equals(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6766,7 +6767,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>getAt(Object)</code> method is called directly in code instead of using the <code>[]</code> index operator. A groovier way to express this: <code>a.getAt(b)</code> is this: <code>a[b]</code>. This rule can be configured to ignore <code>this.getAt(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>getAt(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.getAt(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6778,7 +6779,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>leftShift(Object)</code> method is called directly in code instead of using the \<\< operator. A groovier way to express this: <code>a.leftShift(b)</code> is this: <code>a \<\< b</code>. This rule can be configured to ignore <code>this.leftShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>leftShift(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.leftShift(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6790,7 +6791,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>minus(Object)</code> method is called directly in code instead of using the <code>-</code> operator. A groovier way to express this: <code>a.minus(b)</code> is this: <code>a - b</code>. This rule can be configured to ignore <code>minus.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>minus(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.minus(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6802,7 +6803,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>multiply(Object)</code> method is called directly in code instead of using the <code>*</code> operator. A groovier  way to express this: <code>a.multiply(b)</code> is this: <code>a * b</code>. This rule can be configured to ignore <code>this.multiply(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>multiply(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.multiply(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6814,7 +6815,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>mod(Object)</code> method is called directly in code instead of using the <code>%</code> operator. A groovier way to express this: <code>a.mod(b)</code> is this: <code>a % b</code>. This rule can be configured to ignore <code>this.mod(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>mod(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.mod(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6826,7 +6827,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>or(Object)</code> method is called directly in code instead of using the <code>|</code> operator. A groovier way to express this: <code>a.or(b)</code> is this: <code>a | b</code>. This rule can be configured to ignore <code>this.or(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>or(x)</code> will not trigger a violation. This is the default because it is commonly used in Grails criteria. </p>
 <p>This rule also ignores all calls to <code>super.or(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6838,7 +6839,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>plus(Object)</code> method is called directly in code instead of using the <code>+</code> operator. A groovier way to express this: <code>a.plus(b)</code> is this: <code>a + b</code>. This rule can be configured to ignore <code>this.plus(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>plus(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.plus(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6850,7 +6851,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>power(Object)</code> method is called directly in code instead of using the <code>**</code> operator. A groovier way to express this: <code>a.power(b)</code> is this: <code>a ** b</code>. This rule can be configured to ignore <code>this.power(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>power(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.power(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6862,7 +6863,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>rightShift(Object)</code> method is called directly in code instead of using the \>\> operator. A groovier way to express this: <code>a.rightShift(b)</code> is this: <code>a \>\> b</code>. This rule can be configured to ignore <code>this.rightShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>rightShift(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.rightShift(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6874,7 +6875,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>xor(Object)</code> method is called directly in code instead of using the <code>^</code> operator. A groovier way to express this: <code>a.xor(b)</code> is this: <code>a ^ b</code>. This rule can be configured to ignore <code>this.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>xor(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.xor(Object)</code>. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6885,7 +6886,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitHashMapInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashMap</code>. In Groovy, it is best to replace <code>new HashMap()</code> with <code>[:]</code>, which creates (mostly) the same object. <code>[:]</code> is technically a LinkedHashMap but it is very rare that someone absolutely needs an instance of <code>HashMap</code> and not a subclass. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6896,7 +6897,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitHashSetInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashSet</code>. In Groovy, it is best to replace <code>new HashSet()</code> with <code>[] as Set</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6907,7 +6908,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitLinkedListInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>LinkedList</code>. In Groovy, it is best to replace <code>new LinkedList()</code> with <code>[] as Queue</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6918,7 +6919,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitStackInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>Stack</code>. In Groovy, it is best to replace <code>new Stack()</code> with <code>[] as Stack</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6929,7 +6930,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitTreeSetInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>TreeSet</code>. In Groovy, it is best to replace <code>new TreeSet()</code> with <code>[] as SortedSet</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -6968,7 +6969,7 @@ for (int i = 0; i < 100; ++i) {
     class Person { }
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6983,7 +6984,7 @@ for (int i = 0; i < 100; ++i) {
     Map map = ["${someRef}" : 'invalid' ]       // violation
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -6994,7 +6995,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for the explicit instantiation of a <code>LinkedHashMap</code> using the no-arg constructor. In Groovy, it is best to replace <code>new LinkedHashMap()</code> with <code>[:]</code>, which creates the same object. </p>
  ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -7013,7 +7014,7 @@ for (int i = 0; i < 100; ++i) {
     [1,2,3].each { println it }
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -7031,7 +7032,7 @@ for (int i = 0; i < 100; ++i) {
 
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7054,7 +7055,7 @@ def (f, g) = [1, 2]    // ok
 (a, b, c) = [1, 2, 3]  // ok
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7102,7 +7103,7 @@ def (f, g) = [1, 2]    // ok
     }
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7121,7 +7122,7 @@ l.collect{ [it, it*2] }.flatten() // suboptimal
 l.collectMany{ [it, it*2] }       // same functionality, better readability
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7140,7 +7141,7 @@ list.collectAll { it * 2 }      // deprecated
 list.collectNested { it * 2 }   // replacement
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7169,7 +7170,7 @@ println list.collect([8]) {
 println list.collectNested { it * 2 } // same functionality, better readability
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -7189,7 +7190,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     def str5 = 'abc {123}'                      // ok
 </pre>
 ]]></description>
-    <tag>groovyism</tag>
+    <tag>bug</tag>
   </rule>
 
 </rules>
