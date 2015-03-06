@@ -137,8 +137,6 @@ public abstract class AbstractAnalyzer {
     }
     if (analyzedResources == 0) {
       JaCoCoExtensions.logger().warn("Coverage information was not collected. Perhaps you forget to include debug information into compiled classes?");
-    } else {
-      JaCoCoExtensions.logger().info("No information about coverage per test.");
     }
   }
 
