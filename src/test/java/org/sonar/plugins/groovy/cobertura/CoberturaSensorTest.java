@@ -85,7 +85,7 @@ public class CoberturaSensorTest {
   }
 
   @Test
-  public void should_not_parse_report_if_report_not_found() {
+  public void should_not_parse_report_if_settings_does_not_contain_report_path() {
     sensor = new CoberturaSensor(new Settings(), mock(FileSystem.class));
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
