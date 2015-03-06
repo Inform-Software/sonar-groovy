@@ -153,6 +153,7 @@ public class CodeNarcSensor implements Sensor {
     int i = 1;
     for (File sourceDir : moduleFileSystem.sourceDirs()) {
       CodeNarcRunner runner = new CodeNarcRunner();
+      // TODO SONARGROOV-24
       FilesystemSourceAnalyzer analyzer = new FilesystemSourceAnalyzer();
 
       // only one source directory
@@ -169,7 +170,6 @@ public class CodeNarcSensor implements Sensor {
 
       runner.setRuleSetFiles("file:" + codeNarcConfiguration.getAbsolutePath());
 
-      // TODO : might be possible to process results object to get violations
       runner.execute();
       result.add(reportFile);
       i++;
