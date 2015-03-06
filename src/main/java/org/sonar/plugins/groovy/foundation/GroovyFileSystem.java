@@ -32,8 +32,7 @@ import java.util.List;
 
 public class GroovyFileSystem {
 
-  private GroovyFileSystem() {
-  }
+  private GroovyFileSystem() {}
 
   public static boolean hasGroovyFiles(FileSystem fileSystem) {
     return fileSystem.hasFiles(fileSystem.predicates().hasLanguage(Groovy.KEY));

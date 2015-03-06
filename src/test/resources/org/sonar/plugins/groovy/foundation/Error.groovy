@@ -1,0 +1,3 @@
+class Error {
+  def name#
+}

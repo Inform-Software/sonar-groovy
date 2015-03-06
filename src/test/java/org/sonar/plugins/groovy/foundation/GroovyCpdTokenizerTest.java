@@ -38,7 +38,7 @@ public class GroovyCpdTokenizerTest {
    * See SONARPLUGINS-596
    */
   @Test
-  public void shouldLex() {
+  public void should_lex() {
     SourceCode source = mock(SourceCode.class);
     File file = TestUtils.getResource("/org/sonar/plugins/groovy/foundation/Greet.groovy");
     when(source.getFileName()).thenReturn(file.getAbsolutePath());
@@ -48,6 +48,33 @@ public class GroovyCpdTokenizerTest {
 
     assertThat(tokens.size()).isEqualTo(31);
     assertThat(tokens.get(tokens.size() - 1)).isSameAs(TokenEntry.getEOF());
+  }
+
+  @Test
+  public void should_tokens_only_contains_EOF_if_file_does_not_exist() {
+    SourceCode source = mock(SourceCode.class);
+    File file = new File("/org/sonar/plugins/groovy/foundation/Greet-fake.groovy");
+    when(source.getFileName()).thenReturn(file.getAbsolutePath());
+    Tokens cpdTokens = new Tokens();
+    new GroovyCpdTokenizer().tokenize(source, cpdTokens);
+    List<TokenEntry> tokens = cpdTokens.getTokens();
+
+    assertThat(tokens.size()).isEqualTo(1);
+    assertThat(tokens.get(tokens.size() - 1)).isSameAs(TokenEntry.getEOF());
+  }
+
+  @Test
+  public void should_lex_stop_when_encountering_unexpected_token() {
+    SourceCode source = mock(SourceCode.class);
+    File file = TestUtils.getResource("/org/sonar/plugins/groovy/foundation/Error.groovy");
+    when(source.getFileName()).thenReturn(file.getAbsolutePath());
+    Tokens cpdTokens = new Tokens();
+    new GroovyCpdTokenizer().tokenize(source, cpdTokens);
+    List<TokenEntry> tokens = cpdTokens.getTokens();
+
+    assertThat(tokens.size()).isEqualTo(7);
+    assertThat(tokens.get(tokens.size() - 1)).isSameAs(TokenEntry.getEOF());
+    assertThat(tokens.get(tokens.size() - 2).getValue()).isEqualTo("name");
   }
 
 }
