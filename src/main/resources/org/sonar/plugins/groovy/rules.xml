@@ -2900,11 +2900,6 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>ignoreFieldTypes</key>
-      <description><![CDATA[Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
       <key>addToIgnoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names to be added to the ignoreFieldNames property value. This is a special write-only property, and each call to setAddIgnoreFieldNames() adds to (rather than overwrites) the list of field names to be ignored. ]]></description>
       <defaultValue>null</defaultValue>
@@ -2912,6 +2907,11 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>ignoreFieldTypes</key>
+      <description><![CDATA[Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
   </rule>
@@ -2995,26 +2995,6 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>allowedPropertyModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>illegalFieldModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>illegalPropertyModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>ignoreMethodsWithAnnotationNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) annotation names that should be ignored (i.e., methods with those annotations should not cause a rule violation). The names may optionally contain wildcards (*,?). (Do not include the "@" in the annotation name ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
       <key>allowedFieldModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
       <defaultValue>null</defaultValue>
@@ -3025,13 +3005,33 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>illegalMethodModifiers</key>
-      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <key>allowedPropertyModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>ignoreMethodsWithAnnotationNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names that should be ignored (i.e., methods with those annotations should not cause a rule violation). The names may optionally contain wildcards (*,?). (Do not include the "@" in the annotation name ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>illegalFieldModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>illegalMethodModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>illegalPropertyModifiers</key>
+      <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
   </rule>
@@ -3129,10 +3129,10 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>grails</tag>
     <param>
-      <key>ignoreFieldTypes</key>
+      <key>ignoreFieldNames</key>
     </param>
     <param>
-      <key>ignoreFieldNames</key>
+      <key>ignoreFieldTypes</key>
     </param>
   </rule>
 
@@ -3225,12 +3225,12 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>grails</tag>
     <param>
-      <key>additionalReservedSqlKeywords</key>
-      <description><![CDATA[Comma-separated list of additional reserved SQL keywords (just in case the 337 keywords of nowadays SQL-* standards weren't enough). ]]></description>
-    </param>
-    <param>
       <key>additionalHibernateBasicTypes</key>
       <description><![CDATA[Comma-separated list of simple class names of additional classes that Hibernate maps as basic types (creates a column for a field of such class). Add your custom basic types here. ]]></description>
+    </param>
+    <param>
+      <key>additionalReservedSqlKeywords</key>
+      <description><![CDATA[Comma-separated list of additional reserved SQL keywords (just in case the 337 keywords of nowadays SQL-* standards weren't enough). ]]></description>
     </param>
   </rule>
 
@@ -3994,14 +3994,9 @@ for (int i = 0; i < 100; ++i) {
  ]]></description>
     <tag>bug</tag>
     <param>
-      <key>staticRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex. ]]></description>
+      <key>finalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate final field names. It is optional. If not set, then final fields that are non-static are validated using regex. ]]></description>
       <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the default regular expression used to validate the field name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
     </param>
     <param>
       <key>ignoreFieldNames</key>
@@ -4009,14 +4004,19 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>serialVersionUID</defaultValue>
     </param>
     <param>
-      <key>finalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate final field names. It is optional. If not set, then final fields that are non-static are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
+      <key>regex</key>
+      <description><![CDATA[Specifies the default regular expression used to validate the field name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
     </param>
     <param>
       <key>staticFinalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate static final field names. It is optional. If not set, then static final fields are validated using finalRegex, staticRegex or regex. ]]></description>
       <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
+    </param>
+    <param>
+      <key>staticRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex. ]]></description>
+      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4111,14 +4111,14 @@ for (int i = 0; i < 100; ++i) {
  ]]></description>
     <tag>bug</tag>
     <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
-    <param>
       <key>ignoreParameterNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) parameter names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
     </param>
   </rule>
 
@@ -4138,13 +4138,8 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>staticFinalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex. ]]></description>
-      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
-    </param>
-    <param>
-      <key>staticRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex. ]]></description>
+      <key>ignorePropertyNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
@@ -4153,8 +4148,13 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
     </param>
     <param>
-      <key>ignorePropertyNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <key>staticFinalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex. ]]></description>
+      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
+    </param>
+    <param>
+      <key>staticRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
   </rule>
@@ -4168,11 +4168,6 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
-    <param>
       <key>finalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate final variable names. It is optional. If not set, then regex is used to validate final variable names. ]]></description>
       <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
@@ -4181,6 +4176,11 @@ for (int i = 0; i < 100; ++i) {
       <key>ignoreVariableNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
     </param>
   </rule>
 
@@ -4288,23 +4288,23 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>maxClassAbcScore</key>
-      <description><![CDATA[The maximum <ABC> score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or <null>, then do not check class-level scores. ]]></description>
-      <defaultValue>0</defaultValue>
-    </param>
-    <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>maxMethodAbcScore</key>
-      <description><![CDATA[The maximum <ABC> score allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level scores. ]]></description>
-      <defaultValue>60</defaultValue>
+      <key>maxClassAbcScore</key>
+      <description><![CDATA[The maximum <ABC> score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or <null>, then do not check class-level scores. ]]></description>
+      <defaultValue>0</defaultValue>
     </param>
     <param>
       <key>maxClassAverageMethodAbcScore</key>
       <description><![CDATA[The maximum average <ABC> score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or <null>, then do not check class-level average scores. ]]></description>
+      <defaultValue>60</defaultValue>
+    </param>
+    <param>
+      <key>maxMethodAbcScore</key>
+      <description><![CDATA[The maximum <ABC> score allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level scores. ]]></description>
       <defaultValue>60</defaultValue>
     </param>
   </rule>
@@ -4348,14 +4348,14 @@ for (int i = 0; i < 100; ++i) {
       <defaultValue>20</defaultValue>
     </param>
     <param>
-      <key>maxMethodComplexity</key>
-      <description><![CDATA[The maximum <cyclomatic complexity> value allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level complexity. ]]></description>
-      <defaultValue>20</defaultValue>
-    </param>
-    <param>
       <key>maxClassComplexity</key>
       <description><![CDATA[The maximum total <cyclomatic complexity> value allowed for a class, calculated as the total complexity of its methods or "closure fields". If zero or <null>, then do not check total class-level complexity. ]]></description>
       <defaultValue>0</defaultValue>
+    </param>
+    <param>
+      <key>maxMethodComplexity</key>
+      <description><![CDATA[The maximum <cyclomatic complexity> value allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level complexity. ]]></description>
+      <defaultValue>20</defaultValue>
     </param>
   </rule>
 
@@ -4448,24 +4448,24 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>ignoreMethodNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
+      <key>coberturaXmlFile</key>
+      <description><![CDATA[The path to the Cobertura XML coverage file for the Groovy code By default, the path is relative to the classpath. But the path may be optionally prefixed by any of the valid java.net.URL prefixes, such as "file:" (to load from a relative or absolute path on the filesystem), or "http:". This property is REQUIRED. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
-      <key>maxClassCrapScore</key>
-      <description><![CDATA[The maximum total <CRAP> metric value allowed for a class, calculated as the total CRAP value of its methods. If zero or <null>, then do not check class-level CRAP value. ]]></description>
-      <defaultValue>0</defaultValue>
-    </param>
-    <param>
-      <key>coberturaXmlFile</key>
-      <description><![CDATA[The path to the Cobertura XML coverage file for the Groovy code By default, the path is relative to the classpath. But the path may be optionally prefixed by any of the valid java.net.URL prefixes, such as "file:" (to load from a relative or absolute path on the filesystem), or "http:". This property is REQUIRED. ]]></description>
+      <key>ignoreMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxClassAverageMethodCrapScore</key>
       <description><![CDATA[The maximum <CRAP> average metric value allowed for a class, calculated as the average CRAP value of its methods. If zero or <null>, then do not check the average class-level CRAP value. ]]></description>
       <defaultValue>30</defaultValue>
+    </param>
+    <param>
+      <key>maxClassCrapScore</key>
+      <description><![CDATA[The maximum total <CRAP> metric value allowed for a class, calculated as the total CRAP value of its methods. If zero or <null>, then do not check class-level CRAP value. ]]></description>
+      <defaultValue>0</defaultValue>
     </param>
     <param>
       <key>maxMethodCrapScore</key>
@@ -6239,14 +6239,14 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>convention</tag>
     <param>
-      <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-    <param>
       <key>checkClosureMapEntryValue</key>
       <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
       <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreEmptyBlock</key>
+      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
+      <defaultValue>false</defaultValue>
     </param>
   </rule>
 
@@ -6362,13 +6362,13 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>convention</tag>
     <param>
-      <key>characterBeforeColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <key>characterAfterColonRegex</key>
+      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
       <defaultValue>/\\S/</defaultValue>
     </param>
     <param>
-      <key>characterAfterColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <key>characterBeforeColonRegex</key>
+      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
       <defaultValue>/\\S/</defaultValue>
     </param>
   </rule>
@@ -6689,7 +6689,7 @@ for (int i = 0; i < 100; ++i) {
   def c = myList.sort().findAll { x < 1 }
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6700,7 +6700,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitArrayListInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>ArrayList</code>. In Groovy, it is best to write <code>new ArrayList() as []</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6712,7 +6712,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>and(Object)</code> method is called directly in code instead of using the <code>&</code> operator. A groovier way to express this: <code>a.and(b)</code> is this: <code>a & b</code>. This rule can be configured to ignore <code>this.and(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>and(x)</code> will not trigger a violation. The default is <true> because <code>and</code> appears commonly in Grails criteria. </p>
 <p>This rule also ignores all calls to <code>super.and(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6731,7 +6731,7 @@ for (int i = 0; i < 100; ++i) {
     a.compareTo(b) <= 0               // can be replaced by: a <= b
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6743,7 +6743,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>div(Object)</code> method is called directly in code instead of using the <code>/</code> operator. A groovier way to express this: <code>a.div(b)</code> is this: <code>a / b</code>. This rule can be configured to ignore <code>div.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>div(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.div(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6755,7 +6755,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>equals(Object)</code> method is called directly in code instead of using the <code>==</code> or <code>!=</code> operator. A groovier way to express this: <code>a.equals(b)</code> is this: <code>a == b</code> and a groovier way to express : <code>!a.equals(b)</code> is: <code>a != b</code>. This rule can be configured to ignore <code>this.equals(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>equals(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.equals(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6767,7 +6767,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>getAt(Object)</code> method is called directly in code instead of using the <code>[]</code> index operator. A groovier way to express this: <code>a.getAt(b)</code> is this: <code>a[b]</code>. This rule can be configured to ignore <code>this.getAt(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>getAt(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.getAt(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6779,7 +6779,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>leftShift(Object)</code> method is called directly in code instead of using the \<\< operator. A groovier way to express this: <code>a.leftShift(b)</code> is this: <code>a \<\< b</code>. This rule can be configured to ignore <code>this.leftShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>leftShift(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.leftShift(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6791,7 +6791,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>minus(Object)</code> method is called directly in code instead of using the <code>-</code> operator. A groovier way to express this: <code>a.minus(b)</code> is this: <code>a - b</code>. This rule can be configured to ignore <code>minus.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>minus(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.minus(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6803,7 +6803,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>multiply(Object)</code> method is called directly in code instead of using the <code>*</code> operator. A groovier  way to express this: <code>a.multiply(b)</code> is this: <code>a * b</code>. This rule can be configured to ignore <code>this.multiply(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>multiply(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.multiply(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6815,7 +6815,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>mod(Object)</code> method is called directly in code instead of using the <code>%</code> operator. A groovier way to express this: <code>a.mod(b)</code> is this: <code>a % b</code>. This rule can be configured to ignore <code>this.mod(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>mod(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.mod(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6827,7 +6827,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>or(Object)</code> method is called directly in code instead of using the <code>|</code> operator. A groovier way to express this: <code>a.or(b)</code> is this: <code>a | b</code>. This rule can be configured to ignore <code>this.or(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>or(x)</code> will not trigger a violation. This is the default because it is commonly used in Grails criteria. </p>
 <p>This rule also ignores all calls to <code>super.or(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6839,7 +6839,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>plus(Object)</code> method is called directly in code instead of using the <code>+</code> operator. A groovier way to express this: <code>a.plus(b)</code> is this: <code>a + b</code>. This rule can be configured to ignore <code>this.plus(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>plus(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.plus(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6851,7 +6851,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>power(Object)</code> method is called directly in code instead of using the <code>**</code> operator. A groovier way to express this: <code>a.power(b)</code> is this: <code>a ** b</code>. This rule can be configured to ignore <code>this.power(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>power(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.power(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6863,7 +6863,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>rightShift(Object)</code> method is called directly in code instead of using the \>\> operator. A groovier way to express this: <code>a.rightShift(b)</code> is this: <code>a \>\> b</code>. This rule can be configured to ignore <code>this.rightShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>rightShift(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.rightShift(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6875,7 +6875,7 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule detects when the <code>xor(Object)</code> method is called directly in code instead of using the <code>^</code> operator. A groovier way to express this: <code>a.xor(b)</code> is this: <code>a ^ b</code>. This rule can be configured to ignore <code>this.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>xor(x)</code> will trigger a violation. </p>
 <p>This rule also ignores all calls to <code>super.xor(Object)</code>. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6886,7 +6886,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitHashMapInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashMap</code>. In Groovy, it is best to replace <code>new HashMap()</code> with <code>[:]</code>, which creates (mostly) the same object. <code>[:]</code> is technically a LinkedHashMap but it is very rare that someone absolutely needs an instance of <code>HashMap</code> and not a subclass. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6897,7 +6897,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitHashSetInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashSet</code>. In Groovy, it is best to replace <code>new HashSet()</code> with <code>[] as Set</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6908,7 +6908,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitLinkedListInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>LinkedList</code>. In Groovy, it is best to replace <code>new LinkedList()</code> with <code>[] as Queue</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6919,7 +6919,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitStackInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>Stack</code>. In Groovy, it is best to replace <code>new Stack()</code> with <code>[] as Stack</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6930,7 +6930,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitTreeSetInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>TreeSet</code>. In Groovy, it is best to replace <code>new TreeSet()</code> with <code>[] as SortedSet</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.13 -->
@@ -6969,7 +6969,7 @@ for (int i = 0; i < 100; ++i) {
     class Person { }
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -6984,7 +6984,7 @@ for (int i = 0; i < 100; ++i) {
     Map map = ["${someRef}" : 'invalid' ]       // violation
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -6995,7 +6995,7 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></internalKey>
     <description><![CDATA[<p>This rule checks for the explicit instantiation of a <code>LinkedHashMap</code> using the no-arg constructor. In Groovy, it is best to replace <code>new LinkedHashMap()</code> with <code>[:]</code>, which creates the same object. </p>
  ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -7014,7 +7014,7 @@ for (int i = 0; i < 100; ++i) {
     [1,2,3].each { println it }
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.15 -->
@@ -7032,7 +7032,7 @@ for (int i = 0; i < 100; ++i) {
 
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7055,7 +7055,7 @@ def (f, g) = [1, 2]    // ok
 (a, b, c) = [1, 2, 3]  // ok
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7103,7 +7103,7 @@ def (f, g) = [1, 2]    // ok
     }
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7122,7 +7122,7 @@ l.collect{ [it, it*2] }.flatten() // suboptimal
 l.collectMany{ [it, it*2] }       // same functionality, better readability
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7141,7 +7141,7 @@ list.collectAll { it * 2 }      // deprecated
 list.collectNested { it * 2 }   // replacement
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -7170,7 +7170,7 @@ println list.collect([8]) {
 println list.collectNested { it * 2 } // same functionality, better readability
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
   <!-- since 0.19 -->
@@ -7190,7 +7190,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     def str5 = 'abc {123}'                      // ok
 </pre>
 ]]></description>
-    <tag>bug</tag>
+    <tag>groovyism</tag>
   </rule>
 
 </rules>
