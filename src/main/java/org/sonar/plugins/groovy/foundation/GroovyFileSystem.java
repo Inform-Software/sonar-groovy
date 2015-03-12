@@ -56,7 +56,7 @@ public class GroovyFileSystem {
 
   @CheckForNull
   public InputFile sourceInputFileFromRelativePath(String relativePath) {
-    return fileSystem.inputFile(predicates.and(predicates.matchesPathPattern("**/" + relativePath), isMainTypeFile));
+    return fileSystem.inputFile(predicates.and(predicates.matchesPathPattern("**/" + relativePath), isGroovyLanguage, isMainTypeFile));
   }
 
 }

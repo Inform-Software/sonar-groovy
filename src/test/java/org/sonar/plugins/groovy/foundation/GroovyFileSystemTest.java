@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy.foundation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 
@@ -64,9 +65,12 @@ public class GroovyFileSystemTest {
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath(null)).isNull();
 
     fileSystem.add(new DefaultInputFile("fake1.file"));
-    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake1.file")).isNotNull();
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake1.file")).isNull();
 
-    fileSystem.add(new DefaultInputFile("org/sample/foo/fake2.file"));
-    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("foo/fake2.file")).isNotNull();
+    fileSystem.add(new DefaultInputFile("fake2.file").setType(Type.MAIN).setLanguage(Groovy.KEY));
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake2.file")).isNotNull();
+
+    fileSystem.add(new DefaultInputFile("org/sample/foo/fake3.file").setType(Type.MAIN).setLanguage(Groovy.KEY));
+    assertThat(groovyFileSystem.sourceInputFileFromRelativePath("foo/fake3.file")).isNotNull();
   }
 }
