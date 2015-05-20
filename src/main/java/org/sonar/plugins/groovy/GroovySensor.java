@@ -20,9 +20,9 @@
 
 package org.sonar.plugins.groovy;
 
-import antlr.Token;
-import antlr.TokenStream;
-import antlr.TokenStreamException;
+import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
+import groovyjarjarantlr.TokenStreamException;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
 import org.gmetrics.GMetricsRunner;

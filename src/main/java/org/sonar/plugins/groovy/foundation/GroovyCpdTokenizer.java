@@ -20,9 +20,9 @@
 
 package org.sonar.plugins.groovy.foundation;
 
-import antlr.Token;
-import antlr.TokenStream;
-import antlr.TokenStreamException;
+import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
+import groovyjarjarantlr.TokenStreamException;
 import net.sourceforge.pmd.cpd.SourceCode;
 import net.sourceforge.pmd.cpd.TokenEntry;
 import net.sourceforge.pmd.cpd.Tokenizer;
