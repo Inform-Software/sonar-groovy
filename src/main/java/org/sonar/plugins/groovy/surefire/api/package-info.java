@@ -18,17 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-package org.sonar.plugins.groovy;
+@ParametersAreNonnullByDefault
+package org.sonar.plugins.groovy.surefire.api;
 
-import org.junit.Test;
-
-import static org.fest.assertions.Assertions.assertThat;
-
-public class GroovyPluginTest {
-
-  @Test
-  public void testExtensions() {
-    assertThat(new GroovyPlugin().getExtensions()).hasSize(19);
-  }
-
-}
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -33,6 +33,8 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
 import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
+import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
+import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 import java.util.List;
 
@@ -98,7 +100,9 @@ public class GroovyPlugin extends SonarPlugin {
       GroovyCpdMapping.class,
       // Main sensor
       GroovySensor.class,
-
+      // Surefire
+      GroovySurefireParser.class,
+      GroovySurefireSensor.class,
       // Cobertura
       CoberturaSensor.class
       );
