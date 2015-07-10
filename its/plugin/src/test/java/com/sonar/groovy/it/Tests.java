@@ -43,7 +43,6 @@ public class Tests {
   static {
     OrchestratorBuilder orchestratorBuilder = Orchestrator.builderEnv()
       .addPlugin(PLUGIN_KEY)
-      .setOrchestratorProperty("javaVersion", "LATEST_RELEASE")
       .addPlugin("java")
       .setMainPluginKey(PLUGIN_KEY)
       .restoreProfileAtStartup(FileLocation.of("src/test/resources/default.xml"));
