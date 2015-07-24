@@ -63,11 +63,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
-        <artifactId>sslr-squid-bridge</artifactId>
-        <version>2.7-SNAPSHOT</version>
-      </dependency>        
-      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy</artifactId>
         <version>${groovy.version}</version>
@@ -177,6 +172,12 @@
       <artifactId>fest-assert</artifactId>
       <version>1.4</version>
       <scope>test</scope>
+    </dependency>
+    <!-- needed for Sqale -->
+    <dependency>
+      <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
+      <artifactId>sslr-squid-bridge</artifactId>
+      <version>2.6</version>
     </dependency>
   </dependencies>
 
