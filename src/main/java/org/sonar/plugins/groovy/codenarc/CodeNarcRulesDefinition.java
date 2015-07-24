@@ -23,6 +23,7 @@ package org.sonar.plugins.groovy.codenarc;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 public class CodeNarcRulesDefinition implements RulesDefinition {
 
@@ -37,6 +38,7 @@ public class CodeNarcRulesDefinition implements RulesDefinition {
 
     RulesDefinitionXmlLoader ruleLoader = new RulesDefinitionXmlLoader();
     ruleLoader.load(repository, CodeNarcRulesDefinition.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml"), "UTF-8");
+    SqaleXmlLoader.load(repository, "/com/sonar/sqale/groovy-model.xml");
     repository.done();
   }
 }

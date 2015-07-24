@@ -63,6 +63,11 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
+        <artifactId>sslr-squid-bridge</artifactId>
+        <version>2.7-SNAPSHOT</version>
+      </dependency>        
+      <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy</artifactId>
         <version>${groovy.version}</version>
@@ -190,7 +195,7 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>10000000</maxsize>
+                  <maxsize>15000000</maxsize>
                   <minsize>8500000</minsize>
                   <files>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
