@@ -5867,7 +5867,7 @@ for (int i = 0; i < 100; ++i) {
     <name><![CDATA[File Create Temp File]]></name>
     <internalKey><![CDATA[FileCreateTempFile]]></internalKey>
     <description><![CDATA[<p>The File.createTempFile() method is insecure, and has been deprecated by the ESAPI secure coding library. It has been replaced by the ESAPI Randomizer.getRandomFilename(String) method. </p>
-<p>For more information see the ESAPI website: http://code.google.com/p/owasp-esapi-java/ and the Randomizer Javadoc: <a>http://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/Randomizer.html</a> </p>
+<p>For more information see the <a href="http://code.google.com/p/owasp-esapi-java/">ESAPI website</a> and the <a href="http://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/Randomizer.html">Randomizer Javadoc</a>. </p>
  ]]></description>
     <tag>bug</tag>
   </rule>
