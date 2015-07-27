@@ -3346,6 +3346,11 @@ for (int i = 0; i < 100; ++i) {
 </pre>
 ]]></description>
     <tag>bug</tag>
+    <param>
+      <key>comesBefore</key>
+      <description><![CDATA[If you like your static imports to come after the others, then set this property to false. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.21 -->
