@@ -44,6 +44,19 @@ public class CodeNarcRulesDefinitionTest {
     List<Rule> rules = repository.rules();
     assertThat(rules).hasSize(342);
 
+    int missingDebt = 0;
+    for (Rule rule : rules) {
+      assertThat(rule.key()).isNotNull();
+      assertThat(rule.internalKey()).isNotNull();
+      assertThat(rule.name()).isNotNull();
+      assertThat(rule.htmlDescription()).isNotNull();
+      if (rule.debtRemediationFunction() == null) {
+        missingDebt++;
+      }
+    }
+    // FIXME SONARGROOV-36
+    assertThat(missingDebt).isEqualTo(21);
+
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
     assertThat(rule.params()).hasSize(1);
     assertThat(rule.params().get(0).defaultValue()).isEqualToIgnoringCase("false");
