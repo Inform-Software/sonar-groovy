@@ -2925,10 +2925,244 @@
           <txt>mn</txt>
         </prop>
       </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.BlankLineBeforePackageRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.ConsecutiveBlankLinesRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.FileEndsWithoutNewlineRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.MissingBlankLineAfterImportsRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.MissingBlankLineAfterPackageRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.formatting.TrailingWhitespaceRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.imports.NoWildcardImportsRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
     </chc>
     <chc>
       <key>UNDERSTANDABILITY</key>
       <name>Understandability</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.unnecessary.UnnecessaryCastRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.unnecessary.UnnecessarySafeNavigationOperatorRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.unnecessary.UnnecessaryToStringRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.basic.MultipleUnaryOperatorsRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.convention.NoDefRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.size.AbcMetricRule</rule-key>
@@ -3251,6 +3485,24 @@
     <chc>
       <key>INPUT_VALIDATION_AND_REPRESENTATION</key>
       <name>Input validation and representation</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.grails.GrailsMassAssignmentRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>20.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
     </chc>
     <chc>
       <key>SECURITY_FEATURES</key>
@@ -3609,6 +3861,24 @@
       <name>Logic</name>
       <chc>
         <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.size.ParameterCountRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>20.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.size.CrapMetricRule</rule-key>
         <prop>
           <key>remediationFunction</key>
@@ -3849,6 +4119,24 @@
     <chc>
       <key>ARCHITECTURE_RELIABILITY</key>
       <name>Architecture</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.design.InstanceofRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.design.BuilderMethodWithSideEffectsRule</rule-key>
@@ -4253,6 +4541,24 @@
     <chc>
       <key>EXCEPTION_HANDLING</key>
       <name>Exception handling</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.exceptions.ExceptionExtendsThrowableRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>15.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.basic.AssertWithinFinallyBlockRule</rule-key>
@@ -4749,6 +5055,24 @@
       <name>Instruction</name>
       <chc>
         <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.design.ToStringReturnsNullRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.design.BooleanMethodReturnsNullRule</rule-key>
         <prop>
           <key>remediationFunction</key>
@@ -4895,6 +5219,24 @@
     <chc>
       <key>LOGIC_RELIABILITY</key>
       <name>Logic</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.design.NestedForLoopRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>10.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.convention.CouldBeElvisRule</rule-key>
@@ -5963,6 +6305,24 @@
     <chc>
       <key>UNIT_TESTABILITY</key>
       <name>Unit level</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.junit.JUnitPublicPropertyRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>10.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.junit.ChainedTestRule</rule-key>

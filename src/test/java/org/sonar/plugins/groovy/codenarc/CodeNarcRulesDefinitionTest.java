@@ -20,6 +20,7 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
@@ -44,18 +45,18 @@ public class CodeNarcRulesDefinitionTest {
     List<Rule> rules = repository.rules();
     assertThat(rules).hasSize(342);
 
-    int missingDebt = 0;
+    List<String> missingDebt = Lists.newLinkedList();
     for (Rule rule : rules) {
       assertThat(rule.key()).isNotNull();
       assertThat(rule.internalKey()).isNotNull();
       assertThat(rule.name()).isNotNull();
       assertThat(rule.htmlDescription()).isNotNull();
       if (rule.debtRemediationFunction() == null) {
-        missingDebt++;
+        missingDebt.add(rule.key());
       }
     }
-    // FIXME SONARGROOV-36
-    assertThat(missingDebt).isEqualTo(21);
+    // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have SQALE mapping by purpose
+    assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule");
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
     assertThat(rule.params()).hasSize(1);
