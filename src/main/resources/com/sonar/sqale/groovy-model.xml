@@ -3057,6 +3057,24 @@
       <name>Understandability</name>
       <chc>
         <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.naming.ClassNameSameAsSuperclassRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.unnecessary.UnnecessaryCastRule</rule-key>
         <prop>
           <key>remediationFunction</key>
@@ -3130,6 +3148,24 @@
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.naming.InterfaceNameSameAsSuperInterfaceRule</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -5857,6 +5893,24 @@
     <chc>
       <key>SYNCHRONIZATION_RELIABILITY</key>
       <name>Synchronization</name>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.design.AssignmentToStaticFieldFromInstanceMethodRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>20.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.basic.BigDecimalInstantiationRule</rule-key>

@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.23 -->
+<!-- Generated using CodeNarc 0.24 -->
 <rules>
 
   <!-- basic rules -->
@@ -2461,6 +2461,37 @@ for (int i = 0; i < 100; ++i) {
     <tag>design</tag>
   </rule>
 
+  <!-- since 0.24 -->
+  <rule>
+    <key>org.codenarc.rule.design.AssignmentToStaticFieldFromInstanceMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Assignment To Static Field From Instance Method]]></name>
+    <internalKey><![CDATA[AssignmentToStaticFieldFromInstanceMethod]]></internalKey>
+    <description><![CDATA[<p>Checks for assignment to a static field from an instance method. </p>
+<p>Influenced by the <code>AssignmentToNonFinalStatic</code> rule from <code>PMD</code>, and the <code>ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD</code> rule from <code>FindBugs</code>. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyClass {
+        private static field1
+        protected static String field2 = 'abc'
+        public static int field3 = 123
+        static String property1 = 'abc'
+        private static final NAME = 'joe'
+
+        private void doStuff() {
+            field1 = new Object()       // violation
+            field2 = 'xxx'              // violation
+            field3 = 999                // violation
+            property1 = 'xxx'           // violation
+
+            final NAME = 'martin'       // no violation; local var hides static field
+        }
+    }
+</pre>
+]]></description>
+    <tag>design</tag>
+  </rule>
+
   <!-- dry rules -->
 
   <!-- since 0.11 -->
@@ -4272,6 +4303,37 @@ for (int i = 0; i < 100; ++i) {
       <description><![CDATA[Specifies the common <group id> part of a package name, that will appear within all checked package names. It must also map to the file path for the correspondin source file. For instance, a <groupId> of <"org.sample"> means that for all classes that specify a package, that package name must include <"org.sample">, and the source file must exist under an "org/sample" directory. Then, a MyClass class in a org.sample.util package must be defined in a "MyClass.groovy" file within a <"org/sample/util"> directory. That directory can be the child of any arbitrary <root path>, e.g. "src/main/groovy". To find the sub-path relevant for the package the rule searches for the first appearance of <groupId> in the file path. It's <required> to configure this. If groupId is null or empty, this rule does nothing. ]]></description>
       <defaultValue>null</defaultValue>
     </param>
+  </rule>
+
+  <!-- since 0.24 -->
+  <rule>
+    <key>org.codenarc.rule.naming.ClassNameSameAsSuperclassRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Class Name Same As Superclass]]></name>
+    <internalKey><![CDATA[ClassNameSameAsSuperclass]]></internalKey>
+    <description><![CDATA[<p>Checks for any class that has an identical name to its superclass, other than the package. This can be very confusing. </p>
+<p>Also see FindBugs NM_SAME_SIMPLE_NAME_AS_SUPERCLASS rule. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyClass extends other.MyClass         // violation
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.24 -->
+  <rule>
+    <key>org.codenarc.rule.naming.InterfaceNameSameAsSuperInterfaceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Interface Name Same As Super Interface]]></name>
+    <internalKey><![CDATA[InterfaceNameSameAsSuperInterface]]></internalKey>
+    <description><![CDATA[<p>Checks for any interface that has an identical name to its super-interface, other than the package. This can be very confusing. </p>
+<p>Example of violations: </p>
+<pre>
+    interface MyInterface extends other.MyInterface { }     // violation
+</pre>
+]]></description>
+    <tag>bug</tag>
   </rule>
 
   <!-- size rules -->
