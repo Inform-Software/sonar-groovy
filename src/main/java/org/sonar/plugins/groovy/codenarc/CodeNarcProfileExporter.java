@@ -20,8 +20,10 @@
 
 package org.sonar.plugins.groovy.codenarc;
 
+import org.apache.commons.lang.StringUtils;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.rules.ActiveRuleParam;
 import org.sonar.api.utils.SonarException;
 
 import java.io.IOException;
@@ -74,6 +76,17 @@ public class CodeNarcProfileExporter {
       writer.append(AUTO_CLOSING_TAG);
     } else {
       writer.append("\">\n");
+      for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
+        String value = activeRuleParam.getValue();
+        String defaultValue = activeRuleParam.getRuleParam().getDefaultValue();
+        if (StringUtils.isNotBlank(value) && !value.equals(defaultValue)) {
+          writer.append("<property name=\"")
+            .append(activeRuleParam.getKey())
+            .append("\" value=\"")
+            .append(value)
+            .append(AUTO_CLOSING_TAG);
+        }
+      }
       writer.append("</rule>\n");
     }
   }

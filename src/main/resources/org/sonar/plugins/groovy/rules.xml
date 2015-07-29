@@ -3751,7 +3751,7 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>specificationSuperclassNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification superclasses. In other words, a class that extends a matching class name is considered a Spock Specification . The class names may optionally contain wildcards (*,?), e.g. "*Spec". ]]></description>
-      <defaultValue>"*Specification"</defaultValue>
+      <defaultValue>*Specification</defaultValue>
     </param>
   </rule>
 

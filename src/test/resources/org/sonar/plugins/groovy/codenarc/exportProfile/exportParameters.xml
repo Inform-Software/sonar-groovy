@@ -4,5 +4,6 @@
          xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
          xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
   <rule class="org.codenarc.rule.size.ClassSizeRule">
+    <property name="maxLines" value="20"/>
   </rule>
 </ruleset>

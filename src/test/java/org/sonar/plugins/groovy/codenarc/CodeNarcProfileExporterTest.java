@@ -65,7 +65,7 @@ public class CodeNarcProfileExporterTest {
   }
 
   @Test
-  public void shouldNotExportParameters() throws Exception {
+  public void shouldExportParameters() throws Exception {
     Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", "20");
@@ -82,6 +82,19 @@ public class CodeNarcProfileExporterTest {
     Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines");
     profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", null);
+
+    exporter.exportProfile(profile);
+
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportNullParameters.xml"),
+      writer.toString());
+  }
+
+  @Test
+  public void shouldNotExportParametersWithDefaultValue() throws Exception {
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
+    rule.createParameter("maxLines").setDefaultValue("20");
+    profile.activateRule(rule, RulePriority.MAJOR).setParameter("maxLines", "20");
 
     exporter.exportProfile(profile);
 
