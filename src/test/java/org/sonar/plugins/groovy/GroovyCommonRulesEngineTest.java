@@ -20,7 +20,8 @@
 package org.sonar.plugins.groovy;
 
 import org.junit.Test;
-import org.sonar.commonrules.api.CommonRulesRepository;
+import org.sonar.squidbridge.commonrules.api.CommonRulesRepository;
+import org.sonar.squidbridge.commonrules.internal.CommonRulesConstants;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -36,8 +37,11 @@ public class GroovyCommonRulesEngineTest {
   public void enable_common_rules() {
     GroovyCommonRulesEngine engine = new GroovyCommonRulesEngine();
     CommonRulesRepository repo = engine.newRepository();
-    assertThat(repo.rules()).hasSize(4);
-    assertThat(repo.rule(CommonRulesRepository.RULE_INSUFFICIENT_COMMENT_DENSITY)).isNotNull();
+    assertThat(repo.enabledRuleKeys()).containsOnly(
+      CommonRulesConstants.RULE_DUPLICATED_BLOCKS,
+      CommonRulesConstants.RULE_INSUFFICIENT_COMMENT_DENSITY,
+      CommonRulesConstants.RULE_INSUFFICIENT_LINE_COVERAGE,
+      CommonRulesConstants.RULE_INSUFFICIENT_BRANCH_COVERAGE);
   }
 
 }

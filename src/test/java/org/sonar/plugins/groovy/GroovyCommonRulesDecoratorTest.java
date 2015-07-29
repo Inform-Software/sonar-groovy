@@ -20,8 +20,9 @@
 package org.sonar.plugins.groovy;
 
 import org.junit.Test;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.rule.CheckFactory;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -31,7 +32,7 @@ public class GroovyCommonRulesDecoratorTest {
 
   @Test
   public void test_declaration() throws Exception {
-    GroovyCommonRulesDecorator decorator = new GroovyCommonRulesDecorator(mock(ProjectFileSystem.class), mock(RulesProfile.class));
+    GroovyCommonRulesDecorator decorator = new GroovyCommonRulesDecorator(new DefaultFileSystem(), mock(CheckFactory.class), mock(ResourcePerspectives.class));
     assertThat(decorator.language()).isEqualTo(Groovy.KEY);
   }
 

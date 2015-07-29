@@ -19,13 +19,14 @@
  */
 package org.sonar.plugins.groovy;
 
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.ProjectFileSystem;
-import org.sonar.commonrules.api.CommonRulesDecorator;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.rule.CheckFactory;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.squidbridge.commonrules.api.CommonRulesDecorator;
 
 public class GroovyCommonRulesDecorator extends CommonRulesDecorator {
-  public GroovyCommonRulesDecorator(ProjectFileSystem fs, RulesProfile qProfile) {
-    super(Groovy.KEY, fs, qProfile);
+  public GroovyCommonRulesDecorator(FileSystem fs, CheckFactory checkFactory, ResourcePerspectives resourcePerspectives) {
+    super(Groovy.KEY, fs, checkFactory, resourcePerspectives);
   }
 }

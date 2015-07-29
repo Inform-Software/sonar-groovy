@@ -19,9 +19,9 @@
  */
 package org.sonar.plugins.groovy;
 
-import org.sonar.commonrules.api.CommonRulesEngine;
-import org.sonar.commonrules.api.CommonRulesRepository;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.squidbridge.commonrules.api.CommonRulesEngine;
+import org.sonar.squidbridge.commonrules.api.CommonRulesRepository;
 
 public class GroovyCommonRulesEngine extends CommonRulesEngine {
 
