@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +33,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.config.Settings;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.profiles.RulesProfile;
@@ -43,6 +43,7 @@ import org.sonar.api.rules.RuleQuery;
 import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
+import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
@@ -57,7 +58,6 @@ public class CodeNarcSensor implements Sensor {
 
   private static final Logger LOG = LoggerFactory.getLogger(CodeNarcSensor.class);
 
-  private final Settings settings;
   private final ResourcePerspectives perspectives;
   private final ModuleFileSystem moduleFileSystem;
   private final FileSystem fileSystem;
@@ -65,20 +65,26 @@ public class CodeNarcSensor implements Sensor {
   private final RuleFinder ruleFinder;
   private final GroovyFileSystem groovyFileSystem;
 
+  private final String includedFiles;
+  private final String codeNarcReportPath;
+
   public CodeNarcSensor(
-    Settings settings,
+    Groovy groovy,
     ResourcePerspectives perspectives,
     ModuleFileSystem moduleFileSystem,
     FileSystem fileSystem,
     RulesProfile profile,
     RuleFinder ruleFinder) {
-    this.settings = settings;
     this.perspectives = perspectives;
     this.moduleFileSystem = moduleFileSystem;
     this.fileSystem = fileSystem;
     this.rulesProfile = profile;
     this.ruleFinder = ruleFinder;
     this.groovyFileSystem = new GroovyFileSystem(fileSystem);
+
+    this.includedFiles = groovyExtensions(groovy.getFileSuffixes());
+    this.codeNarcReportPath = groovy.getCodeNarcReportPath();
+
   }
 
   @Override
@@ -89,7 +95,6 @@ public class CodeNarcSensor implements Sensor {
   @Override
   public void analyse(Project project, SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    String codeNarcReportPath = settings.getString(GroovyPlugin.CODENARC_REPORT_PATH);
     if (StringUtils.isNotBlank(codeNarcReportPath)) {
       // Yes
       File report = new File(codeNarcReportPath);
@@ -160,7 +165,7 @@ public class CodeNarcSensor implements Sensor {
 
       // only one source directory
       analyzer.setBaseDirectory(sourceDir.getAbsolutePath());
-      analyzer.setIncludes("**/*.groovy");
+      analyzer.setIncludes(includedFiles);
       runner.setSourceAnalyzer(analyzer);
 
       // generated XML report
@@ -178,7 +183,16 @@ public class CodeNarcSensor implements Sensor {
     }
     return result.build();
   }
-
+  
+  private static String groovyExtensions(String[] suffixes) {
+    for (int i = 0; i < suffixes.length; i++) {
+      String suffix = suffixes[i];
+      String dot = suffix.startsWith(".") ? "" : ".";
+      suffixes[i] = "**/*" + dot + suffix;
+    }
+    return Joiner.on(",").join(suffixes);
+  }
+  
   private void exportCodeNarcConfiguration(File file) {
     try {
       StringWriter writer = new StringWriter();

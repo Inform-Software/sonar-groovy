@@ -68,6 +68,7 @@ public class CodeNarcSensorTest {
   private RuleFinder ruleFinder;
   private RulesProfile profile;
   private CodeNarcSensor sensor;
+  private Groovy groovy;
   private Settings settings;
   private ResourcePerspectives perspectives;
   private ModuleFileSystem moduleFileSystem;
@@ -81,15 +82,21 @@ public class CodeNarcSensorTest {
 
   @Before
   public void setUp() {
+    File sonarhome = projectdir.newFolder("sonarhome");
+
     ruleFinder = mock(RuleFinder.class);
     profile = mock(RulesProfile.class);
     settings = mock(Settings.class);
+    when(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY)).thenReturn(new String[] {".groovy", "grvy"});
     perspectives = mock(ResourcePerspectives.class);
     moduleFileSystem = mock(ModuleFileSystem.class);
     project = mock(Project.class);
     context = mock(SensorContext.class);
     fileSystem = new DefaultFileSystem();
-    sensor = new CodeNarcSensor(settings, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
+    fileSystem.setWorkDir(sonarhome);
+    groovy = new Groovy(settings);
+
+    sensor = new CodeNarcSensor(groovy, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
 
     issuable = mock(Issuable.class);
     IssueBuilder issueBuilder = mock(IssueBuilder.class);
@@ -138,7 +145,7 @@ public class CodeNarcSensorTest {
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
-    sensor = new CodeNarcSensor(settings, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
+    sensor = new CodeNarcSensor(groovy, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
     sensor.analyse(project, context);
 
     verify(issuable, atLeastOnce()).addIssue(any(Issue.class));
@@ -181,7 +188,7 @@ public class CodeNarcSensorTest {
 
     when(perspectives.as(any(Class.class), any(InputFile.class))).thenReturn(null);
 
-    sensor = new CodeNarcSensor(settings, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
+    sensor = new CodeNarcSensor(groovy, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
     sensor.analyse(project, context);
 
     verify(issuable, never()).addIssue(any(Issue.class));
@@ -208,9 +215,10 @@ public class CodeNarcSensorTest {
     when(activeRule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY)).thenReturn(Arrays.asList(activeRule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
+    when(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY)).thenReturn(new String[] {".groovy", "grvy"});
     when(moduleFileSystem.sourceDirs()).thenReturn(Lists.newArrayList(sonarhome));
 
-    sensor = new CodeNarcSensor(settings, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
+    sensor = new CodeNarcSensor(groovy, perspectives, moduleFileSystem, fileSystem, profile, ruleFinder);
     sensor.analyse(project, context);
 
     verify(issuable, atLeastOnce()).addIssue(any(Issue.class));

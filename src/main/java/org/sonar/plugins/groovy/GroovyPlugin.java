@@ -61,13 +61,26 @@ import java.util.List;
       "Thus metrics such as \"Comment lines\" do not get incremented. " +
       "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
     project = true, global = true,
-    type = PropertyType.BOOLEAN)
+    type = PropertyType.BOOLEAN
+  ),
+  @Property(
+    key = GroovyPlugin.FILE_SUFFIXES_KEY,
+    defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
+    name = "File suffixes",
+    description = "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
+    module = true,
+    project = true,
+    global = true
+  )
 })
 public class GroovyPlugin extends SonarPlugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
+
+  public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
+  public static final String DEFAULT_FILE_SUFFIXES = ".groovy";
 
   @Override
   public List getExtensions() {

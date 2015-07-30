@@ -20,18 +20,56 @@
 
 package org.sonar.plugins.groovy.foundation;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.AbstractLanguage;
+import org.sonar.plugins.groovy.GroovyPlugin;
+
+import java.util.List;
 
 public class Groovy extends AbstractLanguage {
 
   public static final String KEY = "grvy";
 
-  public Groovy() {
+  /**
+   * Settings of the plugin.
+   */
+  private final Settings settings;
+
+  /**
+   * Default constructor
+   */
+  public Groovy(Settings settings) {
     super(KEY, "Groovy");
+    this.settings = settings;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @see org.sonar.api.resources.AbstractLanguage#getFileSuffixes()
+   */
   @Override
   public String[] getFileSuffixes() {
-    return new String[] {"groovy"};
+    String[] suffixes = filterEmptyStrings(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY));
+    if (suffixes.length == 0) {
+      suffixes = StringUtils.split(GroovyPlugin.DEFAULT_FILE_SUFFIXES, ",");
+    }
+    return suffixes;
+  }
+
+  private static String[] filterEmptyStrings(String[] stringArray) {
+    List<String> nonEmptyStrings = Lists.newArrayList();
+    for (String string : stringArray) {
+      if (StringUtils.isNotBlank(string.trim())) {
+        nonEmptyStrings.add(string.trim());
+      }
+    }
+    return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+  }
+
+  public String getCodeNarcReportPath() {
+    return settings.getString(GroovyPlugin.CODENARC_REPORT_PATH);
   }
 }
