@@ -77,8 +77,7 @@ public class JaCoCoItSensorTest {
     when(configuration.shouldExecuteOnProject(false)).thenReturn(false);
     when(configuration.getItReportPath()).thenReturn(jacocoExecutionData.getPath());
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
-    fileSystem.setBaseDir(jacocoExecutionData.getParentFile());
+    DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
     inputFile = new DefaultInputFile("org/sonar/plugins/groovy/jacoco/tests/Hello.groovy")
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)

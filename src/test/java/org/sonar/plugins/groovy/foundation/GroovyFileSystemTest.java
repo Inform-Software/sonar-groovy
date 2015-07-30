@@ -25,6 +25,8 @@ import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 
+import java.io.File;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 public class GroovyFileSystemTest {
@@ -34,7 +36,7 @@ public class GroovyFileSystemTest {
 
   @Before
   public void setUp() {
-    fileSystem = new DefaultFileSystem();
+    fileSystem = new DefaultFileSystem(new File("."));
     groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 

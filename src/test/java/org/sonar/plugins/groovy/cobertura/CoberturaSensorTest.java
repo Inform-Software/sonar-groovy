@@ -35,6 +35,8 @@ import org.sonar.api.resources.Project;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.io.File;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -55,7 +57,7 @@ public class CoberturaSensorTest {
   public void setUp() throws Exception {
     settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml"));
-    fileSystem = new DefaultFileSystem();
+    fileSystem = new DefaultFileSystem(new File("."));
     sensor = new CoberturaSensor(settings, fileSystem);
     project = mock(Project.class);
     context = mock(SensorContext.class);
@@ -86,7 +88,7 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_parse_report_if_settings_does_not_contain_report_path() {
-    sensor = new CoberturaSensor(new Settings(), new DefaultFileSystem());
+    sensor = new CoberturaSensor(new Settings(), new DefaultFileSystem(new File(".")));
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
@@ -95,7 +97,7 @@ public class CoberturaSensorTest {
   public void should_not_parse_report_if_report_does_not_exist() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, new DefaultFileSystem());
+    sensor = new CoberturaSensor(settings, new DefaultFileSystem(new File(".")));
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }
@@ -104,7 +106,7 @@ public class CoberturaSensorTest {
   public void should_use_relative_path_to_get_report() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, new DefaultFileSystem());
+    sensor = new CoberturaSensor(settings, new DefaultFileSystem(new File(".")));
     sensor.analyse(project, context);
     verify(context, never()).saveMeasure(any(InputFile.class), any(Measure.class));
   }

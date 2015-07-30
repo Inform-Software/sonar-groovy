@@ -34,10 +34,13 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.io.File;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +48,7 @@ public class GroovySensorTest {
 
   private Settings settings = new Settings();
   private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
-  private DefaultFileSystem fileSystem = new DefaultFileSystem();
+  private DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
   private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
 
   @Test
@@ -112,13 +115,14 @@ public class GroovySensorTest {
       Mockito.argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=0;2=2;4=0;6=0;8=0;10=0;12=0")));
     verify(context).saveMeasure(
       Mockito.eq(sonarFile),
-      Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));
+      Mockito.argThat(new IsMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, "0=1;5=0;10=0;20=0;30=0;60=0;90=0")));;
     // 5 times for comment because we register comment even when ignoring header comment
-    verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), anyInt(), Mockito.eq(1));
-    verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), anyInt(), Mockito.eq(1));
+    verify(fileLinesContext, times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), anyInt(), Mockito.eq(1));
+    verify(fileLinesContext, times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), anyInt(), Mockito.eq(1));
     verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
-    verify(fileLinesContext).save();
+    // 2 times as "Greeting.groovy" (all the metrics) and "unknownFile.groovy" (no metrics) are parts of the file system.
+    verify(fileLinesContext, times(2)).save();
   }
 
   @Test

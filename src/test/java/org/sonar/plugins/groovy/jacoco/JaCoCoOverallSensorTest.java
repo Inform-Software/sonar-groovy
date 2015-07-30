@@ -75,9 +75,8 @@ public class JaCoCoOverallSensorTest {
     ModuleFileSystem moduleFileSystem = mock(ModuleFileSystem.class);
     when(moduleFileSystem.binaryDirs()).thenReturn(binaryDirs);
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
+    DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoUTData.getParentFile());
     fileSystem.setWorkDir(jacocoUTData.getParentFile());
-    fileSystem.setBaseDir(jacocoUTData.getParentFile());
     inputFile = new DefaultInputFile("org/sonar/plugins/groovy/jacoco/tests/Hello.groovy")
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)

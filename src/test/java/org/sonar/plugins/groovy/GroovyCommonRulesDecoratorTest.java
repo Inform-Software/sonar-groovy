@@ -25,6 +25,8 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.io.File;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -32,7 +34,7 @@ public class GroovyCommonRulesDecoratorTest {
 
   @Test
   public void test_declaration() throws Exception {
-    GroovyCommonRulesDecorator decorator = new GroovyCommonRulesDecorator(new DefaultFileSystem(), mock(CheckFactory.class), mock(ResourcePerspectives.class));
+    GroovyCommonRulesDecorator decorator = new GroovyCommonRulesDecorator(new DefaultFileSystem(new File(".")), mock(CheckFactory.class), mock(ResourcePerspectives.class));
     assertThat(decorator.language()).isEqualTo(Groovy.KEY);
   }
 

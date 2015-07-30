@@ -27,6 +27,8 @@ import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.Settings;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
+import java.io.File;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 public class JaCoCoConfigurationTest {
@@ -38,7 +40,7 @@ public class JaCoCoConfigurationTest {
   @Before
   public void setUp() {
     settings = new Settings(new PropertyDefinitions().addComponents(JaCoCoConfiguration.getPropertyDefinitions()));
-    fileSystem = new DefaultFileSystem();
+    fileSystem = new DefaultFileSystem(new File("."));
     jacocoSettings = new JaCoCoConfiguration(settings, fileSystem);
   }
 

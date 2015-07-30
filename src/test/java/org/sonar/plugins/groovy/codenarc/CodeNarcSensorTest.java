@@ -92,7 +92,7 @@ public class CodeNarcSensorTest {
     moduleFileSystem = mock(ModuleFileSystem.class);
     project = mock(Project.class);
     context = mock(SensorContext.class);
-    fileSystem = new DefaultFileSystem();
+    fileSystem = new DefaultFileSystem(new File("."));
     fileSystem.setWorkDir(sonarhome);
     groovy = new Groovy(settings);
 
