@@ -87,7 +87,7 @@ public class JaCoCoOverallSensor implements Sensor {
     new OverallAnalyzer(reportOverall).analyse(project, context);
   }
 
-  private void mergeReports(File reportOverall, File... reports) {
+  private static void mergeReports(File reportOverall, File... reports) {
     SessionInfoStore infoStore = new SessionInfoStore();
     ExecutionDataStore dataStore = new ExecutionDataStore();
 
@@ -107,7 +107,7 @@ public class JaCoCoOverallSensor implements Sensor {
     }
   }
 
-  private void loadSourceFiles(SessionInfoStore infoStore, ExecutionDataStore dataStore, File... reports) {
+  private static void loadSourceFiles(SessionInfoStore infoStore, ExecutionDataStore dataStore, File... reports) {
     for (File report : reports) {
       if (report.isFile()) {
         InputStream resourceStream = null;
