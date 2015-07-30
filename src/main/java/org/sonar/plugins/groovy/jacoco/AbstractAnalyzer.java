@@ -66,7 +66,7 @@ public abstract class AbstractAnalyzer {
     return new GroovyFileSystem(fileSystem).sourceInputFileFromRelativePath(path);
   }
 
-  private String getFileRelativePath(ISourceFileCoverage coverage) {
+  private static String getFileRelativePath(ISourceFileCoverage coverage) {
     return coverage.getPackageName() + "/" + coverage.getName();
   }
 
@@ -152,7 +152,7 @@ public abstract class AbstractAnalyzer {
   /**
    * Copied from {@link Analyzer#analyzeAll(File)} in order to add logging.
    */
-  private void analyzeAll(Analyzer analyzer, File file) {
+  private static void analyzeAll(Analyzer analyzer, File file) {
     if (file.isDirectory()) {
       for (File f : file.listFiles()) {
         analyzeAll(analyzer, f);
@@ -166,7 +166,7 @@ public abstract class AbstractAnalyzer {
     }
   }
 
-  private CoverageMeasuresBuilder analyzeFile(ISourceFileCoverage coverage) {
+  private static CoverageMeasuresBuilder analyzeFile(ISourceFileCoverage coverage) {
     CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
     for (int lineId = coverage.getFirstLine(); lineId <= coverage.getLastLine(); lineId++) {
       final int hits;

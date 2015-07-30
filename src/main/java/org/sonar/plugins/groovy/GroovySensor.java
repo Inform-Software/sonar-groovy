@@ -110,7 +110,7 @@ public class GroovySensor implements Sensor {
     }
   }
 
-  private void processFile(SensorContext context, InputFile sonarFile, Collection<ClassResultsNode> results) {
+  private static void processFile(SensorContext context, InputFile sonarFile, Collection<ClassResultsNode> results) {
     double classes = 0;
     double methods = 0;
     double complexity = 0;
@@ -205,13 +205,13 @@ public class GroovySensor implements Sensor {
     return !(tokenLine == 1 && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS));
   }
 
-  private boolean isNotWhitespace(int tokenType) {
+  private static boolean isNotWhitespace(int tokenType) {
     return !(tokenType == GroovyTokenTypes.WS ||
       tokenType == GroovyTokenTypes.STRING_NL ||
       tokenType == GroovyTokenTypes.ONE_NL || tokenType == GroovyTokenTypes.NLS);
   }
 
-  private boolean isComment(int tokenType) {
+  private static boolean isComment(int tokenType) {
     return tokenType == GroovyTokenTypes.SL_COMMENT || tokenType == GroovyTokenTypes.SH_COMMENT || tokenType == GroovyTokenTypes.ML_COMMENT;
   }
 

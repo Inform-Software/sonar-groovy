@@ -77,7 +77,7 @@ public class CoberturaReportParser {
     sourceParser.parse(xmlFile);
   }
 
-  private List<String> collectSourceDirs(SMInputCursor source) throws XMLStreamException {
+  private static List<String> collectSourceDirs(SMInputCursor source) throws XMLStreamException {
     List<String> directories = Lists.newLinkedList();
     while (source.getNext() != null) {
       String sourceDir = cleanSourceDir(source.getElemStringValue());
@@ -88,7 +88,7 @@ public class CoberturaReportParser {
     return directories;
   }
 
-  private String cleanSourceDir(String sourceDir) {
+  private static String cleanSourceDir(String sourceDir) {
     if (StringUtils.isNotBlank(sourceDir)) {
       return sourceDir.trim();
     }
@@ -133,7 +133,7 @@ public class CoberturaReportParser {
     return null;
   }
 
-  private void collectFileMeasures(SMInputCursor clazz, Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
+  private static void collectFileMeasures(SMInputCursor clazz, Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
     while (clazz.getNext() != null) {
       String fileName = clazz.getAttrValue("filename");
       CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
@@ -145,7 +145,7 @@ public class CoberturaReportParser {
     }
   }
 
-  private void collectFileData(SMInputCursor clazz, CoverageMeasuresBuilder builder) throws XMLStreamException {
+  private static void collectFileData(SMInputCursor clazz, CoverageMeasuresBuilder builder) throws XMLStreamException {
     SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
     while (line.getNext() != null) {
       int lineId = Integer.parseInt(line.getAttrValue("number"));
