@@ -1,38 +1,6 @@
 <!-- Generated using CodeNarc 0.24 -->
 <rules>
-
   <!-- basic rules -->
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.AssignmentInConditionalRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Assignment In Conditional]]></name>
-    <internalKey><![CDATA[AssignmentInConditional]]></internalKey>
-    <description><![CDATA[<p>An assignment operator (=) was used in a conditional test. This is usually a typo, and the comparison operator (==) was intended. </p>
-<p>Example of violations: </p>
-<pre>
-    if ((value = true)) {
-        // should be ==
-    }
-
-    while (value = true) {
-        // should be ==
-    }
-
-    (value = true) ? x : y
-    (value = true) ?: x
-
-    // the following code has no violations
-    if (value == true) {
-    }
-
-    value == true ? x : y
-    value == true ?: x
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
 
   <rule>
     <key>org.codenarc.rule.basic.BigDecimalInstantiationRule</key>
@@ -45,45 +13,6 @@
 <pre>
     def b1 = new BigDecimal(0.1)               // violation
     def b2 = new java.math.BigDecimal(23.45d)  // violation
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.BooleanGetBooleanRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Boolean Get Boolean]]></name>
-    <internalKey><![CDATA[BooleanGetBoolean]]></internalKey>
-    <description><![CDATA[<p>This rule catches usages of java.lang.Boolean.getBoolean(String) which reads a boolean from the System properties. It is often mistakenly used to attempt to read user input or parse a String into a boolean. It is a poor piece of API to use; replace it with System.properties['prop̈́']. </p>
-<p>Example of violations: </p>
-<pre>
-    // produces violation
-    Boolean.getBoolean(value)
-
-    // zero or two parameters is OK, must be different method
-    Boolean.getBoolean(value, 1)
-    Boolean.getBoolean()
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.BrokenOddnessCheckRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Broken Oddness Check]]></name>
-    <internalKey><![CDATA[BrokenOddnessCheck]]></internalKey>
-    <description><![CDATA[<p>The code uses <code>x % 2 == 1</code> to check to see if a value is odd, but this won't work for negative numbers (e.g., <code>(-5) % 2 == -1)</code>. If this code is intending to check for oddness, consider using <code>x & 1 == 1</code>, or <code> x % 2 != 0</code>. </p>
-<p>Examples: </p>
-<pre>
-    if (x % 2 == 1) { }             // violation
-    if (method() % 2 == 1) { }      // violation
-
-    if (x & 1 == 1) { }             // OK
-    if (x % 2 != 0) { }             // OK
 </pre>
 ]]></description>
     <tag>bug</tag>
@@ -140,54 +69,6 @@
     "abc" ?: y
     [:] ?: y
     [a, b, c] ?: y
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.basic.DeadCodeRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Dead Code]]></name>
-    <internalKey><![CDATA[DeadCode]]></internalKey>
-    <description><![CDATA[<p>Dead code appears after a <code>return</code> statement or an exception is thrown. If code appears after one of these statements then it will never be executed and can be safely deleted. </p>
- ]]></description>
-    <tag>unused</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.basic.DoubleNegativeRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Double Negative]]></name>
-    <internalKey><![CDATA[DoubleNegative]]></internalKey>
-    <description><![CDATA[<p>There is no point in using a double negative, it is always positive. For instance <code>!!x</code> can always be simplified to <code>x</code>. And <code>!(!x)</code> can as well. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.basic.DuplicateCaseStatementRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Duplicate Case Statement]]></name>
-    <internalKey><![CDATA[DuplicateCaseStatement]]></internalKey>
-    <description><![CDATA[<p>Check for duplicate <code>case</code> statements in a <code>switch</code> block, such as two equal integers or strings. Here are some examples of code that produces violations: </p>
-<pre>
-    switch( 0 ) {
-        case 1: break;
-        case 2: break;
-        case 2: break;          // violation
-    }
-    
-    switch( "test" ) {
-        case "$a": break;
-        case "$a": break;       // ok; only flags constant values (not GStrings)
-        case "ab": break;
-        case "ab": break;       // violation
-        case "abc": break;
-    }
 </pre>
 ]]></description>
     <tag>bug</tag>
@@ -303,69 +184,6 @@
     <tag>unused</tag>
   </rule>
 
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.EmptyInstanceInitializerRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Empty Instance Initializer]]></name>
-    <internalKey><![CDATA[EmptyInstanceInitializer]]></internalKey>
-    <description><![CDATA[<p>An empty class instance initializer was found. It is safe to remove it. Example: </p>
-<pre>
-    class MyClass {
-        { }     // empty instance initializer, not a closure
-    }
-</pre>
-]]></description>
-    <tag>unused</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.EmptyMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Empty Method]]></name>
-    <internalKey><![CDATA[EmptyMethod]]></internalKey>
-    <description><![CDATA[<p>A method was found without an implementation. If the method is overriding or implementing a parent method, then mark it with the <code>@Override</code> annotation. This rule should not be used with Java 5 code because you cannot put <code>@Override</code> on a method implementing an interface. Use with Java 6 and higher. </p>
-<p>Example of violations: </p>
-<pre>
-    class MyClass {
-
-        // violation, empty method
-        public void method1() {}
-
-        // violation, empty method
-        def method2() {}
-
-        // OK because of @Override
-        @Override
-        public void method3() {}
-    }
-
-    abstract class MyBaseClass {
-        // OK, handled by EmptyMethodInAbstractClass Rule
-        public void method() {}
-    }
-</pre>
-]]></description>
-    <tag>unused</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.EmptyStaticInitializerRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Empty Static Initializer]]></name>
-    <internalKey><![CDATA[EmptyStaticInitializer]]></internalKey>
-    <description><![CDATA[<p>An empty static initializer was found. It is safe to remove it. Example: </p>
-<pre>
-    class MyClass {
-        static { }
-    }
-</pre>
-]]></description>
-    <tag>unused</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.basic.EmptySwitchStatementRule</key>
     <severity>MINOR</severity>
@@ -466,49 +284,6 @@
     <tag>pitfall</tag>
   </rule>
 
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.basic.ExplicitGarbageCollectionRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Garbage Collection]]></name>
-    <internalKey><![CDATA[ExplicitGarbageCollection]]></internalKey>
-    <description><![CDATA[<p>Calls to <code>System.gc()</code>, <code>Runtime.getRuntime().gc()</code>, and <code>System.runFinalization()</code> are not advised. Code should have the same behavior whether the garbage collection is disabled using the option <code>-Xdisableexplicitgc</code> or not. Moreover, "modern" JVMs do a very good job handling garbage collections. If memory usage issues unrelated to memory leaks develop within an application, it should be dealt with JVM options rather than within the code itself. </p>
- ]]></description>
-    <tag>unpredictable</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.basic.IntegerGetIntegerRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Integer Get Integer]]></name>
-    <internalKey><![CDATA[IntegerGetInteger]]></internalKey>
-    <description><![CDATA[<p>This rule catches usages of java.lang.Integer.getInteger(String, ...) which reads an Integer from the System properties. It is often mistakenly used to attempt to read user input or parse a String into an Integer. It is a poor piece of API to use; replace it with System.properties['prop']. </p>
-<p>Example of violations: </p>
-<pre>
-    // violations
-    Integer.getInteger(value)
-    Integer.getInteger(value, radix)
-
-    // zero or more than 2 parameters is OK, must be different method
-    Integer.getInteger()
-    Integer.getInteger(value, radix, locale)
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.basic.RemoveAllOnSelfRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Remove All On Self]]></name>
-    <internalKey><![CDATA[RemoveAllOnSelf]]></internalKey>
-    <description><![CDATA[<p>Don't use <code>removeAll</code> to clear a collection. If you want to remove all elements from a collection <code>c</code>, use <code>c.clear</code>, not <code>c.removeAll(c)</code>. Calling <code>c.removeAll(c)</code> to clear a collection is less clear, susceptible to errors from typos, less efficient and for some collections, might throw a <code>ConcurrentModificationException</code>. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.basic.ReturnFromFinallyBlockRule</key>
     <severity>MINOR</severity>
@@ -552,6 +327,230 @@
 </pre>
 ]]></description>
     <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.basic.DeadCodeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Dead Code]]></name>
+    <internalKey><![CDATA[DeadCode]]></internalKey>
+    <description><![CDATA[<p>Dead code appears after a <code>return</code> statement or an exception is thrown. If code appears after one of these statements then it will never be executed and can be safely deleted. </p>
+ ]]></description>
+    <tag>unused</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.basic.DoubleNegativeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Double Negative]]></name>
+    <internalKey><![CDATA[DoubleNegative]]></internalKey>
+    <description><![CDATA[<p>There is no point in using a double negative, it is always positive. For instance <code>!!x</code> can always be simplified to <code>x</code>. And <code>!(!x)</code> can as well. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.basic.DuplicateCaseStatementRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Duplicate Case Statement]]></name>
+    <internalKey><![CDATA[DuplicateCaseStatement]]></internalKey>
+    <description><![CDATA[<p>Check for duplicate <code>case</code> statements in a <code>switch</code> block, such as two equal integers or strings. Here are some examples of code that produces violations: </p>
+<pre>
+    switch( 0 ) {
+        case 1: break;
+        case 2: break;
+        case 2: break;          // violation
+    }
+    
+    switch( "test" ) {
+        case "$a": break;
+        case "$a": break;       // ok; only flags constant values (not GStrings)
+        case "ab": break;
+        case "ab": break;       // violation
+        case "abc": break;
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.basic.RemoveAllOnSelfRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Remove All On Self]]></name>
+    <internalKey><![CDATA[RemoveAllOnSelf]]></internalKey>
+    <description><![CDATA[<p>Don't use <code>removeAll</code> to clear a collection. If you want to remove all elements from a collection <code>c</code>, use <code>c.clear</code>, not <code>c.removeAll(c)</code>. Calling <code>c.removeAll(c)</code> to clear a collection is less clear, susceptible to errors from typos, less efficient and for some collections, might throw a <code>ConcurrentModificationException</code>. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.basic.ExplicitGarbageCollectionRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Garbage Collection]]></name>
+    <internalKey><![CDATA[ExplicitGarbageCollection]]></internalKey>
+    <description><![CDATA[<p>Calls to <code>System.gc()</code>, <code>Runtime.getRuntime().gc()</code>, and <code>System.runFinalization()</code> are not advised. Code should have the same behavior whether the garbage collection is disabled using the option <code>-Xdisableexplicitgc</code> or not. Moreover, "modern" JVMs do a very good job handling garbage collections. If memory usage issues unrelated to memory leaks develop within an application, it should be dealt with JVM options rather than within the code itself. </p>
+ ]]></description>
+    <tag>unpredictable</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.AssignmentInConditionalRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Assignment In Conditional]]></name>
+    <internalKey><![CDATA[AssignmentInConditional]]></internalKey>
+    <description><![CDATA[<p>An assignment operator (=) was used in a conditional test. This is usually a typo, and the comparison operator (==) was intended. </p>
+<p>Example of violations: </p>
+<pre>
+    if ((value = true)) {
+        // should be ==
+    }
+
+    while (value = true) {
+        // should be ==
+    }
+
+    (value = true) ? x : y
+    (value = true) ?: x
+
+    // the following code has no violations
+    if (value == true) {
+    }
+
+    value == true ? x : y
+    value == true ?: x
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.BooleanGetBooleanRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Boolean Get Boolean]]></name>
+    <internalKey><![CDATA[BooleanGetBoolean]]></internalKey>
+    <description><![CDATA[<p>This rule catches usages of java.lang.Boolean.getBoolean(String) which reads a boolean from the System properties. It is often mistakenly used to attempt to read user input or parse a String into a boolean. It is a poor piece of API to use; replace it with System.properties['prop̈́']. </p>
+<p>Example of violations: </p>
+<pre>
+    // produces violation
+    Boolean.getBoolean(value)
+
+    // zero or two parameters is OK, must be different method
+    Boolean.getBoolean(value, 1)
+    Boolean.getBoolean()
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.BrokenOddnessCheckRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Broken Oddness Check]]></name>
+    <internalKey><![CDATA[BrokenOddnessCheck]]></internalKey>
+    <description><![CDATA[<p>The code uses <code>x % 2 == 1</code> to check to see if a value is odd, but this won't work for negative numbers (e.g., <code>(-5) % 2 == -1)</code>. If this code is intending to check for oddness, consider using <code>x & 1 == 1</code>, or <code> x % 2 != 0</code>. </p>
+<p>Examples: </p>
+<pre>
+    if (x % 2 == 1) { }             // violation
+    if (method() % 2 == 1) { }      // violation
+
+    if (x & 1 == 1) { }             // OK
+    if (x % 2 != 0) { }             // OK
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.EmptyInstanceInitializerRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Empty Instance Initializer]]></name>
+    <internalKey><![CDATA[EmptyInstanceInitializer]]></internalKey>
+    <description><![CDATA[<p>An empty class instance initializer was found. It is safe to remove it. Example: </p>
+<pre>
+    class MyClass {
+        { }     // empty instance initializer, not a closure
+    }
+</pre>
+]]></description>
+    <tag>unused</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.EmptyMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Empty Method]]></name>
+    <internalKey><![CDATA[EmptyMethod]]></internalKey>
+    <description><![CDATA[<p>A method was found without an implementation. If the method is overriding or implementing a parent method, then mark it with the <code>@Override</code> annotation. This rule should not be used with Java 5 code because you cannot put <code>@Override</code> on a method implementing an interface. Use with Java 6 and higher. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyClass {
+
+        // violation, empty method
+        public void method1() {}
+
+        // violation, empty method
+        def method2() {}
+
+        // OK because of @Override
+        @Override
+        public void method3() {}
+    }
+
+    abstract class MyBaseClass {
+        // OK, handled by EmptyMethodInAbstractClass Rule
+        public void method() {}
+    }
+</pre>
+]]></description>
+    <tag>unused</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.EmptyStaticInitializerRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Empty Static Initializer]]></name>
+    <internalKey><![CDATA[EmptyStaticInitializer]]></internalKey>
+    <description><![CDATA[<p>An empty static initializer was found. It is safe to remove it. Example: </p>
+<pre>
+    class MyClass {
+        static { }
+    }
+</pre>
+]]></description>
+    <tag>unused</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.basic.IntegerGetIntegerRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Integer Get Integer]]></name>
+    <internalKey><![CDATA[IntegerGetInteger]]></internalKey>
+    <description><![CDATA[<p>This rule catches usages of java.lang.Integer.getInteger(String, ...) which reads an Integer from the System properties. It is often mistakenly used to attempt to read user input or parse a String into an Integer. It is a poor piece of API to use; replace it with System.properties['prop']. </p>
+<p>Example of violations: </p>
+<pre>
+    // violations
+    Integer.getInteger(value)
+    Integer.getInteger(value, radix)
+
+    // zero or more than 2 parameters is OK, must be different method
+    Integer.getInteger()
+    Integer.getInteger(value, radix, locale)
+</pre>
+]]></description>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.14 -->
@@ -1047,6 +1046,173 @@
 
   <!-- concurrency rules -->
 
+  <rule>
+    <key>org.codenarc.rule.concurrency.NestedSynchronizationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Nested Synchronization]]></name>
+    <internalKey><![CDATA[NestedSynchronization]]></internalKey>
+    <description><![CDATA[<p>This rule reports occurrences of nested <code>synchronized</code> statements. </p>
+<p>Nested <code>synchronized</code> statements should be avoided. Nested <code>synchronized</code> statements are either useless (if the lock objects are identical) or prone to deadlock. </p>
+<p>Note that a <closure> or an <anonymous inner class> carries its own context (scope). A <code>synchronized</code> statement within a <closure> or an <anonymous inner class> defined within an outer <code>synchronized</code> statement does not cause a violation (though nested <code>synchronized</code> statements within either of those will). </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    def myMethod() {
+        synchronized(this) {
+            // do something ...
+            synchronized(this) {
+                // do something else ...
+            }
+        }
+    }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.SynchronizedMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Synchronized Method]]></name>
+    <internalKey><![CDATA[SynchronizedMethod]]></internalKey>
+    <description><![CDATA[<p>This rule reports uses of the <code>synchronized</code> keyword on methods. Synchronized methods are the same as synchronizing on 'this', which effectively make your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    synchronized def myMethod() {
+        // do stuff ...
+    }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.SynchronizedOnThisRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Synchronized On This]]></name>
+    <internalKey><![CDATA[SynchronizedOnThis]]></internalKey>
+    <description><![CDATA[<p>This rule reports uses of the <code>synchronized</code> blocks where the synchronization reference is 'this'. Doing this effectively makes your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    def method3() {
+        synchronized(this) {
+            // do stuff ...
+        }
+    }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[System Run Finalizers On Exit]]></name>
+    <internalKey><![CDATA[SystemRunFinalizersOnExit]]></internalKey>
+    <description><![CDATA[<p>This rule reports uses of the <code>System.runFinalizersOnExit()</code> method. </p>
+<p>Method calls to <code>System.runFinalizersOnExit()</code> should not be allowed. This method is inherently non-thread-safe, may result in data corruption, deadlock, and may affect parts of the program far removed from it's call point. It is deprecated, and it's use strongly discouraged. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    def method() {
+        System.runFinalizersOnExit(true)
+    }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.ThreadGroupRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Thread Group]]></name>
+    <internalKey><![CDATA[ThreadGroup]]></internalKey>
+    <description><![CDATA[<p>Avoid using <code>ThreadGroup</code>; although it is intended to be used in a threaded environment it contains methods that are not thread safe. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    new ThreadGroup("...")
+    new ThreadGroup(tg, "my thread group")
+    Thread.currentThread().getThreadGroup()
+    System.getSecurityManager().getThreadGroup()
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.ThreadLocalNotStaticFinalRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Thread Local Not Static Final]]></name>
+    <internalKey><![CDATA[ThreadLocalNotStaticFinal]]></internalKey>
+    <description><![CDATA[<p>This rule reports definition of the <code>ThreadLocal</code> fields that are not <code>static</code> and <code>final</code>. </p>
+<p><ThreadLocal> fields should be <code>static</code> and <code>final</code>. In the most common case a <code>java.lang.ThreadLocal</code> instance associates state with a thread. A non-<code>static</code> non-<code>final</code> <code>java.lang.ThreadLocal</code> field associates state with an instance-thread combination. This is seldom necessary and often a bug which can cause memory leaks and possibly incorrect behavior. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    private static ThreadLocal local1 = new ThreadLocal()
+    private final ThreadLocal local2 = new ThreadLocal()
+    protected ThreadLocal local3 = new ThreadLocal()
+    ThreadLocal local4 = new ThreadLocal()
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.ThreadYieldRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Thread Yield]]></name>
+    <internalKey><![CDATA[ThreadYield]]></internalKey>
+    <description><![CDATA[<p>This rule reports uses of the <code>Thread.yield()</code> method. </p>
+<p>Method calls to <code>Thread.yield()</code> should not be allowed. This method has no useful guaranteed semantics, and is often used by inexperienced programmers to mask race conditions. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+     def method() {
+         Thread.yield()
+     }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Volatile Long Or Double Field]]></name>
+    <internalKey><![CDATA[VolatileLongOrDoubleField]]></internalKey>
+    <description><![CDATA[<p>This rule reports on <code>long</code> or <code>double</code> fields that are declared <code>volatile</code>. </p>
+<p>Long or double fields should not be declared as <code>volatile</code>. Java specifies that reads and writes from such fields are atomic, but many JVM's have violated this specification. Unless you are certain of your JVM, it is better to synchronize access to such fields rather than declare them <code>volatile</code>. This rule flags fields marked <code>volatile</code> when their type is <code>double</code> or <code>long</code> or the name of their type is "Double" or "Long". </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+     def method() {
+         private volatile double d
+         private volatile long f
+     }
+</pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.concurrency.SynchronizedOnGetClassRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Synchronized On Get Class]]></name>
+    <internalKey><![CDATA[SynchronizedOnGetClass]]></internalKey>
+    <description><![CDATA[<p>Checks for synchronization on <code>getClass()</code> rather than class literal. This instance method synchronizes on <code>this.getClass()</code>. If this class is subclassed, subclasses will synchronize on the class object for the subclass, which isn't likely what was intended. </p>
+ ]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.concurrency.UseOfNotifyMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Use Of Notify Method]]></name>
+    <internalKey><![CDATA[UseOfNotifyMethod]]></internalKey>
+    <description><![CDATA[<p>Checks for code that calls <code>notify()</code> rather than <code>notifyAll()</code>. Java monitors are often used for multiple conditions. Calling <code>notify()</code> only wakes up one thread, meaning that the awakened thread might not be the one waiting for the condition that the caller just satisfied. </p>
+<p>Also see <a href="http://www.javaconcurrencyinpractice.com/"><code>Java_Concurrency_in_Practice</code></a>, Brian Goetz, p 303. </p>
+ ]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.concurrency.BusyWaitRule</key>
@@ -1242,29 +1408,6 @@
     <tag>multi-threading</tag>
   </rule>
 
-  <rule>
-    <key>org.codenarc.rule.concurrency.NestedSynchronizationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Nested Synchronization]]></name>
-    <internalKey><![CDATA[NestedSynchronization]]></internalKey>
-    <description><![CDATA[<p>This rule reports occurrences of nested <code>synchronized</code> statements. </p>
-<p>Nested <code>synchronized</code> statements should be avoided. Nested <code>synchronized</code> statements are either useless (if the lock objects are identical) or prone to deadlock. </p>
-<p>Note that a <closure> or an <anonymous inner class> carries its own context (scope). A <code>synchronized</code> statement within a <closure> or an <anonymous inner class> defined within an outer <code>synchronized</code> statement does not cause a violation (though nested <code>synchronized</code> statements within either of those will). </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    def myMethod() {
-        synchronized(this) {
-            // do something ...
-            synchronized(this) {
-                // do something else ...
-            }
-        }
-    }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.concurrency.StaticCalendarFieldRule</key>
@@ -1356,33 +1499,6 @@
     }
 </pre>
 ]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.concurrency.SynchronizedMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Synchronized Method]]></name>
-    <internalKey><![CDATA[SynchronizedMethod]]></internalKey>
-    <description><![CDATA[<p>This rule reports uses of the <code>synchronized</code> keyword on methods. Synchronized methods are the same as synchronizing on 'this', which effectively make your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    synchronized def myMethod() {
-        // do stuff ...
-    }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.concurrency.SynchronizedOnGetClassRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Synchronized On Get Class]]></name>
-    <internalKey><![CDATA[SynchronizedOnGetClass]]></internalKey>
-    <description><![CDATA[<p>Checks for synchronization on <code>getClass()</code> rather than class literal. This instance method synchronizes on <code>this.getClass()</code>. If this class is subclassed, subclasses will synchronize on the class object for the subclass, which isn't likely what was intended. </p>
- ]]></description>
     <tag>multi-threading</tag>
   </rule>
 
@@ -1636,24 +1752,6 @@
     <tag>multi-threading</tag>
   </rule>
 
-  <rule>
-    <key>org.codenarc.rule.concurrency.SynchronizedOnThisRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Synchronized On This]]></name>
-    <internalKey><![CDATA[SynchronizedOnThis]]></internalKey>
-    <description><![CDATA[<p>This rule reports uses of the <code>synchronized</code> blocks where the synchronization reference is 'this'. Doing this effectively makes your synchronization policy public and modifiable by other objects. To avoid possibilities of deadlock, it is better to synchronize on internal objects. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    def method3() {
-        synchronized(this) {
-            // do stuff ...
-        }
-    }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.concurrency.SynchronizedReadObjectMethodRule</key>
@@ -1794,87 +1892,6 @@
     <tag>multi-threading</tag>
   </rule>
 
-  <rule>
-    <key>org.codenarc.rule.concurrency.SystemRunFinalizersOnExitRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[System Run Finalizers On Exit]]></name>
-    <internalKey><![CDATA[SystemRunFinalizersOnExit]]></internalKey>
-    <description><![CDATA[<p>This rule reports uses of the <code>System.runFinalizersOnExit()</code> method. </p>
-<p>Method calls to <code>System.runFinalizersOnExit()</code> should not be allowed. This method is inherently non-thread-safe, may result in data corruption, deadlock, and may affect parts of the program far removed from it's call point. It is deprecated, and it's use strongly discouraged. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    def method() {
-        System.runFinalizersOnExit(true)
-    }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.concurrency.ThreadGroupRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Thread Group]]></name>
-    <internalKey><![CDATA[ThreadGroup]]></internalKey>
-    <description><![CDATA[<p>Avoid using <code>ThreadGroup</code>; although it is intended to be used in a threaded environment it contains methods that are not thread safe. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    new ThreadGroup("...")
-    new ThreadGroup(tg, "my thread group")
-    Thread.currentThread().getThreadGroup()
-    System.getSecurityManager().getThreadGroup()
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.concurrency.ThreadLocalNotStaticFinalRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Thread Local Not Static Final]]></name>
-    <internalKey><![CDATA[ThreadLocalNotStaticFinal]]></internalKey>
-    <description><![CDATA[<p>This rule reports definition of the <code>ThreadLocal</code> fields that are not <code>static</code> and <code>final</code>. </p>
-<p><ThreadLocal> fields should be <code>static</code> and <code>final</code>. In the most common case a <code>java.lang.ThreadLocal</code> instance associates state with a thread. A non-<code>static</code> non-<code>final</code> <code>java.lang.ThreadLocal</code> field associates state with an instance-thread combination. This is seldom necessary and often a bug which can cause memory leaks and possibly incorrect behavior. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    private static ThreadLocal local1 = new ThreadLocal()
-    private final ThreadLocal local2 = new ThreadLocal()
-    protected ThreadLocal local3 = new ThreadLocal()
-    ThreadLocal local4 = new ThreadLocal()
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.concurrency.ThreadYieldRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Thread Yield]]></name>
-    <internalKey><![CDATA[ThreadYield]]></internalKey>
-    <description><![CDATA[<p>This rule reports uses of the <code>Thread.yield()</code> method. </p>
-<p>Method calls to <code>Thread.yield()</code> should not be allowed. This method has no useful guaranteed semantics, and is often used by inexperienced programmers to mask race conditions. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-     def method() {
-         Thread.yield()
-     }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.concurrency.UseOfNotifyMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Use Of Notify Method]]></name>
-    <internalKey><![CDATA[UseOfNotifyMethod]]></internalKey>
-    <description><![CDATA[<p>Checks for code that calls <code>notify()</code> rather than <code>notifyAll()</code>. Java monitors are often used for multiple conditions. Calling <code>notify()</code> only wakes up one thread, meaning that the awakened thread might not be the one waiting for the condition that the caller just satisfied. </p>
-<p>Also see <a href="http://www.javaconcurrencyinpractice.com/"><code>Java_Concurrency_in_Practice</code></a>, Brian Goetz, p 303. </p>
- ]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.concurrency.VolatileArrayFieldRule</key>
@@ -1890,24 +1907,6 @@
         volatile field2 = value as Object[]
         volatile field3 = (Object[])foo
     }
-</pre>
-]]></description>
-    <tag>multi-threading</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Volatile Long Or Double Field]]></name>
-    <internalKey><![CDATA[VolatileLongOrDoubleField]]></internalKey>
-    <description><![CDATA[<p>This rule reports on <code>long</code> or <code>double</code> fields that are declared <code>volatile</code>. </p>
-<p>Long or double fields should not be declared as <code>volatile</code>. Java specifies that reads and writes from such fields are atomic, but many JVM's have violated this specification. Unless you are certain of your JVM, it is better to synchronize access to such fields rather than declare them <code>volatile</code>. This rule flags fields marked <code>volatile</code> when their type is <code>double</code> or <code>long</code> or the name of their type is "Double" or "Long". </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-     def method() {
-         private volatile double d
-         private volatile long f
-     }
 </pre>
 ]]></description>
     <tag>multi-threading</tag>
@@ -2022,17 +2021,6 @@
 
   <!-- design rules -->
 
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.design.BooleanMethodReturnsNullRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Boolean Method Returns Null]]></name>
-    <internalKey><![CDATA[BooleanMethodReturnsNull]]></internalKey>
-    <description><![CDATA[<p>Checks for a method with <code>Boolean</code> return type that returns an explicit <code>null</code>. A method that returns either <code>Boolean.TRUE</code>, <code>Boolean.FALSE</code> or <code>null</code> is an accident waiting to happen. This method can be invoked as though it returned a value of type <code>boolean</code>, and the compiler will insert automatic <unboxing> of the <code>Boolean</code> value. If a <code>null</code> value is returned, this will result in a <code>NullPointerException</code>. </p>
- ]]></description>
-    <tag>design</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.design.CloneableWithoutCloneRule</key>
     <severity>MINOR</severity>
@@ -2049,20 +2037,24 @@
     <tag>design</tag>
   </rule>
 
-  <!-- since 0.12 -->
   <rule>
-    <key>org.codenarc.rule.design.CompareToWithoutComparableRule</key>
+    <key>org.codenarc.rule.design.ImplementationAsTypeRule</key>
     <severity>MINOR</severity>
-    <name><![CDATA[Compare To Without Comparable]]></name>
-    <internalKey><![CDATA[CompareToWithoutComparable]]></internalKey>
-    <description><![CDATA[<p>If you implement a compareTo method then you should also implement the <code>Comparable</code> interface. If you don't then you could possibly get an exception if the Groovy == operator is invoked on your object. This is an issue fixed in Groovy 1.8 but present in previous versions. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    class BadClass {
-        int compareTo(Object o) { ... }
-    }
-</pre>
+    <name><![CDATA[Implementation As Type]]></name>
+    <internalKey><![CDATA[ImplementationAsType]]></internalKey>
+    <description><![CDATA[<p>Checks for use of the following concrete classes when specifying the type of a method parameter, closure parameter, constructor parameter, method return type or field type. The corresponding interfaces should be used to specify the type instead. </p>
 ]]></description>
+    <tag>design</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.design.BooleanMethodReturnsNullRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Boolean Method Returns Null]]></name>
+    <internalKey><![CDATA[BooleanMethodReturnsNull]]></internalKey>
+    <description><![CDATA[<p>Checks for a method with <code>Boolean</code> return type that returns an explicit <code>null</code>. A method that returns either <code>Boolean.TRUE</code>, <code>Boolean.FALSE</code> or <code>null</code> is an accident waiting to happen. This method can be invoked as though it returned a value of type <code>boolean</code>, and the compiler will insert automatic <unboxing> of the <code>Boolean</code> value. If a <code>null</code> value is returned, this will result in a <code>NullPointerException</code>. </p>
+ ]]></description>
     <tag>design</tag>
   </rule>
 
@@ -2085,6 +2077,23 @@
     <internalKey><![CDATA[ReturnsNullInsteadOfEmptyCollection]]></internalKey>
     <description><![CDATA[<p>If you have a method or closure that returns a collection, then when there are no results return a zero-length (empty) collection rather than <code>null</code>. It is often a better design to return a zero-length collection rather than a <code>null</code> reference to indicate that there are no results (i.e., an <empty> list of results). This way, no explicit check for <code>null</code> is needed by clients of the method. </p>
  ]]></description>
+    <tag>design</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.design.CompareToWithoutComparableRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Compare To Without Comparable]]></name>
+    <internalKey><![CDATA[CompareToWithoutComparable]]></internalKey>
+    <description><![CDATA[<p>If you implement a compareTo method then you should also implement the <code>Comparable</code> interface. If you don't then you could possibly get an exception if the Groovy == operator is invoked on your object. This is an issue fixed in Groovy 1.8 but present in previous versions. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    class BadClass {
+        int compareTo(Object o) { ... }
+    }
+</pre>
+]]></description>
     <tag>design</tag>
   </rule>
 
@@ -2183,16 +2192,6 @@
         }
     }
 </pre>
-]]></description>
-    <tag>design</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.design.ImplementationAsTypeRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Implementation As Type]]></name>
-    <internalKey><![CDATA[ImplementationAsType]]></internalKey>
-    <description><![CDATA[<p>Checks for use of the following concrete classes when specifying the type of a method parameter, closure parameter, constructor parameter, method return type or field type. The corresponding interfaces should be used to specify the type instead. </p>
 ]]></description>
     <tag>design</tag>
   </rule>
@@ -2602,17 +2601,6 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- exceptions rules -->
 
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.CatchArrayIndexOutOfBoundsExceptionRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Catch Array Index Out Of Bounds Exception]]></name>
-    <internalKey><![CDATA[CatchArrayIndexOutOfBoundsException]]></internalKey>
-    <description><![CDATA[<p>Checks for catching a <code>ArrayIndexOutOfBoundsException</code>. Catching <code>ArrayIndexOutOfBoundsException</code> should be avoided in the first place by checking the array size before accessing an array element. Catching the exception may mask underlying errors. </p>
- ]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.exceptions.CatchErrorRule</key>
     <severity>MINOR</severity>
@@ -2629,28 +2617,6 @@ for (int i = 0; i < 100; ++i) {
     <name><![CDATA[Catch Exception]]></name>
     <internalKey><![CDATA[CatchException]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>Exception</code>. In most cases that is too broad or general. It should usually be restricted to framework or infrastructure code, rather than application code. </p>
- ]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.CatchIllegalMonitorStateExceptionRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Catch Illegal Monitor State Exception]]></name>
-    <internalKey><![CDATA[CatchIllegalMonitorStateException]]></internalKey>
-    <description><![CDATA[<p>Dubious catching of IllegalMonitorStateException. IllegalMonitorStateException is generally only thrown in case of a design flaw in your code (calling wait or notify on an object you do not hold a lock on). </p>
- ]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.CatchIndexOutOfBoundsExceptionRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Catch Index Out Of Bounds Exception]]></name>
-    <internalKey><![CDATA[CatchIndexOutOfBoundsException]]></internalKey>
-    <description><![CDATA[<p>Checks for catching a <code>IndexOutOfBoundsException</code>. Catching <code>IndexOutOfBoundsException</code> should be avoided in the first place by checking for a valid index before accessing an indexed element. Catching the exception may mask underlying errors. </p>
  ]]></description>
     <tag>error-handling</tag>
   </rule>
@@ -2681,67 +2647,6 @@ for (int i = 0; i < 100; ++i) {
     <name><![CDATA[Catch Throwable]]></name>
     <internalKey><![CDATA[CatchThrowable]]></internalKey>
     <description><![CDATA[<p>Checks for catching a <code>Throwable</code>. In most cases that is much too broad, and is also dangerous because it can catch exceptions such as <code>ThreadDeath</code> and <code>OutOfMemoryError</code>. </p>
- ]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.ConfusingClassNamedExceptionRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Confusing Class Named Exception]]></name>
-    <internalKey><![CDATA[ConfusingClassNamedException]]></internalKey>
-    <description><![CDATA[<p>This class is not derived from another exception, but ends with 'Exception'. This will be confusing to users of this class. </p>
- ]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.ExceptionExtendsErrorRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Exception Extends Error]]></name>
-    <internalKey><![CDATA[ExceptionExtendsError]]></internalKey>
-    <description><![CDATA[<p>Errors are system exceptions. Do not extend them. </p>
-<p>Examples: </p>
-<pre>
-    class MyError extends Error { }  // violation
-    class MyError extends java.lang.Error { }  // violation
-
-    class MyException extends Exception { }  // OK
-</pre>
-]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.MissingNewInThrowStatementRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Missing New In Throw Statement]]></name>
-    <internalKey><![CDATA[MissingNewInThrowStatement]]></internalKey>
-    <description><![CDATA[<p>A common Groovy mistake when throwing exceptions is to forget the new keyword. For instance, <code>throw RuntimeException()</code> instead of <code>throw new RuntimeException()</code>. If the error path is not unit tested then the production system will throw a Method Missing exception and hide the root cause. This rule finds constructs like <code>throw RuntimeException()</code> that look like a new keyword was meant to be used but forgotten. </p>
-<p>The following code will all cause violations: </p>
-<pre>
-    throw RuntimeException()    // ends in Exceptions, first letter Capitalized
-    throw RuntimeFailure()      // ends in Failure, first letter Capitalized
-    throw RuntimeFault(foo)     // ends in Fault, first letter Capitalized
-</pre>
-<pre>
-    throw new RuntimeException()
-    throw runtimeFailure()      // first letter lowercase, assumed to be method call
-</pre>
-]]></description>
-    <tag>error-handling</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.exceptions.ReturnNullFromCatchBlockRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Return Null From Catch Block]]></name>
-    <internalKey><![CDATA[ReturnNullFromCatchBlock]]></internalKey>
-    <description><![CDATA[<p>Returning null from a catch block often masks errors and requires the client to handle error codes. In some coding styles this is discouraged. This rule ignores methods with <code>void</code> return type. </p>
  ]]></description>
     <tag>error-handling</tag>
   </rule>
@@ -2792,6 +2697,100 @@ for (int i = 0; i < 100; ++i) {
     <name><![CDATA[Throw Throwable]]></name>
     <internalKey><![CDATA[ThrowThrowable]]></internalKey>
     <description><![CDATA[<p>Checks for throwing an instance of <code>java.lang.Throwable</code>. Throw an instance of a more specific exception subclass instead. </p>
+]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.CatchIllegalMonitorStateExceptionRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Catch Illegal Monitor State Exception]]></name>
+    <internalKey><![CDATA[CatchIllegalMonitorStateException]]></internalKey>
+    <description><![CDATA[<p>Dubious catching of IllegalMonitorStateException. IllegalMonitorStateException is generally only thrown in case of a design flaw in your code (calling wait or notify on an object you do not hold a lock on). </p>
+ ]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.ConfusingClassNamedExceptionRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Confusing Class Named Exception]]></name>
+    <internalKey><![CDATA[ConfusingClassNamedException]]></internalKey>
+    <description><![CDATA[<p>This class is not derived from another exception, but ends with 'Exception'. This will be confusing to users of this class. </p>
+ ]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.ReturnNullFromCatchBlockRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Return Null From Catch Block]]></name>
+    <internalKey><![CDATA[ReturnNullFromCatchBlock]]></internalKey>
+    <description><![CDATA[<p>Returning null from a catch block often masks errors and requires the client to handle error codes. In some coding styles this is discouraged. This rule ignores methods with <code>void</code> return type. </p>
+ ]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.CatchArrayIndexOutOfBoundsExceptionRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Catch Array Index Out Of Bounds Exception]]></name>
+    <internalKey><![CDATA[CatchArrayIndexOutOfBoundsException]]></internalKey>
+    <description><![CDATA[<p>Checks for catching a <code>ArrayIndexOutOfBoundsException</code>. Catching <code>ArrayIndexOutOfBoundsException</code> should be avoided in the first place by checking the array size before accessing an array element. Catching the exception may mask underlying errors. </p>
+ ]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.CatchIndexOutOfBoundsExceptionRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Catch Index Out Of Bounds Exception]]></name>
+    <internalKey><![CDATA[CatchIndexOutOfBoundsException]]></internalKey>
+    <description><![CDATA[<p>Checks for catching a <code>IndexOutOfBoundsException</code>. Catching <code>IndexOutOfBoundsException</code> should be avoided in the first place by checking for a valid index before accessing an indexed element. Catching the exception may mask underlying errors. </p>
+ ]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.MissingNewInThrowStatementRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Missing New In Throw Statement]]></name>
+    <internalKey><![CDATA[MissingNewInThrowStatement]]></internalKey>
+    <description><![CDATA[<p>A common Groovy mistake when throwing exceptions is to forget the new keyword. For instance, <code>throw RuntimeException()</code> instead of <code>throw new RuntimeException()</code>. If the error path is not unit tested then the production system will throw a Method Missing exception and hide the root cause. This rule finds constructs like <code>throw RuntimeException()</code> that look like a new keyword was meant to be used but forgotten. </p>
+<p>The following code will all cause violations: </p>
+<pre>
+    throw RuntimeException()    // ends in Exceptions, first letter Capitalized
+    throw RuntimeFailure()      // ends in Failure, first letter Capitalized
+    throw RuntimeFault(foo)     // ends in Fault, first letter Capitalized
+</pre>
+<pre>
+    throw new RuntimeException()
+    throw runtimeFailure()      // first letter lowercase, assumed to be method call
+</pre>
+]]></description>
+    <tag>error-handling</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.exceptions.ExceptionExtendsErrorRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Exception Extends Error]]></name>
+    <internalKey><![CDATA[ExceptionExtendsError]]></internalKey>
+    <description><![CDATA[<p>Errors are system exceptions. Do not extend them. </p>
+<p>Examples: </p>
+<pre>
+    class MyError extends Error { }  // violation
+    class MyError extends java.lang.Error { }  // violation
+
+    class MyException extends Exception { }  // OK
+</pre>
 ]]></description>
     <tag>error-handling</tag>
   </rule>
@@ -3404,66 +3403,6 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- junit rules -->
 
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.junit.ChainedTestRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Chained Test]]></name>
-    <internalKey><![CDATA[ChainedTest]]></internalKey>
-    <description><![CDATA[<p>A test method that invokes another test method is a chained test; the methods are dependent on one another. Tests should be isolated, and not be dependent on one another. </p>
-<p>Example of violations: </p>
-<pre>
-    class MyTest extends GroovyTestCase {
-        public void testFoo() {
-
-            // violations, calls test method on self
-            5.times { testBar() }
-            5.times { this.testBar() }
-
-            // OK, no violation: one arg method is not actually a test method
-            5.times { testBar(it) }
-        }
-
-        private static void assertSomething() {
-            testBar() // violation, even if in helper method
-            this.testBar() // violation, even if in helper method
-        }
-
-        public void testBar() {
-            // ...
-        }
-    }
-</pre>
-]]></description>
-    <tag>junit</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.junit.CoupledTestCaseRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Coupled Test Case]]></name>
-    <internalKey><![CDATA[CoupledTestCase]]></internalKey>
-    <description><![CDATA[<p>This rule finds test cases that are coupled to other test cases, either by invoking static methods on another test case or by creating instances of another test case. If you require shared logic in test cases then extract that logic to a new class where it can properly be reused. Static references to methods on the current test class are ignored. </p>
-<p>Example of violations: </p>
-<pre>
-    class MyTest extends GroovyTestCase {
-        public void testMethod() {
-            // violation, static method call to other test
-            MyOtherTest.helperMethod()
-
-            // violation, instantiation of another test class
-            new MyOtherTest()
-
-            // no violation; same class
-            def input = MyTest.getResourceAsStream('sample.txt')
-        }
-    }
-</pre>
-]]></description>
-    <tag>junit</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.junit.JUnitAssertAlwaysFailsRule</key>
     <severity>MINOR</severity>
@@ -3502,17 +3441,6 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[JUnitSetUpCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>setUp</code> method is defined, that it includes a call to <code>super.setUp()</code>. </p>
 <p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
- ]]></description>
-    <tag>junit</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.junit.JUnitStyleAssertionsRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[JUnit Style Assertions]]></name>
-    <internalKey><![CDATA[JUnitStyleAssertions]]></internalKey>
-    <description><![CDATA[<p>This rule detects calling JUnit style assertions like <code>assertEquals</code>, <code>assertTrue</code>, <code>assertFalse</code>, <code>assertNull</code>, <code>assertNotNull</code>. Groovy 1.7 ships with a feature called the "power assert", which is an assert statement with better error reporting. This is preferable to the JUnit assertions. </p>
  ]]></description>
     <tag>junit</tag>
   </rule>
@@ -3563,6 +3491,17 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
+    <tag>junit</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.junit.JUnitStyleAssertionsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[JUnit Style Assertions]]></name>
+    <internalKey><![CDATA[JUnitStyleAssertions]]></internalKey>
+    <description><![CDATA[<p>This rule detects calling JUnit style assertions like <code>assertEquals</code>, <code>assertTrue</code>, <code>assertFalse</code>, <code>assertNull</code>, <code>assertNotNull</code>. Groovy 1.7 ships with a feature called the "power assert", which is an assert statement with better error reporting. This is preferable to the JUnit assertions. </p>
+ ]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -3623,18 +3562,6 @@ for (int i = 0; i < 100; ++i) {
     </param>
   </rule>
 
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.junit.UseAssertTrueInsteadOfNegationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Use Assert True Instead Of Negation]]></name>
-    <internalKey><![CDATA[UseAssertTrueInsteadOfNegation]]></internalKey>
-    <description><![CDATA[<p>In unit tests, if a condition is expected to be true then there is no sense using <code>assertFalse</code> with the negation operator. For instance, <code>assertFalse(!condition)</code> can always be simplified to <code>assertTrue(condition)</code>. </p>
-<p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
- ]]></description>
-    <tag>junit</tag>
-  </rule>
-
   <!-- since 0.11 -->
   <rule>
     <key>org.codenarc.rule.junit.UseAssertNullInsteadOfAssertEqualsRule</key>
@@ -3672,6 +3599,18 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.12 -->
   <rule>
+    <key>org.codenarc.rule.junit.UseAssertTrueInsteadOfNegationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Use Assert True Instead Of Negation]]></name>
+    <internalKey><![CDATA[UseAssertTrueInsteadOfNegation]]></internalKey>
+    <description><![CDATA[<p>In unit tests, if a condition is expected to be true then there is no sense using <code>assertFalse</code> with the negation operator. For instance, <code>assertFalse(!condition)</code> can always be simplified to <code>assertTrue(condition)</code>. </p>
+<p>This rule sets the default value of the <applyToClassNames> property to only match class names ending in 'Test', 'Tests' or 'TestCase'. </p>
+ ]]></description>
+    <tag>junit</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
     <key>org.codenarc.rule.junit.JUnitTestMethodWithoutAssertRule</key>
     <severity>MINOR</severity>
     <name><![CDATA[JUnit Test Method Without Assert]]></name>
@@ -3683,6 +3622,66 @@ for (int i = 0; i < 100; ++i) {
 </pre>
 <pre>
     'assert.*,should.*,fail.*,verify.*,ensure.*'
+</pre>
+]]></description>
+    <tag>junit</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.junit.ChainedTestRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Chained Test]]></name>
+    <internalKey><![CDATA[ChainedTest]]></internalKey>
+    <description><![CDATA[<p>A test method that invokes another test method is a chained test; the methods are dependent on one another. Tests should be isolated, and not be dependent on one another. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyTest extends GroovyTestCase {
+        public void testFoo() {
+
+            // violations, calls test method on self
+            5.times { testBar() }
+            5.times { this.testBar() }
+
+            // OK, no violation: one arg method is not actually a test method
+            5.times { testBar(it) }
+        }
+
+        private static void assertSomething() {
+            testBar() // violation, even if in helper method
+            this.testBar() // violation, even if in helper method
+        }
+
+        public void testBar() {
+            // ...
+        }
+    }
+</pre>
+]]></description>
+    <tag>junit</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.junit.CoupledTestCaseRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Coupled Test Case]]></name>
+    <internalKey><![CDATA[CoupledTestCase]]></internalKey>
+    <description><![CDATA[<p>This rule finds test cases that are coupled to other test cases, either by invoking static methods on another test case or by creating instances of another test case. If you require shared logic in test cases then extract that logic to a new class where it can properly be reused. Static references to methods on the current test class are ignored. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyTest extends GroovyTestCase {
+        public void testMethod() {
+            // violation, static method call to other test
+            MyOtherTest.helperMethod()
+
+            // violation, instantiation of another test class
+            new MyOtherTest()
+
+            // no violation; same class
+            def input = MyTest.getResourceAsStream('sample.txt')
+        }
+    }
 </pre>
 ]]></description>
     <tag>junit</tag>
@@ -3879,6 +3878,46 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- logging rules -->
 
+  <rule>
+    <key>org.codenarc.rule.logging.PrintlnRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Println]]></name>
+    <internalKey><![CDATA[Println]]></internalKey>
+    <description><![CDATA[<p>Checks for calls to <code>this.print()</code>, <code>this.println()</code> or <code>this.printf()</code>. Consider using a standard logging facility instead. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.logging.PrintStackTraceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Print Stack Trace]]></name>
+    <internalKey><![CDATA[PrintStackTrace]]></internalKey>
+    <description><![CDATA[<p>Checks for calls to <code>Throwable.printStackTrace()</code> or <code>StackTraceUtils.printSanitizedStackTrace(Throwable)</code>. Consider using a standard logging facility instead. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.logging.SystemErrPrintRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[System Err Print]]></name>
+    <internalKey><![CDATA[SystemErrPrint]]></internalKey>
+    <description><![CDATA[<p>Checks for calls to <code>System.err.print()</code>, <code>System.err.println()</code> or <code>System.err.printf()</code>. Consider using a standard logging facility instead. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.logging.SystemOutPrintRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[System Out Print]]></name>
+    <internalKey><![CDATA[SystemOutPrint]]></internalKey>
+    <description><![CDATA[<p>Checks for calls to <code>System.out.print()</code>, <code>System.out.println()</code> or <code>System.out.printf()</code>. Consider using a standard logging facility instead. </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
   <!-- since 0.12 -->
   <rule>
     <key>org.codenarc.rule.logging.LoggerForDifferentClassRule</key>
@@ -3927,46 +3966,6 @@ for (int i = 0; i < 100; ++i) {
     <tag>bug</tag>
   </rule>
 
-  <rule>
-    <key>org.codenarc.rule.logging.PrintlnRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Println]]></name>
-    <internalKey><![CDATA[Println]]></internalKey>
-    <description><![CDATA[<p>Checks for calls to <code>this.print()</code>, <code>this.println()</code> or <code>this.printf()</code>. Consider using a standard logging facility instead. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.logging.PrintStackTraceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Print Stack Trace]]></name>
-    <internalKey><![CDATA[PrintStackTrace]]></internalKey>
-    <description><![CDATA[<p>Checks for calls to <code>Throwable.printStackTrace()</code> or <code>StackTraceUtils.printSanitizedStackTrace(Throwable)</code>. Consider using a standard logging facility instead. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.logging.SystemErrPrintRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[System Err Print]]></name>
-    <internalKey><![CDATA[SystemErrPrint]]></internalKey>
-    <description><![CDATA[<p>Checks for calls to <code>System.err.print()</code>, <code>System.err.println()</code> or <code>System.err.printf()</code>. Consider using a standard logging facility instead. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.logging.SystemOutPrintRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[System Out Print]]></name>
-    <internalKey><![CDATA[SystemOutPrint]]></internalKey>
-    <description><![CDATA[<p>Checks for calls to <code>System.out.print()</code>, <code>System.out.println()</code> or <code>System.out.printf()</code>. Consider using a standard logging facility instead. </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
   <!-- naming rules -->
 
   <rule>
@@ -3995,28 +3994,8 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the class name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/([A-Z]\w*\$?)*/</defaultValue>
+      <defaultValue>([A-Z]\w*\$?)*</defaultValue>
     </param>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.naming.ConfusingMethodNameRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Confusing Method Name]]></name>
-    <internalKey><![CDATA[ConfusingMethodName]]></internalKey>
-    <description><![CDATA[<p>Checks for very confusing method names. The referenced methods have names that differ only by capitalization. This is very confusing because if the capitalization were identical then one of the methods would override the other. </p>
-<p>Also, violations are triggered when methods and fields have very similar names. </p>
-<pre>
-    class MyClass {
-        int total
-        int total() {
-            1
-        }
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
   </rule>
 
   <rule>
@@ -4042,12 +4021,12 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the field name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
+      <defaultValue>[a-z][a-zA-Z0-9]*</defaultValue>
     </param>
     <param>
       <key>staticFinalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate static final field names. It is optional. If not set, then static final fields are validated using finalRegex, staticRegex or regex. ]]></description>
-      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
+      <defaultValue>[A-Z][A-Z0-9_]*</defaultValue>
     </param>
     <param>
       <key>staticRegex</key>
@@ -4087,8 +4066,130 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the method name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z]\w*/</defaultValue>
+      <defaultValue>[a-z]\w*</defaultValue>
     </param>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.naming.PackageNameRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Package Name]]></name>
+    <internalKey><![CDATA[PackageName]]></internalKey>
+    <description><![CDATA[<p>Verifies that the package name of a class matches a regular expression. By default it checks that the package name consists of only lowercase letters and numbers, separated by periods. </p>
+ ]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>packageNameRequired</key>
+      <description><![CDATA[Indicates whether a package name declaration is required for all classes. ]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</defaultValue>
+    </param>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.naming.ParameterNameRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Parameter Name]]></name>
+    <internalKey><![CDATA[ParameterName]]></internalKey>
+    <description><![CDATA[<p>Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. </p>
+ ]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>ignoreParameterNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) parameter names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>[a-z][a-zA-Z0-9]*</defaultValue>
+    </param>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.naming.PropertyNameRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Property Name]]></name>
+    <internalKey><![CDATA[PropertyName]]></internalKey>
+    <description><![CDATA[<p>Verifies that the name of each property matches a regular expression. By default it checks that property names (other than <static final>) start with a lowercase letter and contains only letters or numbers. By default, <static final> property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. </p>
+<p><code>NOTE:</code> This rule checks only <properties> of a class, not regular <fields>. In Groovy, <properties> are fields declared with no access modifier (public, protected, private). For naming of regular <fields>, see <code>FieldNameRule</code>. </p>
+<p>The order of precedence for the regular expression properties is: <code>staticFinalRegex</code>, <code>finalRegex</code>, <code>staticRegex</code> and finally <code>regex</code>. In other words, the first regex in that list matching the modifiers for the property is the one that is applied for the field name validation. </p>
+ ]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>finalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>ignorePropertyNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the default regular expression used to validate the property name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>[a-z][a-zA-Z0-9]*</defaultValue>
+    </param>
+    <param>
+      <key>staticFinalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex. ]]></description>
+      <defaultValue>[A-Z][A-Z0-9_]*</defaultValue>
+    </param>
+    <param>
+      <key>staticRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.naming.VariableNameRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Variable Name]]></name>
+    <internalKey><![CDATA[VariableName]]></internalKey>
+    <description><![CDATA[<p>Verifies that the name of each variable matches a regular expression. By default it checks that non-<code>final</code> variable names start with a lowercase letter and contains only letters or numbers. By default, <code>final</code> variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. </p>
+]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>finalRegex</key>
+      <description><![CDATA[Specifies the regular expression used to validate final variable names. It is optional. If not set, then regex is used to validate final variable names. ]]></description>
+      <defaultValue>[A-Z][A-Z0-9_]*</defaultValue>
+    </param>
+    <param>
+      <key>ignoreVariableNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>regex</key>
+      <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty. ]]></description>
+      <defaultValue>[a-z][a-zA-Z0-9]*</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.naming.ConfusingMethodNameRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Confusing Method Name]]></name>
+    <internalKey><![CDATA[ConfusingMethodName]]></internalKey>
+    <description><![CDATA[<p>Checks for very confusing method names. The referenced methods have names that differ only by capitalization. This is very confusing because if the capitalization were identical then one of the methods would override the other. </p>
+<p>Also, violations are triggered when methods and fields have very similar names. </p>
+<pre>
+    class MyClass {
+        int total
+        int total() {
+            1
+        }
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.11 -->
@@ -4116,108 +4217,6 @@ for (int i = 0; i < 100; ++i) {
 </pre>
 ]]></description>
     <tag>bug</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.naming.PackageNameRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Package Name]]></name>
-    <internalKey><![CDATA[PackageName]]></internalKey>
-    <description><![CDATA[<p>Verifies that the package name of a class matches a regular expression. By default it checks that the package name consists of only lowercase letters and numbers, separated by periods. </p>
- ]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>packageNameRequired</key>
-      <description><![CDATA[Indicates whether a package name declaration is required for all classes. ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-    <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z]+[a-z0-9]*(\.[a-z0-9]+)*/</defaultValue>
-    </param>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.naming.ParameterNameRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Parameter Name]]></name>
-    <internalKey><![CDATA[ParameterName]]></internalKey>
-    <description><![CDATA[<p>Verifies that the name of each parameter matches a regular expression. This rule applies to method parameters, constructor parameters and closure parameters. By default it checks that parameter names start with a lowercase letter and contains only letters or numbers. </p>
- ]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>ignoreParameterNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) parameter names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the regular expression used to validate the parameter name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.naming.PropertyNameRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Property Name]]></name>
-    <internalKey><![CDATA[PropertyName]]></internalKey>
-    <description><![CDATA[<p>Verifies that the name of each property matches a regular expression. By default it checks that property names (other than <static final>) start with a lowercase letter and contains only letters or numbers. By default, <static final> property names start with an uppercase letter and contain only uppercase letters, numbers and underscores. </p>
-<p><code>NOTE:</code> This rule checks only <properties> of a class, not regular <fields>. In Groovy, <properties> are fields declared with no access modifier (public, protected, private). For naming of regular <fields>, see <code>FieldNameRule</code>. </p>
-<p>The order of precedence for the regular expression properties is: <code>staticFinalRegex</code>, <code>finalRegex</code>, <code>staticRegex</code> and finally <code>regex</code>. In other words, the first regex in that list matching the modifiers for the property is the one that is applied for the field name validation. </p>
- ]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>finalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>ignorePropertyNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the default regular expression used to validate the property name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
-    <param>
-      <key>staticFinalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static final property names. It is optional. If not set, then static final property are validated using finalRegex, staticRegex or regex. ]]></description>
-      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
-    </param>
-    <param>
-      <key>staticRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.naming.VariableNameRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Variable Name]]></name>
-    <internalKey><![CDATA[VariableName]]></internalKey>
-    <description><![CDATA[<p>Verifies that the name of each variable matches a regular expression. By default it checks that non-<code>final</code> variable names start with a lowercase letter and contains only letters or numbers. By default, <code>final</code> variable names start with an uppercase letter and contain only uppercase letters, numbers and underscores. </p>
-]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>finalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate final variable names. It is optional. If not set, then regex is used to validate final variable names. ]]></description>
-      <defaultValue>/[A-Z][A-Z0-9_]*/</defaultValue>
-    </param>
-    <param>
-      <key>ignoreVariableNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>regex</key>
-      <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/[a-z][a-zA-Z0-9]*/</defaultValue>
-    </param>
   </rule>
 
   <!-- since 0.16 -->
@@ -4274,7 +4273,7 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the method name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>/(build.*\|create.*)/</defaultValue>
+      <defaultValue>(build.*\|create.*)</defaultValue>
     </param>
   </rule>
 
@@ -4337,44 +4336,6 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <!-- size rules -->
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.size.AbcMetricRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Abc Metric]]></name>
-    <internalKey><![CDATA[AbcMetric]]></internalKey>
-    <description><![CDATA[<p>Calculates the <ABC> size metric for methods/classes and checks against configured threshold values. </p>
-<p>The <code>maxMethodAbcScore</code> property holds the threshold value for the ABC score for each method. If this value is non-zero, a method with an ABC score greater than this value is considered a violation. The value does not have to be an integer (e.g., 1.7 is allowed). </p>
-<p>The <code>maxClassAverageMethodAbcScore</code> property holds the threshold value for the average ABC score for each class. If this value is non-zero, a class with an average ABC score value greater than this value is considered a violation. The value does not have to be an integer. </p>
-<p>The <code>maxClassAbcScore</code> property holds the threshold value for the total ABC score value for each class. If this value is non-zero, a class with a total ABC score greater than this value is considered a violation. The value does not have to be an integer. </p>
-<p>This rule treats "closure fields" as methods. If a class field is initialized to a Closure (ClosureExpression), then that Closure is analyzed and checked just like a method. </p>
- The <ABC> score is calculated as follows: The <ABC> metric measures size by counting the number of Assignments (A), Branches (B) and Conditions (C) and assigns a single numerical score calculated as: </p>
-<p><code> |ABC| = sqrt((A*A)+(B*B)+(C*C)) </code> </p>
-<p>The <ABC Metric> calculation rules for Groovy: </p>
-]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>ignoreMethodNames</key>
-      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
-      <defaultValue>null</defaultValue>
-    </param>
-    <param>
-      <key>maxClassAbcScore</key>
-      <description><![CDATA[The maximum <ABC> score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or <null>, then do not check class-level scores. ]]></description>
-      <defaultValue>0</defaultValue>
-    </param>
-    <param>
-      <key>maxClassAverageMethodAbcScore</key>
-      <description><![CDATA[The maximum average <ABC> score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or <null>, then do not check class-level average scores. ]]></description>
-      <defaultValue>60</defaultValue>
-    </param>
-    <param>
-      <key>maxMethodAbcScore</key>
-      <description><![CDATA[The maximum <ABC> score allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level scores. ]]></description>
-      <defaultValue>60</defaultValue>
-    </param>
-  </rule>
 
   <rule>
     <key>org.codenarc.rule.size.ClassSizeRule</key>
@@ -4541,6 +4502,44 @@ for (int i = 0; i < 100; ++i) {
     </param>
   </rule>
 
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.size.AbcMetricRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Abc Metric]]></name>
+    <internalKey><![CDATA[AbcMetric]]></internalKey>
+    <description><![CDATA[<p>Calculates the <ABC> size metric for methods/classes and checks against configured threshold values. </p>
+<p>The <code>maxMethodAbcScore</code> property holds the threshold value for the ABC score for each method. If this value is non-zero, a method with an ABC score greater than this value is considered a violation. The value does not have to be an integer (e.g., 1.7 is allowed). </p>
+<p>The <code>maxClassAverageMethodAbcScore</code> property holds the threshold value for the average ABC score for each class. If this value is non-zero, a class with an average ABC score value greater than this value is considered a violation. The value does not have to be an integer. </p>
+<p>The <code>maxClassAbcScore</code> property holds the threshold value for the total ABC score value for each class. If this value is non-zero, a class with a total ABC score greater than this value is considered a violation. The value does not have to be an integer. </p>
+<p>This rule treats "closure fields" as methods. If a class field is initialized to a Closure (ClosureExpression), then that Closure is analyzed and checked just like a method. </p>
+ The <ABC> score is calculated as follows: The <ABC> metric measures size by counting the number of Assignments (A), Branches (B) and Conditions (C) and assigns a single numerical score calculated as: </p>
+<p><code> |ABC| = sqrt((A*A)+(B*B)+(C*C)) </code> </p>
+<p>The <ABC Metric> calculation rules for Groovy: </p>
+]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>ignoreMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
+      <defaultValue>null</defaultValue>
+    </param>
+    <param>
+      <key>maxClassAbcScore</key>
+      <description><![CDATA[The maximum <ABC> score allowed for a class, calculated as the total ABC score of its methods or "closure fields". If zero or <null>, then do not check class-level scores. ]]></description>
+      <defaultValue>0</defaultValue>
+    </param>
+    <param>
+      <key>maxClassAverageMethodAbcScore</key>
+      <description><![CDATA[The maximum average <ABC> score allowed for a class, calculated as the average score of its methods or "closure fields". If zero or <null>, then do not check class-level average scores. ]]></description>
+      <defaultValue>60</defaultValue>
+    </param>
+    <param>
+      <key>maxMethodAbcScore</key>
+      <description><![CDATA[The maximum <ABC> score allowed for a single method (or "closure field"). If zero or <null>, then do not check method-level scores. ]]></description>
+      <defaultValue>60</defaultValue>
+    </param>
+  </rule>
+
   <!-- since 0.23 -->
   <rule>
     <key>org.codenarc.rule.size.ParameterCountRule</key>
@@ -4568,110 +4567,6 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <!-- unnecessary rules -->
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.AddEmptyStringRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Add Empty String]]></name>
-    <internalKey><![CDATA[AddEmptyString]]></internalKey>
-    <description><![CDATA[<p>Finds empty string literals which are being added. This is an inefficient way to convert any type to a String. </p>
-<p>Examples: </p>
-<pre>
-    // do not add empty strings to things
-    def a = '' + 123
-    def b = method('' + property)
-
-    // these examples are OK and do not trigger violations
-    def c = 456.toString()
-    def d = property?.toString() ?: ""
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.ConsecutiveLiteralAppendsRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Consecutive Literal Appends]]></name>
-    <internalKey><![CDATA[ConsecutiveLiteralAppends]]></internalKey>
-    <description><![CDATA[<p>Violations occur when method calls to append(Object) are chained together with literals as parameters. The chained calls can be joined into one invocation. </p>
-<p>Example of violations: </p>
-<pre>
-    writer.append('foo').append('bar')      // strings can be joined
-    writer.append('foo').append(5)          // string and number can be joined
-    writer.append('Hello').append("$World") // GString can be joined
-</pre>
-<pre>
-    // usage not chained invocation
-    writer.append('Hello')
-    writer.append('World')
-
-    writer.append(null).append(5)           // nulls cannot be joined
-
-    writer.append().append('Hello')             // no arg append is unknown
-    writer.append('a', 'b').append('Hello')     // two arg append is unknown
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.ConsecutiveStringConcatenationRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Consecutive String Concatenation]]></name>
-    <internalKey><![CDATA[ConsecutiveStringConcatenation]]></internalKey>
-    <description><![CDATA[<p>Catches concatenation of two string literals on the same line. These can safely by joined. In Java, the Java compiler will join two String literals together and place them in the Constant Pool. However, Groovy will not because the plus() method may override the + operator. </p>
-<p>Examples: </p>
-<pre>
-    // Violations
-    def a = 'Hello' + 'World'   // should be 'HelloWorld'
-    def b = "$Hello" + 'World'  // should be "${Hello}World"
-    def c = 'Hello' + "$World"  // should be "Hello${World}"
-    def d = 'Hello' + 5         // should be 'Hello5'
-    def e = 'Hello' + '''
-                        world   // should be joined
-                      '''
-    def f = '''Hello
-                  ''' + 'world'   // should be joined
-
-
-    // Not Violations
-    def g = 'Hello' +           // OK because of line break
-                'World'
-    def h = 'Hello' + null      // OK because not a string
-    def i = 'Hello' + method()  // OK because not a string
-    def j = 'Hello' - "$World"  // OK because not +
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryBigDecimalInstantiationRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Big Decimal Instantiation]]></name>
-    <internalKey><![CDATA[UnnecessaryBigDecimalInstantiation]]></internalKey>
-    <description><![CDATA[<p>It is unnecessary to instantiate <code>BigDecimal</code> objects. Instead just use the decimal literal or the 'G' identifier to force the type, such as <code>123.45</code> or <code>123.45G</code>. </p>
-<p>This rule does not produce violations when the parameter evaluates to an integer/long, e.g. <code>new BigDecimal(42)</code>, <code>new BigDecimal(42L)</code> or <code>new BigDecimal("42")</code>, because using the "G" suffix on an integer value produces a <code>BigInteger</code>, rather than a <code>BigDecimal</code>, e.g. <code>45G</code>. So that means there is no way to produce a <code>BigDecimal</code> with exactly that value using a literal. </p>
-<p>This rule also does not produce violations when the parameter is a double, e.g. <code>new BigDecimal(12.3)</code>. That scenario is covered by the <a href="http://codenarc.sourceforge.net/codenarc-rules-basic.html#BigDecimalInstantiation">BigDecimalInstantiation</a> rule, because that produces an unpredictable (double) value (and so it is <unsafe>, rather than <unnecessary>). </p>
- ]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryBigIntegerInstantiationRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Big Integer Instantiation]]></name>
-    <internalKey><![CDATA[UnnecessaryBigIntegerInstantiation]]></internalKey>
-    <description><![CDATA[<p>It is unnecessary to instantiate <code>BigInteger</code> objects. Instead just use the literal with the 'G' identifier to force the type, such as <code>8G</code> or <code>42G</code>. </p>
- ]]></description>
-    <tag>clumsy</tag>
-  </rule>
 
   <rule>
     <key>org.codenarc.rule.unnecessary.UnnecessaryBooleanExpressionRule</key>
@@ -4710,6 +4605,107 @@ for (int i = 0; i < 100; ++i) {
     result = ![a,b]                     // Negation of List literal
 </pre>
 ]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryIfStatementRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary If Statement]]></name>
+    <internalKey><![CDATA[UnnecessaryIfStatement]]></internalKey>
+    <description><![CDATA[<p>Checks for unnecessary <code>if</code> statements. The entire <code>if</code> statement, or at least the <if> or <else> block, are considered unnecessary for the four scenarios described below. </p>
+<p>(1) When the <if> and <else> blocks contain only an explicit return of <code>true</code> and <code>false</code> constants. These cases can be replaced by a simple <return> statement. Examples of violations include: </p>
+<pre>
+    if (someExpression)         // can be replaced by: return someExpression
+        return true
+    else
+        return false
+
+    if (someExpression) {       // can be replaced by: return !someExpression
+        return false
+    } else {
+        return true
+    }
+
+    if (someExpression) {       // can be replaced by: return someExpression
+        return Boolean.TRUE
+    } else {
+        return Boolean.FALSE
+    }
+</pre>
+<pre>
+    def myMethod() {
+        doSomething()
+        if (someExpression)
+            true
+        else false
+    }
+</pre>
+<pre>
+    def myMethod() {
+        doSomething()
+        if (expression1) {
+            return true
+        }
+        return false
+    }
+</pre>
+<pre>
+    def myMethod() {
+        if (someExpression) { 123 }
+        doSomething()
+    }
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryTernaryExpressionRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Ternary Expression]]></name>
+    <internalKey><![CDATA[UnnecessaryTernaryExpression]]></internalKey>
+    <description><![CDATA[<p>Checks for ternary expressions where the conditional expression always evaluates to a boolean and the <true> and <false> expressions are merely returning <code>true</code> and <code>false</code> constants. These cases can be replaced by a simple boolean expression. Examples of violations include: </p>
+<pre>
+    x==99 ? true : false                    // can be replaced by: x==99
+    x && y ? true : false                   // can be replaced by: x && y
+    x||y ? false : true                     // can be replaced by: !(x||y)
+    x >= 1 ? true: false                    // can be replaced by: x >= 1
+    x < 99 ? Boolean.TRUE : Boolean.FALSE   // can be replaced by: x < 99
+    !x ? true : false                       // can be replaced by: !x
+</pre>
+<pre>
+    x ? '123' : '123'              // can be replaced by: '123'
+    x ? null : null                // can be replaced by: null
+    x ? 23 : 23                    // can be replaced by: 23
+    x ? MAX_VALUE : MAX_VALUE      // can be replaced by: MAX_VALUE
+    ready ? minValue : minValue    // can be replaced by: minValue
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryBigDecimalInstantiationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Big Decimal Instantiation]]></name>
+    <internalKey><![CDATA[UnnecessaryBigDecimalInstantiation]]></internalKey>
+    <description><![CDATA[<p>It is unnecessary to instantiate <code>BigDecimal</code> objects. Instead just use the decimal literal or the 'G' identifier to force the type, such as <code>123.45</code> or <code>123.45G</code>. </p>
+<p>This rule does not produce violations when the parameter evaluates to an integer/long, e.g. <code>new BigDecimal(42)</code>, <code>new BigDecimal(42L)</code> or <code>new BigDecimal("42")</code>, because using the "G" suffix on an integer value produces a <code>BigInteger</code>, rather than a <code>BigDecimal</code>, e.g. <code>45G</code>. So that means there is no way to produce a <code>BigDecimal</code> with exactly that value using a literal. </p>
+<p>This rule also does not produce violations when the parameter is a double, e.g. <code>new BigDecimal(12.3)</code>. That scenario is covered by the <a href="http://codenarc.sourceforge.net/codenarc-rules-basic.html#BigDecimalInstantiation">BigDecimalInstantiation</a> rule, because that produces an unpredictable (double) value (and so it is <unsafe>, rather than <unnecessary>). </p>
+ ]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryBigIntegerInstantiationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Big Integer Instantiation]]></name>
+    <internalKey><![CDATA[UnnecessaryBigIntegerInstantiation]]></internalKey>
+    <description><![CDATA[<p>It is unnecessary to instantiate <code>BigInteger</code> objects. Instead just use the literal with the 'G' identifier to force the type, such as <code>8G</code> or <code>42G</code>. </p>
+ ]]></description>
     <tag>clumsy</tag>
   </rule>
 
@@ -4757,25 +4753,6 @@ for (int i = 0; i < 100; ++i) {
     def d = x.get(z.size() -1)     // different objects
     def e = x.get(z.length -1)     // different objects
     def f = x.getAt(z.size() -1)   // different objects
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryCallToSubstringRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Call To Substring]]></name>
-    <internalKey><![CDATA[UnnecessaryCallToSubstring]]></internalKey>
-    <description><![CDATA[<p>Calling String.substring(0) always returns the original string. This code is meaningless. </p>
-<p>Examples: </p>
-<pre>
-    string.substring(0)         // violation
-    method().substring(0)       // violation
-
-    prop.substring(1)           // OK, not constant 0
-    prop.substring(0, 1)        // OK, end is specified
 </pre>
 ]]></description>
     <tag>clumsy</tag>
@@ -4865,38 +4842,6 @@ for (int i = 0; i < 100; ++i) {
         MyClass2() {                // violation; constructor is not necessary
             super()
         }
-    }
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryDefInMethodDeclarationRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Def In Method Declaration]]></name>
-    <internalKey><![CDATA[UnnecessaryDefInMethodDeclaration]]></internalKey>
-    <description><![CDATA[<p>If a method has a visibility modifier or a type declaration, then the def keyword is unneeded. For instance 'def private method() {}' is redundant and can be simplified to 'private method() {}'. </p>
-<p>Examples of violations: </p>
-<pre>
-    // def and private is redundant
-    def private method1() { return 4 }
-
-    // def and protected is redundant
-    def protected method2() { return 4 }
-
-    // def and public is redundant
-    def public method3() { return 4 }
-
-    // def and static is redundant
-    def static method4() { return 4 }
-
-    // def and type is redundant
-    def Object method5() { return 4 }
-
-    class MyClass {
-        def MyClass() {}    // def is redundant
     }
 </pre>
 ]]></description>
@@ -4995,58 +4940,6 @@ for (int i = 0; i < 100; ++i) {
     <tag>clumsy</tag>
   </rule>
 
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryIfStatementRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary If Statement]]></name>
-    <internalKey><![CDATA[UnnecessaryIfStatement]]></internalKey>
-    <description><![CDATA[<p>Checks for unnecessary <code>if</code> statements. The entire <code>if</code> statement, or at least the <if> or <else> block, are considered unnecessary for the four scenarios described below. </p>
-<p>(1) When the <if> and <else> blocks contain only an explicit return of <code>true</code> and <code>false</code> constants. These cases can be replaced by a simple <return> statement. Examples of violations include: </p>
-<pre>
-    if (someExpression)         // can be replaced by: return someExpression
-        return true
-    else
-        return false
-
-    if (someExpression) {       // can be replaced by: return !someExpression
-        return false
-    } else {
-        return true
-    }
-
-    if (someExpression) {       // can be replaced by: return someExpression
-        return Boolean.TRUE
-    } else {
-        return Boolean.FALSE
-    }
-</pre>
-<pre>
-    def myMethod() {
-        doSomething()
-        if (someExpression)
-            true
-        else false
-    }
-</pre>
-<pre>
-    def myMethod() {
-        doSomething()
-        if (expression1) {
-            return true
-        }
-        return false
-    }
-</pre>
-<pre>
-    def myMethod() {
-        if (someExpression) { 123 }
-        doSomething()
-    }
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
   <!-- since 0.12 -->
   <rule>
     <key>org.codenarc.rule.unnecessary.UnnecessaryInstantiationToGetClassRule</key>
@@ -5086,25 +4979,6 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[UnnecessaryLongInstantiation]]></internalKey>
     <description><![CDATA[<p>It is unnecessary to instantiate <code>Long</code> objects. Instead just use the literal with the 'L' identifier to force the type, such as <code>8L</code> or <code>42L</code>. </p>
  ]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryModOneRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Mod One]]></name>
-    <internalKey><![CDATA[UnnecessaryModOne]]></internalKey>
-    <description><![CDATA[<p>Any expression mod 1 (exp % 1) is guaranteed to always return zero. This code is probably an error, and should be either (exp & 1) or (exp % 2). </p>
-<p>Examples: </p>
-<pre>
-    if (exp % 1) {}         // violation
-    if (method() % 1) {}    // violation
-
-    if (exp & 1) {}     // ok
-    if (exp % 2) {}     // ok
-</pre>
-]]></description>
     <tag>clumsy</tag>
   </rule>
 
@@ -5241,6 +5115,182 @@ for (int i = 0; i < 100; ++i) {
     <tag>clumsy</tag>
   </rule>
 
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Return Keyword]]></name>
+    <internalKey><![CDATA[UnnecessaryReturnKeyword]]></internalKey>
+    <description><![CDATA[<p>In Groovy, the <code>return</code> keyword is often optional. If a statement is the last line in a method or closure then you do not need to have the <code>return</code> keyword. </p>
+ ]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary String Instantiation]]></name>
+    <internalKey><![CDATA[UnnecessaryStringInstantiation]]></internalKey>
+    <description><![CDATA[<p>Checks for direct call to the <code>String</code> constructor that accepts a <code>String</code> literal. In almost all cases, this is unnecessary. Use a <code>String</code> literal (e.g., "...") instead of calling the corresponding <code>String</code> constructor (<code>new String("..")</code>) directly. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    def s = new String('abc')
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.AddEmptyStringRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Add Empty String]]></name>
+    <internalKey><![CDATA[AddEmptyString]]></internalKey>
+    <description><![CDATA[<p>Finds empty string literals which are being added. This is an inefficient way to convert any type to a String. </p>
+<p>Examples: </p>
+<pre>
+    // do not add empty strings to things
+    def a = '' + 123
+    def b = method('' + property)
+
+    // these examples are OK and do not trigger violations
+    def c = 456.toString()
+    def d = property?.toString() ?: ""
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.ConsecutiveLiteralAppendsRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Consecutive Literal Appends]]></name>
+    <internalKey><![CDATA[ConsecutiveLiteralAppends]]></internalKey>
+    <description><![CDATA[<p>Violations occur when method calls to append(Object) are chained together with literals as parameters. The chained calls can be joined into one invocation. </p>
+<p>Example of violations: </p>
+<pre>
+    writer.append('foo').append('bar')      // strings can be joined
+    writer.append('foo').append(5)          // string and number can be joined
+    writer.append('Hello').append("$World") // GString can be joined
+</pre>
+<pre>
+    // usage not chained invocation
+    writer.append('Hello')
+    writer.append('World')
+
+    writer.append(null).append(5)           // nulls cannot be joined
+
+    writer.append().append('Hello')             // no arg append is unknown
+    writer.append('a', 'b').append('Hello')     // two arg append is unknown
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.ConsecutiveStringConcatenationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Consecutive String Concatenation]]></name>
+    <internalKey><![CDATA[ConsecutiveStringConcatenation]]></internalKey>
+    <description><![CDATA[<p>Catches concatenation of two string literals on the same line. These can safely by joined. In Java, the Java compiler will join two String literals together and place them in the Constant Pool. However, Groovy will not because the plus() method may override the + operator. </p>
+<p>Examples: </p>
+<pre>
+    // Violations
+    def a = 'Hello' + 'World'   // should be 'HelloWorld'
+    def b = "$Hello" + 'World'  // should be "${Hello}World"
+    def c = 'Hello' + "$World"  // should be "Hello${World}"
+    def d = 'Hello' + 5         // should be 'Hello5'
+    def e = 'Hello' + '''
+                        world   // should be joined
+                      '''
+    def f = '''Hello
+                  ''' + 'world'   // should be joined
+
+
+    // Not Violations
+    def g = 'Hello' +           // OK because of line break
+                'World'
+    def h = 'Hello' + null      // OK because not a string
+    def i = 'Hello' + method()  // OK because not a string
+    def j = 'Hello' - "$World"  // OK because not +
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryCallToSubstringRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Call To Substring]]></name>
+    <internalKey><![CDATA[UnnecessaryCallToSubstring]]></internalKey>
+    <description><![CDATA[<p>Calling String.substring(0) always returns the original string. This code is meaningless. </p>
+<p>Examples: </p>
+<pre>
+    string.substring(0)         // violation
+    method().substring(0)       // violation
+
+    prop.substring(1)           // OK, not constant 0
+    prop.substring(0, 1)        // OK, end is specified
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryDefInMethodDeclarationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Def In Method Declaration]]></name>
+    <internalKey><![CDATA[UnnecessaryDefInMethodDeclaration]]></internalKey>
+    <description><![CDATA[<p>If a method has a visibility modifier or a type declaration, then the def keyword is unneeded. For instance 'def private method() {}' is redundant and can be simplified to 'private method() {}'. </p>
+<p>Examples of violations: </p>
+<pre>
+    // def and private is redundant
+    def private method1() { return 4 }
+
+    // def and protected is redundant
+    def protected method2() { return 4 }
+
+    // def and public is redundant
+    def public method3() { return 4 }
+
+    // def and static is redundant
+    def static method4() { return 4 }
+
+    // def and type is redundant
+    def Object method5() { return 4 }
+
+    class MyClass {
+        def MyClass() {}    // def is redundant
+    }
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessaryModOneRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Mod One]]></name>
+    <internalKey><![CDATA[UnnecessaryModOne]]></internalKey>
+    <description><![CDATA[<p>Any expression mod 1 (exp % 1) is guaranteed to always return zero. This code is probably an error, and should be either (exp & 1) or (exp % 2). </p>
+<p>Examples: </p>
+<pre>
+    if (exp % 1) {}         // violation
+    if (method() % 1) {}    // violation
+
+    if (exp & 1) {}     // ok
+    if (exp % 2) {}     // ok
+</pre>
+]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.unnecessary.UnnecessaryPublicModifierRule</key>
@@ -5260,17 +5310,6 @@ for (int i = 0; i < 100; ++i) {
     }
 </pre>
 ]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Return Keyword]]></name>
-    <internalKey><![CDATA[UnnecessaryReturnKeyword]]></internalKey>
-    <description><![CDATA[<p>In Groovy, the <code>return</code> keyword is often optional. If a statement is the last line in a method or closure then you do not need to have the <code>return</code> keyword. </p>
- ]]></description>
     <tag>clumsy</tag>
   </rule>
 
@@ -5318,46 +5357,6 @@ for (int i = 0; i < 100; ++i) {
 
     // this code is OK
     println(value); println (otherValue)
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary String Instantiation]]></name>
-    <internalKey><![CDATA[UnnecessaryStringInstantiation]]></internalKey>
-    <description><![CDATA[<p>Checks for direct call to the <code>String</code> constructor that accepts a <code>String</code> literal. In almost all cases, this is unnecessary. Use a <code>String</code> literal (e.g., "...") instead of calling the corresponding <code>String</code> constructor (<code>new String("..")</code>) directly. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    def s = new String('abc')
-</pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessaryTernaryExpressionRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Ternary Expression]]></name>
-    <internalKey><![CDATA[UnnecessaryTernaryExpression]]></internalKey>
-    <description><![CDATA[<p>Checks for ternary expressions where the conditional expression always evaluates to a boolean and the <true> and <false> expressions are merely returning <code>true</code> and <code>false</code> constants. These cases can be replaced by a simple boolean expression. Examples of violations include: </p>
-<pre>
-    x==99 ? true : false                    // can be replaced by: x==99
-    x && y ? true : false                   // can be replaced by: x && y
-    x||y ? false : true                     // can be replaced by: !(x||y)
-    x >= 1 ? true: false                    // can be replaced by: x >= 1
-    x < 99 ? Boolean.TRUE : Boolean.FALSE   // can be replaced by: x < 99
-    !x ? true : false                       // can be replaced by: !x
-</pre>
-<pre>
-    x ? '123' : '123'              // can be replaced by: '123'
-    x ? null : null                // can be replaced by: null
-    x ? 23 : 23                    // can be replaced by: 23
-    x ? MAX_VALUE : MAX_VALUE      // can be replaced by: MAX_VALUE
-    ready ? minValue : minValue    // can be replaced by: minValue
 </pre>
 ]]></description>
     <tag>clumsy</tag>
@@ -5758,18 +5757,6 @@ for (int i = 0; i < 100; ++i) {
     </param>
   </rule>
 
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.unused.UnusedPrivateMethodParameterRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Unused Private Method Parameter]]></name>
-    <internalKey><![CDATA[UnusedPrivateMethodParameter]]></internalKey>
-    <description><![CDATA[<p>Checks for parameters to private methods that are not referenced within the method body. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
   <rule>
     <key>org.codenarc.rule.unused.UnusedPrivateMethodRule</key>
     <severity>MINOR</severity>
@@ -5796,6 +5783,18 @@ for (int i = 0; i < 100; ++i) {
       <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
       <defaultValue>null</defaultValue>
     </param>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.unused.UnusedPrivateMethodParameterRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Unused Private Method Parameter]]></name>
+    <internalKey><![CDATA[UnusedPrivateMethodParameter]]></internalKey>
+    <description><![CDATA[<p>Checks for parameters to private methods that are not referenced within the method body. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>bug</tag>
   </rule>
 
   <!-- since 0.16 -->
@@ -6431,12 +6430,12 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>characterAfterColonRegex</key>
       <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>/\\S/</defaultValue>
+      <defaultValue>\\S</defaultValue>
     </param>
     <param>
       <key>characterBeforeColonRegex</key>
       <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>/\\S/</defaultValue>
+      <defaultValue>\\S</defaultValue>
     </param>
   </rule>
 
@@ -6550,6 +6549,17 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- convention rules -->
 
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.convention.InvertedIfElseRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Inverted If Else]]></name>
+    <internalKey><![CDATA[InvertedIfElse]]></internalKey>
+    <description><![CDATA[<p>An inverted <if-else> statement is one in which there is a single <code>if</code> statement with a single <code>else</code> branch and the boolean test of the <code>if</code> is negated. For instance <code>if (!x) false else true</code>. It is usually clearer to write this as <code>if (x) true else false</code>. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
   <!-- since 0.12 -->
   <rule>
     <key>org.codenarc.rule.convention.ConfusingTernaryRule</key>
@@ -6575,17 +6585,6 @@ for (int i = 0; i < 100; ++i) {
     (x != false) ? diff : same
 </pre>
 ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.convention.InvertedIfElseRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Inverted If Else]]></name>
-    <internalKey><![CDATA[InvertedIfElse]]></internalKey>
-    <description><![CDATA[<p>An inverted <if-else> statement is one in which there is a single <code>if</code> statement with a single <code>else</code> branch and the boolean test of the <code>if</code> is negated. For instance <code>if (!x) false else true</code>. It is usually clearer to write this as <code>if (x) true else false</code>. </p>
- ]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -6741,23 +6740,6 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <!-- groovyism rules -->
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.AssignCollectionSortRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Assign Collection Sort]]></name>
-    <internalKey><![CDATA[AssignCollectionSort]]></internalKey>
-    <description><![CDATA[<p>The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a sort() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
-<p>Example of violations: </p>
-<pre>
-  def a = myList.sort()
-  def b = myList.sort() { it }
-  def c = myList.sort().findAll { x < 1 }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
 
   <!-- since 0.11 -->
   <rule>
@@ -7000,6 +6982,21 @@ for (int i = 0; i < 100; ++i) {
     <tag>groovyism</tag>
   </rule>
 
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.GStringAsMapKeyRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[G String As Map Key]]></name>
+    <internalKey><![CDATA[GStringAsMapKey]]></internalKey>
+    <description><![CDATA[<p> A GString should not be used as a map key since its <hashcode> is not guaranteed to be stable. Consider calling <code>key.toString()</code>. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    Map map = ["${someRef}" : 'invalid' ]       // violation
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
   <!-- since 0.13 -->
   <rule>
     <key>org.codenarc.rule.groovyism.GroovyLangImmutableRule</key>
@@ -7034,21 +7031,6 @@ for (int i = 0; i < 100; ++i) {
     import groovy.transform.Immutable as Imtl
     @Imtl
     class Person { }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.GStringAsMapKeyRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[G String As Map Key]]></name>
-    <internalKey><![CDATA[GStringAsMapKey]]></internalKey>
-    <description><![CDATA[<p> A GString should not be used as a map key since its <hashcode> is not guaranteed to be stable. Consider calling <code>key.toString()</code>. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    Map map = ["${someRef}" : 'invalid' ]       // violation
 </pre>
 ]]></description>
     <tag>groovyism</tag>
@@ -7097,6 +7079,23 @@ for (int i = 0; i < 100; ++i) {
   def b = myList.unique() { it }
   def c = myList.unique().findAll { x < 1 }
 
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.AssignCollectionSortRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Assign Collection Sort]]></name>
+    <internalKey><![CDATA[AssignCollectionSort]]></internalKey>
+    <description><![CDATA[<p>The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a sort() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
+<p>Example of violations: </p>
+<pre>
+  def a = myList.sort()
+  def b = myList.sort() { it }
+  def c = myList.sort().findAll { x < 1 }
 </pre>
 ]]></description>
     <tag>groovyism</tag>
