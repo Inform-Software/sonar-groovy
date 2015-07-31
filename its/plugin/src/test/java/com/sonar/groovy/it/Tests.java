@@ -31,7 +31,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
   GroovyTest.class,
   MetricsTest.class,
-  JaCoCoTest.class
+  JaCoCoTest.class,
+  SurefireTest.class
 })
 public class Tests {
 
@@ -63,6 +64,10 @@ public class Tests {
 
   public static boolean is_after_plugin_1_1() {
     return ORCHESTRATOR.getConfiguration().getPluginVersion(PLUGIN_KEY).isGreaterThanOrEquals("1.1");
+  }
+
+  public static boolean is_after_plugin_1_2() {
+    return ORCHESTRATOR.getConfiguration().getPluginVersion(PLUGIN_KEY).isGreaterThanOrEquals("1.2");
   }
 
   public static MavenBuild createMavenBuild() {
