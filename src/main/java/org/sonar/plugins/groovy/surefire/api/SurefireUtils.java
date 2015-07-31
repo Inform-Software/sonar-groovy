@@ -52,7 +52,7 @@ public final class SurefireUtils {
       try {
         return pathResolver.relativeFile(fs.baseDir(), path);
       } catch (Exception e) {
-        LOGGER.info("Surefire report path: "+fs.baseDir()+"/"+path +" not found.");
+        LOGGER.info("Surefire report path: " + fs.baseDir() + "/" + path + " not found.", e);
       }
     }
     return null;

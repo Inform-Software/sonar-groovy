@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.surefire;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
@@ -48,18 +47,19 @@ import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.List;
 import java.util.Map;
 
 public class GroovySurefireParser implements BatchExtension {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GroovySurefireParser.class);
+  private final Groovy groovy;
   private final ResourcePerspectives perspectives;
   private final FileSystem fs;
-  private final Project project;
 
-  public GroovySurefireParser(ResourcePerspectives perspectives, Project project, FileSystem fs) {
+  public GroovySurefireParser(Groovy groovy, ResourcePerspectives perspectives, FileSystem fs) {
+    this.groovy = groovy;
     this.perspectives = perspectives;
-    this.project = project;
     this.fs = fs;
   }
 
@@ -130,9 +130,9 @@ public class GroovySurefireParser implements BatchExtension {
       UnitTestClassReport report = entry.getValue();
       if (report.getTests() > 0) {
         negativeTimeTestNumber += report.getNegativeTimeTestNumber();
-        Resource resource = getUnitTestResource(entry.getKey());
-        if (resource != null) {
-          save(report, resource, context);
+        InputFile inputFile = getUnitTestInputFile(entry.getKey());
+        if (inputFile != null) {
+          save(report, inputFile, context);
         } else {
           LOGGER.warn("Resource not found: {}", entry.getKey());
         }
@@ -143,22 +143,22 @@ public class GroovySurefireParser implements BatchExtension {
     }
   }
 
-  private void save(UnitTestClassReport report, Resource resource, SensorContext context) {
+  private void save(UnitTestClassReport report, InputFile inputFile, SensorContext context) {
     double testsCount = report.getTests() - report.getSkipped();
-    saveMeasure(context, resource, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
-    saveMeasure(context, resource, CoreMetrics.TESTS, testsCount);
-    saveMeasure(context, resource, CoreMetrics.TEST_ERRORS, report.getErrors());
-    saveMeasure(context, resource, CoreMetrics.TEST_FAILURES, report.getFailures());
-    saveMeasure(context, resource, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
+    saveMeasure(context, inputFile, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
+    saveMeasure(context, inputFile, CoreMetrics.TESTS, testsCount);
+    saveMeasure(context, inputFile, CoreMetrics.TEST_ERRORS, report.getErrors());
+    saveMeasure(context, inputFile, CoreMetrics.TEST_FAILURES, report.getFailures());
+    saveMeasure(context, inputFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
     double passedTests = testsCount - report.getErrors() - report.getFailures();
     if (testsCount > 0) {
       double percentage = passedTests * 100d / testsCount;
-      saveMeasure(context, resource, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
+      saveMeasure(context, inputFile, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
     }
-    saveResults(resource, report);
+    saveResults(inputFile, report);
   }
 
-  protected void saveResults(Resource testFile, UnitTestClassReport report) {
+  protected void saveResults(InputFile testFile, UnitTestClassReport report) {
     for (UnitTestResult unitTestResult : report.getResults()) {
       MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
       if (testPlan != null) {
@@ -172,22 +172,29 @@ public class GroovySurefireParser implements BatchExtension {
     }
   }
 
-  protected Resource getUnitTestResource(String classKey) {
-    // FIXME handle file suffixes
-    String fileName = StringUtils.replace(classKey, ".", "/") + ".groovy";
+  protected InputFile getUnitTestInputFile(String classKey) {
+    String fileName = StringUtils.replace(classKey, ".", "/");
     FilePredicates p = fs.predicates();
-    FilePredicate searchPredicate = p.and(p.and(p.hasLanguage(Groovy.KEY), p.hasType(InputFile.Type.TEST)), p.matchesPathPattern("**/" + fileName));
+    FilePredicate fileNamePredicates = getFileNamePredicateFromSuffixes(p, fileName, groovy.getFileSuffixes());
+    FilePredicate searchPredicate = p.and(p.and(p.hasLanguage(Groovy.KEY), p.hasType(InputFile.Type.TEST)), fileNamePredicates);
     if (fs.hasFiles(searchPredicate)) {
-      File testFile = fs.files(searchPredicate).iterator().next();
-      return org.sonar.api.resources.File.fromIOFile(testFile, project);
+      return fs.inputFiles(searchPredicate).iterator().next();
     } else {
       return null;
     }
   }
 
-  private static void saveMeasure(SensorContext context, Resource resource, Metric metric, double value) {
+  private static FilePredicate getFileNamePredicateFromSuffixes(FilePredicates p, String fileName, String[] suffixes) {
+    List<FilePredicate> fileNamePredicates = Lists.newArrayListWithCapacity(suffixes.length);
+    for (String suffix : suffixes) {
+      fileNamePredicates.add(p.matchesPathPattern("**/" + fileName + suffix));
+    }
+    return p.or(fileNamePredicates);
+  }
+
+  private static void saveMeasure(SensorContext context, InputFile inputFile, Metric metric, double value) {
     if (!Double.isNaN(value)) {
-      context.saveMeasure(resource, metric, value);
+      context.saveMeasure(inputFile, metric, value);
     }
   }
 

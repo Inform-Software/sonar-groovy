@@ -56,7 +56,17 @@ public class Groovy extends AbstractLanguage {
     if (suffixes.length == 0) {
       suffixes = StringUtils.split(GroovyPlugin.DEFAULT_FILE_SUFFIXES, ",");
     }
-    return suffixes;
+    return addDot(suffixes);
+  }
+
+  private static String[] addDot(String[] suffixes) {
+    String[] results = new String[suffixes.length];
+    for (int i = 0; i < suffixes.length; i++) {
+      String suffix = suffixes[i];
+      String dot = suffix.startsWith(".") ? "" : ".";
+      results[i] = dot + suffix;
+    }
+    return results;
   }
 
   private static String[] filterEmptyStrings(String[] stringArray) {

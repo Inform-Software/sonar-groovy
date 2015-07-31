@@ -185,12 +185,11 @@ public class CodeNarcSensor implements Sensor {
   }
   
   private static String groovyExtensions(String[] suffixes) {
+    String[] results = new String[suffixes.length];
     for (int i = 0; i < suffixes.length; i++) {
-      String suffix = suffixes[i];
-      String dot = suffix.startsWith(".") ? "" : ".";
-      suffixes[i] = "**/*" + dot + suffix;
+      results[i] = "**/*" + suffixes[i];
     }
-    return Joiner.on(",").join(suffixes);
+    return Joiner.on(",").join(results);
   }
   
   private void exportCodeNarcConfiguration(File file) {

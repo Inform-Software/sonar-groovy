@@ -39,7 +39,7 @@ import java.io.File;
 @DependedUpon("surefire-java")
 public class GroovySurefireSensor implements Sensor {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(GroovySurefireSensor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(GroovySurefireSensor.class);
 
   private final Settings settings;
   private final FileSystem fs;
