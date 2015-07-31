@@ -29,35 +29,33 @@ import javax.annotation.CheckForNull;
 
 import java.io.File;
 
-/**
- * @author iwarapter
- */
 public final class SurefireUtils {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SurefireUtils.class);
-	public static final String SUREFIRE_REPORTS_PATH_PROPERTY = "sonar.junit.reportsPath";
+  private static final Logger LOGGER = LoggerFactory.getLogger(SurefireUtils.class);
+  public static final String SUREFIRE_REPORTS_PATH_PROPERTY = "sonar.junit.reportsPath";
 
-	private SurefireUtils() {
-	}
+  private SurefireUtils() {
+  }
 
-	public static File getReportsDirectory(Settings settings, FileSystem fs, PathResolver pathResolver) {
-		File dir = getReportsDirectoryFromProperty(settings, fs, pathResolver);
-		if (dir == null) {
-			dir = new File(fs.baseDir(), "target/surefire-reports");
-		}
-		return dir;
-	}
+  public static File getReportsDirectory(Settings settings, FileSystem fs, PathResolver pathResolver) {
+    File dir = getReportsDirectoryFromProperty(settings, fs, pathResolver);
+    if (dir == null) {
+      dir = new File(fs.baseDir(), "target/surefire-reports");
+    }
+    return dir;
+  }
 
-	@CheckForNull
-	private static File getReportsDirectoryFromProperty(Settings settings, FileSystem fs, PathResolver pathResolver) {
-		String path = settings.getString(SUREFIRE_REPORTS_PATH_PROPERTY);
-		if (path != null) {
-			try {
-				return pathResolver.relativeFile(fs.baseDir(), path);
-			} catch (Exception e) {
-				LOGGER.info("Surefire report path: "+fs.baseDir()+"/"+path +" not found.");
-			}
-		}
-		return null;
-	}
+  @CheckForNull
+  private static File getReportsDirectoryFromProperty(Settings settings, FileSystem fs, PathResolver pathResolver) {
+    String path = settings.getString(SUREFIRE_REPORTS_PATH_PROPERTY);
+    if (path != null) {
+      try {
+        return pathResolver.relativeFile(fs.baseDir(), path);
+      } catch (Exception e) {
+        LOGGER.info("Surefire report path: "+fs.baseDir()+"/"+path +" not found.");
+      }
+    }
+    return null;
+  }
+
 }

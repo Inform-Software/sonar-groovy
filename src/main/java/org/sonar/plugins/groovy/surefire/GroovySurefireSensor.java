@@ -20,6 +20,8 @@
 
 package org.sonar.plugins.groovy.surefire;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.DependedUpon;
 import org.sonar.api.batch.DependsUpon;
@@ -30,54 +32,51 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.io.File;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.surefire.api.SurefireUtils;
 
-/**
- * Created by iwarapter
- */
+import java.io.File;
+
 @DependedUpon("surefire-java")
 public class GroovySurefireSensor implements Sensor {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(GroovySurefireSensor.class);
+  private static Logger LOGGER = LoggerFactory.getLogger(GroovySurefireSensor.class);
 
-	private final Settings settings;
-	private final FileSystem fs;
-	private final GroovySurefireParser groovySurefireParser;
-	private final PathResolver pathResolver;
+  private final Settings settings;
+  private final FileSystem fs;
+  private final GroovySurefireParser groovySurefireParser;
+  private final PathResolver pathResolver;
 
-	public GroovySurefireSensor(GroovySurefireParser groovySurefireParser, Settings settings, FileSystem fs, PathResolver pathResolver) {
-		this.groovySurefireParser = groovySurefireParser;
-		this.settings = settings;
-		this.fs = fs;
-		this.pathResolver = pathResolver;
-	}
+  public GroovySurefireSensor(GroovySurefireParser groovySurefireParser, Settings settings, FileSystem fs, PathResolver pathResolver) {
+    this.groovySurefireParser = groovySurefireParser;
+    this.settings = settings;
+    this.fs = fs;
+    this.pathResolver = pathResolver;
+  }
 
-	@DependsUpon
-	public Class dependsUponCoverageSensors() {
-		return CoverageExtension.class;
-	}
+  @DependsUpon
+  public Class dependsUponCoverageSensors() {
+    return CoverageExtension.class;
+  }
 
-	@Override
-	public boolean shouldExecuteOnProject(Project project) {
-		return fs.hasFiles(fs.predicates().hasLanguage(Groovy.KEY));
-	}
+  @Override
+  public boolean shouldExecuteOnProject(Project project) {
+    return fs.hasFiles(fs.predicates().hasLanguage(Groovy.KEY));
+  }
 
-	public void analyse(Project project, SensorContext context) {
-		File dir = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
-		collect(context, dir);
-	}
+  @Override
+  public void analyse(Project project, SensorContext context) {
+    File dir = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
+    collect(context, dir);
+  }
 
-	protected void collect(SensorContext context, File reportsDir) {
-		LOGGER.info("parsing {}", reportsDir);
-		groovySurefireParser.collect(context, reportsDir);
-	}
+  protected void collect(SensorContext context, File reportsDir) {
+    LOGGER.info("parsing {}", reportsDir);
+    groovySurefireParser.collect(context, reportsDir);
+  }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
-	}
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
+  }
+
 }

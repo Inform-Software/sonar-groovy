@@ -24,82 +24,79 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author iwarapter
- */
 public final class UnitTestClassReport {
-	private long errors = 0L;
-	private long failures = 0L;
-	private long skipped = 0L;
-	private long tests = 0L;
-	private long durationMilliseconds = 0L;
+  private long errors = 0L;
+  private long failures = 0L;
+  private long skipped = 0L;
+  private long tests = 0L;
+  private long durationMilliseconds = 0L;
 
 
-	private long negativeTimeTestNumber = 0L;
-	private List<UnitTestResult> results = null;
+  private long negativeTimeTestNumber = 0L;
+  private List<UnitTestResult> results = null;
 
-	public UnitTestClassReport add(UnitTestClassReport other) {
-		for (UnitTestResult otherResult : other.getResults()) {
-			add(otherResult);
-		}
-		return this;
-	}
+  public UnitTestClassReport add(UnitTestClassReport other) {
+    for (UnitTestResult otherResult : other.getResults()) {
+      add(otherResult);
+    }
+    return this;
+  }
 
-	public UnitTestClassReport add(UnitTestResult result) {
-		initResults();
-		results.add(result);
-		if (result.getStatus().equals(UnitTestResult.STATUS_SKIPPED)) {
-			skipped += 1;
+  public UnitTestClassReport add(UnitTestResult result) {
+    initResults();
+    results.add(result);
+    if (result.getStatus().equals(UnitTestResult.STATUS_SKIPPED)) {
+      skipped += 1;
 
-		} else if (result.getStatus().equals(UnitTestResult.STATUS_FAILURE)) {
-			failures += 1;
+    } else if (result.getStatus().equals(UnitTestResult.STATUS_FAILURE)) {
+      failures += 1;
 
-		} else if (result.getStatus().equals(UnitTestResult.STATUS_ERROR)) {
-			errors += 1;
-		}
-		tests += 1;
-		if (result.getDurationMilliseconds() < 0) {
-			negativeTimeTestNumber += 1;
-		} else {
-			durationMilliseconds += result.getDurationMilliseconds();
-		}
-		return this;
-	}
+    } else if (result.getStatus().equals(UnitTestResult.STATUS_ERROR)) {
+      errors += 1;
+    }
+    tests += 1;
+    if (result.getDurationMilliseconds() < 0) {
+      negativeTimeTestNumber += 1;
+    } else {
+      durationMilliseconds += result.getDurationMilliseconds();
+    }
+    return this;
+  }
 
-	private void initResults() {
-		if (results == null) {
-			results = Lists.newArrayList();
-		}
-	}
+  private void initResults() {
+    if (results == null) {
+      results = Lists.newArrayList();
+    }
+  }
 
-	public long getErrors() {
-		return errors;
-	}
+  public long getErrors() {
+    return errors;
+  }
 
-	public long getFailures() {
-		return failures;
-	}
+  public long getFailures() {
+    return failures;
+  }
 
-	public long getSkipped() {
-		return skipped;
-	}
+  public long getSkipped() {
+    return skipped;
+  }
 
-	public long getTests() {
-		return tests;
-	}
+  public long getTests() {
+    return tests;
+  }
 
-	public long getDurationMilliseconds() {
-		return durationMilliseconds;
-	}
+  public long getDurationMilliseconds() {
+    return durationMilliseconds;
+  }
 
-	public long getNegativeTimeTestNumber() {
-		return negativeTimeTestNumber;
-	}
+  public long getNegativeTimeTestNumber() {
+    return negativeTimeTestNumber;
+  }
 
-	public List<UnitTestResult> getResults() {
-		if (results == null) {
-			return Collections.emptyList();
-		}
-		return results;
-	}
+  public List<UnitTestResult> getResults() {
+    if (results == null) {
+      return Collections.emptyList();
+    }
+    return results;
+  }
 }

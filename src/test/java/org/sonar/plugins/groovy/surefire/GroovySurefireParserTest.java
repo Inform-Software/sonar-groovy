@@ -61,180 +61,179 @@ import static org.mockito.Mockito.when;
  */
 public class GroovySurefireParserTest {
 
-	private ResourcePerspectives perspectives;
-	private Project project;
-	private FileSystem fs;
-	private GroovySurefireParser parser;
+  private ResourcePerspectives perspectives;
+  private Project project;
+  private FileSystem fs;
+  private GroovySurefireParser parser;
 
-	@Before
-	public void before() {
-		perspectives = mock(ResourcePerspectives.class);
-		project = mock(Project.class);
-		fs = mock(FileSystem.class);
+  @Before
+  public void before() {
+    perspectives = mock(ResourcePerspectives.class);
+    project = mock(Project.class);
+    fs = mock(FileSystem.class);
 
-		parser = spy(new GroovySurefireParser(perspectives, project, fs));
+    parser = spy(new GroovySurefireParser(perspectives, project, fs));
 
-		doAnswer(new Answer<Resource>() {
-			@Override
-			public Resource answer(InvocationOnMock invocation) throws Throwable {
-				return File.create((String) invocation.getArguments()[0]);
-			}
-		}).when(parser).getUnitTestResource(anyString());
-	}
+    doAnswer(new Answer<Resource>() {
+      @Override
+      public Resource answer(InvocationOnMock invocation) throws Throwable {
+        return File.create((String) invocation.getArguments()[0]);
+      }
+    }).when(parser).getUnitTestResource(anyString());
+  }
 
-	@Test
-	public void should_register_tests() throws URISyntaxException {
-		SensorContext context = mockContext();
+  @Test
+  public void should_register_tests() throws URISyntaxException {
+    SensorContext context = mockContext();
 
-		MutableTestCase testCase = mock(MutableTestCase.class);
-		when(testCase.setDurationInMs(anyLong())).thenReturn(testCase);
-		when(testCase.setStatus(any(TestCase.Status.class))).thenReturn(testCase);
-		when(testCase.setMessage(anyString())).thenReturn(testCase);
-		when(testCase.setStackTrace(anyString())).thenReturn(testCase);
-		when(testCase.setType(anyString())).thenReturn(testCase);
-		MutableTestPlan testPlan = mock(MutableTestPlan.class);
-		when(testPlan.addTestCase(anyString())).thenReturn(testCase);
-		when(perspectives.as(eq(MutableTestPlan.class),
-				argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "ch.hortis.sonar.mvn.mc.MetricsCollectorRegistryTest")))).thenReturn(testPlan);
+    MutableTestCase testCase = mock(MutableTestCase.class);
+    when(testCase.setDurationInMs(anyLong())).thenReturn(testCase);
+    when(testCase.setStatus(any(TestCase.Status.class))).thenReturn(testCase);
+    when(testCase.setMessage(anyString())).thenReturn(testCase);
+    when(testCase.setStackTrace(anyString())).thenReturn(testCase);
+    when(testCase.setType(anyString())).thenReturn(testCase);
+    MutableTestPlan testPlan = mock(MutableTestPlan.class);
+    when(testPlan.addTestCase(anyString())).thenReturn(testCase);
+    when(perspectives.as(eq(MutableTestPlan.class),
+      argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "ch.hortis.sonar.mvn.mc.MetricsCollectorRegistryTest")))).thenReturn(testPlan);
 
-		parser.collect(context, getDir("multipleReports"));
+    parser.collect(context, getDir("multipleReports"));
 
-		verify(testPlan).addTestCase("testGetUnKnownCollector");
-		verify(testPlan).addTestCase("testGetJDependsCollector");
-	}
+    verify(testPlan).addTestCase("testGetUnKnownCollector");
+    verify(testPlan).addTestCase("testGetJDependsCollector");
+  }
 
-	@Test
-	public void should_store_zero_tests_when_directory_is_null_or_non_existing_or_a_file() throws Exception {
-		Project project = mock(Project.class);
+  @Test
+  public void should_store_zero_tests_when_directory_is_null_or_non_existing_or_a_file() throws Exception {
+    Project project = mock(Project.class);
 
-		SensorContext context = mockContext();
-		parser.collect(context, null);
-		verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
+    SensorContext context = mockContext();
+    parser.collect(context, null);
+    verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
 
-		context = mockContext();
-		parser.collect(context, getDir("nonExistingReportsDirectory"));
-		verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
+    context = mockContext();
+    parser.collect(context, getDir("nonExistingReportsDirectory"));
+    verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
 
-		context = mockContext();
-		parser.collect(context, getDir("file.txt"));
-		verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
-	}
+    context = mockContext();
+    parser.collect(context, getDir("file.txt"));
+    verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
+  }
 
-	@Test
-	public void shouldAggregateReports() throws URISyntaxException {
-		SensorContext context = mockContext();
+  @Test
+  public void shouldAggregateReports() throws URISyntaxException {
+    SensorContext context = mockContext();
 
-		parser.collect(context, getDir("multipleReports"));
+    parser.collect(context, getDir("multipleReports"));
 
-		// Only 6 tests measures should be stored, no more: the TESTS-AllTests.xml must not be read as there's 1 file result per unit test
-		// (SONAR-2841).
-		verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.SKIPPED_TESTS), eq(0.0));
-		verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
-		verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
-	}
+    // Only 6 tests measures should be stored, no more: the TESTS-AllTests.xml must not be read as there's 1 file result per unit test
+    // (SONAR-2841).
+    verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.SKIPPED_TESTS), eq(0.0));
+    verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
+    verify(context, times(6)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
+  }
 
-	// SONAR-2841: if there's only a test suite report, then it should be read.
-	@Test
-	public void shouldUseTestSuiteReportIfAlone() throws URISyntaxException {
-		SensorContext context = mockContext();
+  // SONAR-2841: if there's only a test suite report, then it should be read.
+  @Test
+  public void shouldUseTestSuiteReportIfAlone() throws URISyntaxException {
+    SensorContext context = mockContext();
 
-		parser.collect(context, getDir("onlyTestSuiteReport"));
+    parser.collect(context, getDir("onlyTestSuiteReport"));
 
-		verify(context, times(2)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
-		verify(context, times(2)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
-	}
+    verify(context, times(2)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
+    verify(context, times(2)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
+  }
 
-	/**
-	 * See http://jira.codehaus.org/browse/SONAR-2371
-	 */
-	@Test
-	public void shouldInsertZeroWhenNoReports() throws URISyntaxException {
-		SensorContext context = mockContext();
-		Project project = mock(Project.class);
+  /**
+   * See http://jira.codehaus.org/browse/SONAR-2371
+   */
+  @Test
+  public void shouldInsertZeroWhenNoReports() throws URISyntaxException {
+    SensorContext context = mockContext();
+    Project project = mock(Project.class);
 
-		parser.collect(context, getDir("noReports"));
-		verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
+    parser.collect(context, getDir("noReports"));
+    verify(context, never()).saveMeasure(eq(CoreMetrics.TESTS), anyDouble());
 
-	}
+  }
 
-	/**
-	 * See http://jira.codehaus.org/browse/SONAR-2371
-	 */
-	@Test
-	public void shouldNotInsertZeroWhenNoReports() throws URISyntaxException {
-		SensorContext context = mockContext();
-		Project project = mock(Project.class);
-		when(project.getModules()).thenReturn(Arrays.asList(new Project("foo")));
+  /**
+   * See http://jira.codehaus.org/browse/SONAR-2371
+   */
+  @Test
+  public void shouldNotInsertZeroWhenNoReports() throws URISyntaxException {
+    SensorContext context = mockContext();
+    Project project = mock(Project.class);
+    when(project.getModules()).thenReturn(Arrays.asList(new Project("foo")));
 
-		parser.collect(context, getDir("noReports"));
+    parser.collect(context, getDir("noReports"));
 
-		verify(context, never()).saveMeasure(CoreMetrics.TESTS, 0.0);
-	}
+    verify(context, never()).saveMeasure(CoreMetrics.TESTS, 0.0);
+  }
 
-	@Test
-	public void shouldNotInsertZeroOnFiles() throws URISyntaxException {
-		SensorContext context = mockContext();
+  @Test
+  public void shouldNotInsertZeroOnFiles() throws URISyntaxException {
+    SensorContext context = mockContext();
 
-		parser.collect(context, getDir("noTests"));
+    parser.collect(context, getDir("noTests"));
 
-		verify(context, never()).saveMeasure(any(Resource.class), any(Metric.class), anyDouble());
-	}
+    verify(context, never()).saveMeasure(any(Resource.class), any(Metric.class), anyDouble());
+  }
 
-	@Test
-	public void shouldMergeInnerClasses() throws URISyntaxException {
+  @Test
+  public void shouldMergeInnerClasses() throws URISyntaxException {
 
-		SensorContext context = mock(SensorContext.class);
-		when(context.isIndexed(argThat(new ArgumentMatcher<Resource>() {
-			@Override
-			public boolean matches(Object o) {
-				return !((Resource) o).getName().contains("$");
-			}
-		}), eq(false))).thenReturn(true);
+    SensorContext context = mock(SensorContext.class);
+    when(context.isIndexed(argThat(new ArgumentMatcher<Resource>() {
+      @Override
+      public boolean matches(Object o) {
+        return !((Resource) o).getName().contains("$");
+      }
+    }), eq(false))).thenReturn(true);
 
-		parser.collect(context, getDir("innerClasses"));
+    parser.collect(context, getDir("innerClasses"));
 
-		verify(context)
-				.saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap")), eq(CoreMetrics.TESTS), eq(7.0));
-		verify(context).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap")), eq(CoreMetrics.TEST_ERRORS),
-				eq(1.0));
-		verify(context, never()).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap$TestBidiMapEntrySet")),
-				any(Metric.class), anyDouble());
-	}
+    verify(context)
+      .saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap")), eq(CoreMetrics.TESTS), eq(7.0));
+    verify(context).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap")), eq(CoreMetrics.TEST_ERRORS),
+      eq(1.0));
+    verify(context, never()).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.apache.commons.collections.bidimap.AbstractTestBidiMap$TestBidiMapEntrySet")),
+      any(Metric.class), anyDouble());
+  }
 
-	@Test
-	public void shouldMergeNestedInnerClasses() throws URISyntaxException {
+  @Test
+  public void shouldMergeNestedInnerClasses() throws URISyntaxException {
 
-		SensorContext context = mockContext();
-		parser.collect(context, getDir("nestedInnerClasses"));
+    SensorContext context = mockContext();
+    parser.collect(context, getDir("nestedInnerClasses"));
 
-		verify(context).saveMeasure(
-				argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.sonar.plugins.surefire.NestedInnerTest")),
-				eq(CoreMetrics.TESTS),
-				eq(3.0));
-	}
+    verify(context).saveMeasure(
+      argThat(new IsResource(Scopes.FILE, Qualifiers.FILE, "org.sonar.plugins.surefire.NestedInnerTest")),
+      eq(CoreMetrics.TESTS),
+      eq(3.0));
+  }
 
-	@Test
-	public void should_not_count_negative_tests() throws URISyntaxException {
-		SensorContext context = mockContext();
+  @Test
+  public void should_not_count_negative_tests() throws URISyntaxException {
+    SensorContext context = mockContext();
 
-		parser.collect(context, getDir("negativeTestTime"));
-		//Test times : -1.120, 0.644, 0.015 -> computed time : 0.659, ignore negative time.
+    parser.collect(context, getDir("negativeTestTime"));
+    // Test times : -1.120, 0.644, 0.015 -> computed time : 0.659, ignore negative time.
 
-		verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.SKIPPED_TESTS), eq(0.0));
-		verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
-		verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
-		verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_FAILURES), anyDouble());
-		verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_EXECUTION_TIME), eq(659.0));
-	}
+    verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.SKIPPED_TESTS), eq(0.0));
+    verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TESTS), anyDouble());
+    verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_ERRORS), anyDouble());
+    verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_FAILURES), anyDouble());
+    verify(context, times(1)).saveMeasure(argThat(new IsResource(Scopes.FILE, Qualifiers.FILE)), eq(CoreMetrics.TEST_EXECUTION_TIME), eq(659.0));
+  }
 
+  private java.io.File getDir(String dirname) throws URISyntaxException {
+    return new java.io.File("src/test/resources/org/sonar/plugins/groovy/surefire/SurefireParserTest/" + dirname);
+  }
 
-	private java.io.File getDir(String dirname) throws URISyntaxException {
-		return new java.io.File("src/test/resources/org/sonar/plugins/groovy/surefire/SurefireParserTest/" + dirname);
-	}
-
-	private SensorContext mockContext() {
-		SensorContext context = mock(SensorContext.class);
-		when(context.isIndexed(any(Resource.class), eq(false))).thenReturn(true);
-		return context;
-	}
+  private SensorContext mockContext() {
+    SensorContext context = mock(SensorContext.class);
+    when(context.isIndexed(any(Resource.class), eq(false))).thenReturn(true);
+    return context;
+  }
 }

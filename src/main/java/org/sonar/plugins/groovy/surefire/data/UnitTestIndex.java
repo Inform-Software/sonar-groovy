@@ -25,54 +25,53 @@ import com.google.common.collect.Sets;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author iwarapter
- */
 public class UnitTestIndex {
 
-	private Map<String, UnitTestClassReport> indexByClassname;
+  private Map<String, UnitTestClassReport> indexByClassname;
 
-	public UnitTestIndex() {
-		this.indexByClassname = Maps.newHashMap();
-	}
+  public UnitTestIndex() {
+    this.indexByClassname = Maps.newHashMap();
+  }
 
-	public UnitTestClassReport index(String classname) {
-		UnitTestClassReport classReport = indexByClassname.get(classname);
-		if (classReport == null) {
-			classReport = new UnitTestClassReport();
-			indexByClassname.put(classname, classReport);
-		}
-		return classReport;
-	}
+  public UnitTestClassReport index(String classname) {
+    UnitTestClassReport classReport = indexByClassname.get(classname);
+    if (classReport == null) {
+      classReport = new UnitTestClassReport();
+      indexByClassname.put(classname, classReport);
+    }
+    return classReport;
+  }
 
-	public UnitTestClassReport get(String classname) {
-		return indexByClassname.get(classname);
-	}
+  public UnitTestClassReport get(String classname) {
+    return indexByClassname.get(classname);
+  }
 
-	public Set<String> getClassnames() {
-		return Sets.newHashSet(indexByClassname.keySet());
-	}
+  public Set<String> getClassnames() {
+    return Sets.newHashSet(indexByClassname.keySet());
+  }
 
-	public Map<String, UnitTestClassReport> getIndexByClassname() {
-		return indexByClassname;
-	}
+  public Map<String, UnitTestClassReport> getIndexByClassname() {
+    return indexByClassname;
+  }
 
-	public int size() {
-		return indexByClassname.size();
-	}
+  public int size() {
+    return indexByClassname.size();
+  }
 
-	public UnitTestClassReport merge(String classname, String intoClassname) {
-		UnitTestClassReport from = indexByClassname.get(classname);
-		if (from!=null) {
-			UnitTestClassReport to = index(intoClassname);
-			to.add(from);
-			indexByClassname.remove(classname);
-			return to;
-		}
-		return null;
-	}
+  public UnitTestClassReport merge(String classname, String intoClassname) {
+    UnitTestClassReport from = indexByClassname.get(classname);
+    if (from!=null) {
+      UnitTestClassReport to = index(intoClassname);
+      to.add(from);
+      indexByClassname.remove(classname);
+      return to;
+    }
+    return null;
+  }
 
-	public void remove(String classname) {
-		indexByClassname.remove(classname);
-	}
+  public void remove(String classname) {
+    indexByClassname.remove(classname);
+  }
+
+
 }

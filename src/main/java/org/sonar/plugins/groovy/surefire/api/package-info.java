@@ -22,3 +22,4 @@
 package org.sonar.plugins.groovy.surefire.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
