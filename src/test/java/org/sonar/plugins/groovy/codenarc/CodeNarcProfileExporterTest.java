@@ -102,6 +102,19 @@ public class CodeNarcProfileExporterTest {
       writer.toString());
   }
 
+  @Test
+  public void shouldEscapeExportedParameters() throws Exception {
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.naming.ClassNameRule", "Class Name");
+    rule.createParameter("regex").setDefaultValue("([A-Z]\\w*\\$?)*");
+    profile.activateRule(rule, RulePriority.MAJOR).setParameter("regex", "[A-Z]+[a-z&&[^bc]]");
+
+    exporter.exportProfile(profile);
+
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportEscapedParameters.xml"),
+      writer.toString());
+  }
+
   private void assertSimilarXml(File expectedFile, String xml) throws Exception {
     XMLUnit.setIgnoreWhitespace(true);
     Reader reader = new FileReader(expectedFile);

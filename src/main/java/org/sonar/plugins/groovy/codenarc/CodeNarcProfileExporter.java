@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
@@ -82,7 +83,7 @@ public class CodeNarcProfileExporter {
           writer.append("<property name=\"")
             .append(activeRuleParam.getKey())
             .append("\" value=\"")
-            .append(value)
+            .append(StringEscapeUtils.escapeXml(value))
             .append(AUTO_CLOSING_TAG);
         }
       }
