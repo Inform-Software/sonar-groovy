@@ -41,13 +41,11 @@ public class SurefireUtilsTest {
   private Project project;
   private FileSystem fs;
   private PathResolver pathResolver;
-  private Settings settings;
 
   @Before
   public void setup() {
     project = MavenTestUtils.loadProjectFromPom(getClass(), "shouldGetReportsFromProperty/pom.xml");
     fs = new DefaultFileSystem(project.getFileSystem().getBasedir());
-    settings = mock(Settings.class);
     pathResolver = new PathResolver();
   }
 
@@ -61,7 +59,7 @@ public class SurefireUtilsTest {
 
   @Test
   public void return_default_value_if_property_unset() throws Exception {
-    File directory = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
+    File directory = SurefireUtils.getReportsDirectory(mock(Settings.class), fs, pathResolver);
     assertThat(directory.getCanonicalPath()).endsWith("target" + File.separator + "surefire-reports");
     assertThat(directory.exists()).isFalse();
     assertThat(directory.isDirectory()).isFalse();
