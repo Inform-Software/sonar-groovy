@@ -79,7 +79,7 @@ public class CodeNarcProfileExporter {
       for (ActiveRuleParam activeRuleParam : activeRule.getActiveRuleParams()) {
         String value = activeRuleParam.getValue();
         String defaultValue = activeRuleParam.getRuleParam().getDefaultValue();
-        if (StringUtils.isNotBlank(value) && !"null".equals(value) && !value.equals(defaultValue)) {
+        if (StringUtils.isNotBlank(value) && !value.equals(defaultValue)) {
           writer.append("<property name=\"")
             .append(activeRuleParam.getKey())
             .append("\" value=\"")
