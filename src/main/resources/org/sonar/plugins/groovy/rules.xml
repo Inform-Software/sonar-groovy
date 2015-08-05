@@ -2304,7 +2304,7 @@
 
   <!-- since 0.17 -->
   <rule>
-    <key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule</key>
+    <key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed</key>
     <severity>MAJOR</severity>
     <name><![CDATA[Private Field Could Be Final]]></name>
     <internalKey><![CDATA[PrivateFieldCouldBeFinal]]></internalKey>
@@ -2861,7 +2861,7 @@ for (int i = 0; i < 100; ++i) {
   <!-- generic rules -->
 
   <rule>
-    <key>org.codenarc.rule.generic.IllegalRegexRule</key>
+    <key>org.codenarc.rule.generic.IllegalRegexRule.fixed</key>
     <severity>MAJOR</severity>
     <name><![CDATA[Illegal Regex]]></name>
     <internalKey><![CDATA[IllegalRegex]]></internalKey>
@@ -2877,7 +2877,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.generic.RequiredRegexRule</key>
+    <key>org.codenarc.rule.generic.RequiredRegexRule.fixed</key>
     <severity>MAJOR</severity>
     <name><![CDATA[Required Regex]]></name>
     <internalKey><![CDATA[RequiredRegex]]></internalKey>
@@ -2893,7 +2893,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.generic.RequiredStringRule</key>
+    <key>org.codenarc.rule.generic.RequiredStringRule.fixed</key>
     <severity>MAJOR</severity>
     <name><![CDATA[Required String]]></name>
     <internalKey><![CDATA[RequiredString]]></internalKey>
@@ -2909,7 +2909,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.generic.StatelessClassRule</key>
+    <key>org.codenarc.rule.generic.StatelessClassRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Stateless Class]]></name>
     <internalKey><![CDATA[StatelessClass]]></internalKey>
@@ -2941,7 +2941,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.14 -->
   <rule>
-    <key>org.codenarc.rule.generic.IllegalPackageReferenceRule</key>
+    <key>org.codenarc.rule.generic.IllegalPackageReferenceRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Package Reference]]></name>
     <internalKey><![CDATA[IllegalPackageReference]]></internalKey>
@@ -2974,7 +2974,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.15 -->
   <rule>
-    <key>org.codenarc.rule.generic.IllegalClassReferenceRule</key>
+    <key>org.codenarc.rule.generic.IllegalClassReferenceRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Class Reference]]></name>
     <internalKey><![CDATA[IllegalClassReference]]></internalKey>
@@ -3007,7 +3007,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.19 -->
   <rule>
-    <key>org.codenarc.rule.generic.IllegalClassMemberRule</key>
+    <key>org.codenarc.rule.generic.IllegalClassMemberRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Class Member]]></name>
     <internalKey><![CDATA[IllegalClassMember]]></internalKey>
@@ -3051,7 +3051,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.20 -->
   <rule>
-    <key>org.codenarc.rule.generic.IllegalStringRule</key>
+    <key>org.codenarc.rule.generic.IllegalStringRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Illegal String]]></name>
     <internalKey><![CDATA[IllegalString]]></internalKey>
@@ -3068,7 +3068,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.21 -->
   <rule>
-    <key>org.codenarc.rule.generic.IllegalSubclassRule</key>
+    <key>org.codenarc.rule.generic.IllegalSubclassRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Subclass]]></name>
     <internalKey><![CDATA[IllegalSubclass]]></internalKey>
@@ -3085,7 +3085,7 @@ for (int i = 0; i < 100; ++i) {
   <!-- grails rules -->
 
   <rule>
-    <key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule</key>
+    <key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Grails Public Controller Method]]></name>
     <internalKey><![CDATA[GrailsPublicControllerMethod]]></internalKey>
@@ -3697,7 +3697,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.14 -->
   <rule>
-    <key>org.codenarc.rule.junit.SpockIgnoreRestUsedRule</key>
+    <key>org.codenarc.rule.junit.SpockIgnoreRestUsedRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Spock Ignore Rest Used]]></name>
     <internalKey><![CDATA[SpockIgnoreRestUsed]]></internalKey>
@@ -3828,7 +3828,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.21 -->
   <rule>
-    <key>org.codenarc.rule.junit.JUnitPublicPropertyRule</key>
+    <key>org.codenarc.rule.junit.JUnitPublicPropertyRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[JUnit Public Property]]></name>
     <internalKey><![CDATA[JUnitPublicProperty]]></internalKey>
@@ -3947,7 +3947,7 @@ for (int i = 0; i < 100; ++i) {
   <!-- naming rules -->
 
   <rule>
-    <key>org.codenarc.rule.naming.AbstractClassNameRule</key>
+    <key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Abstract Class Name]]></name>
     <internalKey><![CDATA[AbstractClassName]]></internalKey>
@@ -3976,7 +3976,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.FieldNameRule</key>
+    <key>org.codenarc.rule.naming.FieldNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Field Name]]></name>
     <internalKey><![CDATA[FieldName]]></internalKey>
@@ -4011,7 +4011,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.InterfaceNameRule</key>
+    <key>org.codenarc.rule.naming.InterfaceNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Interface Name]]></name>
     <internalKey><![CDATA[InterfaceName]]></internalKey>
@@ -4025,7 +4025,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.MethodNameRule</key>
+    <key>org.codenarc.rule.naming.MethodNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Method Name]]></name>
     <internalKey><![CDATA[MethodName]]></internalKey>
@@ -4064,7 +4064,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.ParameterNameRule</key>
+    <key>org.codenarc.rule.naming.ParameterNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Parameter Name]]></name>
     <internalKey><![CDATA[ParameterName]]></internalKey>
@@ -4083,7 +4083,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.PropertyNameRule</key>
+    <key>org.codenarc.rule.naming.PropertyNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Property Name]]></name>
     <internalKey><![CDATA[PropertyName]]></internalKey>
@@ -4117,7 +4117,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.naming.VariableNameRule</key>
+    <key>org.codenarc.rule.naming.VariableNameRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Variable Name]]></name>
     <internalKey><![CDATA[VariableName]]></internalKey>
@@ -4258,7 +4258,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.22 -->
   <rule>
-    <key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule</key>
+    <key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Package Name Matches File Path]]></name>
     <internalKey><![CDATA[PackageNameMatchesFilePath]]></internalKey>
@@ -4320,7 +4320,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.size.CyclomaticComplexityRule</key>
+    <key>org.codenarc.rule.size.CyclomaticComplexityRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Cyclomatic Complexity]]></name>
     <internalKey><![CDATA[CyclomaticComplexity]]></internalKey>
@@ -4370,7 +4370,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.size.MethodSizeRule</key>
+    <key>org.codenarc.rule.size.MethodSizeRule.fixed</key>
     <severity>MAJOR</severity>
     <name><![CDATA[Method Size]]></name>
     <internalKey><![CDATA[MethodSize]]></internalKey>
@@ -4428,7 +4428,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.17 -->
   <rule>
-    <key>org.codenarc.rule.size.CrapMetricRule</key>
+    <key>org.codenarc.rule.size.CrapMetricRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Crap Metric]]></name>
     <internalKey><![CDATA[CrapMetric]]></internalKey>
@@ -4467,7 +4467,7 @@ for (int i = 0; i < 100; ++i) {
 
   <!-- since 0.18 -->
   <rule>
-    <key>org.codenarc.rule.size.AbcMetricRule</key>
+    <key>org.codenarc.rule.size.AbcMetricRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Abc Metric]]></name>
     <internalKey><![CDATA[AbcMetric]]></internalKey>
@@ -5731,7 +5731,7 @@ for (int i = 0; i < 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.unused.UnusedVariableRule</key>
+    <key>org.codenarc.rule.unused.UnusedVariableRule.fixed</key>
     <severity>MINOR</severity>
     <name><![CDATA[Unused Variable]]></name>
     <internalKey><![CDATA[UnusedVariable]]></internalKey>

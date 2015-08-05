@@ -90,6 +90,18 @@ public class CodeNarcProfileExporterTest {
   }
 
   @Test
+  public void shouldExportFixedRulesCorrectly() throws Exception {
+    Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed", "Private Field Could Be Final");
+    profile.activateRule(rule, RulePriority.MAJOR);
+
+    exporter.exportProfile(profile);
+
+    assertSimilarXml(
+      TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportFixedRules.xml"),
+      writer.toString());
+  }
+
+  @Test
   public void shouldNotExportParametersWithDefaultValue() throws Exception {
     Rule rule = Rule.create(CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule", "Class Size");
     rule.createParameter("maxLines").setDefaultValue("20");

@@ -425,7 +425,7 @@
       <name>Readability</name>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.AbstractClassNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1397,7 +1397,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.FieldNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.FieldNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1469,7 +1469,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.IllegalClassReferenceRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.IllegalClassReferenceRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1487,7 +1487,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.IllegalClassMemberRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.IllegalClassMemberRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1505,7 +1505,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.IllegalPackageReferenceRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.IllegalPackageReferenceRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1523,7 +1523,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.IllegalRegexRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.IllegalRegexRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1541,7 +1541,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.IllegalStringRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.IllegalStringRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1577,7 +1577,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.InterfaceNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.InterfaceNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1703,7 +1703,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.MethodNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.MethodNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1757,7 +1757,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.ParameterNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.ParameterNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1793,7 +1793,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.PropertyNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.PropertyNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1811,7 +1811,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.RequiredRegexRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.RequiredRegexRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -1829,7 +1829,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.RequiredStringRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.RequiredStringRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -2891,7 +2891,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.VariableNameRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.VariableNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3147,7 +3147,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule</rule-key>
+        <rule-key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3201,7 +3201,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.size.AbcMetricRule</rule-key>
+        <rule-key>org.codenarc.rule.size.AbcMetricRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3453,7 +3453,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.unused.UnusedVariableRule</rule-key>
+        <rule-key>org.codenarc.rule.unused.UnusedVariableRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3821,7 +3821,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule</rule-key>
+        <rule-key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3857,7 +3857,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.generic.StatelessClassRule</rule-key>
+        <rule-key>org.codenarc.rule.generic.StatelessClassRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3915,7 +3915,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.size.CrapMetricRule</rule-key>
+        <rule-key>org.codenarc.rule.size.CrapMetricRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -3951,7 +3951,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule</rule-key>
+        <rule-key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -4023,7 +4023,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.size.MethodSizeRule</rule-key>
+        <rule-key>org.codenarc.rule.size.MethodSizeRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -5293,7 +5293,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.size.CyclomaticComplexityRule</rule-key>
+        <rule-key>org.codenarc.rule.size.CyclomaticComplexityRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -5653,7 +5653,7 @@
       </chc>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.junit.SpockIgnoreRestUsedRule</rule-key>
+        <rule-key>org.codenarc.rule.junit.SpockIgnoreRestUsedRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>
@@ -6361,7 +6361,7 @@
       <name>Unit level</name>
       <chc>
         <rule-repo>grvy</rule-repo>
-        <rule-key>org.codenarc.rule.junit.JUnitPublicPropertyRule</rule-key>
+        <rule-key>org.codenarc.rule.junit.JUnitPublicPropertyRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>
           <txt>linear</txt>

@@ -70,8 +70,12 @@ public class CodeNarcProfileExporter {
   }
 
   private void appendRule(ActiveRule activeRule) throws IOException {
-    writer.append("<rule class=\"")
-        .append(activeRule.getRuleKey());
+    String ruleKey = activeRule.getRuleKey();
+    // SOANRGROOV-40 : key of rule having null parameters have been suffixed with ".fixed"
+    if (ruleKey.endsWith(".fixed")) {
+      ruleKey = ruleKey.substring(0, ruleKey.length() - ".fixed".length());
+    }
+    writer.append("<rule class=\"").append(ruleKey);
     if (activeRule.getActiveRuleParams().isEmpty()) {
       writer.append(AUTO_CLOSING_TAG);
     } else {

@@ -307,7 +307,7 @@ public class Rule {
     }
     xmlStringBuilder.append("  <rule>");
     xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <key>" + key + "</key>");
+    xmlStringBuilder.append("    <key>" + markRuleFixedIfNullParameters() + "</key>");
     xmlStringBuilder.append(Converter.LINE_SEPARATOR);
     xmlStringBuilder.append("    <severity>" + severity + "</severity>");
     xmlStringBuilder.append(Converter.LINE_SEPARATOR);
@@ -353,6 +353,22 @@ public class Rule {
     xmlStringBuilder.append("  </rule>");
     xmlStringBuilder.append(Converter.LINE_SEPARATOR);
     xmlStringBuilder.append(Converter.LINE_SEPARATOR);
+  }
+
+  private String markRuleFixedIfNullParameters() {
+    if (hasNullParameters()) {
+      return key + ".fixed";
+    }
+    return key;
+  }
+
+  private boolean hasNullParameters() {
+    for (RuleParameter parameter : parameters) {
+      if ("null".equals(parameter.defaultValue)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public String getVersion() {

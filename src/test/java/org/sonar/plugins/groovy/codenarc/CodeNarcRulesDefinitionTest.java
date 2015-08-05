@@ -55,7 +55,7 @@ public class CodeNarcRulesDefinitionTest {
       }
     }
     // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have SQALE mapping by purpose
-    assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule");
+    assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule.fixed");
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
     assertThat(rule.params()).hasSize(1);

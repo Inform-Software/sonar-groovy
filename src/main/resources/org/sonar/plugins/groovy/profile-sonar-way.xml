@@ -39,7 +39,7 @@
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule</key>
+      <key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule.fixed</key>
       <priority>MINOR</priority>
     </rule>
     <rule>
@@ -159,7 +159,7 @@
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.unused.UnusedVariableRule</key>
+      <key>org.codenarc.rule.unused.UnusedVariableRule.fixed</key>
       <priority>MAJOR</priority>
     </rule>
     <rule>
