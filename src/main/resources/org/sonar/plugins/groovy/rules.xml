@@ -2314,7 +2314,6 @@
     <param>
       <key>ignoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreJpaEntities</key>
@@ -2874,7 +2873,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[The regular expression to check for. If null or empty then do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -2891,7 +2889,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[The regular expression to check for. If null or empty then do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -2908,7 +2905,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>string</key>
       <description><![CDATA[The String to check for. If null or empty then do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -2932,17 +2928,14 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>addToIgnoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names to be added to the ignoreFieldNames property value. This is a special write-only property, and each call to setAddIgnoreFieldNames() adds to (rather than overwrites) the list of field names to be ignored. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreFieldTypes</key>
       <description><![CDATA[Specifies one or more (comma-separated) field types that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -2976,7 +2969,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>packageNames</key>
       <description><![CDATA[Specifies the comma-separated list of package names. The package name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the package name, e.g. 'a.*' matches 'a.b' as well as 'a.b.c.d'. If packageNames is null or empty, do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3010,7 +3002,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>classNames</key>
       <description><![CDATA[Specifies the comma-separated list of (fully-qualified) class names. The class name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the class/package name, e.g. 'a.*.MyClass' matches a.b.MyClass as well as a.b.c.d.MyClass. If classNames is null or empty, do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3027,42 +3018,34 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>allowedFieldModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>allowedMethodModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>allowedPropertyModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property does not match all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreMethodsWithAnnotationNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) annotation names that should be ignored (i.e., methods with those annotations should not cause a rule violation). The names may optionally contain wildcards (*,?). (Do not include the "@" in the annotation name ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>illegalFieldModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a field matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>illegalMethodModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a method matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>illegalPropertyModifiers</key>
       <description><![CDATA[Specifies one or more groups of whitespace-delimited modifier names (e.g. "public static" or "protected"). Multiple groups are separated by commas (e.g. "private final, protected"). If a property matches all of the modifiers in any group, then trigger a violation. If null or empty, skip this check. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3080,7 +3063,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>string</key>
       <description><![CDATA[The String to check for. If null or empty then do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3097,7 +3079,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>superclassNames</key>
       <description><![CDATA[Specifies the comma-separated list of (fully-qualified) class names. The class name(s) may optionally include wildcard characters ('*' or '?'). Note that the '*' wildcard matches any sequence of zero or more characters in the class/package name, e.g. 'a.*.MyClass' matches a.b.MyClass as well as a.b.c.d.MyClass. If classNames is null or empty, do nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3117,7 +3098,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3745,7 +3725,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>specificationClassNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification classes. The class names may optionally contain wildcards (*,?), e.g. "*Spec". ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>specificationSuperclassNames</key>
@@ -3872,7 +3851,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignorePropertyNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -3979,7 +3957,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the abstract class name. If null or empty, then this rule does nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4011,7 +3988,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>finalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate final field names. It is optional. If not set, then final fields that are non-static are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreFieldNames</key>
@@ -4031,7 +4007,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>staticRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate static field names. It is optional. If not set, then static fields that are non-final are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4046,7 +4021,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the name of an interface. If null or empty, then this rule does nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4061,7 +4035,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>regex</key>
@@ -4101,7 +4074,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreParameterNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) parameter names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>regex</key>
@@ -4123,12 +4095,10 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>finalRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate final property names. It is optional. If not set, then final properties that are non-static are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignorePropertyNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) property names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>regex</key>
@@ -4143,7 +4113,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>staticRegex</key>
       <description><![CDATA[Specifies the regular expression used to validate static property names. It is optional. If not set, then static properties that are non-final are validated using regex. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4163,7 +4132,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreVariableNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>regex</key>
@@ -4300,7 +4268,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>groupId</key>
       <description><![CDATA[Specifies the common <group id> part of a package name, that will appear within all checked package names. It must also map to the file path for the correspondin source file. For instance, a <groupId> of <"org.sample"> means that for all classes that specify a package, that package name must include <"org.sample">, and the source file must exist under an "org/sample" directory. Then, a MyClass class in a org.sample.util package must be defined in a "MyClass.groovy" file within a <"org/sample/util"> directory. That directory can be the child of any arbitrary <root path>, e.g. "src/main/groovy". To find the sub-path relevant for the package the rule searches for the first appearance of <groupId> in the file path. It's <required> to configure this. If groupId is null or empty, this rule does nothing. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 
@@ -4368,7 +4335,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxClassAverageMethodComplexity</key>
@@ -4415,7 +4381,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxLines</key>
@@ -4478,12 +4443,10 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>coberturaXmlFile</key>
       <description><![CDATA[The path to the Cobertura XML coverage file for the Groovy code By default, the path is relative to the classpath. But the path may be optionally prefixed by any of the valid java.net.URL prefixes, such as "file:" (to load from a relative or absolute path on the filesystem), or "http:". This property is REQUIRED. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxClassAverageMethodCrapScore</key>
@@ -4521,7 +4484,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreMethodNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) method names that that should not cause a rule violation. The names may optionally contain wildcards (*,?). Note that the ignored methods still contribute to the class complexity value. ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
     <param>
       <key>maxClassAbcScore</key>
@@ -5781,7 +5743,6 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>ignoreVariableNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?). ]]></description>
-      <defaultValue>null</defaultValue>
     </param>
   </rule>
 

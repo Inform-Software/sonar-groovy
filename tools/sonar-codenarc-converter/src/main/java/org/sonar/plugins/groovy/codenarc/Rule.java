@@ -127,9 +127,15 @@ public class Rule {
       Field f = ruleInstance.getClass().getDeclaredField(parameterName);
       f.setAccessible(true);
       Object value = f.get(ruleInstance);
-      return value.toString();
-    } catch (Exception e) {
+      if (value != null) {
+        return value.toString();
+      }
+    } catch (NoSuchFieldException e) {
       // do nothing, there is probably no default value
+    } catch (IllegalArgumentException e) {
+      // do nothing, that's probably not the correct name
+    } catch (IllegalAccessException e) {
+      // do nothing, can not access field
     }
     return result;
   }
@@ -335,7 +341,7 @@ public class Rule {
           xmlStringBuilder.append("      <description><![CDATA[" + parameter.description + "]]></description>");
           xmlStringBuilder.append(Converter.LINE_SEPARATOR);
         }
-        if (StringUtils.isNotBlank(parameter.defaultValue)) {
+        if (StringUtils.isNotBlank(parameter.defaultValue) && !"null".equals(parameter.defaultValue)) {
           xmlStringBuilder.append("      <defaultValue>" + parameter.defaultValue + "</defaultValue>");
           xmlStringBuilder.append(Converter.LINE_SEPARATOR);
         }
