@@ -1,0 +1,16 @@
+{
+'project:src/examples/swing/timelog/TimeLogView.groovy':[
+8,
+10,
+],
+'project:src/test/groovy/bugs/Groovy5687Bug.groovy':[
+26,
+27,
+],
+'project:src/test/org/codehaus/groovy/runtime/DateGDKTest.groovy':[
+88,
+],
+'project:subprojects/groovy-swing/src/test/groovy/groovy/swing/SwingBuilderTest.groovy':[
+415,
+],
+}

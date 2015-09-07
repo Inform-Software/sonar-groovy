@@ -1,0 +1,16 @@
+{
+'project:src/test/groovy/PrintTest.groovy':[
+14,
+18,
+],
+'project:src/test/org/codehaus/groovy/runtime/DateGDKTest.groovy':[
+31,
+43,
+71,
+84,
+],
+'project:subprojects/groovy-xml/src/test/groovy/groovy/xml/XmlUtilTest.groovy':[
+50,
+90,
+],
+}

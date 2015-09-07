@@ -1,0 +1,17 @@
+{
+'project:benchmark/bench/mandelbrot.groovy':[
+22,
+],
+'project:src/test/groovy/beans/BindableTest.groovy':[
+163,
+],
+'project:src/test/groovy/beans/VetoableTest.groovy':[
+210,
+211,
+407,
+408,
+],
+'project:src/test/groovy/lang/SyntheticReturnTest.groovy':[
+119,
+],
+}

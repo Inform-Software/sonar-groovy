@@ -1,0 +1,12 @@
+{
+'project:src/test/org/codehaus/groovy/runtime/powerassert/EvaluationTest.groovy':[
+132,
+],
+'project:subprojects/groovy-swing/src/test/groovy/groovy/util/GroovySwingTestCase.groovy':[
+29,
+],
+'project:subprojects/groovy-xml/src/test/groovy/groovy/xml/dom/DOMTest.groovy':[
+97,
+101,
+],
+}

@@ -1,0 +1,15 @@
+{
+'project:src/main/groovy/util/ConfigSlurper.groovy':[
+226,
+],
+'project:src/main/org/codehaus/groovy/classgen/genMathModification.groovy':[
+66,
+66,
+],
+'project:src/test/groovy/ListTest.groovy':[
+217,
+],
+'project:src/test/groovy/operator/TernaryOperatorsTest.groovy':[
+31,
+],
+}

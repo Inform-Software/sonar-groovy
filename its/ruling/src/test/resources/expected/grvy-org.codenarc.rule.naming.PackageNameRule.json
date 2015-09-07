@@ -1,0 +1,16 @@
+{
+'project:src/test-resources/stubgenerator/circularLanguageReference/Rectangle.groovy':[
+0,
+],
+'project:src/test-resources/stubgenerator/propertyUsageFromJava/somepackage/GroovyPogo.groovy':[
+0,
+],
+'project:src/test/gls/innerClass/InnerClassTest.groovy':[
+0,
+0,
+0,
+],
+'project:src/test/gls/innerClass/InnerInterfaceTest.groovy':[
+0,
+],
+}

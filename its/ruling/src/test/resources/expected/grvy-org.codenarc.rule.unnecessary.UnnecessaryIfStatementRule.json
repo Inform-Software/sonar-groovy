@@ -1,0 +1,8 @@
+{
+'project:subprojects/groovy-groovysh/src/main/groovy/org/codehaus/groovy/tools/shell/completion/GroovySyntaxCompletor.groovy':[
+280,
+],
+'project:subprojects/groovy-test/src/main/groovy/groovy/mock/interceptor/LooseExpectation.groovy':[
+64,
+],
+}

@@ -1,0 +1,16 @@
+{
+'project:src/test/groovy/GStringTest.groovy':[
+534,
+538,
+],
+'project:src/test/groovy/GroovyCharSequenceMethodsTest.groovy':[
+187,
+],
+'project:src/test/org/codehaus/groovy/runtime/PerInstanceMetaClassTest.groovy':[
+40,
+114,
+],
+'project:subprojects/groovy-xml/src/test/groovy/groovy/util/NodeTest.groovy':[
+212,
+],
+}

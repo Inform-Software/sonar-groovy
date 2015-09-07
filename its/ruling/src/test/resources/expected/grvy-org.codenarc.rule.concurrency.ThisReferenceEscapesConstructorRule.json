@@ -1,0 +1,17 @@
+{
+'project:subprojects/groovy-console/src/main/groovy/groovy/ui/Console.groovy':[
+239,
+],
+'project:subprojects/groovy-groovysh/src/main/groovy/org/codehaus/groovy/tools/shell/Groovysh.groovy':[
+70,
+],
+'project:subprojects/groovy-groovysh/src/main/groovy/org/codehaus/groovy/tools/shell/util/PackageHelper.groovy':[
+32,
+],
+'project:subprojects/groovy-test/src/main/groovy/groovy/mock/interceptor/MockFor.groovy':[
+127,
+],
+'project:subprojects/groovy-test/src/main/groovy/groovy/mock/interceptor/StubFor.groovy':[
+84,
+],
+}

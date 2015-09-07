@@ -1,0 +1,13 @@
+{
+'project:src/test/groovy/CastTest.groovy':[
+74,
+75,
+],
+'project:src/test/groovy/SetTest.groovy':[
+52,
+53,
+],
+'project:subprojects/groovy-swing/src/test/groovy/groovy/ClosureSwingListenerTest.groovy':[
+36,
+],
+}

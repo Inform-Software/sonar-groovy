@@ -1,0 +1,11 @@
+{
+'project:src/test/groovy/transform/stc/StaticTypeCheckingTestCase.groovy':[
+51,
+],
+'project:src/test/org/codehaus/groovy/tools/stubgenerator/StubTestCase.groovy':[
+111,
+],
+'project:subprojects/groovy-groovysh/src/main/groovy/org/codehaus/groovy/tools/shell/CommandSupport.groovy':[
+96,
+],
+}

@@ -1,0 +1,16 @@
+{
+'project:src/test/groovy/lang/SyntheticReturnTest.groovy':[
+64,
+74,
+],
+'project:subprojects/groovy-groovysh/src/test/groovy/org/codehaus/groovy/tools/shell/ShellTest.groovy':[
+46,
+],
+'project:subprojects/groovy-groovysh/src/test/groovy/org/codehaus/groovy/tools/shell/commands/ComplexCommandSupportTest.groovy':[
+35,
+36,
+37,
+46,
+71,
+],
+}

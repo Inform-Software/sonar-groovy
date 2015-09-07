@@ -1,0 +1,14 @@
+{
+'project:src/test/groovy/bugs/Groovy3830Bug.groovy':[
+11,
+],
+'project:src/test/groovy/bugs/Groovy4861Bug.groovy':[
+12,
+],
+'project:src/test/groovy/bugs/Groovy5687Bug.groovy':[
+25,
+],
+'project:src/test/groovy/transform/stc/FieldsAndPropertiesSTCTest.groovy':[
+569,
+],
+}

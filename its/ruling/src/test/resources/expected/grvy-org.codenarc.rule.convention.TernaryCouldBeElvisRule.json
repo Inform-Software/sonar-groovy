@@ -1,0 +1,11 @@
+{
+'project:src/test/groovy/bugs/Groovy2350Bug.groovy':[
+44,
+],
+'project:subprojects/groovy-console/src/main/groovy/groovy/ui/HistoryRecord.groovy':[
+40,
+],
+'project:subprojects/groovy-docgenerator/src/main/groovy/org/codehaus/groovy/tools/DocGenerator.groovy':[
+183,
+],
+}
