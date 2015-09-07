@@ -59,13 +59,11 @@ public class SurefireTest {
     Resource project = orchestrator.getServer().getWsClient()
       .find(ResourceQuery.createForMetrics(PROJECT, "tests", "test_errors", "test_failures", "skipped_tests", "test_execution_time", "test_success_density"));
 
-    if (Tests.is_after_plugin_1_2()) {
-      assertThat(project.getMeasure("tests").getIntValue()).isEqualTo(1);
-      assertThat(project.getMeasure("test_errors").getIntValue()).isEqualTo(0);
-      assertThat(project.getMeasure("test_failures").getIntValue()).isEqualTo(0);
-      assertThat(project.getMeasure("skipped_tests").getIntValue()).isEqualTo(0);
-      assertThat(project.getMeasure("test_execution_time").getIntValue()).isGreaterThan(0);
-      assertThat(project.getMeasure("test_success_density").getValue()).isEqualTo(100.0);
-    }
+    assertThat(project.getMeasure("tests").getIntValue()).isEqualTo(1);
+    assertThat(project.getMeasure("test_errors").getIntValue()).isEqualTo(0);
+    assertThat(project.getMeasure("test_failures").getIntValue()).isEqualTo(0);
+    assertThat(project.getMeasure("skipped_tests").getIntValue()).isEqualTo(0);
+    assertThat(project.getMeasure("test_execution_time").getIntValue()).isGreaterThan(0);
+    assertThat(project.getMeasure("test_success_density").getValue()).isEqualTo(100.0);
   }
 }

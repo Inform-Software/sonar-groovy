@@ -66,10 +66,6 @@ public class MetricsTest {
     assertThat(getProjectMeasure("ncloc").getIntValue()).isEqualTo(6);
 
     assertThat(getProjectMeasure("classes").getIntValue()).isEqualTo(1);
-    // Package calculation by Groovy plugin prior to 1.0 is not compatible with sonar 4.2
-    if (!Tests.is_after_sonar_4_2()) {
-      assertThat(getProjectMeasure("packages").getIntValue()).isEqualTo(1);
-    }
     assertThat(getProjectMeasure("functions").getIntValue()).isEqualTo(1);
   }
 
@@ -85,10 +81,6 @@ public class MetricsTest {
     assertThat(getPackageMeasure("ncloc").getIntValue()).isEqualTo(6);
 
     assertThat(getPackageMeasure("classes").getIntValue()).isEqualTo(1);
-    // Package calculation by Groovy plugin prior to 1.0 is not compatible with sonar 4.2
-    if (!Tests.is_after_sonar_4_2()) {
-      assertThat(getPackageMeasure("packages").getIntValue()).isEqualTo(1);
-    }
     assertThat(getPackageMeasure("functions").getIntValue()).isEqualTo(1);
   }
 

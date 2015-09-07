@@ -71,41 +71,35 @@ public class JaCoCoTest {
 
   @Test
   public void unit_test_coverage_metrics() {
-    if (Tests.is_after_plugin_1_1()) {
-      assertThat(getProjectMeasureValue("coverage")).isEqualTo(73.1, Delta.delta(0.1));
-      assertThat(getPackageMeasureValue("coverage")).isEqualTo(73.1, Delta.delta(0.1));
-      assertThat(getProjectMeasureValue("line_coverage")).isEqualTo(83.3);
-      assertThat(getProjectMeasureValue("branch_coverage")).isEqualTo(50.0);
+    assertThat(getProjectMeasureValue("coverage")).isEqualTo(73.1, Delta.delta(0.1));
+    assertThat(getPackageMeasureValue("coverage")).isEqualTo(73.1, Delta.delta(0.1));
+    assertThat(getProjectMeasureValue("line_coverage")).isEqualTo(83.3);
+    assertThat(getProjectMeasureValue("branch_coverage")).isEqualTo(50.0);
 
-      assertThat(getFileMeasureValue("line_coverage")).isEqualTo(78.6);
-      assertThat(getFileMeasureValue("branch_coverage")).isEqualTo(50.0);
-    }
+    assertThat(getFileMeasureValue("line_coverage")).isEqualTo(78.6);
+    assertThat(getFileMeasureValue("branch_coverage")).isEqualTo(50.0);
   }
 
   @Test
   public void integration_test_coverage_metrics() {
-    if (Tests.is_after_plugin_1_1()) {
-      assertThat(getProjectMeasureValue("it_coverage")).isEqualTo(30.8, Delta.delta(0.1));
-      assertThat(getPackageMeasureValue("it_coverage")).isEqualTo(30.8, Delta.delta(0.1));
-      assertThat(getProjectMeasureValue("it_line_coverage")).isEqualTo(38.9);
-      assertThat(getProjectMeasureValue("it_branch_coverage")).isEqualTo(12.5);
+    assertThat(getProjectMeasureValue("it_coverage")).isEqualTo(30.8, Delta.delta(0.1));
+    assertThat(getPackageMeasureValue("it_coverage")).isEqualTo(30.8, Delta.delta(0.1));
+    assertThat(getProjectMeasureValue("it_line_coverage")).isEqualTo(38.9);
+    assertThat(getProjectMeasureValue("it_branch_coverage")).isEqualTo(12.5);
 
-      assertThat(getFileMeasureValue("it_line_coverage")).isEqualTo(21.4);
-      assertThat(getFileMeasureValue("it_branch_coverage")).isEqualTo(0.0);
-    }
+    assertThat(getFileMeasureValue("it_line_coverage")).isEqualTo(21.4);
+    assertThat(getFileMeasureValue("it_branch_coverage")).isEqualTo(0.0);
   }
 
   @Test
   public void overall_coverage_metrics() {
-    if (Tests.is_after_plugin_1_1()) {
-      assertThat(getProjectMeasureValue("overall_coverage")).isEqualTo(80.8, Delta.delta(0.1));
-      assertThat(getPackageMeasureValue("overall_coverage")).isEqualTo(80.8, Delta.delta(0.1));
-      assertThat(getProjectMeasureValue("overall_line_coverage")).isEqualTo(88.9);
-      assertThat(getProjectMeasureValue("overall_branch_coverage")).isEqualTo(62.5);
+    assertThat(getProjectMeasureValue("overall_coverage")).isEqualTo(80.8, Delta.delta(0.1));
+    assertThat(getPackageMeasureValue("overall_coverage")).isEqualTo(80.8, Delta.delta(0.1));
+    assertThat(getProjectMeasureValue("overall_line_coverage")).isEqualTo(88.9);
+    assertThat(getProjectMeasureValue("overall_branch_coverage")).isEqualTo(62.5);
 
-      assertThat(getFileMeasureValue("overall_line_coverage")).isEqualTo(85.7);
-      assertThat(getFileMeasureValue("overall_branch_coverage")).isEqualTo(50.0);
-    }
+    assertThat(getFileMeasureValue("overall_line_coverage")).isEqualTo(85.7);
+    assertThat(getFileMeasureValue("overall_branch_coverage")).isEqualTo(50.0);
   }
 
   private Double getProjectMeasureValue(String metricKey) {

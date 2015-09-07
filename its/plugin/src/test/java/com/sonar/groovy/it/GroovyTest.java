@@ -23,7 +23,6 @@ import com.sonar.orchestrator.Orchestrator;
 import com.sonar.orchestrator.build.MavenBuild;
 import com.sonar.orchestrator.locator.FileLocation;
 import org.fest.assertions.Delta;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -59,12 +58,8 @@ public class GroovyTest {
       .setProperty("sonar.scm.disabled", "true")
       .setGoals("sonar:sonar");
 
-    if (Tests.is_after_plugin_1_0()) {
-      build.setProperty("sonar.dynamicAnalysis", "reuseReports")
-        .setProperty("sonar.groovy.cobertura.reportPath", "target/site/cobertura/coverage.xml");
-    } else {
-      build.setProperty("sonar.dynamicAnalysis", "false");
-    }
+    build.setProperty("sonar.dynamicAnalysis", "reuseReports")
+      .setProperty("sonar.groovy.cobertura.reportPath", "target/site/cobertura/coverage.xml");
 
     orchestrator.executeBuild(build);
   }
@@ -85,34 +80,17 @@ public class GroovyTest {
     assertThat(getProjectMeasure("ncloc").getIntValue()).isEqualTo(4199);
     assertThat(getProjectMeasure("files").getIntValue()).isEqualTo(135);
     assertThat(getProjectMeasure("classes").getIntValue()).isEqualTo(196);
-    // Package calculation by Groovy plugin prior to 1.0 is not compatible with sonar 4.2
-    if (!Tests.is_after_sonar_4_2()) {
-      assertThat(getProjectMeasure("packages").getIntValue()).isEqualTo(22);
-    }
     assertThat(getProjectMeasure("functions").getIntValue()).isEqualTo(406);
 
-    if (Tests.is_after_plugin_1_1()) {
-      assertThat(getProjectMeasure("violations").getIntValue()).isEqualTo(13);
-    } else {
-      assertThat(getProjectMeasure("violations").getIntValue()).isEqualTo(12);
-    }
-    if (Tests.is_after_plugin_1_0()) {
-      assertThat(getProjectMeasure("lines").getIntValue()).isEqualTo(9458);
-      assertThat(getProjectMeasure("comment_lines").getIntValue()).isEqualTo(2325);
-      assertThat(getProjectMeasure("complexity").getIntValue()).isEqualTo(873);
-      assertThat(getProjectMeasure("function_complexity").getValue()).isEqualTo(2.2);
-      assertThat(getProjectMeasure("class_complexity").getValue()).isEqualTo(4.5);
-      assertThat(getProjectMeasure("comment_lines_density").getValue()).isEqualTo(35.6);
-      assertThat(getProjectMeasure("function_complexity_distribution").getData()).isEqualTo("1=212;2=134;4=43;6=11;8=1;10=4;12=1");
-    } else {
-      assertThat(getProjectMeasure("lines").getIntValue()).isEqualTo(9439);
-      assertThat(getProjectMeasure("comment_lines").getIntValue()).isEqualTo(2856);
-      assertThat(getProjectMeasure("comment_lines_density").getValue()).isEqualTo(40.5);
-      assertThat(getProjectMeasure("complexity").getIntValue()).isEqualTo(870);
-      assertThat(getProjectMeasure("function_complexity").getValue()).isEqualTo(2.1);
-      assertThat(getProjectMeasure("class_complexity").getValue()).isEqualTo(4.4);
-      assertThat(getProjectMeasure("function_complexity_distribution").getData()).isEqualTo("1=212;2=137;4=40;6=11;8=1;10=4;12=1");
-    }
+    assertThat(getProjectMeasure("violations").getIntValue()).isEqualTo(13);
+    assertThat(getProjectMeasure("lines").getIntValue()).isEqualTo(9458);
+    assertThat(getProjectMeasure("comment_lines").getIntValue()).isEqualTo(2325);
+    assertThat(getProjectMeasure("complexity").getIntValue()).isEqualTo(873);
+    assertThat(getProjectMeasure("function_complexity").getValue()).isEqualTo(2.2);
+    assertThat(getProjectMeasure("class_complexity").getValue()).isEqualTo(4.5);
+    assertThat(getProjectMeasure("comment_lines_density").getValue()).isEqualTo(35.6);
+    assertThat(getProjectMeasure("function_complexity_distribution").getData()).isEqualTo("1=212;2=134;4=43;6=11;8=1;10=4;12=1");
+
     assertThat(getProjectMeasure("file_complexity_distribution").getData()).isEqualTo("0=73;5=32;10=21;20=7;30=2;60=0;90=0");
     assertThat(getProjectMeasure("class_complexity_distribution")).isNull();
   }
@@ -130,8 +108,6 @@ public class GroovyTest {
 
   @Test
   public void testProjectCoverage() {
-    Assume.assumeTrue(Tests.is_after_plugin_1_0());
-
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat(getProjectMeasure("coverage").getValue()).isEqualTo(89.5, Delta.delta(0.2));
     assertThat(getProjectMeasure("line_coverage").getValue()).isEqualTo(98.8, Delta.delta(0.2));
@@ -152,18 +128,9 @@ public class GroovyTest {
     assertThat(getPackageMeasure("lines").getIntValue()).isEqualTo(807);
     assertThat(getPackageMeasure("files").getIntValue()).isEqualTo(6);
     assertThat(getPackageMeasure("classes").getIntValue()).isEqualTo(6);
-    // Package calculation by Groovy plugin prior to 1.0 is not compatible with sonar 4.2
-    if (!Tests.is_after_sonar_4_2()) {
-      assertThat(getPackageMeasure("packages").getIntValue()).isEqualTo(1);
-    }
     assertThat(getPackageMeasure("functions").getIntValue()).isEqualTo(57);
-    if (Tests.is_after_plugin_1_0()) {
-      assertThat(getPackageMeasure("comment_lines_density").getValue()).isEqualTo(13.9);
-      assertThat(getPackageMeasure("comment_lines").getIntValue()).isEqualTo(87);
-    } else {
-      assertThat(getPackageMeasure("comment_lines_density").getValue()).isEqualTo(17.8);
-      assertThat(getPackageMeasure("comment_lines").getIntValue()).isEqualTo(117);
-    }
+    assertThat(getPackageMeasure("comment_lines_density").getValue()).isEqualTo(13.9);
+    assertThat(getPackageMeasure("comment_lines").getIntValue()).isEqualTo(87);
 
     assertThat(getPackageMeasure("duplicated_lines").getIntValue()).isEqualTo(0);
     assertThat(getPackageMeasure("duplicated_blocks").getIntValue()).isEqualTo(0);
@@ -182,8 +149,6 @@ public class GroovyTest {
 
   @Test
   public void testPackageCoverage() {
-    Assume.assumeTrue(Tests.is_after_plugin_1_0());
-
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat(getPackageMeasure("coverage").getValue()).isEqualTo(88.3, Delta.delta(0.3));
     assertThat(getPackageMeasure("line_coverage").getValue()).isEqualTo(99.6, Delta.delta(0.2));
@@ -206,13 +171,8 @@ public class GroovyTest {
     assertThat(getFileMeasure("classes").getIntValue()).isEqualTo(1);
     assertThat(getFileMeasure("packages")).isNull();
     assertThat(getFileMeasure("functions").getIntValue()).isEqualTo(18);
-    if (Tests.is_after_plugin_1_0()) {
-      assertThat(getFileMeasure("comment_lines_density").getValue()).isEqualTo(13.1);
-      assertThat(getFileMeasure("comment_lines").getIntValue()).isEqualTo(36);
-    } else {
-      assertThat(getFileMeasure("comment_lines_density").getValue()).isEqualTo(12.8);
-      assertThat(getFileMeasure("comment_lines").getIntValue()).isEqualTo(35);
-    }
+    assertThat(getFileMeasure("comment_lines_density").getValue()).isEqualTo(13.1);
+    assertThat(getFileMeasure("comment_lines").getIntValue()).isEqualTo(36);
 
     assertThat(getFileMeasure("duplicated_lines")).isNull();
     assertThat(getFileMeasure("duplicated_blocks")).isNull();
@@ -231,8 +191,6 @@ public class GroovyTest {
 
   @Test
   public void testFileCoverage() {
-    Assume.assumeTrue(Tests.is_after_plugin_1_0());
-
     // We are getting different results for different Java versions : 1.6.0_21 and 1.5.0_16
     assertThat(getFileMeasure("coverage").getValue()).isEqualTo(86.5, Delta.delta(0.2));
     assertThat(getFileMeasure("line_coverage").getValue()).isEqualTo(100.0);
@@ -245,8 +203,6 @@ public class GroovyTest {
 
   @Test
   public void ncloc_data_should_be_saved() {
-    Assume.assumeTrue(Tests.is_after_plugin_1_0());
-
     String nclocData = getFileMeasure("ncloc_data").getData();
     assertThat(nclocData).contains("16=1");
     assertThat(nclocData).contains("35=1");
