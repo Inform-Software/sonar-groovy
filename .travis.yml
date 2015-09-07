@@ -14,6 +14,8 @@ env:
     SQ_VERSION=LATEST_RELEASE
   - TEST=plugin
     SQ_VERSION=LTS
+  - TEST=ruling
+    SQ_VERSION=LATEST_RELEASE
 
 matrix:
   fast_finish: true
