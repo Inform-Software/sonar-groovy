@@ -42,17 +42,16 @@ import java.util.List;
     key = GroovyPlugin.CODENARC_REPORT_PATH,
     name = "CodeNarc Report",
     description = "Path to the CodeNarc XML report. Path may be absolute or relative to the project base directory.",
-    module = true,
     project = true,
-    global = true
-  ),
+    module = true,
+    global = true),
   @Property(
     key = GroovyPlugin.COBERTURA_REPORT_PATH,
     name = "Cobertura Report",
     description = "Path to the Cobertura XML report. Path may be absolute or relative to the project base directory.",
+    project = true,
     module = true,
-    global = true,
-    project = true),
+    global = true),
   @Property(
     key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
     defaultValue = "true",
@@ -69,8 +68,8 @@ import java.util.List;
     defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
     name = "File suffixes",
     description = "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
-    module = true,
     project = true,
+    module = true,
     global = true
   )
 })
