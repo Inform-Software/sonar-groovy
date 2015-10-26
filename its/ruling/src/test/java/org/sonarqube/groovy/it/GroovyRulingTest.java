@@ -44,12 +44,13 @@ public class GroovyRulingTest {
   @Test
   public void test() throws Exception {
     File litsDifferencesFile = FileLocation.of("target/differences").getFile();
+    orchestrator.getServer().provisionProject("project", "project");
+    orchestrator.getServer().associateProjectToQualityProfile("project", "grvy", "rules");
     SonarRunner build = SonarRunner.create(FileLocation.of("../sources/groovy-core").getFile())
       .setProjectKey("project")
       .setProjectName("project")
       .setProjectVersion("1")
       .setSourceEncoding("UTF-8")
-      .setProfile("rules")
       .setSourceDirs(".")
       .setProperty("sonar.analysis.mode", "preview")
       .setProperty("sonar.issuesReport.html.enable", "true")
