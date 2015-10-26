@@ -24,6 +24,8 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -44,6 +46,8 @@ import static java.util.Locale.ENGLISH;
 import static org.sonar.api.utils.ParsingUtils.parseNumber;
 
 public class CoberturaReportParser {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CoberturaReportParser.class);
 
   private final SensorContext context;
   private final FileSystem fileSystem;
@@ -110,13 +114,20 @@ public class CoberturaReportParser {
     while (pack.getNext() != null) {
       Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
       collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
-      for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-        InputFile file = getInputFile(entry.getKey(), sourceDirs);
-        if (file != null) {
-          for (Measure measure : entry.getValue().createMeasures()) {
-            context.saveMeasure(file, measure);
-          }
+      handleFileMeasures(builderByFilename, sourceDirs);
+    }
+  }
+
+  private void handleFileMeasures(Map<String, CoverageMeasuresBuilder> builderByFilename, List<String> sourceDirs) {
+    for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
+      String fileKey = entry.getKey();
+      InputFile file = getInputFile(fileKey, sourceDirs);
+      if (file != null) {
+        for (Measure measure : entry.getValue().createMeasures()) {
+          context.saveMeasure(file, measure);
         }
+      } else {
+        LOG.warn("File not found: {}", fileKey);
       }
     }
   }

@@ -76,7 +76,7 @@ public class CoberturaSensorTest {
   }
 
   @Test
-  public void should_not_save_any_measure_if_report_not_found() {
+  public void should_not_save_any_measure_if_files_can_not_be_found() {
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
     when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(null);
