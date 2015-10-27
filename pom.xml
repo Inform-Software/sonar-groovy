@@ -106,7 +106,7 @@
     <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
-      <version>0.24</version>
+      <version>0.24.1</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
