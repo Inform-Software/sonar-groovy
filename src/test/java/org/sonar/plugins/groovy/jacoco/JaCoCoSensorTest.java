@@ -89,7 +89,7 @@ public class JaCoCoSensorTest {
 
   @Test
   public void testSensorDefinition() {
-    assertThat(sensor.toString()).isEqualTo("JaCoCoSensor");
+    assertThat(sensor.toString()).isEqualTo("Groovy JaCoCoSensor");
   }
 
   @Test
