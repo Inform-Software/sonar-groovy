@@ -41,4 +41,16 @@ public class GroovyTest {
     settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy, .grvy");
     assertThat(language.getFileSuffixes()).containsOnly(".groovy", ".grvy");
   }
+
+  @Test
+  public void binaryDirectories() throws Exception {
+    Settings settings = new Settings();
+    Groovy language = new Groovy(settings);
+
+    settings.setProperty(GroovyPlugin.BINARY_DIRECTORIES, "");
+    assertThat(language.getBinaryDirectories()).isEmpty();
+
+    settings.setProperty(GroovyPlugin.BINARY_DIRECTORIES, "target/firstDir , target/secondDir");
+    assertThat(language.getBinaryDirectories()).hasSize(2);
+  }
 }

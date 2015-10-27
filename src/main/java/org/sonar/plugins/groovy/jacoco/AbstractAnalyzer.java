@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closeables;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -33,9 +34,9 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.api.utils.SonarException;
+import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import javax.annotation.CheckForNull;
@@ -50,20 +51,32 @@ import java.util.List;
 
 public abstract class AbstractAnalyzer {
 
-  private final ModuleFileSystem moduleFileSystem;
+  private final List<File> binaryDirs;
   private final FileSystem fileSystem;
   private final PathResolver pathResolver;
 
-  public AbstractAnalyzer(ModuleFileSystem moduleFileSystem, FileSystem fileSystem, PathResolver pathResolver) {
-    this.moduleFileSystem = moduleFileSystem;
+  public AbstractAnalyzer(Groovy groovy, FileSystem fileSystem, PathResolver pathResolver) {
     this.fileSystem = fileSystem;
     this.pathResolver = pathResolver;
+    this.binaryDirs = getFiles(groovy.getBinaryDirectories(), fileSystem);
+  }
+
+  private static List<File> getFiles(List<String> binaryDirectories, FileSystem fileSystem) {
+    ImmutableList.Builder<File> builder = ImmutableList.builder();
+    for (String directory : binaryDirectories) {
+      builder.add(new File(fileSystem.baseDir(), directory));
+    }
+    return builder.build();
   }
 
   @CheckForNull
   private InputFile getInputFile(ISourceFileCoverage coverage) {
     String path = getFileRelativePath(coverage);
-    return new GroovyFileSystem(fileSystem).sourceInputFileFromRelativePath(path);
+    InputFile sourceInputFileFromRelativePath = new GroovyFileSystem(fileSystem).sourceInputFileFromRelativePath(path);
+    if (sourceInputFileFromRelativePath == null) {
+      JaCoCoExtensions.logger().warn("File not found: " + path);
+    }
+    return sourceInputFileFromRelativePath;
   }
 
   private static String getFileRelativePath(ISourceFileCoverage coverage) {
@@ -90,16 +103,13 @@ public abstract class AbstractAnalyzer {
   }
 
   private boolean atLeastOneBinaryDirectoryExists(Project project) {
-    List<File> binaryDirs = moduleFileSystem.binaryDirs();
-    if (binaryDirs == null || binaryDirs.isEmpty()) {
+    if (binaryDirs.isEmpty()) {
       JaCoCoExtensions.logger().warn("No binary directories defined for project " + project.getName() + ".");
     }
-    if (binaryDirs != null) {
-      for (File binaryDir : binaryDirs) {
-        JaCoCoExtensions.logger().info("\tChecking binary directory: {}", binaryDir.toString());
-        if (binaryDir.exists()) {
-          return true;
-        }
+    for (File binaryDir : binaryDirs) {
+      JaCoCoExtensions.logger().info("\tChecking binary directory: {}", binaryDir.toString());
+      if (binaryDir.exists()) {
+        return true;
       }
     }
     return false;
@@ -143,7 +153,7 @@ public abstract class AbstractAnalyzer {
   private CoverageBuilder analyze(ExecutionDataStore executionDataStore) {
     CoverageBuilder coverageBuilder = new CoverageBuilder();
     Analyzer analyzer = new Analyzer(executionDataStore, coverageBuilder);
-    for (File binaryDir : moduleFileSystem.binaryDirs()) {
+    for (File binaryDir : binaryDirs) {
       analyzeAll(analyzer, binaryDir);
     }
     return coverageBuilder;

@@ -60,7 +60,8 @@ import java.util.List;
     "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. " +
       "Thus metrics such as \"Comment lines\" do not get incremented. " +
       "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
-    project = true, global = true,
+    project = true,
+    global = true,
     type = PropertyType.BOOLEAN
   ),
   @Property(
@@ -71,13 +72,22 @@ import java.util.List;
     project = true,
     module = true,
     global = true
-  )
+  ),
+  @Property(
+    key = GroovyPlugin.BINARY_DIRECTORIES,
+    name = "Binary directories",
+    description = "Comma-separated list of optional directories that contain the compiled groovy sources.",
+    project = true,
+    module = true,
+    global = true)
 })
 public class GroovyPlugin extends SonarPlugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
+
+  public static final String BINARY_DIRECTORIES = "sonar.groovy.binaryDirs";
 
   public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
   public static final String DEFAULT_FILE_SUFFIXES = ".groovy";

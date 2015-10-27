@@ -37,7 +37,6 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
 import java.io.File;
-import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -70,10 +69,9 @@ public class JaCoCoOverallSensorTest {
       new File(jacocoUTData.getParentFile(), "Hello.class"));
     Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
-    List<File> binaryDirs = Lists.newArrayList(jacocoUTData.getParentFile());
 
-    ModuleFileSystem moduleFileSystem = mock(ModuleFileSystem.class);
-    when(moduleFileSystem.binaryDirs()).thenReturn(binaryDirs);
+    Groovy groovy = mock(Groovy.class);
+    when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList("."));
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoUTData.getParentFile());
     fileSystem.setWorkDir(jacocoUTData.getParentFile());
@@ -89,7 +87,7 @@ public class JaCoCoOverallSensorTest {
     context = mock(SensorContext.class);
     pathResolver = mock(PathResolver.class);
     project = mock(Project.class);
-    sensor = new JaCoCoOverallSensor(configuration, moduleFileSystem, fileSystem, pathResolver);
+    sensor = new JaCoCoOverallSensor(groovy, configuration, fileSystem, pathResolver);
   }
 
   @Test

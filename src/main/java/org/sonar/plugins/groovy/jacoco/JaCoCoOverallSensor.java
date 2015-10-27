@@ -31,9 +31,9 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.api.utils.SonarException;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -49,13 +49,13 @@ public class JaCoCoOverallSensor implements Sensor {
   public static final String JACOCO_OVERALL = "jacoco-overall.exec";
 
   private final JaCoCoConfiguration configuration;
-  private final ModuleFileSystem moduleFileSystem;
   private final FileSystem fileSystem;
   private final PathResolver pathResolver;
+  private final Groovy groovy;
 
-  public JaCoCoOverallSensor(JaCoCoConfiguration configuration, ModuleFileSystem moduleFileSystem, FileSystem fileSystem, PathResolver pathResolver) {
+  public JaCoCoOverallSensor(Groovy groovy, JaCoCoConfiguration configuration, FileSystem fileSystem, PathResolver pathResolver) {
     this.configuration = configuration;
-    this.moduleFileSystem = moduleFileSystem;
+    this.groovy = groovy;
     this.pathResolver = pathResolver;
     this.fileSystem = fileSystem;
   }
@@ -130,7 +130,7 @@ public class JaCoCoOverallSensor implements Sensor {
     private final File report;
 
     OverallAnalyzer(File report) {
-      super(moduleFileSystem, fileSystem, pathResolver);
+      super(groovy, fileSystem, pathResolver);
       this.report = report;
     }
 

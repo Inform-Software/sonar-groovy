@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Settings;
@@ -80,5 +81,9 @@ public class Groovy extends AbstractLanguage {
 
   public String getCodeNarcReportPath() {
     return settings.getString(GroovyPlugin.CODENARC_REPORT_PATH);
+  }
+
+  public List<String> getBinaryDirectories() {
+    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.BINARY_DIRECTORIES));
   }
 }
