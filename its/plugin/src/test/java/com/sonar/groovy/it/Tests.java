@@ -37,7 +37,7 @@ public class Tests {
 
   @ClassRule
   public static final Orchestrator ORCHESTRATOR = Orchestrator.builderEnv()
-    .addPlugin(FileLocation.of("../../target/sonar-groovy-plugin.jar"))
+    .addPlugin(FileLocation.of("../../sonar-groovy-plugin/target/sonar-groovy-plugin.jar"))
     .addPlugin("java")
     .restoreProfileAtStartup(FileLocation.of("src/test/resources/default.xml"))
     .build();

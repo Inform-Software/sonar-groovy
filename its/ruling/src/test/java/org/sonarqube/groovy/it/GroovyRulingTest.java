@@ -35,7 +35,7 @@ public class GroovyRulingTest {
 
   @ClassRule
   public static Orchestrator orchestrator = Orchestrator.builderEnv()
-    .addPlugin(FileLocation.of("../../target/sonar-groovy-plugin.jar"))
+    .addPlugin(FileLocation.of("../../sonar-groovy-plugin/target/sonar-groovy-plugin.jar"))
     .setOrchestratorProperty("litsVersion", "0.5")
     .addPlugin("lits")
     .restoreProfileAtStartup(FileLocation.of("src/test/resources/profile.xml"))

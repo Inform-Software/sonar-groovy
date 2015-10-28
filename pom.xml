@@ -8,14 +8,12 @@
     <version>23</version>
   </parent>
 
-  <groupId>org.sonarsource.sonar-groovy-plugin</groupId>
-  <artifactId>sonar-groovy-plugin</artifactId>
+  <groupId>org.sonarsource.groovy</groupId>
+  <artifactId>groovy</artifactId>
   <version>1.3-SNAPSHOT</version>
-  <packaging>sonar-plugin</packaging>
+  <packaging>pom</packaging>
 
-  <name>Sonar Groovy Plugin</name>
-  <description>Enables analysis of Groovy projects.</description>
-  <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
+  <name>Sonar Groovy</name>
   <inceptionYear>2010</inceptionYear>
   <organization>
     <name>SonarSource</name>
@@ -31,18 +29,19 @@
 
   <developers>
     <developer>
-      <id>ogaudin</id>
-      <name>Olivier Gaudin</name>
-    </developer>
-    <developer>
-      <id>godin</id>
-      <name>Evgeny Mandrikov</name>
+      <id>m-g-sonar</id>
+      <name>Michael Gumowski</name>
     </developer>
     <developer>
       <id>benzonico</id>
       <name>Nicolas Peru</name>
     </developer>
   </developers>
+
+  <modules>
+    <module>sonar-groovy-plugin</module>
+    <module>groovy-jacoco-previous</module>
+  </modules>
 
   <scm>
     <connection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</connection>
@@ -54,156 +53,11 @@
     <system>JIRA</system>
     <url>http://jira.sonarsource.com/browse/SONARGROOV</url>
   </issueManagement>
-
+  
   <properties>
     <sonar.version>4.5.4</sonar.version>
-    <sonar.pluginName>Groovy</sonar.pluginName>
-    <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
+    <jacoco.previous.version>0.7.4.201502262128</jacoco.previous.version>
+    <jacoco.version>0.7.5.201505241946</jacoco.version>
     <groovy.version>2.4.3</groovy.version>
   </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy</artifactId>
-        <version>${groovy.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-ant</artifactId>
-        <version>${groovy.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-xml</artifactId>
-        <version>${groovy.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.gmetrics</groupId>
-        <artifactId>GMetrics</artifactId>
-        <version>0.7</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.10</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-plugin-api</artifactId>
-      <version>${sonar.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-deprecated</artifactId>
-      <version>${sonar.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codenarc</groupId>
-      <artifactId>CodeNarc</artifactId>
-      <version>0.24.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>ant</groupId>
-          <artifactId>ant</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.ant</groupId>
-          <artifactId>ant</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.ant</groupId>
-          <artifactId>ant-launcher</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jacoco</groupId>
-      <artifactId>org.jacoco.core</artifactId>
-      <version>0.7.4.201502262128</version>
-    </dependency>
-
-    <!-- unit tests -->
-    <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-testing-harness</artifactId>
-      <version>${sonar.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-plugin-api</artifactId>
-      <version>${sonar.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-      <version>1.6</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- TODO http://jira.codehaus.org/browse/SONAR-2011 We need following
-      dependency, otherwise we will receive java.lang.NoClassDefFoundError: org/apache/maven/project/MavenProject
-      during call mock(org.sonar.api.resources.Project.class) -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>2.0.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert</artifactId>
-      <version>1.4</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- needed for Sqale -->
-    <dependency>
-      <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
-      <artifactId>sslr-squid-bridge</artifactId>
-      <version>2.6</version>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <finalName>${project.artifactId}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>enforce-plugin-size</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <rules>
-                <requireFilesSize>
-                  <maxsize>15000000</maxsize>
-                  <minsize>8500000</minsize>
-                  <files>
-                    <file>${project.build.directory}/${project.build.finalName}.jar</file>
-                  </files>
-                </requireFilesSize>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
