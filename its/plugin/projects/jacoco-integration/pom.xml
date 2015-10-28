@@ -10,6 +10,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.integration.tests>false</skip.integration.tests>
+    <jacoco.version>0.7.4.201502262128</jacoco.version>
   </properties>
 
   <dependencies>
@@ -27,7 +28,7 @@
     <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.core</artifactId>
-      <version>0.7.4.201502262128</version>
+      <version>${jacoco.version}</version>
     </dependency>
   </dependencies>
 
@@ -94,7 +95,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.1.201405082137</version>
+        <version>${jacoco.version}</version>
         <executions>
           <execution>
             <id>default-prepare-agent</id>

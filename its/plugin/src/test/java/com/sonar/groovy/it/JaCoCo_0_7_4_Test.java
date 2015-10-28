@@ -33,7 +33,7 @@ import org.sonar.wsclient.services.ResourceQuery;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class JaCoCoTest {
+public class JaCoCo_0_7_4_Test {
 
   private static final String PROJECT = "org.sonarsource.it.groovy.samples:JaCoCo-Integration";
   private static final String PACKAGE_TESTS = Tests.keyFor(PROJECT, "org/sonar/plugins/groovy/jacoco/tests");
@@ -54,7 +54,8 @@ public class JaCoCoTest {
       .setProperty("sonar.groovy.jacoco.reportPath", "target/coverage-reports/jacoco-ut.exec")
       .setProperty("sonar.groovy.jacoco.itReportPath", "target/coverage-reports/jacoco-it.exec")
       .setProperty("sonar.jacoco.reportPath", "target/coverage-reports/jacoco-ut.exec")
-      .setProperty("sonar.jacoco.itReportPath", "target/coverage-reports/jacoco-it.exec");
+      .setProperty("sonar.jacoco.itReportPath", "target/coverage-reports/jacoco-it.exec")
+      .setProperty("jacoco.version", "0.7.4.201502262128");
     buildResult = orchestrator.executeBuild(build);
   }
 
@@ -103,19 +104,19 @@ public class JaCoCoTest {
     assertThat(getFileMeasureValue("overall_branch_coverage")).isEqualTo(50.0);
   }
 
-  private Double getProjectMeasureValue(String metricKey) {
+  private static Double getProjectMeasureValue(String metricKey) {
     return getValue(orchestrator.getServer().getWsClient().find(ResourceQuery.createForMetrics(PROJECT, metricKey)).getMeasure(metricKey));
   }
 
-  private Double getPackageMeasureValue(String metricKey) {
+  private static Double getPackageMeasureValue(String metricKey) {
     return getValue(orchestrator.getServer().getWsClient().find(ResourceQuery.createForMetrics(PACKAGE_TESTS, metricKey)).getMeasure(metricKey));
   }
 
-  private Double getFileMeasureValue(String metricKey) {
+  private static Double getFileMeasureValue(String metricKey) {
     return getValue(orchestrator.getServer().getWsClient().find(ResourceQuery.createForMetrics(FILE_HELLO, metricKey)).getMeasure(metricKey));
   }
 
-  private Double getValue(Measure measure) {
+  private static Double getValue(Measure measure) {
     if (measure != null) {
       return measure.getValue();
     }

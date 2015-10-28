@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
   GroovyTest.class,
   MetricsTest.class,
-  JaCoCoTest.class,
+  JaCoCo_0_7_4_Test.class,
+  JaCoCo_0_7_5_Test.class,
   SurefireTest.class
 })
 public class Tests {
