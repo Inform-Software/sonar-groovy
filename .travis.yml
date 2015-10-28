@@ -1,28 +1,26 @@
 language: java
 sudo: false
-
 jdk:
-  - oraclejdk7
-
+- oraclejdk7
 install: true
 script: ./travis.sh
 env:
+  matrix:
   - TEST=ci
-  - TEST=plugin
-    SQ_VERSION=DEV
-  - TEST=plugin
-    SQ_VERSION=LATEST_RELEASE
-  - TEST=plugin
-    SQ_VERSION=LTS
-  - TEST=ruling
-    SQ_VERSION=LATEST_RELEASE
-
+  - TEST=plugin SQ_VERSION=DEV
+  - TEST=plugin SQ_VERSION=LATEST_RELEASE
+  - TEST=plugin SQ_VERSION=LTS
+  - TEST=ruling SQ_VERSION=LATEST_RELEASE
+  global:
+  - secure: PGK61TxqUB3cVdABKQRcnCANyBE5NeYOQTUYy+W9RvvtJoV6198nbKICZJKcKe0EyWolOvNZHd/R9pSln0KOjQm3dbTlK7kSGmGBPsvBuZM0+STt9oFWv2vNsWvyLylvUBA1doFWHZF7XImpcHjRHFBGl7tEL0GOBANU8HT4eS0=
+  - secure: BzET7flkqBwOlxvAHRZVU0zki2oYlFjseA2Bo2aDdicAd4o2yBH/WT6ikxjFBPQdeN6Pd8GUIOK+nSi7fxGNXDQZRTHAI4SxjQc0fgBlRs39iB9xrPYPr9QKIxbLDv1mTtJ9eEe1YeN5F5VQ6iAMnCg9NFnAV0ZtgWtrOC2ddlk=
+  - secure: IRd9P8PavaOv3eRLlioAAYr7hnr8KK1v5z9u9Foop2JYPP632Cx/tIUssPDe+qeTGDYftnq64NCYzV9Zb9tBfNBbo/aq5+TKkEkd/b8xHoXwLg89Z3nw8yGCfjRt0z2HPejn/ziGCAIMUkDIy+ezSeHW5WFVl4xSLRRyFcOWBsA=
+  - secure: BNGHlPTlK1bsjIHJmdT6T+r8t/uixxZrOenfHFZeceTfy3e6UsRkWcWApIW6lfmaMTyvq9XWuh0pfONE4nz3D8y7ATtRxaH6FCiqOYZoBNzX2K0j89HTB5Q6T/P7p4IoPex+8ISK1fknvkFh6nHWP5Pqlc270o+zRVO19CjQfa0=
+  - secure: MPWwB0+H/M/786mbZCpPlVKTNJ0lBJcSjufaJn49xpRDxQd9fNtNU85HYH2xTd9SHV6vVMSXrX2S9oeeZd/gD0qiD3wOgdWDmuYVsoxI5pp+phWCJCk2ms8p10z45Y5QGDc4mJEeHiIPt6NWpzA+cpGj6j7C9/sV1+OSJwmvZSs=
 matrix:
   fast_finish: true
-
 cache:
   directories:
-    - '$HOME/.m2/repository'
-
+  - $HOME/.m2/repository
 notifications:
   email: false
