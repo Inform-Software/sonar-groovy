@@ -19,11 +19,6 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.io.Closeables;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.data.SessionInfoStore;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
@@ -34,13 +29,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 
 public class JaCoCoOverallSensor implements Sensor {
@@ -81,48 +70,9 @@ public class JaCoCoOverallSensor implements Sensor {
     File reportOverall = new File(fileSystem.workDir(), JACOCO_OVERALL);
     reportOverall.getParentFile().mkdirs();
 
-    mergeReports(reportOverall, reportUTs, reportITs);
+    JaCoCoReportMerger.mergeReports(reportOverall, reportUTs, reportITs);
 
     new OverallAnalyzer(reportOverall).analyse(project, context);
-  }
-
-  private static void mergeReports(File reportOverall, File... reports) {
-    SessionInfoStore infoStore = new SessionInfoStore();
-    ExecutionDataStore dataStore = new ExecutionDataStore();
-
-    loadSourceFiles(infoStore, dataStore, reports);
-
-    BufferedOutputStream outputStream = null;
-    try {
-      outputStream = new BufferedOutputStream(new FileOutputStream(reportOverall));
-      ExecutionDataWriter dataWriter = new ExecutionDataWriter(outputStream);
-
-      infoStore.accept(dataWriter);
-      dataStore.accept(dataWriter);
-    } catch (IOException e) {
-      throw new IllegalStateException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
-    } finally {
-      Closeables.closeQuietly(outputStream);
-    }
-  }
-
-  private static void loadSourceFiles(SessionInfoStore infoStore, ExecutionDataStore dataStore, File... reports) {
-    for (File report : reports) {
-      if (report.isFile()) {
-        InputStream resourceStream = null;
-        try {
-          resourceStream = new BufferedInputStream(new FileInputStream(report));
-          ExecutionDataReader reader = new ExecutionDataReader(resourceStream);
-          reader.setSessionInfoVisitor(infoStore);
-          reader.setExecutionDataVisitor(dataStore);
-          reader.read();
-        } catch (IOException e) {
-          throw new IllegalArgumentException(String.format("Unable to read %s", report.getAbsolutePath()), e);
-        } finally {
-          Closeables.closeQuietly(resourceStream);
-        }
-      }
-    }
   }
 
   class OverallAnalyzer extends AbstractAnalyzer {

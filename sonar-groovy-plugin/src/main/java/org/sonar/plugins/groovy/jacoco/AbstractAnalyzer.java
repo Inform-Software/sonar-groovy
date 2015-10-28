@@ -20,14 +20,12 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Closeables;
-import org.jacoco.core.analysis.Analyzer;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -39,13 +37,11 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import javax.annotation.CheckForNull;
-import java.io.BufferedInputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractAnalyzer {
 
@@ -53,6 +49,7 @@ public abstract class AbstractAnalyzer {
   private final File baseDir;
   private final PathResolver pathResolver;
   private final GroovyFileSystem groovyFileSystem;
+  private Map<String, File> classFilesCache;
 
   public AbstractAnalyzer(Groovy groovy, FileSystem fileSystem, PathResolver pathResolver) {
     groovyFileSystem = new GroovyFileSystem(fileSystem);
@@ -88,6 +85,11 @@ public abstract class AbstractAnalyzer {
       JaCoCoExtensions.logger().warn("Project coverage is set to 0% since there is no directories with classes.");
       return;
     }
+    classFilesCache = Maps.newHashMap();
+    for (File classesDir : binaryDirs) {
+      populateClassFilesCache(classFilesCache, classesDir, "");
+    }
+
     String path = getReportPath(project);
     if (path == null) {
       JaCoCoExtensions.logger().warn("No jacoco coverage execution file found for project " + project.getName() + ".");
@@ -95,10 +97,23 @@ public abstract class AbstractAnalyzer {
     }
     File jacocoExecutionData = pathResolver.relativeFile(baseDir, path);
 
-    try {
-      readExecutionData(jacocoExecutionData, context);
-    } catch (IOException e) {
-      throw new IllegalArgumentException(e);
+    readExecutionData(jacocoExecutionData, context);
+
+    classFilesCache.clear();
+  }
+
+  private static void populateClassFilesCache(Map<String, File> classFilesCache, File dir, String path) {
+    File[] files = dir.listFiles();
+    if (files == null) {
+      return;
+    }
+    for (File file : files) {
+      if (file.isDirectory()) {
+        populateClassFilesCache(classFilesCache, file, path + file.getName() + "/");
+      } else if (file.getName().endsWith(".class")) {
+        String className = path + StringUtils.removeEnd(file.getName(), ".class");
+        classFilesCache.put(className, file);
+      }
     }
   }
 
@@ -115,27 +130,19 @@ public abstract class AbstractAnalyzer {
     return false;
   }
 
-  public final void readExecutionData(File jacocoExecutionData, SensorContext context) throws IOException {
+  public final void readExecutionData(File jacocoExecutionData, SensorContext context) {
     ExecutionDataVisitor executionDataVisitor = new ExecutionDataVisitor();
 
-    if (jacocoExecutionData == null || !jacocoExecutionData.isFile()) {
+    File fileToAnalyze = jacocoExecutionData;
+    if (fileToAnalyze == null || !fileToAnalyze.isFile()) {
       JaCoCoExtensions.logger().warn("Project coverage is set to 0% as no JaCoCo execution data has been dumped: {}", jacocoExecutionData);
+      fileToAnalyze = null;
     } else {
-      JaCoCoExtensions.logger().info("Analysing {}", jacocoExecutionData);
-
-      InputStream inputStream = null;
-      try {
-        inputStream = new BufferedInputStream(new FileInputStream(jacocoExecutionData));
-        ExecutionDataReader reader = new ExecutionDataReader(inputStream);
-        reader.setSessionInfoVisitor(executionDataVisitor);
-        reader.setExecutionDataVisitor(executionDataVisitor);
-        reader.read();
-      } finally {
-        Closeables.closeQuietly(inputStream);
-      }
+      JaCoCoExtensions.logger().info("Analysing {}", fileToAnalyze);
     }
+    JaCoCoReportReader jacocoReportReader = new JaCoCoReportReader(fileToAnalyze).readJacocoReport(executionDataVisitor, executionDataVisitor);
 
-    CoverageBuilder coverageBuilder = analyze(executionDataVisitor.getMerged());
+    CoverageBuilder coverageBuilder = jacocoReportReader.analyzeFiles(executionDataVisitor.getMerged(), classFilesCache.values());
     int analyzedResources = 0;
     for (ISourceFileCoverage coverage : coverageBuilder.getSourceFiles()) {
       InputFile groovyFile = getInputFile(coverage);
@@ -147,32 +154,6 @@ public abstract class AbstractAnalyzer {
     }
     if (analyzedResources == 0) {
       JaCoCoExtensions.logger().warn("Coverage information was not collected. Perhaps you forget to include debug information into compiled classes?");
-    }
-  }
-
-  private CoverageBuilder analyze(ExecutionDataStore executionDataStore) {
-    CoverageBuilder coverageBuilder = new CoverageBuilder();
-    Analyzer analyzer = new Analyzer(executionDataStore, coverageBuilder);
-    for (File binaryDir : binaryDirs) {
-      analyzeAll(analyzer, binaryDir);
-    }
-    return coverageBuilder;
-  }
-
-  /**
-   * Copied from {@link Analyzer#analyzeAll(File)} in order to add logging.
-   */
-  private static void analyzeAll(Analyzer analyzer, File file) {
-    if (file.isDirectory()) {
-      for (File f : file.listFiles()) {
-        analyzeAll(analyzer, f);
-      }
-    } else if (file.getName().endsWith(".class")) {
-      try {
-        analyzer.analyzeAll(file);
-      } catch (Exception e) {
-        JaCoCoExtensions.logger().warn("Exception during analysis of file " + file.getAbsolutePath(), e);
-      }
     }
   }
 

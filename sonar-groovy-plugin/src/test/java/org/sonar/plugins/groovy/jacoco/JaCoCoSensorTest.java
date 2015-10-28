@@ -37,6 +37,7 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -58,8 +59,12 @@ public class JaCoCoSensorTest {
 
   @Before
   public void setUp() throws Exception {
-    File outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCoSensorSimpleFileTest/");
-    jacocoExecutionData = new File(outputDir, "jacoco-ut.exec");
+    this.jacocoExecutionData = initWithJaCoCoVersion("JaCoCoSensor_0_7_4");
+  }
+
+  private File initWithJaCoCoVersion(String jacocoVersion) throws IOException {
+    File outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/" + jacocoVersion + "/");
+    File jacocoExecutionData = new File(outputDir, "jacoco-ut.exec");
 
     Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
       new File(jacocoExecutionData.getParentFile(), "Hello.class"));
@@ -75,16 +80,18 @@ public class JaCoCoSensorTest {
     when(configuration.getReportPath()).thenReturn(jacocoExecutionData.getPath());
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
-    inputFile = new DefaultInputFile("org/sonar/plugins/groovy/jacoco/tests/Hello.groovy")
+    inputFile = new DefaultInputFile("example/Hello.groovy")
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)
-      .setAbsolutePath(fileSystem.baseDir() + "/org/sonar/plugins/groovy/jacoco/tests/Hello.groovy");
+      .setAbsolutePath(fileSystem.baseDir() + "/example/Hello.groovy");
     fileSystem.add(inputFile);
 
     context = mock(SensorContext.class);
     pathResolver = mock(PathResolver.class);
     project = mock(Project.class);
     sensor = new JaCoCoSensor(groovy, configuration, fileSystem, pathResolver);
+
+    return jacocoExecutionData;
   }
 
   @Test
@@ -118,11 +125,25 @@ public class JaCoCoSensorTest {
   }
 
   @Test
-  public void test_read_execution_data() {
+  public void test_read_execution_data_with_jacoco_0_7_4() {
     when(pathResolver.relativeFile(any(File.class), argThat(Matchers.endsWith(".exec")))).thenReturn(jacocoExecutionData);
 
     sensor.analyse(project, context);
 
+    verifyMeasures();
+  }
+
+  @Test
+  public void test_read_execution_data_with_jacoco_0_7_5() throws IOException {
+    File jacocoExecutionData = initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
+    when(pathResolver.relativeFile(any(File.class), argThat(Matchers.endsWith(".exec")))).thenReturn(jacocoExecutionData);
+
+    sensor.analyse(project, context);
+
+    verifyMeasures();
+  }
+
+  private void verifyMeasures() {
     verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.LINES_TO_COVER, 14.0)));
     verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.UNCOVERED_LINES, 3.0)));
     verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=1;15=1;17=1;21=1;25=0;29=1;30=0;32=1;33=1;38=0;42=1;47=1")));
@@ -131,5 +152,4 @@ public class JaCoCoSensorTest {
     verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
     verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.COVERED_CONDITIONS_BY_LINE, "14=2;29=1;30=0")));
   }
-
 }
