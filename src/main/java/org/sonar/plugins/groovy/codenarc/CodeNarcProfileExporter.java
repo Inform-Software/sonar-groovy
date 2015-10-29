@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.rules.ActiveRuleParam;
-import org.sonar.api.utils.SonarException;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,7 +43,7 @@ public class CodeNarcProfileExporter {
       generateXML(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY));
 
     } catch (IOException e) {
-      throw new SonarException("Fail to export CodeNarc profile : " + profile, e);
+      throw new IllegalStateException("Fail to export CodeNarc profile : " + profile, e);
     }
   }
 

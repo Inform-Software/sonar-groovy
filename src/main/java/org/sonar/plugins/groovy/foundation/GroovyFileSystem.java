@@ -51,7 +51,7 @@ public class GroovyFileSystem {
 
   public List<File> sourceFiles() {
     Iterable<File> files = fileSystem.files(predicates.and(isGroovyLanguage, isMainTypeFile));
-    return Lists.<File>newArrayList(files);
+    return Lists.newArrayList(files);
   }
 
   @CheckForNull

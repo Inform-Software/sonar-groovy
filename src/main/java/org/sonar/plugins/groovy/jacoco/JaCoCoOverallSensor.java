@@ -32,7 +32,6 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.BufferedInputStream;
@@ -101,7 +100,7 @@ public class JaCoCoOverallSensor implements Sensor {
       infoStore.accept(dataWriter);
       dataStore.accept(dataWriter);
     } catch (IOException e) {
-      throw new SonarException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
+      throw new IllegalStateException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
     } finally {
       Closeables.closeQuietly(outputStream);
     }
@@ -118,7 +117,7 @@ public class JaCoCoOverallSensor implements Sensor {
           reader.setExecutionDataVisitor(dataStore);
           reader.read();
         } catch (IOException e) {
-          throw new SonarException(String.format("Unable to read %s", report.getAbsolutePath()), e);
+          throw new IllegalArgumentException(String.format("Unable to read %s", report.getAbsolutePath()), e);
         } finally {
           Closeables.closeQuietly(resourceStream);
         }

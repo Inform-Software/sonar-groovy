@@ -35,12 +35,10 @@ import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.api.utils.SonarException;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import javax.annotation.CheckForNull;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,19 +50,21 @@ import java.util.List;
 public abstract class AbstractAnalyzer {
 
   private final List<File> binaryDirs;
-  private final FileSystem fileSystem;
+  private final File baseDir;
   private final PathResolver pathResolver;
+  private final GroovyFileSystem groovyFileSystem;
 
   public AbstractAnalyzer(Groovy groovy, FileSystem fileSystem, PathResolver pathResolver) {
-    this.fileSystem = fileSystem;
+    groovyFileSystem = new GroovyFileSystem(fileSystem);
+    baseDir = fileSystem.baseDir();
     this.pathResolver = pathResolver;
-    this.binaryDirs = getFiles(groovy.getBinaryDirectories(), fileSystem);
+    this.binaryDirs = getFiles(groovy.getBinaryDirectories(), baseDir);
   }
 
-  private static List<File> getFiles(List<String> binaryDirectories, FileSystem fileSystem) {
+  private static List<File> getFiles(List<String> binaryDirectories, File baseDir) {
     ImmutableList.Builder<File> builder = ImmutableList.builder();
     for (String directory : binaryDirectories) {
-      builder.add(new File(fileSystem.baseDir(), directory));
+      builder.add(new File(baseDir, directory));
     }
     return builder.build();
   }
@@ -72,7 +72,7 @@ public abstract class AbstractAnalyzer {
   @CheckForNull
   private InputFile getInputFile(ISourceFileCoverage coverage) {
     String path = getFileRelativePath(coverage);
-    InputFile sourceInputFileFromRelativePath = new GroovyFileSystem(fileSystem).sourceInputFileFromRelativePath(path);
+    InputFile sourceInputFileFromRelativePath = groovyFileSystem.sourceInputFileFromRelativePath(path);
     if (sourceInputFileFromRelativePath == null) {
       JaCoCoExtensions.logger().warn("File not found: " + path);
     }
@@ -93,12 +93,12 @@ public abstract class AbstractAnalyzer {
       JaCoCoExtensions.logger().warn("No jacoco coverage execution file found for project " + project.getName() + ".");
       return;
     }
-    File jacocoExecutionData = pathResolver.relativeFile(fileSystem.baseDir(), path);
+    File jacocoExecutionData = pathResolver.relativeFile(baseDir, path);
 
     try {
       readExecutionData(jacocoExecutionData, context);
     } catch (IOException e) {
-      throw new SonarException(e);
+      throw new IllegalArgumentException(e);
     }
   }
 
