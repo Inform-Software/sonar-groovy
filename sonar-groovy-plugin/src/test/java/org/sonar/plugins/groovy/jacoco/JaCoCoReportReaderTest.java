@@ -22,6 +22,8 @@ package org.sonar.plugins.groovy.jacoco;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.fest.assertions.Fail;
+import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,6 +33,8 @@ import org.sonar.test.TestUtils;
 
 import java.io.File;
 import java.util.Collection;
+
+import static org.mockito.Mockito.mock;
 
 public class JaCoCoReportReaderTest {
 
@@ -46,6 +50,11 @@ public class JaCoCoReportReaderTest {
   public void reading_unexisting_file_should_fail() {
     expectedException.expect(SonarException.class);
     new JaCoCoReportReader(dummy);
+  }
+
+  @Test
+  public void try_reading_unexistant_file_should_do_nothing() {
+    new JaCoCoReportReader(null).readJacocoReport(mock(IExecutionDataVisitor.class), mock(ISessionInfoVisitor.class));
   }
 
   @Test
