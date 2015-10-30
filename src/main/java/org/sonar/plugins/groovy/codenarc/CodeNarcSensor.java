@@ -34,6 +34,7 @@ import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
+import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RuleFinder;
 import org.sonar.api.rules.RuleQuery;
@@ -42,6 +43,8 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -110,10 +113,7 @@ public class CodeNarcSensor implements Sensor {
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(CodeNarcRulesDefinition.REPOSITORY_KEY).withConfigKey(violation.getRuleName());
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-          InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(violation.getFilename()));
-          if (sonarFile != null) {
-            insertIssue(violation, rule, sonarFile);
-          }
+          insertIssue(violation, rule, issuableFor(violation.getFilename()));
         } else {
           LOG.warn("No such rule in Sonar, so violation from CodeNarc will be ignored: ", violation.getRuleName());
         }
@@ -121,16 +121,19 @@ public class CodeNarcSensor implements Sensor {
     }
   }
 
-  private void insertIssue(CodeNarcViolation violation, Rule rule, InputFile sonarFile) {
-    Issuable issuable = perspectives.as(Issuable.class, sonarFile);
+  private static void insertIssue(CodeNarcViolation violation, Rule rule, @Nullable Issuable issuable) {
     if (issuable != null) {
-      Issue issue = issuable.newIssueBuilder()
-        .ruleKey(rule.ruleKey())
-        .line(violation.getLine())
-        .message(violation.getMessage())
-        .build();
-      issuable.addIssue(issue);
+      insertIssue(rule.ruleKey(), violation.getLine(), violation.getMessage(), issuable);
     }
+  }
+
+  private static void insertIssue(RuleKey ruleKey, Integer line, String message, Issuable issuable) {
+    Issue issue = issuable.newIssueBuilder()
+      .ruleKey(ruleKey)
+      .line(line)
+      .message(message)
+      .build();
+    issuable.addIssue(issue);
   }
 
   private void runCodeNarc() {
@@ -153,16 +156,16 @@ public class CodeNarcSensor implements Sensor {
 
   private void reportViolations(Map<File, List<Violation>> violationsByFile) {
     for (Entry<File, List<Violation>> violationsOnFile : violationsByFile.entrySet()) {
-      File file = violationsOnFile.getKey();
+      Issuable issuable = issuableFor(violationsOnFile.getKey().getAbsolutePath());
+      if (issuable == null) {
+        continue;
+      }
       for (Violation violation : violationsOnFile.getValue()) {
         String ruleName = violation.getRule().getName();
         RuleQuery ruleQuery = RuleQuery.create().withRepositoryKey(CodeNarcRulesDefinition.REPOSITORY_KEY).withConfigKey(ruleName);
         Rule rule = ruleFinder.find(ruleQuery);
         if (rule != null) {
-          InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-          if (sonarFile != null) {
-            insertIssue(violation, rule, sonarFile);
-          }
+          insertIssue(rule.ruleKey(), violation.getLineNumber(), violation.getMessage(), issuable);
         } else {
           LOG.warn("No such rule in Sonar, so violation from CodeNarc will be ignored: ", ruleName);
         }
@@ -170,16 +173,13 @@ public class CodeNarcSensor implements Sensor {
     }
   }
 
-  private void insertIssue(Violation violation, Rule rule, InputFile sonarFile) {
-    Issuable issuable = perspectives.as(Issuable.class, sonarFile);
-    if (issuable != null) {
-      Issue issue = issuable.newIssueBuilder()
-        .ruleKey(rule.ruleKey())
-        .line(violation.getLineNumber())
-        .message(violation.getMessage())
-        .build();
-      issuable.addIssue(issue);
+  @CheckForNull
+  private Issuable issuableFor(String path) {
+    InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(path));
+    if (sonarFile != null) {
+      return perspectives.as(Issuable.class, sonarFile);
     }
+    return null;
   }
 
   private void exportCodeNarcConfiguration(File file) {
