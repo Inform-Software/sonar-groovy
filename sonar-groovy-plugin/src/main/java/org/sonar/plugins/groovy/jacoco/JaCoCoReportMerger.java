@@ -25,7 +25,6 @@ import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfoStore;
-import org.sonar.api.utils.SonarException;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -62,7 +61,7 @@ public class JaCoCoReportMerger {
       infoStore.accept((ISessionInfoVisitor) visitor);
       dataStore.accept((IExecutionDataVisitor) visitor);
     } catch (IOException e) {
-      throw new SonarException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
+      throw new IllegalStateException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
     }
   }
 

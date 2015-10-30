@@ -27,7 +27,6 @@ import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
-import org.sonar.api.utils.SonarException;
 
 import javax.annotation.Nullable;
 
@@ -76,7 +75,7 @@ public class JaCoCoReportReader {
         reader.read();
       }
     } catch (IOException e) {
-      throw new SonarException(String.format("Unable to read %s", jacocoExecutionData.getAbsolutePath()), e);
+      throw new IllegalArgumentException(String.format("Unable to read %s", jacocoExecutionData.getAbsolutePath()), e);
     }
     return this;
   }
@@ -96,7 +95,7 @@ public class JaCoCoReportReader {
       }
       return isCurrentFormat;
     } catch (IOException | IllegalStateException e) {
-      throw new SonarException(String.format("Unable to read %s to determine JaCoCo binary format.", jacocoExecutionData.getAbsolutePath()), e);
+      throw new IllegalArgumentException(String.format("Unable to read %s to determine JaCoCo binary format.", jacocoExecutionData.getAbsolutePath()), e);
     }
   }
 

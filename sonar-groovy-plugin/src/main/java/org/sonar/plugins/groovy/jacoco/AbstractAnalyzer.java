@@ -160,8 +160,9 @@ public abstract class AbstractAnalyzer {
   private static CoverageMeasuresBuilder analyzeFile(ISourceFileCoverage coverage) {
     CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
     for (int lineId = coverage.getFirstLine(); lineId <= coverage.getLastLine(); lineId++) {
-      final int hits;
+      int hits = -1;
       ILine line = coverage.getLine(lineId);
+      boolean ignore = false;
       switch (line.getInstructionCounter().getStatus()) {
         case ICounter.FULLY_COVERED:
         case ICounter.PARTLY_COVERED:
@@ -171,10 +172,15 @@ public abstract class AbstractAnalyzer {
           hits = 0;
           break;
         case ICounter.EMPTY:
-          continue;
+          ignore = true;
+          break;
         default:
+          ignore = true;
           JaCoCoExtensions.logger().warn("Unknown status for line {} in {}", lineId, getFileRelativePath(coverage));
-          continue;
+          break;
+      }
+      if (ignore) {
+        continue;
       }
       builder.setHits(lineId, hits);
 
