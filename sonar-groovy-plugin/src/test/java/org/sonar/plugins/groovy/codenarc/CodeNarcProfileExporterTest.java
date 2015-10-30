@@ -22,9 +22,12 @@ package org.sonar.plugins.groovy.codenarc;
 import org.apache.commons.lang.CharUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.fest.assertions.Fail;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RulePriority;
@@ -33,8 +36,12 @@ import org.sonar.test.TestUtils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 public class CodeNarcProfileExporterTest {
 
@@ -60,7 +67,20 @@ public class CodeNarcProfileExporterTest {
     assertSimilarXml(
       TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportProfile.xml"),
       writer.toString());
+  }
 
+  @Test
+  public void shouldFailToExport() throws IOException {
+    Writer writer = Mockito.mock(Writer.class);
+    Mockito.when(writer.append(Matchers.any(CharSequence.class))).thenThrow(new IOException());
+    exporter = new CodeNarcProfileExporter(writer);
+
+    try {
+      exporter.exportProfile(profile);
+      Fail.fail("Should have failed");
+    }  catch(IllegalStateException e) {
+      assertThat(e.getMessage()).contains("Fail to export CodeNarc profile");
+    }
   }
 
   @Test
