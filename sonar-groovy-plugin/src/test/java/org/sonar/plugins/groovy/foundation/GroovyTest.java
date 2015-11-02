@@ -47,10 +47,10 @@ public class GroovyTest {
     Settings settings = new Settings();
     Groovy language = new Groovy(settings);
 
-    settings.setProperty(GroovyPlugin.BINARY_DIRECTORIES, "");
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "");
     assertThat(language.getBinaryDirectories()).isEmpty();
 
-    settings.setProperty(GroovyPlugin.BINARY_DIRECTORIES, "target/firstDir , target/secondDir");
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "target/firstDir , target/secondDir");
     assertThat(language.getBinaryDirectories()).hasSize(2);
   }
 }

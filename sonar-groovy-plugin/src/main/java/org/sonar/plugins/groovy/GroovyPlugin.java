@@ -74,7 +74,7 @@ import java.util.List;
     global = true
   ),
   @Property(
-    key = GroovyPlugin.BINARY_DIRECTORIES,
+    key = GroovyPlugin.SONAR_GROOVY_BINARIES,
     name = "Binary directories",
     description = "Comma-separated list of optional directories that contain the compiled groovy sources.",
     project = true,
@@ -87,7 +87,7 @@ public class GroovyPlugin extends SonarPlugin {
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
-  public static final String BINARY_DIRECTORIES = "sonar.groovy.binaryDirs";
+  public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
 
   public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
   public static final String DEFAULT_FILE_SUFFIXES = ".groovy";

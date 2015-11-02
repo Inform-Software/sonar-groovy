@@ -84,6 +84,6 @@ public class Groovy extends AbstractLanguage {
   }
 
   public List<String> getBinaryDirectories() {
-    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.BINARY_DIRECTORIES));
+    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
   }
 }

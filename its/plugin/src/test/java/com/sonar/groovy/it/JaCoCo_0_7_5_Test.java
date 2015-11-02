@@ -50,7 +50,7 @@ public class JaCoCo_0_7_5_Test {
       .setGoals("clean install sonar:sonar")
       .setPom(FileLocation.of("projects/jacoco-integration/pom.xml"))
       .setProperty("sonar.scm.disabled", "true")
-      .setProperty("sonar.groovy.binaryDirs", "target/classes")
+      .setProperty("sonar.groovy.binaries", "target/classes")
       .setProperty("sonar.groovy.jacoco.reportPath", "target/coverage-reports/jacoco-ut.exec")
       .setProperty("sonar.groovy.jacoco.itReportPath", "target/coverage-reports/jacoco-it.exec")
       .setProperty("sonar.jacoco.reportPath", "target/coverage-reports/jacoco-ut.exec")
