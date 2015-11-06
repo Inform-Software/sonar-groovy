@@ -58,6 +58,7 @@ public class JaCoCoOverallSensorTest {
   private File jacocoITData;
   private File outputDir;
   private InputFile inputFile;
+  private Groovy groovy;
 
   @Before
   public void before() throws Exception {
@@ -70,7 +71,7 @@ public class JaCoCoOverallSensorTest {
     Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
 
-    Groovy groovy = mock(Groovy.class);
+    groovy = mock(Groovy.class);
     when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList("."));
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoUTData.getParentFile());
@@ -119,6 +120,23 @@ public class JaCoCoOverallSensorTest {
   @Test
   public void test_read_execution_data_with_IT_and_UT() {
     setMocks(true, true);
+
+    sensor.analyse(project, context);
+
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_LINES_TO_COVER, 14.0)));
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_LINES, 2.0)));
+    verify(context).saveMeasure(eq(inputFile),
+      argThat(new IsMeasure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=1;15=1;17=1;21=1;25=1;29=1;30=0;32=1;33=1;38=0;42=1;47=1")));
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, 6.0)));
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, 3.0)));
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
+    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, "14=2;29=1;30=0")));
+  }
+
+  @Test
+  public void test_read_execution_data_with_IT_and_UT_and_binaryDirs_being_absolute() {
+    setMocks(true, true);
+    when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList(jacocoUTData.getParentFile().getAbsolutePath()));
 
     sensor.analyse(project, context);
 

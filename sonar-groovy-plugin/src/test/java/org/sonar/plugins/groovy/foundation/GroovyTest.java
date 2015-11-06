@@ -52,5 +52,10 @@ public class GroovyTest {
 
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "target/firstDir , target/secondDir");
     assertThat(language.getBinaryDirectories()).hasSize(2);
+
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "");
+    // property 'sonar.binaries' is set by maven and gradle plugins
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK, "target/firstDir , target/secondDir");
+    assertThat(language.getBinaryDirectories()).hasSize(2);
   }
 }

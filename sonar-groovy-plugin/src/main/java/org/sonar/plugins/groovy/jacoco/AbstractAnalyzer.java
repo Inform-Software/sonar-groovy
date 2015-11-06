@@ -61,7 +61,11 @@ public abstract class AbstractAnalyzer {
   private static List<File> getFiles(List<String> binaryDirectories, File baseDir) {
     ImmutableList.Builder<File> builder = ImmutableList.builder();
     for (String directory : binaryDirectories) {
-      builder.add(new File(baseDir, directory));
+      File f = new File(directory);
+      if (!f.isAbsolute()) {
+        f = new File(baseDir, directory);
+      }
+      builder.add(f);
     }
     return builder.build();
   }

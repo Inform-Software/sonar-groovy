@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy.foundation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.AbstractLanguage;
@@ -84,6 +85,10 @@ public class Groovy extends AbstractLanguage {
   }
 
   public List<String> getBinaryDirectories() {
-    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
+    String[] binaries = settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES);
+    if (ArrayUtils.isEmpty(binaries)) {
+      binaries = settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK);
+    }
+    return ImmutableList.copyOf(binaries);
   }
 }

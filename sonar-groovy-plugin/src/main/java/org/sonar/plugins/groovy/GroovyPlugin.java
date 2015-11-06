@@ -88,6 +88,7 @@ public class GroovyPlugin extends SonarPlugin {
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
   public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
+  public static final String SONAR_GROOVY_BINARIES_FALLBACK = "sonar.binaries";
 
   public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
   public static final String DEFAULT_FILE_SUFFIXES = ".groovy";
