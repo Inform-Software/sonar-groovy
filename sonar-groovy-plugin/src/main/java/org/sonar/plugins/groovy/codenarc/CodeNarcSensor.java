@@ -148,8 +148,7 @@ public class CodeNarcSensor implements Sensor {
     CodeNarcRunner runner = new CodeNarcRunner();
     runner.setRuleSetFiles("file:" + codeNarcConfiguration.getAbsolutePath());
 
-    List<File> sourceFiles = groovyFileSystem.sourceFiles();
-    CodeNarcSourceAnalyzer analyzer = new CodeNarcSourceAnalyzer(sourceFiles, fileSystem.baseDir());
+    CodeNarcSourceAnalyzer analyzer = new CodeNarcSourceAnalyzer(groovyFileSystem.sourceFiles());
     runner.setSourceAnalyzer(analyzer);
     runner.execute();
     reportViolations(analyzer.getViolationsByFile());

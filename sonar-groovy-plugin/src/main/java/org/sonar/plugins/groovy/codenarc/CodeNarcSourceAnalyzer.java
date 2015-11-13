@@ -32,28 +32,26 @@ import org.codenarc.ruleset.RuleSet;
 import org.codenarc.source.SourceFile;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
   private final Map<File, List<Violation>> violationsByFile = Maps.newHashMap();
   private final List<File> sourceFiles;
-  private final File baseDir;
-  private static final FileFilter SUBDIRECTORY_FILTER = new SubDirectoryFilter();
 
-  public CodeNarcSourceAnalyzer(List<File> sourceFiles, File baseDir) {
+  public CodeNarcSourceAnalyzer(List<File> sourceFiles) {
     this.sourceFiles = sourceFiles;
-    this.baseDir = baseDir;
   }
 
   @Override
   public Results analyze(RuleSet ruleSet) {
     Multimap<File, FileResults> resultsByFileByDirectory = processFiles(ruleSet);
-    return processDirectories(baseDir, resultsByFileByDirectory);
+    DirectoryResults directoryResults = new DirectoryResults(".");
+    for (FileResults fileResults : resultsByFileByDirectory.values()) {
+      directoryResults.addChild(fileResults);
+    }
+    return directoryResults;
   }
 
   private Multimap<File, FileResults> processFiles(RuleSet ruleSet) {
@@ -67,45 +65,6 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
     return results;
   }
 
-  private static DirectoryResults processDirectories(File baseDir, Multimap<File, FileResults> resultsByFileByDirectory) {
-    Map<File, DirectoryResults> results = prepopulateDirectoryResults(baseDir, resultsByFileByDirectory);
-
-    for (File directory : resultsByFileByDirectory.keySet()) {
-      DirectoryResults directoryResult = results.get(directory);
-      Collection<FileResults> filesResults = resultsByFileByDirectory.get(directory);
-      for (FileResults fileResults : filesResults) {
-        directoryResult.addChild(fileResults);
-      }
-    }
-    return results.get(baseDir);
-  }
-
-  private static Map<File, DirectoryResults> prepopulateDirectoryResults(File baseDir, Multimap<File, FileResults> resultsByFileByDirectory) {
-    Map<File, DirectoryResults> results = Maps.newHashMap();
-    results.put(baseDir, new DirectoryResults());
-    // add a result by directory for each level from current directory to baseDir
-    for (File directory : resultsByFileByDirectory.keySet()) {
-      File parent = directory;
-      while (!results.containsKey(parent)) {
-        results.put(parent, new DirectoryResults());
-        parent = parent.getParentFile();
-      }
-    }
-
-    // construct parent-child relationship between results
-    for (Entry<File, DirectoryResults> resultsByFile : results.entrySet()) {
-      DirectoryResults directoryResults = resultsByFile.getValue();
-      File directory = resultsByFile.getKey();
-      for (File subDirectory : directory.listFiles(SUBDIRECTORY_FILTER)) {
-        if (results.containsKey(subDirectory)) {
-          directoryResults.addChild(results.get(subDirectory));
-        }
-      }
-    }
-
-    return results;
-  }
-
   @Override
   public List getSourceDirectories() {
     return ImmutableList.of();
@@ -115,11 +74,4 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
     return violationsByFile;
   }
 
-  private static class SubDirectoryFilter implements FileFilter {
-    @Override
-    public boolean accept(File pathname) {
-      return pathname.isDirectory();
-    }
-
-  }
 }
