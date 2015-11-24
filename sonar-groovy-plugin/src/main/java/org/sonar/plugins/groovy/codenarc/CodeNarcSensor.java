@@ -45,6 +45,7 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -95,7 +96,7 @@ public class CodeNarcSensor implements Sensor {
       if (!report.isAbsolute()) {
         report = new File(fileSystem.baseDir(), codeNarcReportPath);
       }
-      if (report == null || !report.isFile()) {
+      if (!report.isFile()) {
         LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATH + " not found at {}", report);
         return;
       }
