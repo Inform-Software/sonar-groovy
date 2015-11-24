@@ -157,6 +157,9 @@ public class CodeNarcSensorTest {
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
+    groovy = new Groovy(settings);
+    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
+
     sensor.analyse(project, context);
 
     verify(issuable, never()).addIssue(any(Issue.class));
@@ -168,6 +171,9 @@ public class CodeNarcSensorTest {
 
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
+
+    groovy = new Groovy(settings);
+    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
 
     sensor.analyse(project, context);
 
@@ -184,8 +190,9 @@ public class CodeNarcSensorTest {
 
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
-
     when(perspectives.as(any(Class.class), any(InputFile.class))).thenReturn(null);
+
+    groovy = new Groovy(settings);
 
     sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
     sensor.analyse(project, context);
@@ -217,6 +224,19 @@ public class CodeNarcSensorTest {
     sensor.analyse(project, context);
 
     verify(issuable, times(1)).addIssue(any(Issue.class));
+  }
+
+  @Test
+  public void should_do_nothing_when_can_not_find_report_path() {
+
+    when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("../missing_file.xml");
+
+    groovy = new Groovy(settings);
+    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
+
+    sensor.analyse(project, context);
+
+    verify(issuable, never()).addIssue(any(Issue.class));
   }
 
   @Test
