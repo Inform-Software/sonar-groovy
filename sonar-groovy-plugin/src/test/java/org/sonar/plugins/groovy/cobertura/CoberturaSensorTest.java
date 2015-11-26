@@ -69,7 +69,9 @@ public class CoberturaSensorTest {
   public void should_parse_report() {
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
-    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(mock(InputFile.class));
+    InputFile mockInputFile = mock(InputFile.class);
+    when(mockInputFile.lines()).thenReturn(Integer.MAX_VALUE);
+    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(mockInputFile);
     sensor = new CoberturaSensor(settings, mockfileSystem);
     sensor.analyse(project, context);
     verify(context, times(298)).saveMeasure(any(InputFile.class), any(Measure.class));

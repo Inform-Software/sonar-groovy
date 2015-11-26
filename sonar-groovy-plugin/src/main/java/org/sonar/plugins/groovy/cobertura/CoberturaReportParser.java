@@ -35,6 +35,7 @@ import org.sonar.api.utils.StaxParser;
 import org.sonar.api.utils.XmlParserException;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
@@ -112,22 +113,20 @@ public class CoberturaReportParser {
 
   private void collectPackageMeasures(SMInputCursor pack, List<String> sourceDirs) throws XMLStreamException {
     while (pack.getNext() != null) {
-      Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
-      collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
-      handleFileMeasures(builderByFilename, sourceDirs);
+      Map<String, ParsingResult> resultByFilename = Maps.newHashMap();
+      collectFileMeasures(pack.descendantElementCursor("class"), resultByFilename);
+      handleFileMeasures(resultByFilename);
     }
   }
 
-  private void handleFileMeasures(Map<String, CoverageMeasuresBuilder> builderByFilename, List<String> sourceDirs) {
-    for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-      String fileKey = entry.getKey();
-      InputFile file = getInputFile(fileKey, sourceDirs);
-      if (file != null) {
-        for (Measure measure : entry.getValue().createMeasures()) {
-          context.saveMeasure(file, measure);
+  private void handleFileMeasures(Map<String, ParsingResult> resultByFilename) {
+    for (ParsingResult parsingResult : resultByFilename.values()) {
+      if (parsingResult.inputFile != null) {
+        for (Measure measure : parsingResult.builder.createMeasures()) {
+          context.saveMeasure(parsingResult.inputFile, measure);
         }
       } else {
-        LOG.warn("File not found: {}", fileKey);
+        LOG.warn("File not found: {}", parsingResult.filename);
       }
     }
   }
@@ -144,34 +143,63 @@ public class CoberturaReportParser {
     return null;
   }
 
-  private static void collectFileMeasures(SMInputCursor clazz, Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
+  private void collectFileMeasures(SMInputCursor clazz, Map<String, ParsingResult> resultByFilename)
+    throws XMLStreamException {
     while (clazz.getNext() != null) {
       String fileName = clazz.getAttrValue("filename");
-      CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
-      if (builder == null) {
-        builder = CoverageMeasuresBuilder.create();
-        builderByFilename.put(fileName, builder);
+      ParsingResult parsingResult = resultByFilename.get(fileName);
+      if (parsingResult == null) {
+        parsingResult = new ParsingResult(fileName, getInputFile(fileName, sourceDirs), CoverageMeasuresBuilder.create());
+        resultByFilename.put(fileName, parsingResult);
       }
-      collectFileData(clazz, builder);
+      collectFileData(clazz, parsingResult);
     }
   }
 
-  private static void collectFileData(SMInputCursor clazz, CoverageMeasuresBuilder builder) throws XMLStreamException {
+  private static void collectFileData(SMInputCursor clazz, ParsingResult parsingResult) throws XMLStreamException {
     SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
     while (line.getNext() != null) {
       int lineId = Integer.parseInt(line.getAttrValue("number"));
+      boolean validLine = parsingResult.isValidLine(lineId);
+      if (!validLine && parsingResult.fileExists()) {
+        LOG.info("Hit on invalid line for file " + parsingResult.filename + " (line: " + lineId + "/" + parsingResult.inputFile.lines() + ")");
+      }
       try {
-        builder.setHits(lineId, (int) parseNumber(line.getAttrValue("hits"), ENGLISH));
+        int hits = (int) parseNumber(line.getAttrValue("hits"), ENGLISH);
+        if (validLine) {
+          parsingResult.builder.setHits(lineId, hits);
+        }
       } catch (ParseException e) {
         throw new XmlParserException(e);
       }
 
       String isBranch = line.getAttrValue("branch");
       String text = line.getAttrValue("condition-coverage");
-      if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
+      if (validLine && StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
         String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-        builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+        parsingResult.builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
       }
+    }
+  }
+
+  private static class ParsingResult {
+    private final String filename;
+    @Nullable
+    private final InputFile inputFile;
+    private final CoverageMeasuresBuilder builder;
+
+    public ParsingResult(String filename, @Nullable InputFile inputFile, CoverageMeasuresBuilder builder) {
+      this.filename = filename;
+      this.inputFile = inputFile;
+      this.builder = builder;
+    }
+
+    public boolean isValidLine(int lineId) {
+      return fileExists() && lineId <= inputFile.lines();
+    }
+
+    public boolean fileExists() {
+      return inputFile != null;
     }
   }
 }
