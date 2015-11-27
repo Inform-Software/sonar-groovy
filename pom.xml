@@ -44,9 +44,9 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</developerConnection>
-    <url>https://github.com/SonarCommunity/sonar-groovy</url>
+    <connection>scm:git:git@github.com:SonarSource/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:SonarSource/sonar-groovy.git</developerConnection>
+    <url>https://github.com/SonarSource/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
