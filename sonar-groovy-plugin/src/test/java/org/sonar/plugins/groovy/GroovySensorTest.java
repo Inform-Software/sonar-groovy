@@ -110,6 +110,8 @@ public class GroovySensorTest {
     verify(context).saveMeasure(sonarFile, CoreMetrics.COMMENT_LINES, expectedCommentMetric);
 
     verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, 4.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, 4.0);
+    verify(context).saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, 4.0);
     verify(context).saveMeasure(
       Mockito.eq(sonarFile),
       Mockito.argThat(new IsMeasure(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, "1=0;2=2;4=0;6=0;8=0;10=0;12=0")));

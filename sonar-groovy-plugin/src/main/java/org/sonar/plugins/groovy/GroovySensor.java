@@ -113,6 +113,7 @@ public class GroovySensor implements Sensor {
     double classes = 0;
     double methods = 0;
     double complexity = 0;
+    double complexityInFunctions = 0;
 
     RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 
@@ -126,6 +127,7 @@ public class GroovySensor implements Sensor {
           if (CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricName)) {
             int value = (Integer) ((SingleNumberMetricResult) metricResult).getNumber();
             functionsComplexityDistribution.add(value);
+            complexityInFunctions += value;
           }
         }
       }
@@ -143,6 +145,8 @@ public class GroovySensor implements Sensor {
     context.saveMeasure(sonarFile, CoreMetrics.CLASSES, classes);
     context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, methods);
     context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
+    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
+    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
 
     context.saveMeasure(sonarFile, functionsComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
     RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
