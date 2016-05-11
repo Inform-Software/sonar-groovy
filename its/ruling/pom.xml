@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonarsource.parent</groupId>
-    <artifactId>parent</artifactId>
-    <version>23</version>
+    <groupId>org.sonarsource.groovy</groupId>
+    <artifactId>groovy-its</artifactId>
+    <version>1.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>it-groovy-ruling</artifactId>
