@@ -22,6 +22,7 @@ package com.sonar.groovy.it;
 import com.sonar.orchestrator.Orchestrator;
 import com.sonar.orchestrator.build.MavenBuild;
 import com.sonar.orchestrator.locator.FileLocation;
+
 import org.fest.assertions.Delta;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -114,7 +115,7 @@ public class GroovyTest {
     // - windows 1.7.0_76 oracle jdk and linux 1.7.0_76 oracle jre (Travis)
     assertThat(getProjectMeasure("coverage").getValue()).isEqualTo(89.5, Delta.delta(0.5));
     assertThat(getProjectMeasure("line_coverage").getValue()).isEqualTo(98.8, Delta.delta(1.0));
-    assertThat(getProjectMeasure("lines_to_cover").getValue()).isEqualTo(1668.0, Delta.delta(100.0));
+    assertThat(getProjectMeasure("lines_to_cover").getValue()).isEqualTo(1668.0, Delta.delta(120.0));
     // when ignoring line outside file...
     assertThat(getProjectMeasure("uncovered_lines").getValue()).isGreaterThan(5.0);
     assertThat(getProjectMeasure("uncovered_lines").getValue()).isLessThan(23.0);
