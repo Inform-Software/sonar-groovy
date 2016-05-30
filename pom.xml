@@ -59,6 +59,7 @@
     <jacoco.previous.version>0.7.4.201502262128</jacoco.previous.version>
     <jacoco.version>0.7.5.201505241946</jacoco.version>
     <groovy.version>2.4.4</groovy.version>
+    <orchestrator.version>3.11</orchestrator.version>
     <!-- used for deployment to SonarSource Artifactory -->
     <gitRepositoryName>sonar-groovy</gitRepositoryName>
   </properties>
