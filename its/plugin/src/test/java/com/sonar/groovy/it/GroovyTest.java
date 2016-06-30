@@ -117,7 +117,7 @@ public class GroovyTest {
     assertThat(getProjectMeasure("line_coverage").getValue()).isEqualTo(98.8, Delta.delta(1.0));
     assertThat(getProjectMeasure("lines_to_cover").getValue()).isEqualTo(1668.0, Delta.delta(120.0));
     // when ignoring line outside file...
-    assertThat(getProjectMeasure("uncovered_lines").getValue()).isGreaterThan(5.0);
+    assertThat(getProjectMeasure("uncovered_lines").getValue()).isGreaterThan(4.0);
     assertThat(getProjectMeasure("uncovered_lines").getValue()).isLessThan(23.0);
 
     assertThat(getProjectMeasure("tests")).isNull();
