@@ -33,6 +33,7 @@ import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.utils.StaxParser;
 import org.sonar.api.utils.XmlParserException;
+import org.sonar.plugins.groovy.foundation.Groovy;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -121,7 +122,7 @@ public class CoberturaReportParser {
 
   private void handleFileMeasures(Map<String, ParsingResult> resultByFilename) {
     for (ParsingResult parsingResult : resultByFilename.values()) {
-      if (parsingResult.inputFile != null) {
+      if (parsingResult.inputFile != null && Groovy.KEY.equals(parsingResult.inputFile.language())) {
         for (Measure measure : parsingResult.builder.createMeasures()) {
           context.saveMeasure(parsingResult.inputFile, measure);
         }

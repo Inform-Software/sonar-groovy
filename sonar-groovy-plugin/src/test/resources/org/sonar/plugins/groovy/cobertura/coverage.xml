@@ -19,6 +19,24 @@
     <source></source>
   </sources>
   <packages>
+    <package name="com.test.web" line-rate="0.2222222222222222" branch-rate="1.0" complexity="1.0">
+      <classes>
+        <class name="com.test.web.EmptyResultException" filename="com/test/web/EmptyResultException.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
+          <methods>
+            <method name="&lt;init&gt;" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
+              <lines>
+                <line number="16" hits="5" branch="false"/>
+                <line number="17" hits="5" branch="false"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="16" hits="5" branch="false"/>
+            <line number="17" hits="5" branch="false"/>
+          </lines>
+        </class>
+      </classes>
+    </package>
     <package name="" line-rate="0.06451612903225806" branch-rate="0.0" complexity="0.0">
       <classes>
         <class name="AboveEighteenFilters" filename="AboveEighteenFilters.groovy" line-rate="1.0" branch-rate="1.0" complexity="0.0">

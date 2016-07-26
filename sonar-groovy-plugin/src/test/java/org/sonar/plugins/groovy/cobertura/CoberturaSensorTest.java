@@ -71,6 +71,8 @@ public class CoberturaSensorTest {
     when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
     InputFile mockInputFile = mock(InputFile.class);
     when(mockInputFile.lines()).thenReturn(Integer.MAX_VALUE);
+    // The first class in the test coverage.xml is a java class and the rest are groovy
+    when(mockInputFile.language()).thenReturn("java", Groovy.KEY);
     when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(mockInputFile);
     sensor = new CoberturaSensor(settings, mockfileSystem);
     sensor.analyse(project, context);
