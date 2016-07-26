@@ -200,6 +200,11 @@
             </method>
           </methods>
           <lines>
+              <line number="0" hits="0" branch="true" condition-coverage="0% (0/2)">
+                  <conditions>
+                      <condition number="0" type="switch" coverage="0%"/>
+                  </conditions>
+              </line>
             <line number="6" hits="0" branch="false" condition-coverage="100%"/>
           </lines>
         </class>

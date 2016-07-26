@@ -144,7 +144,7 @@ public class CoberturaReportParser {
   }
 
   private void collectFileMeasures(SMInputCursor clazz, Map<String, ParsingResult> resultByFilename)
-    throws XMLStreamException {
+          throws XMLStreamException {
     while (clazz.getNext() != null) {
       String fileName = clazz.getAttrValue("filename");
       ParsingResult parsingResult = resultByFilename.get(fileName);
@@ -195,7 +195,7 @@ public class CoberturaReportParser {
     }
 
     public boolean isValidLine(int lineId) {
-      return fileExists() && lineId <= inputFile.lines();
+      return fileExists() && lineId> 0 && lineId <= inputFile.lines();
     }
 
     public boolean fileExists() {
