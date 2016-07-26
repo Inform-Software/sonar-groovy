@@ -12,7 +12,7 @@
   <packaging>sonar-plugin</packaging>
 
   <name>Sonar Groovy Plugin</name>
-  <description>Enables analysis of Groovy projects.</description>
+  <description>Enables scanning of Groovy source files.</description>
   <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
   <scm>
     <connection>scm:git:git@github.com:SonarCommunity/sonar-groovy.git</connection>
