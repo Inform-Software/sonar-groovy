@@ -25,9 +25,10 @@ import org.codehaus.staxmate.in.SMEvent;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser.XmlStreamHandler;
+import org.sonar.plugins.groovy.utils.StaxParser.XmlStreamHandler;
 
 import javax.xml.stream.XMLStreamException;
+
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -66,7 +67,7 @@ public class SurefireStaxHandler implements XmlStreamHandler {
   private static String getClassname(SMInputCursor testCaseCursor, String defaultClassname) throws XMLStreamException {
     String testClassName = testCaseCursor.getAttrValue("classname");
     if(StringUtils.isNotBlank(testClassName) && testClassName.endsWith(")")) {
-      testClassName = testClassName.substring(0, testClassName.indexOf("("));
+      testClassName = testClassName.substring(0, testClassName.indexOf('('));
     }
     return StringUtils.defaultIfBlank(testClassName, defaultClassname);
   }

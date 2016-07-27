@@ -19,17 +19,15 @@
  */
 package org.sonar.plugins.groovy.surefire;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.DependedUpon;
-import org.sonar.api.batch.DependsUpon;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.surefire.api.SurefireUtils;
 
@@ -38,11 +36,11 @@ import java.io.File;
 @DependedUpon("surefire-java")
 public class GroovySurefireSensor implements Sensor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroovySurefireSensor.class);
+  private static final Logger LOGGER = Loggers.get(GroovySurefireSensor.class);
 
+  private final GroovySurefireParser groovySurefireParser;
   private final Settings settings;
   private final FileSystem fs;
-  private final GroovySurefireParser groovySurefireParser;
   private final PathResolver pathResolver;
 
   public GroovySurefireSensor(GroovySurefireParser groovySurefireParser, Settings settings, FileSystem fs, PathResolver pathResolver) {
@@ -52,18 +50,13 @@ public class GroovySurefireSensor implements Sensor {
     this.pathResolver = pathResolver;
   }
 
-  @DependsUpon
-  public Class dependsUponCoverageSensors() {
-    return CoverageExtension.class;
+  @Override
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name("GroovySurefireSensor");
   }
 
   @Override
-  public boolean shouldExecuteOnProject(Project project) {
-    return fs.hasFiles(fs.predicates().hasLanguage(Groovy.KEY));
-  }
-
-  @Override
-  public void analyse(Project project, SensorContext context) {
+  public void execute(SensorContext context) {
     File dir = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
     collect(context, dir);
   }

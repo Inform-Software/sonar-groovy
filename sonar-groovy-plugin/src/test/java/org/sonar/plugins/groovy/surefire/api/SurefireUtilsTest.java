@@ -24,9 +24,7 @@ import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.api.test.MavenTestUtils;
 
 import java.io.File;
 
@@ -38,14 +36,12 @@ import static org.mockito.Mockito.when;
 
 public class SurefireUtilsTest {
 
-  private Project project;
   private FileSystem fs;
   private PathResolver pathResolver;
 
   @Before
   public void setup() {
-    project = MavenTestUtils.loadProjectFromPom(getClass(), "shouldGetReportsFromProperty/pom.xml");
-    fs = new DefaultFileSystem(project.getFileSystem().getBasedir());
+    fs = new DefaultFileSystem(new File("src/test/resources/org/sonar/plugins/groovy/surefire/api/SurefireUtilsTest/shouldGetReportsFromProperty"));
     pathResolver = new PathResolver();
   }
 

@@ -20,41 +20,44 @@
 package org.sonar.plugins.groovy.surefire;
 
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.BatchExtension;
-import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.SonarException;
-import org.sonar.api.utils.StaxParser;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.surefire.data.SurefireStaxHandler;
 import org.sonar.plugins.groovy.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.groovy.surefire.data.UnitTestIndex;
 import org.sonar.plugins.groovy.surefire.data.UnitTestResult;
+import org.sonar.plugins.groovy.utils.StaxParser;
+import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class GroovySurefireParser implements BatchExtension {
+@BatchSide
+public class GroovySurefireParser {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroovySurefireParser.class);
-  private final Groovy groovy;
+  private static final Logger LOGGER = Loggers.get(GroovySurefireParser.class);
   private final ResourcePerspectives perspectives;
+  private final Groovy groovy;
   private final FileSystem fs;
 
   public GroovySurefireParser(Groovy groovy, ResourcePerspectives perspectives, FileSystem fs) {
@@ -103,13 +106,12 @@ public class GroovySurefireParser implements BatchExtension {
   }
 
   private static void parseFiles(File[] reports, UnitTestIndex index) {
-    SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
-    StaxParser parser = new StaxParser(staxParser, false);
+    StaxParser parser = new StaxParser(new SurefireStaxHandler(index));
     for (File report : reports) {
       try {
         parser.parse(report);
       } catch (XMLStreamException e) {
-        throw new SonarException("Fail to parse the Surefire report: " + report, e);
+        throw new AnalysisException("Fail to parse the Surefire report: " + report, e);
       }
     }
   }
@@ -144,7 +146,7 @@ public class GroovySurefireParser implements BatchExtension {
   }
 
   private void save(UnitTestClassReport report, InputFile inputFile, SensorContext context) {
-    double testsCount = report.getTests() - report.getSkipped();
+    int testsCount = report.getTests() - report.getSkipped();
     saveMeasure(context, inputFile, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
     saveMeasure(context, inputFile, CoreMetrics.TESTS, testsCount);
     saveMeasure(context, inputFile, CoreMetrics.TEST_ERRORS, report.getErrors());
@@ -192,10 +194,8 @@ public class GroovySurefireParser implements BatchExtension {
     return p.or(fileNamePredicates);
   }
 
-  private static void saveMeasure(SensorContext context, InputFile inputFile, Metric metric, double value) {
-    if (!Double.isNaN(value)) {
-      context.saveMeasure(inputFile, metric, value);
-    }
+  private static <T extends Serializable> void saveMeasure(SensorContext context, InputFile inputFile, Metric<T> metric, T value) {
+    context.<T>newMeasure().forMetric(metric).on(inputFile).withValue(value).save();
   }
 
 }
