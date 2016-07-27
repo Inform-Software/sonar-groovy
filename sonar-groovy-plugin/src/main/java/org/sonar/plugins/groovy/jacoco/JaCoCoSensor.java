@@ -19,19 +19,17 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import org.sonar.api.batch.DependsUpon;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
-import java.util.Collection;
 
 public class JaCoCoSensor implements Sensor {
 
@@ -47,18 +45,20 @@ public class JaCoCoSensor implements Sensor {
     this.pathResolver = pathResolver;
   }
 
-  @DependsUpon
-  public String dependsUponSurefireSensors() {
-    return "surefire-java";
+  @Override
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
   }
 
   @Override
-  public void analyse(Project project, SensorContext context) {
-    new UnitTestsAnalyzer().analyse(project, context);
+  public void execute(SensorContext context) {
+    if (shouldExecuteOnProject()) {
+      new UnitTestsAnalyzer().analyse(context);
+    }
   }
 
-  @Override
-  public boolean shouldExecuteOnProject(Project project) {
+  @VisibleForTesting
+  boolean shouldExecuteOnProject() {
     File report = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getReportPath());
     boolean foundReport = report.exists() && report.isFile();
     boolean shouldExecute = configuration.shouldExecuteOnProject(foundReport);
@@ -74,28 +74,14 @@ public class JaCoCoSensor implements Sensor {
     }
 
     @Override
-    protected String getReportPath(Project project) {
+    protected String getReportPath() {
       return configuration.getReportPath();
     }
 
     @Override
-    protected void saveMeasures(SensorContext context, InputFile inputFile, Collection<Measure> measures) {
-      for (Measure measure : measures) {
-        context.saveMeasure(inputFile, measure);
-      }
+    protected CoverageType coverageType() {
+      return CoverageType.UNIT;
     }
-  }
-
-  protected static Measure getMeasureBasedOnValue(Metric metric, Measure measure) {
-    return new Measure(metric, measure.getValue());
-  }
-
-  protected static Measure getMeasureBasedOnData(Metric metric, Measure measure) {
-    String data = measure.getData();
-    if (data != null) {
-      return new Measure(metric, data);
-    }
-    return null;
   }
 
   @Override

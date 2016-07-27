@@ -19,18 +19,17 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
-import java.util.Collection;
 
 public class JaCoCoItSensor implements Sensor {
   private final JaCoCoConfiguration configuration;
@@ -46,19 +45,26 @@ public class JaCoCoItSensor implements Sensor {
   }
 
   @Override
-  public boolean shouldExecuteOnProject(Project project) {
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+  }
+
+  @Override
+  public void execute(SensorContext context) {
+    if (shouldExecuteOnProject()) {
+      new ITAnalyzer().analyse(context);
+    }
+  }
+
+  @VisibleForTesting
+  boolean shouldExecuteOnProject() {
     File report = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getItReportPath());
     boolean foundReport = report.exists() && report.isFile();
     boolean shouldExecute = configuration.shouldExecuteOnProject(foundReport);
     if (!foundReport && shouldExecute) {
-      JaCoCoExtensions.logger().info("JaCoCoItSensor: JaCoCo IT report not found.");
+      JaCoCoExtensions.logger().info(this.toString() + ": JaCoCo IT report not found.");
     }
     return shouldExecute;
-  }
-
-  @Override
-  public void analyse(Project project, SensorContext context) {
-    new ITAnalyzer().analyse(project, context);
   }
 
   class ITAnalyzer extends AbstractAnalyzer {
@@ -67,38 +73,13 @@ public class JaCoCoItSensor implements Sensor {
     }
 
     @Override
-    protected String getReportPath(Project project) {
+    protected String getReportPath() {
       return configuration.getItReportPath();
     }
 
     @Override
-    protected void saveMeasures(SensorContext context, InputFile inputFile, Collection<Measure> measures) {
-      for (Measure measure : measures) {
-        Measure itMeasure = convertForIT(measure);
-        if (itMeasure != null) {
-          context.saveMeasure(inputFile, itMeasure);
-        }
-      }
-    }
-
-    private Measure convertForIT(Measure measure) {
-      Measure itMeasure = null;
-      if (CoreMetrics.LINES_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.IT_LINES_TO_COVER, measure);
-      } else if (CoreMetrics.UNCOVERED_LINES.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.IT_UNCOVERED_LINES, measure);
-      } else if (CoreMetrics.COVERAGE_LINE_HITS_DATA.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.IT_COVERAGE_LINE_HITS_DATA, measure);
-      } else if (CoreMetrics.CONDITIONS_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.IT_CONDITIONS_TO_COVER, measure);
-      } else if (CoreMetrics.UNCOVERED_CONDITIONS.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.IT_UNCOVERED_CONDITIONS, measure);
-      } else if (CoreMetrics.COVERED_CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.IT_COVERED_CONDITIONS_BY_LINE, measure);
-      } else if (CoreMetrics.CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.IT_CONDITIONS_BY_LINE, measure);
-      }
-      return itMeasure;
+    protected CoverageType coverageType() {
+      return CoverageType.IT;
     }
   }
 

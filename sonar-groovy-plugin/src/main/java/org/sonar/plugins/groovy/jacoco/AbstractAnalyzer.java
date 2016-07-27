@@ -21,17 +21,17 @@ package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+
 import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.sensor.coverage.NewCoverage;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
@@ -39,7 +39,6 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import javax.annotation.CheckForNull;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -84,8 +83,8 @@ public abstract class AbstractAnalyzer {
     return coverage.getPackageName() + "/" + coverage.getName();
   }
 
-  public final void analyse(Project project, SensorContext context) {
-    if (!atLeastOneBinaryDirectoryExists(project)) {
+  public final void analyse(SensorContext context) {
+    if (!atLeastOneBinaryDirectoryExists()) {
       JaCoCoExtensions.logger().warn("Project coverage is set to 0% since there is no directories with classes.");
       return;
     }
@@ -94,9 +93,9 @@ public abstract class AbstractAnalyzer {
       populateClassFilesCache(classFilesCache, classesDir, "");
     }
 
-    String path = getReportPath(project);
+    String path = getReportPath();
     if (path == null) {
-      JaCoCoExtensions.logger().warn("No jacoco coverage execution file found for project " + project.getName() + ".");
+      JaCoCoExtensions.logger().warn("No jacoco coverage execution file found.");
       return;
     }
     File jacocoExecutionData = pathResolver.relativeFile(baseDir, path);
@@ -121,9 +120,9 @@ public abstract class AbstractAnalyzer {
     }
   }
 
-  private boolean atLeastOneBinaryDirectoryExists(Project project) {
+  private boolean atLeastOneBinaryDirectoryExists() {
     if (binaryDirs.isEmpty()) {
-      JaCoCoExtensions.logger().warn("No binary directories defined for project " + project.getName() + ".");
+      JaCoCoExtensions.logger().warn("No binary directories defined.");
     }
     for (File binaryDir : binaryDirs) {
       JaCoCoExtensions.logger().info("\tChecking binary directory: {}", binaryDir.toString());
@@ -151,8 +150,9 @@ public abstract class AbstractAnalyzer {
     for (ISourceFileCoverage coverage : coverageBuilder.getSourceFiles()) {
       InputFile groovyFile = getInputFile(coverage);
       if (groovyFile != null) {
-        CoverageMeasuresBuilder builder = analyzeFile(coverage);
-        saveMeasures(context, groovyFile, builder.createMeasures());
+        NewCoverage newCoverage = context.newCoverage().onFile(groovyFile).ofType(coverageType());
+        analyzeFile(newCoverage, groovyFile, coverage);
+        newCoverage.save();
         analyzedResources++;
       }
     }
@@ -161,8 +161,7 @@ public abstract class AbstractAnalyzer {
     }
   }
 
-  private static CoverageMeasuresBuilder analyzeFile(ISourceFileCoverage coverage) {
-    CoverageMeasuresBuilder builder = CoverageMeasuresBuilder.create();
+  private static void analyzeFile(NewCoverage newCoverage, InputFile groovyFile, ISourceFileCoverage coverage) {
     for (int lineId = coverage.getFirstLine(); lineId <= coverage.getLastLine(); lineId++) {
       int hits = -1;
       ILine line = coverage.getLine(lineId);
@@ -180,25 +179,24 @@ public abstract class AbstractAnalyzer {
           break;
         default:
           ignore = true;
-          JaCoCoExtensions.logger().warn("Unknown status for line {} in {}", lineId, getFileRelativePath(coverage));
+          JaCoCoExtensions.logger().warn("Unknown status for line {} in {}", lineId, groovyFile);
           break;
       }
       if (ignore) {
         continue;
       }
-      builder.setHits(lineId, hits);
+      newCoverage.lineHits(lineId, hits);
 
       ICounter branchCounter = line.getBranchCounter();
       int conditions = branchCounter.getTotalCount();
       if (conditions > 0) {
         int coveredConditions = branchCounter.getCoveredCount();
-        builder.setConditions(lineId, conditions, coveredConditions);
+        newCoverage.conditions(lineId, conditions, coveredConditions);
       }
     }
-    return builder;
   }
 
-  protected abstract void saveMeasures(SensorContext context, InputFile inputFile, Collection<Measure> measures);
+  protected abstract CoverageType coverageType();
 
-  protected abstract String getReportPath(Project project);
+  protected abstract String getReportPath();
 }

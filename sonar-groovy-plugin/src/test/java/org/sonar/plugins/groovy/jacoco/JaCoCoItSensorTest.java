@@ -21,18 +21,17 @@ package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import org.hamcrest.Matchers;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.InputFile;
+import org.mockito.Matchers;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
+import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
@@ -40,20 +39,16 @@ import java.io.File;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JaCoCoItSensorTest {
 
   private File jacocoExecutionData;
-  private InputFile inputFile;
+  private DefaultInputFile inputFile;
   private JaCoCoConfiguration configuration;
-  private SensorContext context;
   private PathResolver pathResolver;
-  private Project project;
   private JaCoCoItSensor sensor;
 
   @Before
@@ -75,15 +70,13 @@ public class JaCoCoItSensorTest {
     when(configuration.getItReportPath()).thenReturn(jacocoExecutionData.getPath());
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
-    inputFile = new DefaultInputFile("example/Hello.groovy")
+    inputFile = new DefaultInputFile("", "example/Hello.groovy")
       .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN)
-      .setAbsolutePath(fileSystem.baseDir() + "/example/Hello.groovy");
+      .setType(Type.MAIN);
+    inputFile.setLines(50);
     fileSystem.add(inputFile);
 
-    context = mock(SensorContext.class);
     pathResolver = mock(PathResolver.class);
-    project = mock(Project.class);
     sensor = new JaCoCoItSensor(groovy, configuration, fileSystem, pathResolver);
   }
 
@@ -93,38 +86,52 @@ public class JaCoCoItSensorTest {
   }
 
   @Test
+  public void test_description() {
+    DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
+    sensor.describe(defaultSensorDescriptor);
+    assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
+  }
+
+  @Test
   public void should_Execute_On_Project_only_if_exec_exists() {
     when(configuration.getItReportPath()).thenReturn("it.exec");
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoExecutionData);
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoExecutionData.getParentFile());
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+    assertThat(sensor.shouldExecuteOnProject()).isFalse();
 
     File outputDir = TestUtils.getResource(JaCoCoSensorTest.class, ".");
     File fakeExecFile = new File(outputDir, "it.not.found.exec");
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile);
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+    assertThat(sensor.shouldExecuteOnProject()).isFalse();
 
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile);
     when(configuration.shouldExecuteOnProject(false)).thenReturn(true);
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.shouldExecuteOnProject()).isTrue();
   }
 
   @Test
   public void test_read_execution_data() {
-    when(pathResolver.relativeFile(any(File.class), argThat(Matchers.endsWith(".exec")))).thenReturn(jacocoExecutionData);
+    when(pathResolver.relativeFile(any(File.class), Matchers.endsWith(".exec"))).thenReturn(jacocoExecutionData);
 
-    sensor.analyse(project, context);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
 
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_LINES_TO_COVER, 14.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_UNCOVERED_LINES, 11.0)));
-    verify(context).saveMeasure(eq(inputFile),
-      argThat(new IsMeasure(CoreMetrics.IT_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=0;15=0;17=0;21=0;25=1;29=0;30=0;32=0;33=0;38=0;42=0;47=0")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_CONDITIONS_TO_COVER, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_UNCOVERED_CONDITIONS, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.IT_COVERED_CONDITIONS_BY_LINE, "14=0;29=0;30=0")));
+    int[] oneHitlines = {9, 10, 25};
+    int[] zeroHitlines = {14, 15, 17, 21, 29, 30, 32, 33, 38, 42, 47};
+    int[] conditionLines = {14, 29, 30};
+
+    for (int zeroHitline : zeroHitlines) {
+      assertThat(context.lineHits(":example/Hello.groovy", CoverageType.IT, zeroHitline)).isEqualTo(0);
+    }
+    for (int oneHitline : oneHitlines) {
+      assertThat(context.lineHits(":example/Hello.groovy", CoverageType.IT, oneHitline)).isEqualTo(1);
+    }
+    for (int conditionLine : conditionLines) {
+      assertThat(context.conditions(":example/Hello.groovy", CoverageType.IT, conditionLine)).isEqualTo(2);
+      assertThat(context.coveredConditions(":example/Hello.groovy", CoverageType.IT, conditionLine)).isEqualTo(0);
+    }
   }
 
 }

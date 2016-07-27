@@ -21,18 +21,16 @@ package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.ModuleFileSystem;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
+import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.api.test.IsMeasure;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.test.TestUtils;
 
@@ -40,24 +38,19 @@ import java.io.File;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JaCoCoOverallSensorTest {
 
   private JaCoCoConfiguration configuration;
-  private SensorContext context;
-  private ModuleFileSystem fileSystem;
   private PathResolver pathResolver;
-  private Project project;
   private JaCoCoOverallSensor sensor;
   private File jacocoUTData;
   private File jacocoITData;
   private File outputDir;
-  private InputFile inputFile;
+  private DefaultInputFile inputFile;
   private Groovy groovy;
 
   @Before
@@ -76,18 +69,16 @@ public class JaCoCoOverallSensorTest {
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoUTData.getParentFile());
     fileSystem.setWorkDir(jacocoUTData.getParentFile());
-    inputFile = new DefaultInputFile("example/Hello.groovy")
+    inputFile = new DefaultInputFile("", "example/Hello.groovy")
       .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN)
-      .setAbsolutePath(fileSystem.baseDir() + "/example/Hello.groovy");
+      .setType(Type.MAIN);
+    inputFile.setLines(50);
     fileSystem.add(inputFile);
 
     configuration = mock(JaCoCoConfiguration.class);
     when(configuration.shouldExecuteOnProject(true)).thenReturn(true);
     when(configuration.shouldExecuteOnProject(false)).thenReturn(false);
-    context = mock(SensorContext.class);
     pathResolver = mock(PathResolver.class);
-    project = mock(Project.class);
     sensor = new JaCoCoOverallSensor(groovy, configuration, fileSystem, pathResolver);
   }
 
@@ -97,40 +88,61 @@ public class JaCoCoOverallSensorTest {
   }
 
   @Test
+  public void test_description() {
+    DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
+    sensor.describe(defaultSensorDescriptor);
+    assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
+  }
+
+  @Test
   public void should_Execute_On_Project_only_if_at_least_one_exec_exists() {
     when(configuration.getItReportPath()).thenReturn("it.exec");
     when(configuration.getReportPath()).thenReturn("ut.exec");
 
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoITData);
     when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(fakeExecFile());
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile());
     when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(jacocoUTData);
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile());
     when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(fakeExecFile());
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+    assertThat(sensor.shouldExecuteOnProject()).isFalse();
 
     when(configuration.shouldExecuteOnProject(false)).thenReturn(true);
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+    assertThat(sensor.shouldExecuteOnProject()).isTrue();
   }
 
   @Test
   public void test_read_execution_data_with_IT_and_UT() {
     setMocks(true, true);
 
-    sensor.analyse(project, context);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
 
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_LINES_TO_COVER, 14.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_LINES, 2.0)));
-    verify(context).saveMeasure(eq(inputFile),
-      argThat(new IsMeasure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=1;15=1;17=1;21=1;25=1;29=1;30=0;32=1;33=1;38=0;42=1;47=1")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, 3.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, "14=2;29=1;30=0")));
+    int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
+    int[] zeroHitlines = {30, 38};
+    int[] conditionLines = {14, 29, 30};
+    int[] coveredConditions = {2, 1, 0};
+
+    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
+  }
+
+  private void verifyOverallMetrics(SensorContextTester context, int[] zeroHitlines, int[] oneHitlines, int[] conditionLines, int[] coveredConditions) {
+    for (int zeroHitline : zeroHitlines) {
+      assertThat(context.lineHits(inputFile.key(), CoverageType.OVERALL, zeroHitline)).isEqualTo(0);
+    }
+    for (int oneHitline : oneHitlines) {
+      assertThat(context.lineHits(inputFile.key(), CoverageType.OVERALL, oneHitline)).isEqualTo(1);
+    }
+
+    for (int i = 0; i < conditionLines.length; i++) {
+      int line = conditionLines[i];
+      assertThat(context.conditions(inputFile.key(), CoverageType.OVERALL, line)).isEqualTo(2);
+      assertThat(context.coveredConditions(inputFile.key(), CoverageType.OVERALL, line)).isEqualTo(coveredConditions[i]);
+    }
   }
 
   @Test
@@ -138,48 +150,45 @@ public class JaCoCoOverallSensorTest {
     setMocks(true, true);
     when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList(jacocoUTData.getParentFile().getAbsolutePath()));
 
-    sensor.analyse(project, context);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
 
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_LINES_TO_COVER, 14.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_LINES, 2.0)));
-    verify(context).saveMeasure(eq(inputFile),
-      argThat(new IsMeasure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=1;15=1;17=1;21=1;25=1;29=1;30=0;32=1;33=1;38=0;42=1;47=1")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, 3.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, "14=2;29=1;30=0")));
+    int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
+    int[] zeroHitlines = {30, 38};
+    int[] conditionLines = {14, 29, 30};
+    int[] coveredConditions = {2, 1, 0};
+
+    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
   @Test
   public void test_read_execution_data_with_only_UT() {
     setMocks(true, false);
 
-    sensor.analyse(project, context);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
 
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_LINES_TO_COVER, 14.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_LINES, 3.0)));
-    verify(context).saveMeasure(eq(inputFile),
-      argThat(new IsMeasure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=1;15=1;17=1;21=1;25=0;29=1;30=0;32=1;33=1;38=0;42=1;47=1")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, 3.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, "14=2;29=1;30=0")));
+    int[] oneHitlines = {9, 10, 14, 15, 17, 21, /* 25 not covered in UT */ 29, 32, 33, 42, 47};
+    int[] zeroHitlines = {25, 30, 38};
+    int[] conditionLines = {14, 29, 30};
+    int[] coveredConditions = {2, 1, 0};
+
+    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
   @Test
   public void test_read_execution_data_with_only_IT() {
     setMocks(false, true);
 
-    sensor.analyse(project, context);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
 
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_LINES_TO_COVER, 14.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_LINES, 11.0)));
-    verify(context).saveMeasure(eq(inputFile),
-      argThat(new IsMeasure(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, "9=1;10=1;14=0;15=0;17=0;21=0;25=1;29=0;30=0;32=0;33=0;38=0;42=0;47=0")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, 6.0)));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, "14=2;29=2;30=2")));
-    verify(context).saveMeasure(eq(inputFile), argThat(new IsMeasure(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, "14=0;29=0;30=0")));
+    int[] oneHitlines = {9, 10, 25};
+    int[] zeroHitlines = {14, 15, 17, 21, 29, 30, 32, 33, 38, 42, 47};
+    int[] conditionLines = {14, 29, 30};
+    int[] coveredConditions = {0, 0, 0};
+
+    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
   private void setMocks(boolean utReport, boolean itReport) {

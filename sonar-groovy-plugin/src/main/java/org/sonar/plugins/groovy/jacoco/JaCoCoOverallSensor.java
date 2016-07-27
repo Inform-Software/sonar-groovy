@@ -19,18 +19,17 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
-import java.util.Collection;
 
 public class JaCoCoOverallSensor implements Sensor {
 
@@ -49,7 +48,24 @@ public class JaCoCoOverallSensor implements Sensor {
   }
 
   @Override
-  public boolean shouldExecuteOnProject(Project project) {
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+  }
+
+  @Override
+  public void execute(SensorContext context) {
+    File reportUTs = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getReportPath());
+    File reportITs = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getItReportPath());
+    if (shouldExecuteOnProject()) {
+      File reportOverall = new File(fileSystem.workDir(), JACOCO_OVERALL);
+      reportOverall.getParentFile().mkdirs();
+      JaCoCoReportMerger.mergeReports(reportOverall, reportUTs, reportITs);
+      new OverallAnalyzer(reportOverall).analyse(context);
+    }
+  }
+
+  @VisibleForTesting
+  boolean shouldExecuteOnProject() {
     File baseDir = fileSystem.baseDir();
     File reportUTs = pathResolver.relativeFile(baseDir, configuration.getReportPath());
     File reportITs = pathResolver.relativeFile(baseDir, configuration.getItReportPath());
@@ -61,20 +77,6 @@ public class JaCoCoOverallSensor implements Sensor {
     return shouldExecute;
   }
 
-  @Override
-  public void analyse(Project project, SensorContext context) {
-    File baseDir = fileSystem.baseDir();
-    File reportUTs = pathResolver.relativeFile(baseDir, configuration.getReportPath());
-    File reportITs = pathResolver.relativeFile(baseDir, configuration.getItReportPath());
-
-    File reportOverall = new File(fileSystem.workDir(), JACOCO_OVERALL);
-    reportOverall.getParentFile().mkdirs();
-
-    JaCoCoReportMerger.mergeReports(reportOverall, reportUTs, reportITs);
-
-    new OverallAnalyzer(reportOverall).analyse(project, context);
-  }
-
   class OverallAnalyzer extends AbstractAnalyzer {
     private final File report;
 
@@ -84,38 +86,13 @@ public class JaCoCoOverallSensor implements Sensor {
     }
 
     @Override
-    protected String getReportPath(Project project) {
-      return report.getAbsolutePath();
+    protected CoverageType coverageType() {
+      return CoverageType.OVERALL;
     }
 
     @Override
-    protected void saveMeasures(SensorContext context, InputFile inputFile, Collection<Measure> measures) {
-      for (Measure measure : measures) {
-        Measure mergedMeasure = convertForOverall(measure);
-        if (mergedMeasure != null) {
-          context.saveMeasure(inputFile, mergedMeasure);
-        }
-      }
-    }
-
-    private Measure convertForOverall(Measure measure) {
-      Measure itMeasure = null;
-      if (CoreMetrics.LINES_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_LINES_TO_COVER, measure);
-      } else if (CoreMetrics.UNCOVERED_LINES.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_UNCOVERED_LINES, measure);
-      } else if (CoreMetrics.COVERAGE_LINE_HITS_DATA.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_COVERAGE_LINE_HITS_DATA, measure);
-      } else if (CoreMetrics.CONDITIONS_TO_COVER.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_CONDITIONS_TO_COVER, measure);
-      } else if (CoreMetrics.UNCOVERED_CONDITIONS.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnValue(CoreMetrics.OVERALL_UNCOVERED_CONDITIONS, measure);
-      } else if (CoreMetrics.COVERED_CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_COVERED_CONDITIONS_BY_LINE, measure);
-      } else if (CoreMetrics.CONDITIONS_BY_LINE.equals(measure.getMetric())) {
-        itMeasure = JaCoCoSensor.getMeasureBasedOnData(CoreMetrics.OVERALL_CONDITIONS_BY_LINE, measure);
-      }
-      return itMeasure;
+    protected String getReportPath() {
+      return report.getAbsolutePath();
     }
   }
 

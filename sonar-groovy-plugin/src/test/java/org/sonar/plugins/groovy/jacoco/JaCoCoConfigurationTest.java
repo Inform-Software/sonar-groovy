@@ -50,11 +50,11 @@ public class JaCoCoConfigurationTest {
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isFalse();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 
-    fileSystem.add(new DefaultInputFile("src/foo/bar.java").setLanguage("java"));
+    fileSystem.add(new DefaultInputFile("", "src/foo/bar.java").setLanguage("java"));
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isFalse();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 
-    fileSystem.add(new DefaultInputFile("src/foo/bar.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(new DefaultInputFile("", "src/foo/bar.groovy").setLanguage(Groovy.KEY));
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isTrue();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 
