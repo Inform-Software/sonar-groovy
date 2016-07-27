@@ -50,6 +50,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -109,7 +110,7 @@ public class CodeNarcSensorTest {
 
   @Test
   public void should_execute_on_project() {
-    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
     .thenReturn(Arrays.asList(new ActiveRule()));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
@@ -117,7 +118,7 @@ public class CodeNarcSensorTest {
 
   @Test
   public void should_not_execute_when_no_active_rules() {
-    fileSystem.add(new DefaultInputFile("fake.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
     .thenReturn(Collections.EMPTY_LIST);
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
@@ -204,7 +205,10 @@ public class CodeNarcSensorTest {
   public void should_run_code_narc() throws IOException {
     File sonarhome = projectdir.newFolder("sonarhome");
     File sample = createSampleFile(sonarhome);
-    DefaultInputFile inputFile = new DefaultInputFile("sample.groovy").setFile(sample).setLanguage(Groovy.KEY).setType(Type.MAIN);
+    DefaultInputFile inputFile = new DefaultInputFile("", "sample.groovy")
+      .setLanguage(Groovy.KEY)
+      .setType(Type.MAIN)
+      .initMetadata(new String(Files.readAllBytes(sample.toPath()), "UTF-8"));
 
     Rule rule = Rule.create();
     rule.setRepositoryKey("repoKey");
@@ -255,8 +259,14 @@ public class CodeNarcSensorTest {
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(sonarhome);
     fileSystem.setWorkDir(sonarhome);
-    fileSystem.add(new DefaultInputFile("sample.groovy").setFile(sample1).setLanguage(Groovy.KEY).setType(Type.MAIN));
-    fileSystem.add(new DefaultInputFile("foo/bar/qix/sample.groovy").setFile(sample2).setLanguage(Groovy.KEY).setType(Type.MAIN));
+    fileSystem.add(new DefaultInputFile("", "sample.groovy")
+      .setLanguage(Groovy.KEY)
+      .setType(Type.MAIN)
+      .initMetadata(new String(Files.readAllBytes(sample1.toPath()), "UTF-8")));
+    fileSystem.add(new DefaultInputFile("", "foo/bar/qix/sample.groovy")
+      .setLanguage(Groovy.KEY)
+      .setType(Type.MAIN)
+      .initMetadata(new String(Files.readAllBytes(sample2.toPath()), "UTF-8")));
 
     ActiveRule activeRule = mock(ActiveRule.class);
     when(activeRule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");

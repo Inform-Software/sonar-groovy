@@ -19,9 +19,8 @@
  */
 package org.sonar.plugins.groovy;
 
-import groovyjarjarantlr.Token;
-import groovyjarjarantlr.TokenStream;
-import groovyjarjarantlr.TokenStreamException;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
 import org.gmetrics.GMetricsRunner;
@@ -33,26 +32,32 @@ import org.gmetrics.resultsnode.ClassResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.measure.Metric;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.ce.measure.RangeDistributionBuilder;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.api.measures.PersistenceMode;
-import org.sonar.api.measures.RangeDistributionBuilder;
-import org.sonar.api.resources.Project;
+import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
+
+import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
+import groovyjarjarantlr.TokenStreamException;
 
 public class GroovySensor implements Sensor {
 
@@ -68,8 +73,8 @@ public class GroovySensor implements Sensor {
   private final FileSystem fileSystem;
   private final GroovyFileSystem groovyFileSystem;
 
-  private double loc = 0;
-  private double comments = 0;
+  private int loc = 0;
+  private int comments = 0;
   private int currentLine = 0;
   private FileLinesContext fileLinesContext;
 
@@ -81,14 +86,21 @@ public class GroovySensor implements Sensor {
   }
 
   @Override
-  public boolean shouldExecuteOnProject(Project project) {
-    return groovyFileSystem.hasGroovyFiles();
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
   }
 
   @Override
-  public void analyse(Project project, SensorContext context) {
-    computeBaseMetrics(project, context);
-    processFiles(context);
+  public void execute(SensorContext context) {
+    if (shouldExecuteOnProject()) {
+      computeBaseMetrics(context);
+      processFiles(context);
+    }
+  }
+
+  @VisibleForTesting
+  boolean shouldExecuteOnProject() {
+    return groovyFileSystem.hasGroovyFiles();
   }
 
   private void processFiles(SensorContext context) {
@@ -110,12 +122,12 @@ public class GroovySensor implements Sensor {
   }
 
   private static void processFile(SensorContext context, InputFile sonarFile, Collection<ClassResultsNode> results) {
-    double classes = 0;
-    double methods = 0;
-    double complexity = 0;
-    double complexityInFunctions = 0;
+    int classes = 0;
+    int methods = 0;
+    int complexity = 0;
+    int complexityInFunctions = 0;
 
-    RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
+    RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 
     for (ClassResultsNode result : results) {
       classes += 1;
@@ -141,29 +153,37 @@ public class GroovySensor implements Sensor {
       }
     }
 
-    context.saveMeasure(sonarFile, CoreMetrics.FILES, 1.0);
-    context.saveMeasure(sonarFile, CoreMetrics.CLASSES, classes);
-    context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, methods);
-    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, complexity);
-    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
-    context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.FILES, 1);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.CLASSES, classes);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.FUNCTIONS, methods);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY, complexity);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
+    saveMetricOnFile(context, sonarFile, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, functionsComplexityDistribution.build());
 
-    context.saveMeasure(sonarFile, functionsComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-    RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
+    RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(FILES_DISTRIB_BOTTOM_LIMITS);
     fileComplexityDistribution.add(complexity);
-    context.saveMeasure(sonarFile, fileComplexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
+    saveMetricOnFile(context, sonarFile, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, fileComplexityDistribution.build());
   }
 
-  private void computeBaseMetrics(Project project, SensorContext sensorContext) {
-    for (File groovyFile : groovyFileSystem.sourceFiles()) {
-      InputFile resource = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(groovyFile.getAbsolutePath()));
-      if (resource != null) {
+  private static <T extends Serializable> void saveMetricOnFile(SensorContext context, InputFile inputFile, Metric<T> metric, T value) {
+    context.<T>newMeasure()
+      .withValue(value)
+      .forMetric(metric)
+      .on(inputFile)
+      .save();
+  }
+
+  private void computeBaseMetrics(SensorContext sensorContext) {
+    for (InputFile groovyFile : groovyFileSystem.sourceInputFiles()) {
+      File file = groovyFile.file();
+      if (file.exists()) {
         loc = 0;
         comments = 0;
         currentLine = 0;
-        fileLinesContext = fileLinesContextFactory.createFor(resource);
+        fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
         try {
-          GroovyLexer groovyLexer = new GroovyLexer(new FileReader(groovyFile));
+          GroovyLexer groovyLexer = new GroovyLexer(new FileReader(file));
           groovyLexer.setWhitespaceIncluded(true);
           TokenStream tokenStream = groovyLexer.plumb();
           Token token = tokenStream.nextToken();
@@ -174,13 +194,13 @@ public class GroovySensor implements Sensor {
             nextToken = tokenStream.nextToken();
           }
           handleToken(token, nextToken.getLine());
-          sensorContext.saveMeasure(resource, CoreMetrics.LINES, (double) nextToken.getLine());
-          sensorContext.saveMeasure(resource, CoreMetrics.NCLOC, loc);
-          sensorContext.saveMeasure(resource, CoreMetrics.COMMENT_LINES, comments);
+          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.LINES, nextToken.getLine());
+          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.NCLOC, loc);
+          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.COMMENT_LINES, comments);
         } catch (TokenStreamException tse) {
-          LOG.error("Unexpected token when lexing file : " + groovyFile.getName(), tse);
+          LOG.error("Unexpected token when lexing file : " + file.getName(), tse);
         } catch (FileNotFoundException fnfe) {
-          LOG.error("Could not find : " + groovyFile.getName(), fnfe);
+          LOG.error("Could not find : " + file.getName(), fnfe);
         }
         fileLinesContext.save();
       }

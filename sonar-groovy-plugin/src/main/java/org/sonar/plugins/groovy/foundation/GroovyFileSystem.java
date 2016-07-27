@@ -20,6 +20,7 @@
 package org.sonar.plugins.groovy.foundation;
 
 import com.google.common.collect.Lists;
+
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
@@ -52,6 +53,11 @@ public class GroovyFileSystem {
   public List<File> sourceFiles() {
     Iterable<File> files = fileSystem.files(predicates.and(isGroovyLanguage, isMainTypeFile));
     return Lists.newArrayList(files);
+  }
+
+  public List<InputFile> sourceInputFiles() {
+    Iterable<InputFile> inputFiles = fileSystem.inputFiles(predicates.and(isGroovyLanguage, isMainTypeFile));
+    return Lists.newArrayList(inputFiles);
   }
 
   @CheckForNull
