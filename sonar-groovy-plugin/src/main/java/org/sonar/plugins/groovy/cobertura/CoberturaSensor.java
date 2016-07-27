@@ -19,22 +19,24 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.CoverageExtension;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.GroovyPlugin;
+import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 import java.io.File;
 
-public class CoberturaSensor implements Sensor, CoverageExtension {
+public class CoberturaSensor implements Sensor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CoberturaSensor.class);
+  private static final Logger LOG = Loggers.get(CoberturaSensor.class);
 
   private final Settings settings;
   private final FileSystem fileSystem;
@@ -47,12 +49,24 @@ public class CoberturaSensor implements Sensor, CoverageExtension {
   }
 
   @Override
-  public boolean shouldExecuteOnProject(Project project) {
-    return groovyFileSystem.hasGroovyFiles();
+  public void describe(SensorDescriptor descriptor) {
+    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+
   }
 
   @Override
-  public void analyse(Project project, SensorContext context) {
+  public void execute(SensorContext context) {
+    if (shouldExecuteOnProject()) {
+      analyse(context);
+    }
+  }
+
+  @VisibleForTesting
+  boolean shouldExecuteOnProject() {
+    return groovyFileSystem.hasGroovyFiles();
+  }
+
+  public void analyse(SensorContext context) {
     String reportPath = settings.getString(GroovyPlugin.COBERTURA_REPORT_PATH);
 
     if (reportPath != null) {

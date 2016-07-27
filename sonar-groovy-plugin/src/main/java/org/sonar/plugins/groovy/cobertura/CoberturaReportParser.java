@@ -21,19 +21,20 @@ package org.sonar.plugins.groovy.cobertura;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.sensor.coverage.NewCoverage;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.utils.StaxParser;
+import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -49,13 +50,13 @@ import static org.sonar.api.utils.ParsingUtils.parseNumber;
 
 public class CoberturaReportParser {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CoberturaReportParser.class);
+  private static final Logger LOG = Loggers.get(CoberturaReportParser.class);
 
   private final SensorContext context;
   private final FileSystem fileSystem;
   private List<String> sourceDirs = Lists.newArrayList();
 
-  public CoberturaReportParser(final SensorContext context, final FileSystem fileSystem) {
+  public CoberturaReportParser(SensorContext context, final FileSystem fileSystem) {
     this.context = context;
     this.fileSystem = fileSystem;
   }
@@ -68,7 +69,7 @@ public class CoberturaReportParser {
       parseSources(xmlFile);
       parsePackages(xmlFile);
     } catch (XMLStreamException e) {
-      throw new XmlParserException(e);
+      throw new AnalysisException("Unable to parse Cobertura report.", e);
     }
   }
 
@@ -106,13 +107,13 @@ public class CoberturaReportParser {
       @Override
       public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
         rootCursor.advance();
-        collectPackageMeasures(rootCursor.descendantElementCursor("package"), sourceDirs);
+        collectPackageMeasures(rootCursor.descendantElementCursor("package"));
       }
     });
     fileParser.parse(xmlFile);
   }
 
-  private void collectPackageMeasures(SMInputCursor pack, List<String> sourceDirs) throws XMLStreamException {
+  private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
     while (pack.getNext() != null) {
       Map<String, ParsingResult> resultByFilename = Maps.newHashMap();
       collectFileMeasures(pack.descendantElementCursor("class"), resultByFilename);
@@ -120,12 +121,10 @@ public class CoberturaReportParser {
     }
   }
 
-  private void handleFileMeasures(Map<String, ParsingResult> resultByFilename) {
+  private static void handleFileMeasures(Map<String, ParsingResult> resultByFilename) {
     for (ParsingResult parsingResult : resultByFilename.values()) {
       if (parsingResult.inputFile != null && Groovy.KEY.equals(parsingResult.inputFile.language())) {
-        for (Measure measure : parsingResult.builder.createMeasures()) {
-          context.saveMeasure(parsingResult.inputFile, measure);
-        }
+        parsingResult.coverage.save();
       } else {
         LOG.warn("File not found: {}", parsingResult.filename);
       }
@@ -150,7 +149,9 @@ public class CoberturaReportParser {
       String fileName = clazz.getAttrValue("filename");
       ParsingResult parsingResult = resultByFilename.get(fileName);
       if (parsingResult == null) {
-        parsingResult = new ParsingResult(fileName, getInputFile(fileName, sourceDirs), CoverageMeasuresBuilder.create());
+        InputFile inputFile = getInputFile(fileName, sourceDirs);
+        NewCoverage onFile = context.newCoverage().onFile(inputFile).ofType(CoverageType.UNIT);
+        parsingResult = new ParsingResult(fileName, inputFile, onFile);
         resultByFilename.put(fileName, parsingResult);
       }
       collectFileData(clazz, parsingResult);
@@ -168,17 +169,17 @@ public class CoberturaReportParser {
       try {
         int hits = (int) parseNumber(line.getAttrValue("hits"), ENGLISH);
         if (validLine) {
-          parsingResult.builder.setHits(lineId, hits);
+          parsingResult.coverage = parsingResult.coverage.lineHits(lineId, hits);
         }
       } catch (ParseException e) {
-        throw new XmlParserException(e);
+        throw new AnalysisException("Unable to parse Cobertura report.", e);
       }
 
       String isBranch = line.getAttrValue("branch");
       String text = line.getAttrValue("condition-coverage");
       if (validLine && StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
         String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-        parsingResult.builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+        parsingResult.coverage = parsingResult.coverage.conditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
       }
     }
   }
@@ -187,12 +188,12 @@ public class CoberturaReportParser {
     private final String filename;
     @Nullable
     private final InputFile inputFile;
-    private final CoverageMeasuresBuilder builder;
+    private NewCoverage coverage;
 
-    public ParsingResult(String filename, @Nullable InputFile inputFile, CoverageMeasuresBuilder builder) {
+    public ParsingResult(String filename, @Nullable InputFile inputFile, NewCoverage coverage) {
       this.filename = filename;
       this.inputFile = inputFile;
-      this.builder = builder;
+      this.coverage = coverage;
     }
 
     public boolean isValidLine(int lineId) {
