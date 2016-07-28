@@ -20,6 +20,7 @@
 package org.sonar.plugins.groovy;
 
 import com.google.common.collect.ImmutableList;
+
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.PropertyType;
@@ -97,8 +98,6 @@ public class GroovyPlugin extends SonarPlugin {
   public List getExtensions() {
     ImmutableList.Builder<Object> builder = ImmutableList.builder();
     builder.add(
-      GroovyCommonRulesDecorator.class,
-      GroovyCommonRulesEngine.class,
       // CodeNarc
       CodeNarcRulesDefinition.class,
       CodeNarcSensor.class,
