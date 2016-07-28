@@ -21,10 +21,10 @@ package org.sonar.plugins.groovy;
 
 import com.google.common.collect.ImmutableList;
 
+import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.PropertyType;
-import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcRulesDefinition;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
@@ -35,8 +35,6 @@ import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
-
-import java.util.List;
 
 @Properties({
   @Property(
@@ -82,7 +80,7 @@ import java.util.List;
     module = true,
     global = true)
 })
-public class GroovyPlugin extends SonarPlugin {
+public class GroovyPlugin implements Plugin {
 
   public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
@@ -95,7 +93,7 @@ public class GroovyPlugin extends SonarPlugin {
   public static final String DEFAULT_FILE_SUFFIXES = ".groovy";
 
   @Override
-  public List getExtensions() {
+  public void define(Context context) {
     ImmutableList.Builder<Object> builder = ImmutableList.builder();
     builder.add(
       // CodeNarc
@@ -115,6 +113,6 @@ public class GroovyPlugin extends SonarPlugin {
       CoberturaSensor.class
       );
     builder.addAll(JaCoCoExtensions.getExtensions());
-    return builder.build();
+    context.addExtensions(builder.build());
   }
 }

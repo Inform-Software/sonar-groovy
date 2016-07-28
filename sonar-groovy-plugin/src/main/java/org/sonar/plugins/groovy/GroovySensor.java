@@ -30,8 +30,6 @@ import org.gmetrics.result.NumberMetricResult;
 import org.gmetrics.result.SingleNumberMetricResult;
 import org.gmetrics.resultsnode.ClassResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
@@ -43,6 +41,8 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
@@ -63,7 +63,7 @@ public class GroovySensor implements Sensor {
 
   private static final String CYCLOMATIC_COMPLEXITY_METRIC_NAME = "CyclomaticComplexity";
 
-  private static final Logger LOG = LoggerFactory.getLogger(GroovySensor.class);
+  private static final Logger LOG = Loggers.get(GroovySensor.class);
 
   private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
   private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
