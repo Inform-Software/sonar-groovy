@@ -23,7 +23,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -74,12 +73,9 @@ public class CoberturaReportParser {
   }
 
   private void parseSources(File xmlFile) throws XMLStreamException {
-    StaxParser sourceParser = new StaxParser(new StaxParser.XmlStreamHandler() {
-      @Override
-      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-        rootCursor.advance();
-        sourceDirs = collectSourceDirs(rootCursor.descendantElementCursor("source"));
-      }
+    StaxParser sourceParser = new StaxParser(rootCursor -> {
+      rootCursor.advance();
+      sourceDirs = collectSourceDirs(rootCursor.descendantElementCursor("source"));
     });
     sourceParser.parse(xmlFile);
   }
@@ -103,12 +99,9 @@ public class CoberturaReportParser {
   }
 
   private void parsePackages(File xmlFile) throws XMLStreamException {
-    StaxParser fileParser = new StaxParser(new StaxParser.XmlStreamHandler() {
-      @Override
-      public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-        rootCursor.advance();
-        collectPackageMeasures(rootCursor.descendantElementCursor("package"));
-      }
+    StaxParser fileParser = new StaxParser(rootCursor -> {
+      rootCursor.advance();
+      collectPackageMeasures(rootCursor.descendantElementCursor("package"));
     });
     fileParser.parse(xmlFile);
   }

@@ -33,6 +33,7 @@ import java.io.IOException;
 
 public class StaxParser {
 
+  @FunctionalInterface
   public interface XmlStreamHandler {
     void stream(SMHierarchicCursor rootCursor) throws XMLStreamException;
   }

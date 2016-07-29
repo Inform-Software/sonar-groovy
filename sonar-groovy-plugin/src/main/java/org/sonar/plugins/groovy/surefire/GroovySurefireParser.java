@@ -152,9 +152,9 @@ public class GroovySurefireParser {
     saveMeasure(context, inputFile, CoreMetrics.TEST_ERRORS, report.getErrors());
     saveMeasure(context, inputFile, CoreMetrics.TEST_FAILURES, report.getFailures());
     saveMeasure(context, inputFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
-    double passedTests = testsCount - report.getErrors() - report.getFailures();
+    int passedTests = testsCount - report.getErrors() - report.getFailures();
     if (testsCount > 0) {
-      double percentage = passedTests * 100D / testsCount;
+      double percentage = (passedTests * 100D) / testsCount;
       saveMeasure(context, inputFile, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
     }
     saveResults(inputFile, report);
