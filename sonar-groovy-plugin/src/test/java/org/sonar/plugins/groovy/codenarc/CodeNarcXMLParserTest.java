@@ -41,7 +41,7 @@ public class CodeNarcXMLParserTest {
     Mockito.when(fileSystem.hasFiles(Matchers.any(FilePredicate.class))).thenReturn(true);
     List<CodeNarcViolation> violations = CodeNarcXMLParser.parse(FileUtils.toFile(getClass().getResource("parsing/sample.xml")), fileSystem);
 
-    assertThat(violations.size()).isEqualTo(16);
+    assertThat(violations.size()).isEqualTo(17);
 
     CodeNarcViolation violation = violations.get(0);
     assertThat(violation.getRuleName()).isEqualTo("EmptyElseBlock");

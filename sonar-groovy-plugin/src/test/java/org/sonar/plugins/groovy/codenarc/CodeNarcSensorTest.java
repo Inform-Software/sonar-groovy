@@ -19,30 +19,29 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.common.collect.Lists;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.sonar.api.batch.SensorContext;
+import org.mockito.Matchers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
-import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.batch.rule.ActiveRules;
+import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
+import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
+import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.Settings;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issuable.IssueBuilder;
-import org.sonar.api.issue.Issue;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rules.ActiveRule;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.RuleFinder;
-import org.sonar.api.rules.RuleQuery;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -51,32 +50,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CodeNarcSensorTest {
 
-  private RuleFinder ruleFinder;
   private RulesProfile profile;
   private CodeNarcSensor sensor;
   private Groovy groovy;
   private Settings settings;
-  private ResourcePerspectives perspectives;
   private DefaultFileSystem fileSystem;
-  private Project project;
-  private SensorContext context;
-  private Issuable issuable;
 
   @org.junit.Rule
   public TemporaryFolder projectdir = new TemporaryFolder();
@@ -85,179 +75,207 @@ public class CodeNarcSensorTest {
   public void setUp() {
     File sonarhome = projectdir.newFolder("sonarhome");
 
-    ruleFinder = mock(RuleFinder.class);
     profile = mock(RulesProfile.class);
     settings = mock(Settings.class);
     when(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY)).thenReturn(new String[] {".groovy", "grvy"});
-    perspectives = mock(ResourcePerspectives.class);
-    project = mock(Project.class);
-    context = mock(SensorContext.class);
     fileSystem = new DefaultFileSystem(new File("."));
     fileSystem.setWorkDir(sonarhome);
     groovy = new Groovy(settings);
 
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
-
-    issuable = mock(Issuable.class);
-    IssueBuilder issueBuilder = mock(IssueBuilder.class);
-    when(issuable.newIssueBuilder()).thenReturn(issueBuilder);
-    when(issueBuilder.message(anyString())).thenReturn(issueBuilder);
-    when(issueBuilder.line(anyInt())).thenReturn(issueBuilder);
-    when(issueBuilder.ruleKey(any(RuleKey.class))).thenReturn(issueBuilder);
-    when(issueBuilder.build()).thenReturn(mock(Issue.class));
-    when(perspectives.as(any(Class.class), any(InputFile.class))).thenReturn(issuable);
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
   }
 
   @Test
   public void should_execute_on_project() {
     fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
-    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
-    .thenReturn(Arrays.asList(new ActiveRule()));
-    assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
+
+    ActiveRules activeRules = mock(ActiveRules.class);
+    when(activeRules.findByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
+      .thenReturn(Lists.newArrayList(mock(org.sonar.api.batch.rule.ActiveRule.class)));
+
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    context.setFileSystem(fileSystem);
+    context.setActiveRules(activeRules);
+
+    assertThat(sensor.shouldExecuteOnProject(context)).isTrue();
   }
 
   @Test
   public void should_not_execute_when_no_active_rules() {
     fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
-    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
-    .thenReturn(Collections.EMPTY_LIST);
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+
+    ActiveRules activeRules = mock(ActiveRules.class);
+    when(activeRules.findByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY)).thenReturn(new ArrayList<>());
+
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    context.setFileSystem(fileSystem);
+    context.setActiveRules(activeRules);
+
+    assertThat(sensor.shouldExecuteOnProject(context)).isFalse();
   }
 
   @Test
   public void should_not_execute_if_no_groovy_files() {
-    when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
-    .thenReturn(Arrays.asList(new ActiveRule()));
-    assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    assertThat(sensor.shouldExecuteOnProject(context)).isFalse();
+  }
+
+  @Test
+  public void test_description() {
+    DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
+    sensor.describe(defaultSensorDescriptor);
+    assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
   @Test
   public void should_parse() {
-    Rule rule = Rule.create();
-    rule.setRepositoryKey("repoKey");
-    rule.setKey("ruleKey");
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(rule);
+    SensorContextTester context = SensorContextTester.create(new File(""));
 
-    FileSystem fileSystem = mock(FileSystem.class);
-    when(fileSystem.predicates()).thenReturn(mock(FilePredicates.class));
-    when(fileSystem.inputFile(any(FilePredicate.class))).thenReturn(mock(InputFile.class));
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "BooleanInstantiation");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "DuplicateImport");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyCatchBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyElseBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyFinallyBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyForStatement");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyIfStatement");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyTryBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "EmptyWhileStatement");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "ImportFromSamePackage");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "ReturnFromFinallyBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "StringInstantiation");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "ThrowExceptionFromFinallyBlock");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "UnnecessaryGroovyImport");
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "UnusedImport");
+    context.setActiveRules(activeRulesBuilder.build());
 
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
-    sensor.analyse(project, context);
+    DefaultFileSystem fileSystem = mockFileSystem();
+    context.setFileSystem(fileSystem);
 
-    verify(issuable, atLeastOnce()).addIssue(any(Issue.class));
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
+    sensor.execute(context);
+
+    assertThat(context.allIssues()).hasSize(17);
+  }
+
+  private static ActiveRulesBuilder activateFakeRule(ActiveRulesBuilder activeRulesBuilder, String ruleKey) {
+    return activateRule(activeRulesBuilder, ruleKey, ruleKey);
+  }
+
+  private static ActiveRulesBuilder activateRule(ActiveRulesBuilder activeRulesBuilder, String ruleKey, String internalKey) {
+    return activeRulesBuilder.create(RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, ruleKey)).setInternalKey(internalKey).activate();
   }
 
   @Test
   public void should_parse_but_not_add_issue_if_rule_not_found() {
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(null);
+    SensorContextTester context = SensorContextTester.create(new File(""));
+
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "UnknownRule");
+    context.setActiveRules(activeRulesBuilder.build());
+
+    DefaultFileSystem fileSystem = mockFileSystem();
+    context.setFileSystem(fileSystem);
 
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
-    groovy = new Groovy(settings);
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
+    sensor.execute(context);
 
-    sensor.analyse(project, context);
-
-    verify(issuable, never()).addIssue(any(Issue.class));
+    assertThat(context.allIssues()).isEmpty();
   }
 
   @Test
   public void should_parse_but_not_add_issue_if_inputFile_not_found() {
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(Rule.create());
+    SensorContextTester context = SensorContextTester.create(new File(""));
+
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateFakeRule(activeRulesBuilder, "BooleanInstantiation");
+    context.setActiveRules(activeRulesBuilder.build());
 
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
 
-    groovy = new Groovy(settings);
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
+    DefaultFileSystem fileSystem = new DefaultFileSystem(new File(""));
+    fileSystem.add(new DefaultInputFile("", "unknownFile.groovy").setLanguage(Groovy.KEY).setType(Type.MAIN));
+    context.setFileSystem(fileSystem);
 
-    sensor.analyse(project, context);
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
+    sensor.execute(context);
 
-    verify(issuable, never()).addIssue(any(Issue.class));
-  }
-
-  @Test
-  public void should_parse_but_not_add_issue_if_issuable_not_found() {
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(Rule.create());
-
-    FileSystem fileSystem = mock(FileSystem.class);
-    when(fileSystem.predicates()).thenReturn(mock(FilePredicates.class));
-    when(fileSystem.inputFile(any(FilePredicate.class))).thenReturn(mock(InputFile.class));
-
-    File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
-    when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn(report.getAbsolutePath());
-    when(perspectives.as(any(Class.class), any(InputFile.class))).thenReturn(null);
-
-    groovy = new Groovy(settings);
-
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
-    sensor.analyse(project, context);
-
-    verify(issuable, never()).addIssue(any(Issue.class));
+    assertThat(context.allIssues()).isEmpty();
   }
 
   @Test
   public void should_run_code_narc() throws IOException {
     File sonarhome = projectdir.newFolder("sonarhome");
+    SensorContextTester context = SensorContextTester.create(sonarhome);
+
     File sample = createSampleFile(sonarhome);
     DefaultInputFile inputFile = new DefaultInputFile("", "sample.groovy")
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)
       .initMetadata(new String(Files.readAllBytes(sample.toPath()), "UTF-8"));
 
-    Rule rule = Rule.create();
-    rule.setRepositoryKey("repoKey");
-    rule.setKey("ruleKey");
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(rule);
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
+    context.setActiveRules(activeRulesBuilder.build());
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(sonarhome);
     fileSystem.setWorkDir(sonarhome);
     fileSystem.add(inputFile);
+    context.setFileSystem(fileSystem);
 
     ActiveRule activeRule = mock(ActiveRule.class);
     when(activeRule.getRuleKey()).thenReturn("org.codenarc.rule.basic.EmptyClassRule");
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY)).thenReturn(Arrays.asList(activeRule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
 
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
-    sensor.analyse(project, context);
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
+    sensor.execute(context);
 
-    verify(issuable, times(1)).addIssue(any(Issue.class));
+    assertThat(context.allIssues()).hasSize(1);
   }
 
   @Test
   public void should_do_nothing_when_can_not_find_report_path() {
+    SensorContextTester context = SensorContextTester.create(new File(""));
 
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("../missing_file.xml");
 
-    groovy = new Groovy(settings);
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
+    DefaultInputFile inputFile = new DefaultInputFile("", "sample.groovy").setLanguage(Groovy.KEY).setType(Type.MAIN);
 
-    sensor.analyse(project, context);
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
+    context.setActiveRules(activeRulesBuilder.build());
 
-    verify(issuable, never()).addIssue(any(Issue.class));
+    context.fileSystem().add(inputFile);
+
+    sensor = new CodeNarcSensor(groovy, context.fileSystem(), profile);
+    sensor.execute(context);
+
+    assertThat(context.allIssues()).isEmpty();
   }
 
   @Test
   public void should_run_code_narc_with_multiple_files() throws IOException {
     File sonarhome = projectdir.newFolder("sonarhome");
+    SensorContextTester context = SensorContextTester.create(sonarhome);
 
     File sample1 = createSampleFile(sonarhome);
     File foo = new File(sonarhome, "foo/bar/qix");
     foo.mkdirs();
     File sample2 = createSampleFile(foo);
 
-    Rule rule = Rule.create();
-    rule.setRepositoryKey("repoKey");
-    rule.setKey("ruleKey");
-    when(ruleFinder.find(any(RuleQuery.class))).thenReturn(rule);
+    ActiveRulesBuilder activeRulesBuilder = new ActiveRulesBuilder();
+    activeRulesBuilder = activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
+    context.setActiveRules(activeRulesBuilder.build());
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem(sonarhome);
+    DefaultFileSystem fileSystem = context.fileSystem();
     fileSystem.setWorkDir(sonarhome);
     fileSystem.add(new DefaultInputFile("", "sample.groovy")
       .setLanguage(Groovy.KEY)
@@ -273,10 +291,15 @@ public class CodeNarcSensorTest {
     when(profile.getActiveRulesByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY)).thenReturn(Arrays.asList(activeRule));
     when(settings.getString(GroovyPlugin.CODENARC_REPORT_PATH)).thenReturn("");
 
-    sensor = new CodeNarcSensor(groovy, perspectives, fileSystem, profile, ruleFinder);
-    sensor.analyse(project, context);
+    sensor = new CodeNarcSensor(groovy, fileSystem, profile);
+    sensor.execute(context);
 
-    verify(issuable, times(2)).addIssue(any(Issue.class));
+    assertThat(context.allIssues()).hasSize(2);
+  }
+
+  @Test
+  public void test_toString() {
+    assertThat(sensor.toString()).isEqualTo("CodeNarc");
   }
 
   private static File createSampleFile(File sonarhome) throws FileNotFoundException {
@@ -287,9 +310,54 @@ public class CodeNarcSensorTest {
     return sample;
   }
 
-  @Test
-  public void test_toString() {
-    assertThat(sensor.toString()).isEqualTo("CodeNarc");
+  private DefaultFileSystem mockFileSystem() {
+    FilePredicates fp = mock(FilePredicates.class);
+
+    class CustomFilePredicate implements FilePredicate {
+
+      final String fileName;
+
+      CustomFilePredicate(String fileName) {
+        this.fileName = fileName;
+      }
+
+      @Override
+      public boolean apply(InputFile inputFile) {
+        return true;
+      }
+    }
+
+    when(fp.hasAbsolutePath(Matchers.anyString())).thenAnswer(new Answer<FilePredicate>() {
+      @Override
+      public FilePredicate answer(InvocationOnMock invocation) throws Throwable {
+        return new CustomFilePredicate(invocation.getArgumentAt(0, String.class));
+      }
+    });
+
+    DefaultFileSystem mockfileSystem = mock(DefaultFileSystem.class);
+    when(mockfileSystem.predicates()).thenReturn(fp);
+    when(mockfileSystem.hasFiles(Matchers.any(FilePredicate.class))).thenReturn(true);
+
+    Map<String, DefaultInputFile> groovyFilesByName = new HashMap<>();
+    File sampleFile = FileUtils.toFile(getClass().getResource("parsing/Sample.groovy"));
+
+    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenAnswer(new Answer<InputFile>() {
+      @Override
+      public InputFile answer(InvocationOnMock invocation) throws Throwable {
+        String fileName = invocation.getArgumentAt(0, CustomFilePredicate.class).fileName;
+        DefaultInputFile groovyFile;
+        if (!groovyFilesByName.containsKey(fileName)) {
+          // store groovy file as default input files
+          groovyFile = new DefaultInputFile("", fileName)
+            .setLanguage(Groovy.KEY)
+            .setType(Type.MAIN)
+            .initMetadata(new String(Files.readAllBytes(sampleFile.toPath()), "UTF-8"));
+          groovyFilesByName.put(fileName, groovyFile);
+        }
+        return groovyFilesByName.get(fileName);
+      }
+    });
+    return mockfileSystem;
   }
 
 }

@@ -21,13 +21,14 @@ package org.sonar.plugins.groovy.codenarc;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile.Type;
-import org.sonar.api.utils.StaxParser;
+import org.sonar.plugins.groovy.utils.StaxParser;
 
 import javax.xml.stream.XMLStreamException;
 

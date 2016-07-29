@@ -30,6 +30,10 @@
       <Violation ruleName='UnnecessaryGroovyImport' priority='3' lineNumber='3'>
         <SourceLine><![CDATA[import java.util.Map]]></SourceLine>
       </Violation>
+      <!-- invalid line -->
+      <Violation ruleName='UnnecessaryGroovyImport' priority='3' lineNumber='0'>
+        <Message>Unnecessary Import</Message>
+      </Violation>
     </File>
   </Package>
   <Package path='org/codenarc/sample/other' totalFiles='1' filesWithViolations='0' priority1='0' priority2='0'

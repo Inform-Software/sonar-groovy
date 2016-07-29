@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+
 import org.codenarc.analyzer.AbstractSourceAnalyzer;
 import org.codenarc.results.DirectoryResults;
 import org.codenarc.results.FileResults;
@@ -66,7 +67,7 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
   }
 
   @Override
-  public List getSourceDirectories() {
+  public List<?> getSourceDirectories() {
     return ImmutableList.of();
   }
 
