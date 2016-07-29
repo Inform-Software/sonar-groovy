@@ -32,7 +32,7 @@ public class GroovyPluginTest {
     GroovyPlugin plugin = new GroovyPlugin();
     Plugin.Context context = new Plugin.Context(SonarQubeVersion.V5_6);
     plugin.define(context);
-    assertThat(context.getExtensions()).hasSize(17);
+    assertThat(context.getExtensions()).hasSize(15);
   }
 
 }

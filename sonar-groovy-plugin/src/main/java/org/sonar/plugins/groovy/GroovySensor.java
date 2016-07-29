@@ -45,6 +45,7 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
+import org.sonar.plugins.groovy.foundation.GroovyHighlighterAndTokenizer;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 
 import java.io.File;
@@ -106,18 +107,17 @@ public class GroovySensor implements Sensor {
   private void processFiles(SensorContext context) {
     GMetricsRunner runner = new GMetricsRunner();
     runner.setMetricSet(new DefaultMetricSet());
-    List<File> sourceFiles = groovyFileSystem.sourceFiles();
+    List<InputFile> sourceInputFiles = groovyFileSystem.sourceInputFiles();
     String baseDirAbsolutePath = fileSystem.baseDir().getAbsolutePath();
 
-    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(baseDirAbsolutePath, sourceFiles);
+
+    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(baseDirAbsolutePath, sourceInputFiles);
     runner.setSourceAnalyzer(analyzer);
     runner.execute();
 
-    for (Entry<File, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
-      File file = entry.getKey();
-      Collection<ClassResultsNode> results = entry.getValue();
-      InputFile sonarFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-      processFile(context, sonarFile, results);
+    for (Entry<InputFile, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
+      InputFile inputFile = entry.getKey();
+      processFile(context, inputFile, entry.getValue());
     }
   }
 
@@ -126,6 +126,8 @@ public class GroovySensor implements Sensor {
     int methods = 0;
     int complexity = 0;
     int complexityInFunctions = 0;
+
+    new GroovyHighlighterAndTokenizer(sonarFile).processFile(context);
 
     RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 

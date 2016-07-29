@@ -30,8 +30,6 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcRulesDefinition;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.plugins.groovy.foundation.GroovyColorizerFormat;
-import org.sonar.plugins.groovy.foundation.GroovyCpdMapping;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
@@ -102,8 +100,6 @@ public class GroovyPlugin implements Plugin {
       SonarWayProfile.class,
       // Foundation
       Groovy.class,
-      GroovyColorizerFormat.class,
-      GroovyCpdMapping.class,
       // Main sensor
       GroovySensor.class,
       // Surefire

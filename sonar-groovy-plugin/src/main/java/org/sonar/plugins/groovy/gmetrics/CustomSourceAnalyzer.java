@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy.gmetrics;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.gmetrics.analyzer.SourceAnalyzer;
@@ -32,8 +33,8 @@ import org.gmetrics.resultsnode.PackageResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.gmetrics.source.SourceCode;
 import org.gmetrics.source.SourceFile;
+import org.sonar.api.batch.fs.InputFile;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,16 +43,16 @@ import java.util.List;
  */
 public class CustomSourceAnalyzer implements SourceAnalyzer {
 
-  private final Multimap<File, ClassResultsNode> resultsByFile = ArrayListMultimap.create();
+  private final Multimap<InputFile, ClassResultsNode> resultsByFile = ArrayListMultimap.create();
   private final String baseDirAbsolutePath;
-  private final List<File> sourceFiles;
+  private final List<InputFile> sourceFiles;
 
-  public CustomSourceAnalyzer(String baseDirAbsolutePath, List<File> sourceFiles) {
+  public CustomSourceAnalyzer(String baseDirAbsolutePath, List<InputFile> sourceFiles) {
     this.baseDirAbsolutePath = baseDirAbsolutePath;
     this.sourceFiles = sourceFiles;
   }
 
-  public Multimap<File, ClassResultsNode> getResultsByFile() {
+  public Multimap<InputFile, ClassResultsNode> getResultsByFile() {
     return resultsByFile;
   }
 
@@ -66,8 +67,8 @@ public class CustomSourceAnalyzer implements SourceAnalyzer {
   }
 
   private PackageResultsNode processFiles(MetricSet metricSet) {
-    for (File file : sourceFiles) {
-      SourceCode sourceCode = new SourceFile(file);
+    for (InputFile file : sourceFiles) {
+      SourceCode sourceCode = new SourceFile(file.file());
       ModuleNode ast = sourceCode.getAst();
       if (ast != null) {
         for (ClassNode classNode : ast.getClasses()) {
