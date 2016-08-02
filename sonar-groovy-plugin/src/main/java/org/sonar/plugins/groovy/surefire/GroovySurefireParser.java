@@ -47,7 +47,6 @@ import org.sonar.squidbridge.api.AnalysisException;
 import javax.xml.stream.XMLStreamException;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class GroovySurefireParser {
     }
   }
 
-  private File[] getReports(File dir) {
+  private static File[] getReports(File dir) {
     if (dir == null) {
       return new File[0];
     } else if (!dir.isDirectory()) {
@@ -89,13 +88,8 @@ public class GroovySurefireParser {
     return unitTestResultFiles;
   }
 
-  private File[] findXMLFilesStartingWith(File dir, final String fileNameStart) {
-    return dir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.startsWith(fileNameStart) && name.endsWith(".xml");
-      }
-    });
+  private static File[] findXMLFilesStartingWith(File dir, final String fileNameStart) {
+    return dir.listFiles((folder, name) -> name.startsWith(fileNameStart) && name.endsWith(".xml"));
   }
 
   private void parseFiles(SensorContext context, File[] reports) {
