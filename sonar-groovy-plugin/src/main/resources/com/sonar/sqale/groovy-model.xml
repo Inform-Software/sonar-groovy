@@ -425,6 +425,42 @@
       <name>Readability</name>
       <chc>
         <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.convention.TrailingCommaRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>5.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
+        <rule-key>org.codenarc.rule.convention.NoTabCharacterRule</rule-key>
+        <prop>
+          <key>remediationFunction</key>
+          <txt>linear</txt>
+        </prop>
+        <prop>
+          <key>remediationFactor</key>
+          <val>2.0</val>
+          <txt>mn</txt>
+        </prop>
+        <prop>
+          <key>offset</key>
+          <val>0.0</val>
+          <txt>mn</txt>
+        </prop>
+      </chc>
+      <chc>
+        <rule-repo>grvy</rule-repo>
         <rule-key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</rule-key>
         <prop>
           <key>remediationFunction</key>

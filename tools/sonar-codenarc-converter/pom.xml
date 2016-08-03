@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>23</version>
+    <version>36</version>
   </parent>
 
   <groupId>org.sonarsource.sonar-groovy-plugin.sonar-codenarc-converter</groupId>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
-      <version>0.24</version>
+      <version>0.25.2</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>

@@ -23,6 +23,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+
 import org.apache.commons.io.IOUtils;
 import org.codenarc.rule.AbstractRule;
 import org.sonar.plugins.groovy.codenarc.apt.AptParser;
@@ -53,7 +54,7 @@ public class Converter {
 
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-  private Set<String> duplications = new HashSet<String>();
+  private Set<String> duplications = new HashSet<>();
 
   private static int count = 0;
   private static Map<String, Integer> rulesByVersion = Maps.newHashMap();
@@ -61,7 +62,7 @@ public class Converter {
 
   public static void main(String[] args) throws Exception {
     String xml = Converter.convert();
-    
+
     PrintStream out = new PrintStream(setUpRulesFile(), "UTF-8");
     out.print(xml);
     out.flush();
@@ -92,7 +93,7 @@ public class Converter {
     Map<String, AptResult> parametersByRule = retrieveRulesParameters();
 
     Multimap<RuleSet, Rule> rules = LinkedListMultimap.create();
-    
+
     insertRules(rules, /* legacy */null, props, parametersByRule,
       org.codenarc.rule.unused.UnusedArrayRule.class,
       org.codenarc.rule.unused.UnusedObjectRule.class,
@@ -478,6 +479,10 @@ public class Converter {
       org.codenarc.rule.naming.ClassNameSameAsSuperclassRule.class,
       org.codenarc.rule.naming.InterfaceNameSameAsSuperInterfaceRule.class,
       org.codenarc.rule.design.AssignmentToStaticFieldFromInstanceMethodRule.class);
+
+    insertRules(rules, "0.25", props, parametersByRule,
+      org.codenarc.rule.convention.TrailingCommaRule.class,
+      org.codenarc.rule.convention.NoTabCharacterRule.class);
 
     return rules;
   }

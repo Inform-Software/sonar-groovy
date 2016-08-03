@@ -1626,5 +1626,15 @@
       <key>org.codenarc.rule.braces.WhileStatementBracesRule</key>
       <priority>INFO</priority>
     </rule>
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.convention.TrailingCommaRule</key>
+      <priority>INFO</priority>
+    </rule>
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.convention.NoTabCharacterRule</key>
+      <priority>INFO</priority>
+    </rule>
   </rules>
 </profile>

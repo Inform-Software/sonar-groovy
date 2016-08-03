@@ -22,11 +22,13 @@ package org.sonar.plugins.groovy.codenarc;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import org.apache.commons.lang.StringUtils;
 import org.codenarc.rule.AbstractRule;
 import org.sonar.plugins.groovy.codenarc.apt.AptResult;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +47,36 @@ public class Rule {
   private String version;
   private Set<String> tags;
   private Set<RuleParameter> parameters;
+
+  // SONARGROOV-40
+  private static final String[] FIXED_RULES_WITH_NULL_PARAMETERS = {
+    "org.codenarc.rule.design.PrivateFieldCouldBeFinalRule",
+    "org.codenarc.rule.generic.IllegalRegexRule",
+    "org.codenarc.rule.generic.RequiredRegexRule",
+    "org.codenarc.rule.generic.RequiredStringRule",
+    "org.codenarc.rule.generic.StatelessClassRule",
+    "org.codenarc.rule.generic.IllegalPackageReferenceRule",
+    "org.codenarc.rule.generic.IllegalClassReferenceRule",
+    "org.codenarc.rule.generic.IllegalClassMemberRule",
+    "org.codenarc.rule.generic.IllegalStringRule",
+    "org.codenarc.rule.generic.IllegalSubclassRule",
+    "org.codenarc.rule.grails.GrailsPublicControllerMethodRule",
+    "org.codenarc.rule.junit.SpockIgnoreRestUsedRule",
+    "org.codenarc.rule.junit.JUnitPublicPropertyRule",
+    "org.codenarc.rule.naming.AbstractClassNameRule",
+    "org.codenarc.rule.naming.FieldNameRule",
+    "org.codenarc.rule.naming.InterfaceNameRule",
+    "org.codenarc.rule.naming.MethodNameRule",
+    "org.codenarc.rule.naming.ParameterNameRule",
+    "org.codenarc.rule.naming.PropertyNameRule",
+    "org.codenarc.rule.naming.VariableNameRule",
+    "org.codenarc.rule.naming.PackageNameMatchesFilePathRule",
+    "org.codenarc.rule.size.CyclomaticComplexityRule",
+    "org.codenarc.rule.size.MethodSizeRule",
+    "org.codenarc.rule.size.CrapMetricRule",
+    "org.codenarc.rule.size.AbcMetricRule",
+    "org.codenarc.rule.unused.UnusedVariableRule"
+  };
 
   public Rule(Class<? extends AbstractRule> ruleClass, String since, Properties props, Map<String, AptResult> parametersByRule) throws Exception {
     ruleInstance = ruleClass.newInstance();
@@ -356,10 +388,14 @@ public class Rule {
   }
 
   private String markRuleFixedIfNullParameters() {
-    if (hasNullParameters()) {
+    if (hasNullParameters() && isPartOfFixedRules()) {
       return key + ".fixed";
     }
     return key;
+  }
+
+  private boolean isPartOfFixedRules() {
+    return Arrays.stream(FIXED_RULES_WITH_NULL_PARAMETERS).anyMatch(key::equals);
   }
 
   private boolean hasNullParameters() {

@@ -20,6 +20,7 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import com.google.common.collect.Lists;
+
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
@@ -42,7 +43,7 @@ public class CodeNarcRulesDefinitionTest {
     assertThat(repository.language()).isEqualTo(Groovy.KEY);
 
     List<Rule> rules = repository.rules();
-    assertThat(rules).hasSize(345);
+    assertThat(rules).hasSize(347);
 
     List<String> missingDebt = Lists.newLinkedList();
     for (Rule rule : rules) {

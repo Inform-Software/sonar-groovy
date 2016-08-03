@@ -70,7 +70,7 @@ public class CodeNarcProfileExporter {
 
   private void appendRule(ActiveRule activeRule) throws IOException {
     String ruleKey = activeRule.getRuleKey();
-    // SOANRGROOV-40 : key of rule having null parameters have been suffixed with ".fixed"
+    // SONARGROOV-40 : key of rule having null parameters have been suffixed with ".fixed"
     if (ruleKey.endsWith(".fixed")) {
       ruleKey = ruleKey.substring(0, ruleKey.length() - ".fixed".length());
     }

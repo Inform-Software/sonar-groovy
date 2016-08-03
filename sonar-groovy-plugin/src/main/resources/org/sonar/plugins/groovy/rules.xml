@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.24 -->
+<!-- Generated using CodeNarc 0.25.2 -->
 <rules>
   <!-- basic rules -->
 
@@ -902,7 +902,7 @@
     <name><![CDATA[Empty Class]]></name>
     <internalKey><![CDATA[EmptyClass]]></internalKey>
     <description><![CDATA[<p>Reports classes without methods, fields or properties. Why would you need a class like this? </p>
-<p>This rule ignores interfaces, enums, anonymous inner classes, subclasses (extends), and classes with annotations. </p>
+<p>This rule ignores interfaces, abstract classes, enums, anonymous inner classes, subclasses (extends), and classes with annotations. </p>
  ]]></description>
     <tag>unused</tag>
   </rule>
@@ -6056,7 +6056,22 @@ for (int i = 0; i < 100; ++i) {
  ]]></description>
     <tag>convention</tag>
     <param>
+      <key>ignoreImportStatements</key>
+      <description><![CDATA[If true, then do not apply this rule to import statements. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreLineRegex</key>
+      <description><![CDATA[If specified, then ignore lines matching this regular expression. ]]></description>
+    </param>
+    <param>
+      <key>ignorePackageStatements</key>
+      <description><![CDATA[If true, then do not apply this rule to package statements. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
       <key>length</key>
+      <description><![CDATA[The maximum line length allowed. ]]></description>
       <defaultValue>120</defaultValue>
     </param>
   </rule>
@@ -6083,11 +6098,27 @@ for (int i = 0; i < 100; ++i) {
     <name><![CDATA[Braces For If Else]]></name>
     <internalKey><![CDATA[BracesForIfElse]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for if statements. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
- ]]></description>
+]]></description>
     <tag>convention</tag>
     <param>
-      <key>sameLine</key>
+      <key>elseOnSameLineAsClosingBrace</key>
+      <description><![CDATA[If true, then the else statement should be on the same line as closing brace (\}) ]]></description>
       <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>elseOnSameLineAsOpeningBrace</key>
+      <description><![CDATA[If true, then the else statement should be on the same line as opening brace (\{) ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>sameLine</key>
+      <description><![CDATA[If true, then the opening brace (\{) for if statement should be on the same line. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>validateElse</key>
+      <description><![CDATA[To enable else checking, set the property to true ]]></description>
+      <defaultValue>false</defaultValue>
     </param>
   </rule>
 
@@ -6692,12 +6723,60 @@ for (int i = 0; i < 100; ++i) {
     <internalKey><![CDATA[NoDef]]></internalKey>
     <description><![CDATA[<p> Do not allow using the <code>def</code> keyword in code. Use a specific type instead. </p>
 <p><code>NOTE:</code> This rule applies to the text contents of a <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
- ]]></description>
+]]></description>
     <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
       <description><![CDATA[Regular expression describing names of attributes, parameters or methods that could be precede by the def keyword. ]]></description>
     </param>
+  </rule>
+
+  <!-- since 0.25 -->
+  <rule>
+    <key>org.codenarc.rule.convention.TrailingCommaRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Trailing Comma]]></name>
+    <internalKey><![CDATA[TrailingComma]]></internalKey>
+    <description><![CDATA[<p>Check whether list and map literals contain optional trailing comma. Rationale: Putting this comma in make is easier to change the order of the elements or add new elements on the end. </p>
+<p>This is valid code: </p>
+<pre>
+  int[] array1 = [] // one line declaration
+  int[] array2 = [ // empty list
+                 ]
+  int[] array3 = [1,2,3] // one line declaration
+  int[] array4 = [1,
+                  2,
+                  3, // contains trailing comma
+                 ]
+</pre>
+<pre>
+  int[] array2 = [1,
+                  2 // there is no trailing comma
+                 ]
+</pre>
+]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>checkList</key>
+      <description><![CDATA[To disable checking List literals, set this property to false ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>checkMap</key>
+      <description><![CDATA[To disable checking Map literals, set this property to false ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.25 -->
+  <rule>
+    <key>org.codenarc.rule.convention.NoTabCharacterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[No Tab Character]]></name>
+    <internalKey><![CDATA[NoTabCharacter]]></internalKey>
+    <description><![CDATA[<p>Checks that all source files do not contain the tab character. </p>
+]]></description>
+    <tag>bug</tag>
   </rule>
 
   <!-- groovyism rules -->

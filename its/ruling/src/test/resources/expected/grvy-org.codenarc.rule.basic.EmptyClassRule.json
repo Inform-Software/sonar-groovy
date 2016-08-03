@@ -34,9 +34,6 @@
 'project:src/test/groovy/bugs/Groovy3424Bug.groovy':[
 62,
 ],
-'project:src/test/groovy/bugs/Groovy3720Bug.groovy':[
-39,
-],
 'project:src/test/groovy/bugs/Groovy3871Bug.groovy':[
 40,
 ],
@@ -80,17 +77,11 @@
 346,
 350,
 ],
-'project:src/test/org/codehaus/groovy/classgen/asm/sc/bugs/Groovy6475Bug.groovy':[
-40,
-],
 'project:src/test/org/codehaus/groovy/control/customizers/ImportCustomizerTest.groovy':[
 113,
 ],
 'project:subprojects/groovy-groovydoc/src/test/groovy/org/codehaus/groovy/tools/groovydoc/testfiles/DocumentedClass.groovy':[
 21,
-],
-'project:subprojects/groovy-groovydoc/src/test/groovy/org/codehaus/groovy/tools/groovydoc/testfiles/GroovyClassWithMultipleInterfaces.groovy':[
-3,
 ],
 'project:subprojects/groovy-groovydoc/src/test/groovy/org/codehaus/groovy/tools/groovydoc/testfiles/InnerEnum.groovy':[
 19,

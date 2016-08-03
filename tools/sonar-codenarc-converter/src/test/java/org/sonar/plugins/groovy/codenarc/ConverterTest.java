@@ -20,9 +20,7 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import com.google.common.collect.Lists;
-import difflib.Delta;
-import difflib.DiffUtils;
-import difflib.Patch;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -45,9 +43,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
 
+import difflib.Delta;
+import difflib.DiffUtils;
+import difflib.Patch;
+
 public class ConverterTest {
   
-  private static final String PLUGIN_RULES_FILE_LOCATION = "../../src/main/resources/org/sonar/plugins/groovy/rules.xml";
+  private static final String PLUGIN_RULES_FILE_LOCATION = "../../sonar-groovy-plugin/src/main/resources/org/sonar/plugins/groovy/rules.xml";
 
   @org.junit.Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
@@ -121,7 +123,13 @@ public class ConverterTest {
     }
 
     Assert.assertEquals(0, nbrMissing);
-    Assert.assertEquals(2, nbrDiff);
+    /*
+     * Known diffs:
+     * - MisorderedStaticImportsRule : description of 'comesBefore' parameter missing in apt files
+     * - FileCreateTempFileRule: link to website
+     * - BracesForIfElseRule: default value of parameters should be true, not 'the same as sameLine'
+     */
+    Assert.assertEquals(3, nbrDiff);
   }
 
   private static String getRuleKey(Node Rule) {
