@@ -85,11 +85,12 @@ public class GroovyTest {
 
     assertThat(getProjectMeasure("violations").getIntValue()).isEqualTo(13);
     assertThat(getProjectMeasure("lines").getIntValue()).isEqualTo(9458);
-    assertThat(getProjectMeasure("comment_lines").getIntValue()).isEqualTo(2325);
+    // 779 empty comment lines
+    assertThat(getProjectMeasure("comment_lines").getIntValue()).isEqualTo(2325 - 779);
     assertThat(getProjectMeasure("complexity").getIntValue()).isEqualTo(873);
     assertThat(getProjectMeasure("function_complexity").getValue()).isEqualTo(2.2);
     assertThat(getProjectMeasure("class_complexity").getValue()).isEqualTo(4.5);
-    assertThat(getProjectMeasure("comment_lines_density").getValue()).isEqualTo(35.6);
+    assertThat(getProjectMeasure("comment_lines_density").getValue()).isEqualTo(26.9);
     assertThat(getProjectMeasure("function_complexity_distribution").getData()).isEqualTo("1=212;2=134;4=43;6=11;8=1;10=4;12=1");
 
     assertThat(getProjectMeasure("file_complexity_distribution").getData()).isEqualTo("0=73;5=32;10=21;20=7;30=2;60=0;90=0");
@@ -135,8 +136,9 @@ public class GroovyTest {
     assertThat(getPackageMeasure("files").getIntValue()).isEqualTo(6);
     assertThat(getPackageMeasure("classes").getIntValue()).isEqualTo(6);
     assertThat(getPackageMeasure("functions").getIntValue()).isEqualTo(57);
-    assertThat(getPackageMeasure("comment_lines_density").getValue()).isEqualTo(13.9);
-    assertThat(getPackageMeasure("comment_lines").getIntValue()).isEqualTo(87);
+    assertThat(getPackageMeasure("comment_lines_density").getValue()).isEqualTo(9.5);
+    // 30 empty comment lines
+    assertThat(getPackageMeasure("comment_lines").getIntValue()).isEqualTo(87 - 30);
 
     assertThat(getPackageMeasure("duplicated_lines").getIntValue()).isEqualTo(0);
     assertThat(getPackageMeasure("duplicated_blocks").getIntValue()).isEqualTo(0);
@@ -180,8 +182,9 @@ public class GroovyTest {
     assertThat(getFileMeasure("classes").getIntValue()).isEqualTo(1);
     assertThat(getFileMeasure("packages")).isNull();
     assertThat(getFileMeasure("functions").getIntValue()).isEqualTo(18);
-    assertThat(getFileMeasure("comment_lines_density").getValue()).isEqualTo(13.1);
-    assertThat(getFileMeasure("comment_lines").getIntValue()).isEqualTo(36);
+    assertThat(getFileMeasure("comment_lines_density").getValue()).isEqualTo(9.5);
+    // 11 empty comment lines
+    assertThat(getFileMeasure("comment_lines").getIntValue()).isEqualTo(36 - 11);
 
     assertThat(getFileMeasure("duplicated_lines")).isNull();
     assertThat(getFileMeasure("duplicated_blocks")).isNull();

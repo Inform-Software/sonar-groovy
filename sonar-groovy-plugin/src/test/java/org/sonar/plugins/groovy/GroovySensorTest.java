@@ -66,7 +66,7 @@ public class GroovySensorTest {
 
   @Test
   public void compute_metrics_ignoring_header_comment() throws IOException {
-    testMetrics(true, 1);
+    testMetrics(true, 3);
   }
 
   private void testMetrics(boolean headerComment, int expectedCommentMetric) throws IOException {
@@ -94,7 +94,7 @@ public class GroovySensorTest {
     assertThat(context.measure(key, CoreMetrics.CLASSES).value()).isEqualTo(2);
     assertThat(context.measure(key, CoreMetrics.FUNCTIONS).value()).isEqualTo(2);
 
-    assertThat(context.measure(key, CoreMetrics.LINES).value()).isEqualTo(27);
+    assertThat(context.measure(key, CoreMetrics.LINES).value()).isEqualTo(33);
     assertThat(context.measure(key, CoreMetrics.NCLOC).value()).isEqualTo(17);
     assertThat(context.measure(key, CoreMetrics.COMMENT_LINES).value()).isEqualTo(expectedCommentMetric);
 
@@ -105,8 +105,8 @@ public class GroovySensorTest {
     assertThat(context.measure(key, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
     assertThat(context.measure(key, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
 
-    // 5 times for comment because we register comment even when ignoring header comment
-    Mockito.verify(fileLinesContext, Mockito.times(5)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
+    // 11 times for comment because we register comment even when ignoring header comment
+    Mockito.verify(fileLinesContext, Mockito.times(11)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);

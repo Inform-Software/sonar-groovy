@@ -21,6 +21,8 @@ package org.sonar.plugins.groovy;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import org.apache.commons.io.FileUtils;
+import org.codehaus.groovy.antlr.GroovySourceToken;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
 import org.gmetrics.GMetricsRunner;
@@ -49,12 +51,18 @@ import org.sonar.plugins.groovy.foundation.GroovyHighlighterAndTokenizer;
 import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
@@ -68,6 +76,8 @@ public class GroovySensor implements Sensor {
 
   private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
   private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
+
+  private static final Set<String> EMPTY_COMMENT_LINES = Arrays.stream(new String[] {"/**", "/*", "*", "*/", "//"}).collect(Collectors.toSet());
 
   private final Settings settings;
   private final FileLinesContextFactory fileLinesContextFactory;
@@ -178,43 +188,49 @@ public class GroovySensor implements Sensor {
 
   private void computeBaseMetrics(SensorContext sensorContext) {
     for (InputFile groovyFile : groovyFileSystem.sourceInputFiles()) {
-      File file = groovyFile.file();
-      if (file.exists()) {
-        loc = 0;
-        comments = 0;
-        currentLine = 0;
-        fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
-        try {
-          GroovyLexer groovyLexer = new GroovyLexer(new FileReader(file));
-          groovyLexer.setWhitespaceIncluded(true);
-          TokenStream tokenStream = groovyLexer.plumb();
-          Token token = tokenStream.nextToken();
-          Token nextToken = tokenStream.nextToken();
-          while (nextToken.getType() != Token.EOF_TYPE) {
-            handleToken(token, nextToken.getLine());
-            token = nextToken;
-            nextToken = tokenStream.nextToken();
-          }
-          handleToken(token, nextToken.getLine());
-          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.LINES, nextToken.getLine());
-          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.NCLOC, loc);
-          saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.COMMENT_LINES, comments);
-        } catch (TokenStreamException tse) {
-          LOG.error("Unexpected token when lexing file : " + file.getName(), tse);
-        } catch (FileNotFoundException fnfe) {
-          LOG.error("Could not find : " + file.getName(), fnfe);
-        }
-        fileLinesContext.save();
-      }
+      computeBaseMetrics(sensorContext, groovyFile);
     }
   }
 
-  private void handleToken(Token token, int nextTokenLine) {
+  private void computeBaseMetrics(SensorContext sensorContext, InputFile groovyFile) {
+    File file = groovyFile.file();
+    if (file.exists()) {
+      loc = 0;
+      comments = 0;
+      currentLine = 0;
+      fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
+      Charset encoding = sensorContext.fileSystem().encoding();
+      try (InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), encoding)) {
+        List<String> lines = FileUtils.readLines(file, encoding);
+        GroovyLexer groovyLexer = new GroovyLexer(streamReader);
+        groovyLexer.setWhitespaceIncluded(true);
+        TokenStream tokenStream = groovyLexer.plumb();
+        Token token = tokenStream.nextToken();
+        Token nextToken = tokenStream.nextToken();
+        while (nextToken.getType() != Token.EOF_TYPE) {
+          handleToken(token, nextToken.getLine(), lines);
+          token = nextToken;
+          nextToken = tokenStream.nextToken();
+        }
+        handleToken(token, nextToken.getLine(), lines);
+        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.LINES, nextToken.getLine());
+        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.NCLOC, loc);
+        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.COMMENT_LINES, comments);
+      } catch (TokenStreamException tse) {
+        LOG.error("Unexpected token when lexing file: " + file.getName(), tse);
+      } catch (IOException fnfe) {
+        LOG.error("Unable to read file: " + file.getName(), fnfe);
+      }
+      fileLinesContext.save();
+    }
+  }
+
+  private void handleToken(Token token, int nextTokenLine, List<String> lines) {
     int tokenType = token.getType();
     int tokenLine = token.getLine();
     if (isComment(tokenType)) {
       if (isNotHeaderComment(tokenLine)) {
-        comments += nextTokenLine - tokenLine + 1;
+        comments += nextTokenLine - tokenLine + 1 - numberEmptyLines(token, lines);
       }
       for (int commentLineNb = tokenLine; commentLineNb <= nextTokenLine; commentLineNb++) {
         fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, commentLineNb, 1);
@@ -224,6 +240,25 @@ public class GroovySensor implements Sensor {
       fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 1);
       currentLine = tokenLine;
     }
+  }
+
+  private int numberEmptyLines(Token token, List<String> lines) {
+    List<String> relatedLines = getLinesFromToken(lines, (GroovySourceToken) token);
+    long emptyLines = relatedLines.stream().map(String::trim).filter(EMPTY_COMMENT_LINES::contains).count();
+    return (int) emptyLines;
+  }
+
+  private static List<String> getLinesFromToken(List<String> lines, GroovySourceToken gst) {
+    List<String> newLines = new ArrayList<>(lines.subList(gst.getLine() - 1, gst.getLineLast()));
+
+    int lastLineIndex = newLines.size() - 1;
+    String lastLine = newLines.get(lastLineIndex).substring(0, gst.getColumnLast() - 1);
+    newLines.set(lastLineIndex, lastLine);
+
+    String firstLine = newLines.get(0).substring(gst.getColumn() - 1);
+    newLines.set(0, firstLine);
+
+    return newLines;
   }
 
   private boolean isNotHeaderComment(int tokenLine) {

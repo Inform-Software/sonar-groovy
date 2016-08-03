@@ -18,7 +18,13 @@ class Greeting {
 class OneMoreClass { //comment line
 
   def void sayHello() {
+    /*
+     * Multi-line comment
+     *
+     * with empty lines.
+     */
     if (true) {
+      //
       print "Hello world!"
     } else {
     }
