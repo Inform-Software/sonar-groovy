@@ -25,14 +25,16 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.antlr.GroovySourceToken;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
-import org.gmetrics.GMetricsRunner;
-import org.gmetrics.metricset.DefaultMetricSet;
 import org.gmetrics.result.MetricResult;
+import org.gmetrics.result.MutableMapMetricResult;
 import org.gmetrics.result.NumberMetricResult;
 import org.gmetrics.result.SingleNumberMetricResult;
 import org.gmetrics.resultsnode.ClassResultsNode;
+import org.gmetrics.resultsnode.PackageResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputComponent;
+import org.sonar.api.batch.fs.InputDir;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.Sensor;
@@ -48,19 +50,21 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.foundation.GroovyHighlighterAndTokenizer;
-import org.sonar.plugins.groovy.gmetrics.CustomSourceAnalyzer;
+import org.sonar.plugins.groovy.gmetrics.GMetricsSourceAnalyzer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,10 +73,11 @@ import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
 
 public class GroovySensor implements Sensor {
+  private static final Logger LOG = Loggers.get(GroovySensor.class);
 
   private static final String CYCLOMATIC_COMPLEXITY_METRIC_NAME = "CyclomaticComplexity";
-
-  private static final Logger LOG = Loggers.get(GroovySensor.class);
+  private static final String EFFERENT_COUPLING_METRIC_NAME = "EfferentCoupling";
+  private static final String AFFERENT_COUPLING_METRIC_NAME = "AfferentCoupling";
 
   private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
   private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
@@ -81,7 +86,6 @@ public class GroovySensor implements Sensor {
 
   private final Settings settings;
   private final FileLinesContextFactory fileLinesContextFactory;
-  private final FileSystem fileSystem;
   private final GroovyFileSystem groovyFileSystem;
 
   private int loc = 0;
@@ -92,7 +96,6 @@ public class GroovySensor implements Sensor {
   public GroovySensor(Settings settings, FileLinesContextFactory fileLinesContextFactory, FileSystem fileSystem) {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
-    this.fileSystem = fileSystem;
     this.groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 
@@ -104,8 +107,10 @@ public class GroovySensor implements Sensor {
   @Override
   public void execute(SensorContext context) {
     if (shouldExecuteOnProject()) {
-      computeBaseMetrics(context);
-      processFiles(context);
+      List<InputFile> inputFiles = groovyFileSystem.sourceInputFiles();
+      computeBaseMetrics(context, inputFiles);
+      computeGroovyMetrics(context, inputFiles);
+      highlightFiles(context, inputFiles);
     }
   }
 
@@ -114,20 +119,17 @@ public class GroovySensor implements Sensor {
     return groovyFileSystem.hasGroovyFiles();
   }
 
-  private void processFiles(SensorContext context) {
-    GMetricsRunner runner = new GMetricsRunner();
-    runner.setMetricSet(new DefaultMetricSet());
-    List<InputFile> sourceInputFiles = groovyFileSystem.sourceInputFiles();
-    String baseDirAbsolutePath = fileSystem.baseDir().getAbsolutePath();
+  private static void computeGroovyMetrics(SensorContext context, List<InputFile> inputFiles) {
+    GMetricsSourceAnalyzer metricsAnalyzer = new GMetricsSourceAnalyzer(context.fileSystem(), inputFiles);
 
+    metricsAnalyzer.analyze();
 
-    CustomSourceAnalyzer analyzer = new CustomSourceAnalyzer(baseDirAbsolutePath, sourceInputFiles);
-    runner.setSourceAnalyzer(analyzer);
-    runner.execute();
+    for (Entry<InputFile, Collection<ClassResultsNode>> entry : metricsAnalyzer.resultsByFile().asMap().entrySet()) {
+      processFile(context, entry.getKey(), entry.getValue());
+    }
 
-    for (Entry<InputFile, Collection<ClassResultsNode>> entry : analyzer.getResultsByFile().asMap().entrySet()) {
-      InputFile inputFile = entry.getKey();
-      processFile(context, inputFile, entry.getValue());
+    for (Entry<InputDir, PackageResultsNode> entry : metricsAnalyzer.resultsByPackage().entrySet()) {
+      processPackage(context, entry.getKey(), entry.getValue().getMetricResults());
     }
   }
 
@@ -137,8 +139,6 @@ public class GroovySensor implements Sensor {
     int complexity = 0;
     int complexityInFunctions = 0;
 
-    new GroovyHighlighterAndTokenizer(sonarFile).processFile(context);
-
     RangeDistributionBuilder functionsComplexityDistribution = new RangeDistributionBuilder(FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 
     for (ClassResultsNode result : results) {
@@ -146,60 +146,81 @@ public class GroovySensor implements Sensor {
 
       for (ResultsNode resultsNode : result.getChildren().values()) {
         methods += 1;
-        for (MetricResult metricResult : resultsNode.getMetricResults()) {
-          String metricName = metricResult.getMetric().getName();
-          if (CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricName)) {
-            int value = (Integer) ((SingleNumberMetricResult) metricResult).getNumber();
-            functionsComplexityDistribution.add(value);
-            complexityInFunctions += value;
-          }
+        Optional<MetricResult> cyclomaticComplexity = getCyclomaticComplexity(resultsNode.getMetricResults());
+        if (cyclomaticComplexity.isPresent()) {
+          int value = (Integer) ((SingleNumberMetricResult) cyclomaticComplexity.get()).getNumber();
+          functionsComplexityDistribution.add(value);
+          complexityInFunctions += value;
         }
       }
 
-      for (MetricResult metricResult : result.getMetricResults()) {
-        String metricName = metricResult.getMetric().getName();
-        if (CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricName)) {
-          int value = (Integer) ((NumberMetricResult) metricResult).getValues().get("total");
-          complexity += value;
-        }
+      Optional<MetricResult> cyclomaticComplexity = getCyclomaticComplexity(result.getMetricResults());
+      if (cyclomaticComplexity.isPresent()) {
+        int value = (Integer) ((NumberMetricResult) cyclomaticComplexity.get()).getValues().get("total");
+        complexity += value;
       }
     }
 
-    saveMetricOnFile(context, sonarFile, CoreMetrics.FILES, 1);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.CLASSES, classes);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.FUNCTIONS, methods);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY, complexity);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, functionsComplexityDistribution.build());
+    saveMetric(context, sonarFile, CoreMetrics.FILES, 1);
+    saveMetric(context, sonarFile, CoreMetrics.CLASSES, classes);
+    saveMetric(context, sonarFile, CoreMetrics.FUNCTIONS, methods);
+    saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY, complexity);
+    saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
+    saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
+    saveMetric(context, sonarFile, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, functionsComplexityDistribution.build());
 
     RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(FILES_DISTRIB_BOTTOM_LIMITS);
     fileComplexityDistribution.add(complexity);
-    saveMetricOnFile(context, sonarFile, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, fileComplexityDistribution.build());
+    saveMetric(context, sonarFile, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, fileComplexityDistribution.build());
   }
 
-  private static <T extends Serializable> void saveMetricOnFile(SensorContext context, InputFile inputFile, Metric<T> metric, T value) {
-    context.<T>newMeasure()
-      .withValue(value)
-      .forMetric(metric)
-      .on(inputFile)
-      .save();
+  private static Optional<MetricResult> getCyclomaticComplexity(List<MetricResult> metricResults) {
+    return metricResults
+      .stream()
+      .filter(metricResult -> CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricResult.getMetric().getName()))
+      .findAny();
   }
 
-  private void computeBaseMetrics(SensorContext sensorContext) {
-    for (InputFile groovyFile : groovyFileSystem.sourceInputFiles()) {
-      computeBaseMetrics(sensorContext, groovyFile);
+  private static void processPackage(SensorContext context, InputDir inputDir, List<MetricResult> metricResults) {
+    for (MetricResult metricResult : metricResults) {
+      org.gmetrics.metric.Metric metric = metricResult.getMetric();
+      String metricName = metric.getName();
+      if (EFFERENT_COUPLING_METRIC_NAME.equals(metricName)) {
+        MutableMapMetricResult result = (MutableMapMetricResult) metricResult;
+        saveMetric(context, inputDir, GroovyMetrics.EFFERENT_COUPLING_TOTAL, getTotalValue(result));
+        saveMetric(context, inputDir, GroovyMetrics.EFFERENT_COUPLING_AVERAGE, getAverageValue(result));
+      } else if (AFFERENT_COUPLING_METRIC_NAME.equals(metricName)) {
+        MutableMapMetricResult result = (MutableMapMetricResult) metricResult;
+        saveMetric(context, inputDir, GroovyMetrics.AFFERENT_COUPLING_TOTAL, getTotalValue(result));
+        saveMetric(context, inputDir, GroovyMetrics.AFFERENT_COUPLING_AVERAGE, getAverageValue(result));
+      }
     }
   }
 
-  private void computeBaseMetrics(SensorContext sensorContext, InputFile groovyFile) {
+  private static Integer getTotalValue(MutableMapMetricResult result) {
+    return (Integer) result.getAt("total");
+  }
+
+  private static double getAverageValue(MutableMapMetricResult result) {
+    Object avg = result.getAt("average");
+    BigDecimal avgValue = (avg instanceof Integer) ? new BigDecimal((Integer) avg) : (BigDecimal) avg;
+    return avgValue.doubleValue();
+  }
+
+  private void computeBaseMetrics(SensorContext context, List<InputFile> inputFiles) {
+    for (InputFile groovyFile : inputFiles) {
+      computeBaseMetrics(context, groovyFile);
+    }
+  }
+
+  private void computeBaseMetrics(SensorContext context, InputFile groovyFile) {
     File file = groovyFile.file();
     if (file.exists()) {
       loc = 0;
       comments = 0;
       currentLine = 0;
       fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
-      Charset encoding = sensorContext.fileSystem().encoding();
+      Charset encoding = context.fileSystem().encoding();
       try (InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), encoding)) {
         List<String> lines = FileUtils.readLines(file, encoding);
         GroovyLexer groovyLexer = new GroovyLexer(streamReader);
@@ -213,16 +234,30 @@ public class GroovySensor implements Sensor {
           nextToken = tokenStream.nextToken();
         }
         handleToken(token, nextToken.getLine(), lines);
-        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.LINES, nextToken.getLine());
-        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.NCLOC, loc);
-        saveMetricOnFile(sensorContext, groovyFile, CoreMetrics.COMMENT_LINES, comments);
-      } catch (TokenStreamException tse) {
-        LOG.error("Unexpected token when lexing file: " + file.getName(), tse);
-      } catch (IOException fnfe) {
-        LOG.error("Unable to read file: " + file.getName(), fnfe);
+        saveMetric(context, groovyFile, CoreMetrics.LINES, nextToken.getLine());
+        saveMetric(context, groovyFile, CoreMetrics.NCLOC, loc);
+        saveMetric(context, groovyFile, CoreMetrics.COMMENT_LINES, comments);
+      } catch (TokenStreamException e) {
+        LOG.error("Unexpected token when lexing file : " + file.getName(), e);
+      } catch (IOException e) {
+        LOG.error("Unable to read file: " + file.getName(), e);
       }
       fileLinesContext.save();
     }
+  }
+
+  private static void highlightFiles(SensorContext context, List<InputFile> inputFiles) {
+    for (InputFile inputFile : inputFiles) {
+      new GroovyHighlighterAndTokenizer(inputFile).processFile(context);
+    }
+  }
+
+  private static <T extends Serializable> void saveMetric(SensorContext context, InputComponent inputComponent, Metric<T> metric, T value) {
+    context.<T>newMeasure()
+      .withValue(value)
+      .forMetric(metric)
+      .on(inputComponent)
+      .save();
   }
 
   private void handleToken(Token token, int nextTokenLine, List<String> lines) {

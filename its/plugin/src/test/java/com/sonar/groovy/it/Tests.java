@@ -19,17 +19,15 @@
  */
 package com.sonar.groovy.it;
 
-import com.google.common.collect.Iterables;
 import com.sonar.orchestrator.Orchestrator;
 import com.sonar.orchestrator.build.MavenBuild;
 import com.sonar.orchestrator.locator.FileLocation;
+
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

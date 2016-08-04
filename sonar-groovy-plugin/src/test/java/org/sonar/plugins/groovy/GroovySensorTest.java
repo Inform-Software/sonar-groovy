@@ -25,6 +25,7 @@ import org.mockito.Mockito;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputDir;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
@@ -57,6 +58,8 @@ public class GroovySensorTest {
   @Test
   public void should_not_execute_if_no_groovy_files() {
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
+    SensorContextTester context = SensorContextTester.create(new File(""));
+    sensor.execute(context);
   }
 
   @Test
@@ -115,8 +118,57 @@ public class GroovySensorTest {
   }
 
   @Test
+  public void compute_coupling_metrics() throws IOException {
+    SensorContextTester context = SensorContextTester.create(new File(""));
+
+    fileSystem = context.fileSystem();
+    // package 'org' contains class 'Greeting', used by no other class, but using classes 'Bar' and 'Foo'
+    DefaultInputDir org = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org", "Greeting.groovy");
+    // package 'org.foo' contains class 'Foo', used by class 'Greeting', and using class 'Bar'
+    DefaultInputDir org_foo = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/foo", "Foo.groovy");
+    // package 'org.bar' contains class 'Bar', used by classes 'Greeting' and 'Foo', but using no other class
+    DefaultInputDir org_bar = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/bar", "Bar.groovy");
+
+    FileLinesContext fileLinesContext = mock(FileLinesContext.class);
+    when(fileLinesContextFactory.createFor(any(DefaultInputFile.class))).thenReturn(fileLinesContext);
+
+    sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
+    sensor.execute(context);
+
+    assertCouplingMeasureAre(context, org.key(), 3, 1.0, 3, 1.0);
+    assertCouplingMeasureAre(context, org_foo.key(), 1, 1.0, 1, 1.0);
+    assertCouplingMeasureAre(context, org_bar.key(), 2, 2.0, 0, 0.0);
+  }
+
+  private static void assertCouplingMeasureAre(SensorContextTester context, String key, Object afferentTot, Object afferentAvg, Object efferentTot, Object efferentAvg) {
+    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_TOTAL.key()).value()).isEqualTo(afferentTot);
+    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_AVERAGE.key()).value()).isEqualTo(afferentAvg);
+
+    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_TOTAL.key()).value()).isEqualTo(efferentTot);
+    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_AVERAGE.key()).value()).isEqualTo(efferentAvg);
+  }
+
+  private DefaultInputDir addFileWithParentFolder(String dirPath, String fileName) throws IOException {
+    File dir = new File(dirPath);
+    File file = new File(dir, fileName);
+    DefaultInputDir inputDir = new DefaultInputDir("", dir.getPath());
+    fileSystem.add(inputDir);
+    fileSystem.add(new DefaultInputFile("", file.getPath())
+      .setLanguage(Groovy.KEY)
+      .initMetadata(new String(Files.readAllBytes(file.toPath()), "UTF-8")));
+    return inputDir;
+  }
+
+  @Test
   public void test_toString() {
     assertThat(sensor.toString()).isEqualTo("GroovySensor");
+  }
+
+  @Test
+  public void test_description() {
+    DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
+    sensor.describe(defaultSensorDescriptor);
+    assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
 }

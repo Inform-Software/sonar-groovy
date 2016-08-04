@@ -153,6 +153,11 @@ public class GroovyTest {
     assertThat(getPackageMeasure("file_complexity_distribution").getData()).isEqualTo("0=1;5=1;10=2;20=1;30=1;60=0;90=0");
     assertThat(getPackageMeasure("class_complexity_distribution")).isNull();
     assertThat(getPackageMeasure("function_complexity_distribution").getData()).isEqualTo("1=31;2=20;4=6;6=0;8=0;10=0;12=0");
+
+    assertThat(getPackageMeasure("efferent_coupling_average").getValue()).isEqualTo(5.0);
+    assertThat(getPackageMeasure("efferent_coupling_total").getIntValue()).isEqualTo(5);
+    assertThat(getPackageMeasure("afferent_coupling_average").getValue()).isEqualTo(2.0);
+    assertThat(getPackageMeasure("afferent_coupling_total").getIntValue()).isEqualTo(2);
   }
 
   @Test

@@ -20,19 +20,12 @@
 package org.sonar.plugins.groovy;
 
 import org.junit.Test;
-import org.sonar.api.Plugin;
-import org.sonar.api.SonarQubeVersion;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class GroovyPluginTest {
-
+public class GroovyMetricsTest {
   @Test
-  public void testExtensions() {
-    GroovyPlugin plugin = new GroovyPlugin();
-    Plugin.Context context = new Plugin.Context(SonarQubeVersion.V5_6);
-    plugin.define(context);
-    assertThat(context.getExtensions()).hasSize(16);
+  public void test_metrics() {
+    assertThat(new GroovyMetrics().getMetrics()).hasSize(4);
   }
-
 }

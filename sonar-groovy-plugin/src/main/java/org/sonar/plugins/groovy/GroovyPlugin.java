@@ -102,6 +102,7 @@ public class GroovyPlugin implements Plugin {
       Groovy.class,
       // Main sensor
       GroovySensor.class,
+      GroovyMetrics.class,
       // Surefire
       GroovySurefireParser.class,
       GroovySurefireSensor.class,
