@@ -62,29 +62,37 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
     while (items.getNext() != null) {
       String localName = items.getLocalName();
       if ("Project".equals(localName)) {
-        SMInputCursor sourceDirectoryCursor = items.descendantElementCursor("SourceDirectory");
-        while (sourceDirectoryCursor.getNext() != null) {
-          String value = sourceDirectoryCursor.getElemStringValue();
-          if (StringUtils.isNotBlank(value)) {
-            sourceDirectories.add(value.trim().replaceAll("\\\\", "/") + "/");
-          }
-        }
+        extractSourceDirectories(items, sourceDirectories);
       } else if ("Package".equals(localName)) {
-        String packPath = items.getAttrValue("path");
-        SMInputCursor file = items.descendantElementCursor("File");
-        while (file.getNext() != null) {
-          String filename = getFilename(sourceDirectories, packPath, file.getAttrValue("name"));
-          SMInputCursor violation = file.childElementCursor("Violation");
-          while (violation.getNext() != null) {
-            String lineNumber = violation.getAttrValue("lineNumber");
-            String ruleName = violation.getAttrValue("ruleName");
+        extractIssues(items, sourceDirectories);
+      }
+    }
+  }
 
-            SMInputCursor messageCursor = violation.childElementCursor("Message");
-            String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
+  private void extractIssues(SMInputCursor items, List<String> sourceDirectories) throws XMLStreamException {
+    String packPath = items.getAttrValue("path");
+    SMInputCursor file = items.descendantElementCursor("File");
+    while (file.getNext() != null) {
+      String filename = getFilename(sourceDirectories, packPath, file.getAttrValue("name"));
+      SMInputCursor violation = file.childElementCursor("Violation");
+      while (violation.getNext() != null) {
+        String lineNumber = violation.getAttrValue("lineNumber");
+        String ruleName = violation.getAttrValue("ruleName");
 
-            result.add(new CodeNarcViolation(ruleName, filename, lineNumber, message));
-          }
-        }
+        SMInputCursor messageCursor = violation.childElementCursor("Message");
+        String message = messageCursor.getNext() == null ? "" : messageCursor.collectDescendantText(true);
+
+        result.add(new CodeNarcViolation(ruleName, filename, lineNumber, message));
+      }
+    }
+  }
+
+  private static void extractSourceDirectories(SMInputCursor items, List<String> sourceDirectories) throws XMLStreamException {
+    SMInputCursor sourceDirectoryCursor = items.descendantElementCursor("SourceDirectory");
+    while (sourceDirectoryCursor.getNext() != null) {
+      String value = sourceDirectoryCursor.getElemStringValue();
+      if (StringUtils.isNotBlank(value)) {
+        sourceDirectories.add(value.trim().replaceAll("\\\\", "/") + "/");
       }
     }
   }
