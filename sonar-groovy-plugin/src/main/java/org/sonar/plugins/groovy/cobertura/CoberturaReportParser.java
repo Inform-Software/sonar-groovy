@@ -29,11 +29,11 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
+import org.sonar.api.utils.MessageException;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.utils.StaxParser;
-import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ public class CoberturaReportParser {
       parseSources(xmlFile);
       parsePackages(xmlFile);
     } catch (XMLStreamException e) {
-      throw new AnalysisException("Unable to parse Cobertura report.", e);
+      throw MessageException.of("Unable to parse Cobertura report.", e);
     }
   }
 
@@ -165,7 +165,7 @@ public class CoberturaReportParser {
           parsingResult.coverage = parsingResult.coverage.lineHits(lineId, hits);
         }
       } catch (ParseException e) {
-        throw new AnalysisException("Unable to parse Cobertura report.", e);
+        throw MessageException.of("Unable to parse Cobertura report.", e);
       }
 
       String isBranch = line.getAttrValue("branch");

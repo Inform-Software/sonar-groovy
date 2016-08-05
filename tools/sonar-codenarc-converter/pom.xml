@@ -37,12 +37,12 @@
       <artifactId>slf4j-nop</artifactId>
       <version>1.5.6</version>
     </dependency>
-	<dependency>
+    <dependency>
       <groupId>com.googlecode.java-diff-utils</groupId>
       <artifactId>diffutils</artifactId>
       <version>1.2.1</version>
     </dependency>
-	<dependency>
+    <dependency>
       <groupId>org.codehaus.sonar</groupId>
       <artifactId>sonar-testing-harness</artifactId>
       <version>4.5.2</version>

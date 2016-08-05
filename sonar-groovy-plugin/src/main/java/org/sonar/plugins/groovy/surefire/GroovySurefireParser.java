@@ -33,6 +33,7 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
+import org.sonar.api.utils.MessageException;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -42,7 +43,6 @@ import org.sonar.plugins.groovy.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.groovy.surefire.data.UnitTestIndex;
 import org.sonar.plugins.groovy.surefire.data.UnitTestResult;
 import org.sonar.plugins.groovy.utils.StaxParser;
-import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -105,7 +105,7 @@ public class GroovySurefireParser {
       try {
         parser.parse(report);
       } catch (XMLStreamException e) {
-        throw new AnalysisException("Fail to parse the Surefire report: " + report, e);
+        throw MessageException.of("Fail to parse the Surefire report: " + report, e);
       }
     }
   }

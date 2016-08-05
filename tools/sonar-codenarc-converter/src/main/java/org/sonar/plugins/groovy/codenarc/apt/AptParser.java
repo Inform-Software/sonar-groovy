@@ -1,7 +1,7 @@
 /*
  * Sonar CodeNarc Converter
- * Copyright (C) 2011 SonarSource
- * sonarqube@googlegroups.com
+ * Copyright (C) 2011-2016 SonarSource SA
+ * mailto:contact AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,13 +13,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.sonar.plugins.groovy.codenarc.apt;
 
 import com.google.common.collect.Maps;
+
 import org.apache.commons.lang.StringUtils;
 import org.sonar.plugins.groovy.codenarc.RuleParameter;
 
@@ -119,13 +120,13 @@ public class AptParser {
           String description = blocks[1].trim();
           String defaultValue = blocks[2].trim();
           if (StringUtils.isNotBlank(key)) {
-            currentParameter.setKey(currentParameter.getKey() + key.replaceAll("(-)+", ""));
+            currentParameter.key = currentParameter.key + key.replaceAll("(-)+", "");
           }
           if (StringUtils.isNotBlank(defaultValue) && !currentParameter.hasDefaultValue()) {
-            currentParameter.setDefaultValue(cleanDefaultValue(defaultValue));
+            currentParameter.defaultValue = cleanDefaultValue(defaultValue);
           }
           if (StringUtils.isNotBlank(description)) {
-            currentParameter.setDescription(currentParameter.getDescription() + cleanDescription(description, true) + " ");
+            currentParameter.description = currentParameter.description + cleanDescription(description, true) + " ";
           }
         }
       } else if (inRule && inParameters && isParameterSeparator(line)) {

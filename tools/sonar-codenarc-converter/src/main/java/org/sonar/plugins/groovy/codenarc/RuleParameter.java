@@ -1,7 +1,7 @@
 /*
  * Sonar CodeNarc Converter
- * Copyright (C) 2011 SonarSource
- * sonarqube@googlegroups.com
+ * Copyright (C) 2011-2016 SonarSource SA
+ * mailto:contact AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,18 +13,18 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.sonar.plugins.groovy.codenarc;
 
 import org.apache.commons.lang.StringUtils;
 
-public class RuleParameter {
-  String key = "";
-  String description = "";
-  String defaultValue = "";
+public class RuleParameter implements Comparable<RuleParameter> {
+  public String key = "";
+  public String description = "";
+  public String defaultValue = "";
 
   public RuleParameter() {
   }
@@ -77,30 +77,6 @@ public class RuleParameter {
     return StringUtils.isNotBlank(defaultValue);
   }
 
-  public String getKey() {
-    return key;
-  }
-
-  public void setKey(String key) {
-    this.key = key;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getDefaultValue() {
-    return defaultValue;
-  }
-
-  public void setDefaultValue(String defaultValue) {
-    this.defaultValue = defaultValue;
-  }
-
   public void merge(RuleParameter parameter) {
     if (key != null && key.equals(parameter.key)) {
       description = selectValue(description, parameter.description);
@@ -122,6 +98,11 @@ public class RuleParameter {
       smallDescr = description.substring(0, 30) + "...";
     }
     return "RuleParameter [key=" + key + ", defaultValue=" + defaultValue + ", description=" + smallDescr + "]";
+  }
+
+  @Override
+  public int compareTo(RuleParameter o) {
+    return key.compareTo(o.key);
   }
 
 }

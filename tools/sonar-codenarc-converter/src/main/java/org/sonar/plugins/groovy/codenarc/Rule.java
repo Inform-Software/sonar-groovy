@@ -1,7 +1,7 @@
 /*
  * Sonar CodeNarc Converter
- * Copyright (C) 2011 SonarSource
- * sonarqube@googlegroups.com
+ * Copyright (C) 2011-2016 SonarSource SA
+ * mailto:contact AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,9 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.sonar.plugins.groovy.codenarc;
 
@@ -29,8 +29,6 @@ import org.sonar.plugins.groovy.codenarc.apt.AptResult;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,15 +36,15 @@ import java.util.Set;
 
 public class Rule {
 
-  private AbstractRule ruleInstance;
-  private String key;
-  private String internalKey;
-  private String name;
-  private String description;
-  private String severity;
-  private String version;
-  private Set<String> tags;
-  private Set<RuleParameter> parameters;
+  public final AbstractRule ruleInstance;
+  public final String key;
+  public final String internalKey;
+  public final String name;
+  public final String description;
+  public final String severity;
+  public final String version;
+  public final Set<String> tags;
+  public final Set<RuleParameter> parameters;
 
   // SONARGROOV-40
   private static final String[] FIXED_RULES_WITH_NULL_PARAMETERS = {
@@ -329,65 +327,7 @@ public class Rule {
     return urls.toArray(new String[urls.size()]);
   }
 
-  /**
-   * Rule format based on {@link org.sonar.api.server.rule.RulesDefinitionXmlLoader}
-   */
-  public void printAsXml(StringBuilder xmlStringBuilder) {
-    if (version != null) {
-      xmlStringBuilder.append("  <!-- since " + version + " -->");
-      xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    }
-    xmlStringBuilder.append("  <rule>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <key>" + markRuleFixedIfNullParameters() + "</key>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <severity>" + severity + "</severity>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <name><![CDATA[" + name + "]]></name>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <internalKey><![CDATA[" + internalKey + "]]></internalKey>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append("    <description><![CDATA[" + description + "]]></description>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    if (!tags.isEmpty()) {
-      for (String tag : tags) {
-        xmlStringBuilder.append("    <tag>" + tag + "</tag>");
-        xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-      }
-    }
-
-    if (!parameters.isEmpty()) {
-      List<RuleParameter> sortedParameters = Lists.newArrayList(parameters);
-      Collections.sort(sortedParameters, new Comparator<RuleParameter>() {
-        @Override
-        public int compare(RuleParameter o1, RuleParameter o2) {
-          return o1.key.compareTo(o2.key);
-        }
-      });
-      for (RuleParameter parameter : sortedParameters) {
-        xmlStringBuilder.append("    <param>");
-        xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-        xmlStringBuilder.append("      <key>" + parameter.key + "</key>");
-        xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-        if (StringUtils.isNotBlank(parameter.description)) {
-          xmlStringBuilder.append("      <description><![CDATA[" + parameter.description + "]]></description>");
-          xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-        }
-        if (StringUtils.isNotBlank(parameter.defaultValue) && !"null".equals(parameter.defaultValue)) {
-          xmlStringBuilder.append("      <defaultValue>" + parameter.defaultValue + "</defaultValue>");
-          xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-        }
-        xmlStringBuilder.append("    </param>");
-        xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-      }
-    }
-
-    xmlStringBuilder.append("  </rule>");
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-    xmlStringBuilder.append(Converter.LINE_SEPARATOR);
-  }
-
-  private String markRuleFixedIfNullParameters() {
+  public String fixedRuleKey() {
     if (hasNullParameters() && isPartOfFixedRules()) {
       return key + ".fixed";
     }
@@ -405,17 +345,5 @@ public class Rule {
       }
     }
     return false;
-  }
-
-  public String getVersion() {
-    return version;
-  }
-
-  public Set<String> getTags() {
-    return tags;
-  }
-
-  public String getKey() {
-    return key;
   }
 }

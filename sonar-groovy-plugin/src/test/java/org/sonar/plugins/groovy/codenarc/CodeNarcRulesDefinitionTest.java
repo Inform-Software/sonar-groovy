@@ -55,7 +55,7 @@ public class CodeNarcRulesDefinitionTest {
         missingDebt.add(rule.key());
       }
     }
-    // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have SQALE mapping by purpose
+    // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have debt by purpose
     assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule.fixed");
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");

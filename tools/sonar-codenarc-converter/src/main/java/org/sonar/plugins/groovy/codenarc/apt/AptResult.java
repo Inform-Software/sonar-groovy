@@ -1,7 +1,7 @@
 /*
  * Sonar CodeNarc Converter
- * Copyright (C) 2011 SonarSource
- * sonarqube@googlegroups.com
+ * Copyright (C) 2011-2016 SonarSource SA
+ * mailto:contact AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,13 +13,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.sonar.plugins.groovy.codenarc.apt;
 
 import com.google.common.collect.Sets;
+
 import org.apache.commons.lang.StringUtils;
 import org.sonar.plugins.groovy.codenarc.RuleParameter;
 
@@ -46,10 +47,10 @@ public class AptResult {
       System.out.println("------------------------------------------");
       System.out.println("Parameters: ");
       for (RuleParameter parameter : parameters) {
-        System.out.println("  * \"" + parameter.getKey() + "\"");
+        System.out.println("  * \"" + parameter.key + "\"");
         System.out.println("    - defaultValue: "
-          + (parameter.getDefaultValue() == null ? "" : parameter.getDefaultValue()));
-        System.out.println("    - description: " + parameter.getDescription());
+          + (parameter.defaultValue == null ? "" : parameter.defaultValue));
+        System.out.println("    - description: " + parameter.description);
       }
     }
   }
