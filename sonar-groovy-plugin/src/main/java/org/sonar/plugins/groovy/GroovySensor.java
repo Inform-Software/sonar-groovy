@@ -19,8 +19,6 @@
  */
 package org.sonar.plugins.groovy;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.antlr.GroovySourceToken;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
@@ -106,17 +104,12 @@ public class GroovySensor implements Sensor {
 
   @Override
   public void execute(SensorContext context) {
-    if (shouldExecuteOnProject()) {
+    if (groovyFileSystem.hasGroovyFiles()) {
       List<InputFile> inputFiles = groovyFileSystem.sourceInputFiles();
       computeBaseMetrics(context, inputFiles);
       computeGroovyMetrics(context, inputFiles);
-      highlightFiles(context, inputFiles);
+      highlightFiles(context, groovyFileSystem.groovyInputFiles());
     }
-  }
-
-  @VisibleForTesting
-  boolean shouldExecuteOnProject() {
-    return groovyFileSystem.hasGroovyFiles();
   }
 
   private static void computeGroovyMetrics(SensorContext context, List<InputFile> inputFiles) {

@@ -50,16 +50,13 @@ public class GroovySensorTest {
   private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
 
   @Test
-  public void should_execute_on_project() {
-    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
-  }
-
-  @Test
-  public void should_not_execute_if_no_groovy_files() {
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
+  public void do_nothing_when_no_groovy_file() throws IOException {
     SensorContextTester context = SensorContextTester.create(new File(""));
+    context = Mockito.spy(context);
+    sensor = new GroovySensor(settings, fileLinesContextFactory, context.fileSystem());
     sensor.execute(context);
+
+    Mockito.verify(context, Mockito.never()).newHighlighting();
   }
 
   @Test

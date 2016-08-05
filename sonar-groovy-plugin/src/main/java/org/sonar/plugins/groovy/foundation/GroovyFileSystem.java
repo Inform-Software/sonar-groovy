@@ -55,6 +55,11 @@ public class GroovyFileSystem {
     return Lists.newArrayList(files);
   }
 
+  public List<InputFile> groovyInputFiles() {
+    Iterable<InputFile> inputFiles = fileSystem.inputFiles(isGroovyLanguage);
+    return Lists.newArrayList(inputFiles);
+  }
+
   public List<InputFile> sourceInputFiles() {
     Iterable<InputFile> inputFiles = fileSystem.inputFiles(predicates.and(isGroovyLanguage, isMainTypeFile));
     return Lists.newArrayList(inputFiles);
