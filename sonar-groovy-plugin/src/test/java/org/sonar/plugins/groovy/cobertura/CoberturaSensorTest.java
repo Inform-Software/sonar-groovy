@@ -162,7 +162,9 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_parse_report_if_settings_does_not_contain_report_path() {
-    sensor = new CoberturaSensor(new Settings(), new DefaultFileSystem(new File(".")));
+    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
+    sensor = new CoberturaSensor(new Settings(), fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
@@ -174,7 +176,11 @@ public class CoberturaSensorTest {
   public void should_not_parse_report_if_report_does_not_exist() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, new DefaultFileSystem(new File(".")));
+
+    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
+
+    sensor = new CoberturaSensor(settings, fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
@@ -186,7 +192,11 @@ public class CoberturaSensorTest {
   public void should_use_relative_path_to_get_report() {
     Settings settings = new Settings();
     settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
-    sensor = new CoberturaSensor(settings, new DefaultFileSystem(new File(".")));
+
+    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
+
+    sensor = new CoberturaSensor(settings, fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
