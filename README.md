@@ -41,11 +41,13 @@ The Groovy Plugin does not generate its own test coverage report, but re-uses th
 
 ### Code Coverage with Cobertura
 To display code coverage data:
+
 1. Prior to the SonarQube analysis, execute your unit tests and generate the Cobertura XML report.
 1. Import this report while running the SonarQube analysis by setting the `sonar.groovy.cobertura.reportPath` property to the path to the Cobertura XML report. The path may be absolute or relative to the project base directory.
 
 ### Code Coverage with JaCoCo
 To display code coverage data:
+
 1. Prior to the SonarQube analysis, execute your tests and generate the JaCoCo exec file(s).
 1. In order to be able to read the exec report file, and as JaCoCo bases its analysis on binaries, set the sonar.binaries property.
 1. Set the `sonar.groovy.jacoco.reportPath` property to the path to the JaCoCo exec file related to your unit tests.
