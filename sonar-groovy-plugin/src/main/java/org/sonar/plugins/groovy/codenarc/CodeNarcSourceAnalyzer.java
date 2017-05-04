@@ -23,7 +23,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import org.codenarc.analyzer.AbstractSourceAnalyzer;
 import org.codenarc.results.DirectoryResults;
 import org.codenarc.results.FileResults;
@@ -31,17 +33,14 @@ import org.codenarc.results.Results;
 import org.codenarc.rule.Violation;
 import org.codenarc.ruleset.RuleSet;
 import org.codenarc.source.SourceFile;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+import org.sonar.api.batch.fs.InputFile;
 
 public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
-  private final Map<File, List<Violation>> violationsByFile = Maps.newHashMap();
-  private final List<File> sourceFiles;
+  private final Map<InputFile, List<Violation>> violationsByFile = Maps.newHashMap();
+  private final List<InputFile> sourceFiles;
 
-  public CodeNarcSourceAnalyzer(List<File> sourceFiles) {
+  public CodeNarcSourceAnalyzer(List<InputFile> sourceFiles) {
     this.sourceFiles = sourceFiles;
   }
 
@@ -57,11 +56,11 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
   private Multimap<File, FileResults> processFiles(RuleSet ruleSet) {
     Multimap<File, FileResults> results = LinkedListMultimap.create();
-    for (File file : sourceFiles) {
-      List<Violation> violations = collectViolations(new SourceFile(file), ruleSet);
-      violationsByFile.put(file, violations);
-      FileResults result = new FileResults(file.getAbsolutePath(), violations);
-      results.put(file.getParentFile(), result);
+    for (InputFile inputFile : sourceFiles) {
+      List<Violation> violations = collectViolations(new SourceFile(inputFile.file()), ruleSet);
+      violationsByFile.put(inputFile, violations);
+      FileResults result = new FileResults(inputFile.absolutePath(), violations);
+      results.put(inputFile.file().getParentFile(), result);
     }
     return results;
   }
@@ -71,7 +70,7 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
     return ImmutableList.of();
   }
 
-  public Map<File, List<Violation>> getViolationsByFile() {
+  public Map<InputFile, List<Violation>> getViolationsByFile() {
     return violationsByFile;
   }
 

@@ -19,13 +19,19 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.annotations.VisibleForTesting;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codenarc.CodeNarcRunner;
 import org.codenarc.rule.Violation;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.ActiveRule;
 import org.sonar.api.batch.sensor.Sensor;
@@ -42,61 +48,33 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 public class CodeNarcSensor implements Sensor {
 
   private static final Logger LOG = Loggers.get(CodeNarcSensor.class);
 
-  private final FileSystem fileSystem;
   private final RulesProfile rulesProfile;
   private final GroovyFileSystem groovyFileSystem;
 
-  private final String codeNarcReportPath;
-
-  public CodeNarcSensor(Groovy groovy, FileSystem fileSystem, RulesProfile profile) {
-    this.fileSystem = fileSystem;
+  public CodeNarcSensor(RulesProfile profile, GroovyFileSystem groovyFileSystem) {
     this.rulesProfile = profile;
-    this.groovyFileSystem = new GroovyFileSystem(fileSystem);
-
-    this.codeNarcReportPath = groovy.getCodeNarcReportPath();
+    this.groovyFileSystem = groovyFileSystem;
   }
 
   @Override
   public void describe(SensorDescriptor descriptor) {
-    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+    descriptor
+      .name("CodeNarc")
+      .onlyOnLanguage(Groovy.KEY)
+      .createIssuesForRuleRepositories(CodeNarcRulesDefinition.REPOSITORY_KEY);
   }
 
   @Override
   public void execute(SensorContext context) {
-    if (shouldExecuteOnProject(context)) {
-      analyse(context);
-    }
-  }
-
-  @VisibleForTesting
-  boolean shouldExecuteOnProject(SensorContext context) {
-    return groovyFileSystem.hasGroovyFiles() && !context.activeRules().findByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY).isEmpty();
-  }
-
-  private void analyse(SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (StringUtils.isNotBlank(codeNarcReportPath)) {
+    if (context.settings().hasKey(GroovyPlugin.CODENARC_REPORT_PATH)) {
       // Yes
-      File report = new File(codeNarcReportPath);
-      if (!report.isAbsolute()) {
-        report = new File(fileSystem.baseDir(), codeNarcReportPath);
-      }
+      String codeNarcReportPath = context.settings().getString(GroovyPlugin.CODENARC_REPORT_PATH);
+      File report = context.fileSystem().resolvePath(codeNarcReportPath);
       if (!report.isFile()) {
         LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATH + " not found at {}", report);
         return;
@@ -110,14 +88,14 @@ public class CodeNarcSensor implements Sensor {
 
   private void parseReport(SensorContext context, List<File> reports) {
     for (File report : reports) {
-      Collection<CodeNarcViolation> violations = CodeNarcXMLParser.parse(report, fileSystem);
+      Collection<CodeNarcViolation> violations = CodeNarcXMLParser.parse(report, context.fileSystem());
       for (CodeNarcViolation violation : violations) {
         ActiveRule activeRule = context.activeRules().findByInternalKey(CodeNarcRulesDefinition.REPOSITORY_KEY, violation.getRuleName());
         if (activeRule != null) {
-          InputFile inputFile = inputFileFor(violation.getFilename());
+          InputFile inputFile = inputFileFor(context, violation.getFilename());
           insertIssue(context, violation, activeRule.ruleKey(), inputFile);
         } else {
-          LOG.warn("No such rule in Sonar, so violation from CodeNarc will be ignored: ", violation.getRuleName());
+          LOG.warn("No such rule in SonarQube, so violation from CodeNarc will be ignored: {}", violation.getRuleName());
         }
       }
     }
@@ -144,7 +122,7 @@ public class CodeNarcSensor implements Sensor {
   private void runCodeNarc(SensorContext context) {
     LOG.info("Executing CodeNarc");
 
-    File workdir = new File(fileSystem.workDir(), "/codenarc/");
+    File workdir = new File(context.fileSystem().workDir(), "codenarc");
     prepareWorkDir(workdir);
     File codeNarcConfiguration = new File(workdir, "profile.xml");
     exportCodeNarcConfiguration(codeNarcConfiguration);
@@ -152,15 +130,15 @@ public class CodeNarcSensor implements Sensor {
     CodeNarcRunner runner = new CodeNarcRunner();
     runner.setRuleSetFiles("file:" + codeNarcConfiguration.getAbsolutePath());
 
-    CodeNarcSourceAnalyzer analyzer = new CodeNarcSourceAnalyzer(groovyFileSystem.sourceFiles());
+    CodeNarcSourceAnalyzer analyzer = new CodeNarcSourceAnalyzer(groovyFileSystem.sourceInputFiles());
     runner.setSourceAnalyzer(analyzer);
     runner.execute();
     reportViolations(context, analyzer.getViolationsByFile());
   }
 
-  private void reportViolations(SensorContext context, Map<File, List<Violation>> violationsByFile) {
-    for (Entry<File, List<Violation>> violationsOnFile : violationsByFile.entrySet()) {
-      InputFile groovyFile = inputFileFor(violationsOnFile.getKey().getAbsolutePath());
+  private void reportViolations(SensorContext context, Map<InputFile, List<Violation>> violationsByFile) {
+    for (Entry<InputFile, List<Violation>> violationsOnFile : violationsByFile.entrySet()) {
+      InputFile groovyFile = violationsOnFile.getKey();
       if (groovyFile == null) {
         continue;
       }
@@ -170,15 +148,15 @@ public class CodeNarcSensor implements Sensor {
         if (activeRule != null) {
           insertIssue(context, activeRule.ruleKey(), violation.getLineNumber(), violation.getMessage(), groovyFile);
         } else {
-          LOG.warn("No such rule in Sonar, so violation from CodeNarc will be ignored: ", ruleKey);
+          LOG.warn("No such rule in SonarQube, so violation from CodeNarc will be ignored: {}", ruleKey);
         }
       }
     }
   }
 
   @CheckForNull
-  private InputFile inputFileFor(String path) {
-    return fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(path));
+  private InputFile inputFileFor(SensorContext context, String path) {
+    return context.fileSystem().inputFile(context.fileSystem().predicates().hasAbsolutePath(path));
   }
 
   private void exportCodeNarcConfiguration(File file) {
@@ -201,8 +179,4 @@ public class CodeNarcSensor implements Sensor {
     }
   }
 
-  @Override
-  public String toString() {
-    return "CodeNarc";
-  }
 }

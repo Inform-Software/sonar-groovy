@@ -42,20 +42,4 @@ public class GroovyTest {
     assertThat(language.getFileSuffixes()).containsOnly(".groovy", ".grvy");
   }
 
-  @Test
-  public void binaryDirectories() throws Exception {
-    Settings settings = new Settings();
-    Groovy language = new Groovy(settings);
-
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "");
-    assertThat(language.getBinaryDirectories()).isEmpty();
-
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "target/firstDir , target/secondDir");
-    assertThat(language.getBinaryDirectories()).hasSize(2);
-
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, "");
-    // property 'sonar.binaries' is set by maven and gradle plugins
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK, "target/firstDir , target/secondDir");
-    assertThat(language.getBinaryDirectories()).hasSize(2);
-  }
 }

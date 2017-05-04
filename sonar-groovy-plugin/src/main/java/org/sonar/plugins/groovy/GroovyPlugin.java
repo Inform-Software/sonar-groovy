@@ -20,7 +20,6 @@
 package org.sonar.plugins.groovy;
 
 import com.google.common.collect.ImmutableList;
-
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
@@ -30,6 +29,7 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcRulesDefinition;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
@@ -53,14 +53,12 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
     key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
     defaultValue = "true",
     name = "Ignore Header Comments",
-    description =
-    "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. " +
+    description = "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. " +
       "Thus metrics such as \"Comment lines\" do not get incremented. " +
       "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
     project = true,
     global = true,
-    type = PropertyType.BOOLEAN
-  ),
+    type = PropertyType.BOOLEAN),
   @Property(
     key = GroovyPlugin.FILE_SUFFIXES_KEY,
     defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
@@ -68,8 +66,7 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
     description = "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
     project = true,
     module = true,
-    global = true
-  ),
+    global = true),
   @Property(
     key = GroovyPlugin.SONAR_GROOVY_BINARIES,
     name = "Binary directories",
@@ -100,6 +97,7 @@ public class GroovyPlugin implements Plugin {
       SonarWayProfile.class,
       // Foundation
       Groovy.class,
+      GroovyFileSystem.class,
       // Main sensor
       GroovySensor.class,
       GroovyMetrics.class,
@@ -107,8 +105,7 @@ public class GroovyPlugin implements Plugin {
       GroovySurefireParser.class,
       GroovySurefireSensor.class,
       // Cobertura
-      CoberturaSensor.class
-      );
+      CoberturaSensor.class);
     builder.addAll(JaCoCoExtensions.getExtensions());
     context.addExtensions(builder.build());
   }

@@ -20,33 +20,34 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import org.sonar.api.batch.fs.FileSystem;
+import java.io.File;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.io.File;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 public class JaCoCoItSensor implements Sensor {
   private final JaCoCoConfiguration configuration;
-  private final FileSystem fileSystem;
+  private final GroovyFileSystem fileSystem;
   private final PathResolver pathResolver;
-  private final Groovy groovy;
+  private final Settings settings;
 
-  public JaCoCoItSensor(Groovy groovy, JaCoCoConfiguration configuration, FileSystem fileSystem, PathResolver pathResolver) {
+  public JaCoCoItSensor(JaCoCoConfiguration configuration, GroovyFileSystem fileSystem, PathResolver pathResolver, Settings settings) {
     this.configuration = configuration;
-    this.groovy = groovy;
     this.fileSystem = fileSystem;
     this.pathResolver = pathResolver;
+    this.settings = settings;
   }
 
   @Override
   public void describe(SensorDescriptor descriptor) {
-    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+    descriptor
+      .name("Groovy JaCoCo IT")
+      .onlyOnLanguage(Groovy.KEY);
   }
 
   @Override
@@ -69,7 +70,7 @@ public class JaCoCoItSensor implements Sensor {
 
   class ITAnalyzer extends AbstractAnalyzer {
     public ITAnalyzer() {
-      super(groovy, fileSystem, pathResolver);
+      super(fileSystem, pathResolver, settings);
     }
 
     @Override
@@ -83,8 +84,4 @@ public class JaCoCoItSensor implements Sensor {
     }
   }
 
-  @Override
-  public String toString() {
-    return "Groovy " + getClass().getSimpleName();
-  }
 }

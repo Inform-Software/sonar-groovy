@@ -1,7 +1,7 @@
 <CodeNarc url='http://www.codenarc.org' version='0.9'>
   <Report timestamp='May 10, 2010 10:04:28 PM'/>
   <Project title='Sample Project'>
-    <SourceDirectory>samples\src</SourceDirectory>
+    <SourceDirectory>[sourcedir]</SourceDirectory>
   </Project>
   <PackageSummary totalFiles='7' filesWithViolations='4' priority1='0' priority2='11' priority3='5'></PackageSummary>
   <Package path='org' totalFiles='7' filesWithViolations='4' priority1='0' priority2='11' priority3='5'></Package>

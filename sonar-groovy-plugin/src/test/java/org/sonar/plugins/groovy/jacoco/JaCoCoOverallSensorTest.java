@@ -19,22 +19,21 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-
+import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile.Type;
-import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.test.TestUtils;
-
-import java.io.File;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -51,7 +50,8 @@ public class JaCoCoOverallSensorTest {
   private File jacocoITData;
   private File outputDir;
   private DefaultInputFile inputFile;
-  private Groovy groovy;
+  private Settings settings;
+  private SensorContextTester context;
 
   @Before
   public void before() throws Exception {
@@ -64,27 +64,23 @@ public class JaCoCoOverallSensorTest {
     Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
 
-    groovy = mock(Groovy.class);
-    when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList("."));
+    settings = new Settings();
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoUTData.getParentFile());
-    fileSystem.setWorkDir(jacocoUTData.getParentFile());
+    context = SensorContextTester.create(jacocoUTData.getParentFile());
+
+    context.fileSystem().setWorkDir(jacocoUTData.getParentFile());
     inputFile = new DefaultInputFile("", "example/Hello.groovy")
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN);
     inputFile.setLines(50);
-    fileSystem.add(inputFile);
+    context.fileSystem().add(inputFile);
 
     configuration = mock(JaCoCoConfiguration.class);
     when(configuration.shouldExecuteOnProject(true)).thenReturn(true);
     when(configuration.shouldExecuteOnProject(false)).thenReturn(false);
     pathResolver = mock(PathResolver.class);
-    sensor = new JaCoCoOverallSensor(groovy, configuration, fileSystem, pathResolver);
-  }
-
-  @Test
-  public void testSensorDefinition() {
-    assertThat(sensor.toString()).isEqualTo("Groovy JaCoCoOverallSensor");
+    sensor = new JaCoCoOverallSensor(configuration, new GroovyFileSystem(context.fileSystem()), pathResolver, settings);
   }
 
   @Test
@@ -119,7 +115,6 @@ public class JaCoCoOverallSensorTest {
   public void test_read_execution_data_with_IT_and_UT() {
     setMocks(true, true);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
@@ -148,9 +143,8 @@ public class JaCoCoOverallSensorTest {
   @Test
   public void test_read_execution_data_with_IT_and_UT_and_binaryDirs_being_absolute() {
     setMocks(true, true);
-    when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList(jacocoUTData.getParentFile().getAbsolutePath()));
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, jacocoUTData.getParentFile().getAbsolutePath());
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
@@ -165,7 +159,6 @@ public class JaCoCoOverallSensorTest {
   public void test_read_execution_data_with_only_UT() {
     setMocks(true, false);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 14, 15, 17, 21, /* 25 not covered in UT */ 29, 32, 33, 42, 47};
@@ -180,7 +173,6 @@ public class JaCoCoOverallSensorTest {
   public void test_read_execution_data_with_only_IT() {
     setMocks(false, true);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 25};

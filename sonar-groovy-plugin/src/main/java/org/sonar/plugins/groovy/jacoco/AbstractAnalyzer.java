@@ -21,26 +21,23 @@ package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceFileCoverage;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
+import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
-
-import javax.annotation.CheckForNull;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractAnalyzer {
 
@@ -50,11 +47,18 @@ public abstract class AbstractAnalyzer {
   private final GroovyFileSystem groovyFileSystem;
   private Map<String, File> classFilesCache;
 
-  public AbstractAnalyzer(Groovy groovy, FileSystem fileSystem, PathResolver pathResolver) {
-    groovyFileSystem = new GroovyFileSystem(fileSystem);
-    baseDir = fileSystem.baseDir();
+  public AbstractAnalyzer(GroovyFileSystem groovyFileSystem, PathResolver pathResolver, Settings settings) {
+    this.groovyFileSystem = groovyFileSystem;
+    baseDir = groovyFileSystem.baseDir();
     this.pathResolver = pathResolver;
-    this.binaryDirs = getFiles(groovy.getBinaryDirectories(), baseDir);
+    this.binaryDirs = getFiles(getBinaryDirectories(settings), baseDir);
+  }
+
+  private List<String> getBinaryDirectories(Settings settings) {
+    if (settings.hasKey(GroovyPlugin.SONAR_GROOVY_BINARIES)) {
+      return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
+    }
+    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK));
   }
 
   private static List<File> getFiles(List<String> binaryDirectories, File baseDir) {

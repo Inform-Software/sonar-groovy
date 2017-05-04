@@ -19,9 +19,9 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-
+import java.io.File;
+import java.io.IOException;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,12 +31,12 @@ import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.test.TestUtils;
-
-import java.io.File;
-import java.io.IOException;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -67,8 +67,8 @@ public class JaCoCoSensorTest {
     Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
 
-    Groovy groovy = mock(Groovy.class);
-    when(groovy.getBinaryDirectories()).thenReturn(Lists.newArrayList("."));
+    Settings settings = new Settings();
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
     configuration = mock(JaCoCoConfiguration.class);
     when(configuration.shouldExecuteOnProject(true)).thenReturn(true);
@@ -83,14 +83,9 @@ public class JaCoCoSensorTest {
     fileSystem.add(inputFile);
 
     pathResolver = mock(PathResolver.class);
-    sensor = new JaCoCoSensor(groovy, configuration, fileSystem, pathResolver);
+    sensor = new JaCoCoSensor(configuration, new GroovyFileSystem(fileSystem), pathResolver, settings);
 
     return jacocoExecutionData;
-  }
-
-  @Test
-  public void testSensorDefinition() {
-    assertThat(sensor.toString()).isEqualTo("Groovy JaCoCoSensor");
   }
 
   @Test

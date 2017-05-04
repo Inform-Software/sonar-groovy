@@ -20,36 +20,37 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import org.sonar.api.batch.fs.FileSystem;
+import java.io.File;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.io.File;
+import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 public class JaCoCoOverallSensor implements Sensor {
 
   public static final String JACOCO_OVERALL = "jacoco-overall.exec";
 
   private final JaCoCoConfiguration configuration;
-  private final FileSystem fileSystem;
+  private final GroovyFileSystem fileSystem;
   private final PathResolver pathResolver;
-  private final Groovy groovy;
+  private final Settings settings;
 
-  public JaCoCoOverallSensor(Groovy groovy, JaCoCoConfiguration configuration, FileSystem fileSystem, PathResolver pathResolver) {
+  public JaCoCoOverallSensor(JaCoCoConfiguration configuration, GroovyFileSystem fileSystem, PathResolver pathResolver, Settings settings) {
     this.configuration = configuration;
-    this.groovy = groovy;
     this.pathResolver = pathResolver;
     this.fileSystem = fileSystem;
+    this.settings = settings;
   }
 
   @Override
   public void describe(SensorDescriptor descriptor) {
-    descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
+    descriptor
+      .name("Groovy JaCoCo Overall")
+      .onlyOnLanguage(Groovy.KEY);
   }
 
   @Override
@@ -57,7 +58,7 @@ public class JaCoCoOverallSensor implements Sensor {
     File reportUTs = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getReportPath());
     File reportITs = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getItReportPath());
     if (shouldExecuteOnProject()) {
-      File reportOverall = new File(fileSystem.workDir(), JACOCO_OVERALL);
+      File reportOverall = new File(context.fileSystem().workDir(), JACOCO_OVERALL);
       reportOverall.getParentFile().mkdirs();
       JaCoCoReportMerger.mergeReports(reportOverall, reportUTs, reportITs);
       new OverallAnalyzer(reportOverall).analyse(context);
@@ -81,7 +82,7 @@ public class JaCoCoOverallSensor implements Sensor {
     private final File report;
 
     OverallAnalyzer(File report) {
-      super(groovy, fileSystem, pathResolver);
+      super(fileSystem, pathResolver, settings);
       this.report = report;
     }
 
@@ -96,8 +97,4 @@ public class JaCoCoOverallSensor implements Sensor {
     }
   }
 
-  @Override
-  public String toString() {
-    return "Groovy " + getClass().getSimpleName();
-  }
 }

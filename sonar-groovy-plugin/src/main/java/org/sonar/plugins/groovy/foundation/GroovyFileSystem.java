@@ -20,18 +20,17 @@
 package org.sonar.plugins.groovy.foundation;
 
 import com.google.common.collect.Lists;
-
+import java.io.File;
+import java.util.List;
+import javax.annotation.CheckForNull;
+import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 
-import javax.annotation.CheckForNull;
-
-import java.io.File;
-import java.util.List;
-
+@BatchSide
 public class GroovyFileSystem {
 
   private final FileSystem fileSystem;
@@ -68,6 +67,10 @@ public class GroovyFileSystem {
   @CheckForNull
   public InputFile sourceInputFileFromRelativePath(String relativePath) {
     return fileSystem.inputFile(predicates.and(predicates.matchesPathPattern("**/" + relativePath), isGroovyLanguage, isMainTypeFile));
+  }
+
+  public File baseDir() {
+    return fileSystem.baseDir();
   }
 
 }
