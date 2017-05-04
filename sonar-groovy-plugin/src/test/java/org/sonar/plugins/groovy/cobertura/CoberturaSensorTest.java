@@ -20,10 +20,12 @@
 package org.sonar.plugins.groovy.cobertura;
 
 import com.google.common.collect.ImmutableMap;
-
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -42,12 +44,8 @@ import org.sonar.api.config.Settings;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +70,6 @@ public class CoberturaSensorTest {
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
-
   /**
    * See SONARPLUGINS-696
    */
@@ -94,21 +91,22 @@ public class CoberturaSensorTest {
       }
     }
 
-    when(fp.hasAbsolutePath(Matchers.anyString())).thenAnswer(new Answer<FilePredicate>() {
+    when(fp.hasAbsolutePath(ArgumentMatchers.anyString())).thenAnswer(new Answer<FilePredicate>() {
       @Override
       public FilePredicate answer(InvocationOnMock invocation) throws Throwable {
-        return new CustomFilePredicate(invocation.getArgumentAt(0, String.class));
+        return new CustomFilePredicate(invocation.<String>getArgument(0));
       }
     });
 
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fp);
-    when(mockfileSystem.hasFiles(Matchers.any(FilePredicate.class))).thenReturn(true);
+    when(mockfileSystem.hasFiles(ArgumentMatchers.nullable(FilePredicate.class))).thenReturn(true);
 
     Map<String, DefaultInputFile> groovyFilesByName = new HashMap<>();
 
     when(mockfileSystem.inputFile(any(FilePredicate.class))).thenAnswer(new Answer<InputFile>() {
       boolean firstCall = true;
+
       @Override
       public InputFile answer(InvocationOnMock invocation) throws Throwable {
         if (firstCall) {
@@ -116,7 +114,7 @@ public class CoberturaSensorTest {
           firstCall = false;
           return new DefaultInputFile("", "fake.java").setLanguage("java");
         }
-        String fileName = invocation.getArgumentAt(0, CustomFilePredicate.class).fileName;
+        String fileName = invocation.<CustomFilePredicate>getArgument(0).fileName;
         DefaultInputFile groovyFile;
         if (!groovyFilesByName.containsKey(fileName)) {
           // store groovy file as default input files

@@ -40,7 +40,7 @@ import org.sonar.plugins.groovy.surefire.api.SurefireUtils;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;

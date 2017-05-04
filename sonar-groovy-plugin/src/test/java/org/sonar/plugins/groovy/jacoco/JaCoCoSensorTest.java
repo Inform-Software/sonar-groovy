@@ -22,9 +22,9 @@ package org.sonar.plugins.groovy.jacoco;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
@@ -34,14 +34,13 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
+import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
-import org.sonar.test.TestUtils;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -117,7 +116,7 @@ public class JaCoCoSensorTest {
 
   @Test
   public void test_read_execution_data_with_jacoco_0_7_4() {
-    when(pathResolver.relativeFile(any(File.class), argThat(Matchers.endsWith(".exec")))).thenReturn(jacocoExecutionData);
+    when(pathResolver.relativeFile(any(File.class), ArgumentMatchers.endsWith(".exec"))).thenReturn(jacocoExecutionData);
 
     SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);
@@ -128,7 +127,7 @@ public class JaCoCoSensorTest {
   @Test
   public void test_read_execution_data_with_jacoco_0_7_5() throws IOException {
     File jacocoExecutionData = initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
-    when(pathResolver.relativeFile(any(File.class), argThat(Matchers.endsWith(".exec")))).thenReturn(jacocoExecutionData);
+    when(pathResolver.relativeFile(any(File.class), ArgumentMatchers.endsWith(".exec"))).thenReturn(jacocoExecutionData);
 
     SensorContextTester context = SensorContextTester.create(new File(""));
     sensor.execute(context);

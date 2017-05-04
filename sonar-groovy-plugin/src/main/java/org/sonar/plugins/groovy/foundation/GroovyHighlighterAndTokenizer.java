@@ -19,18 +19,9 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
-import org.codehaus.groovy.antlr.GroovySourceToken;
-import org.codehaus.groovy.antlr.parser.GroovyLexer;
-import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.batch.sensor.cpd.NewCpdTokens;
-import org.sonar.api.batch.sensor.highlighting.NewHighlighting;
-import org.sonar.api.batch.sensor.highlighting.TypeOfText;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
-
-import javax.annotation.Nullable;
-
+import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
+import groovyjarjarantlr.TokenStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -39,10 +30,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import groovyjarjarantlr.Token;
-import groovyjarjarantlr.TokenStream;
-import groovyjarjarantlr.TokenStreamException;
+import javax.annotation.Nullable;
+import org.codehaus.groovy.antlr.GroovySourceToken;
+import org.codehaus.groovy.antlr.parser.GroovyLexer;
+import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.cpd.NewCpdTokens;
+import org.sonar.api.batch.sensor.highlighting.NewHighlighting;
+import org.sonar.api.batch.sensor.highlighting.TypeOfText;
+import org.sonar.api.internal.apachecommons.lang.StringUtils;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 public class GroovyHighlighterAndTokenizer {
 
@@ -104,24 +103,24 @@ public class GroovyHighlighterAndTokenizer {
   };
 
   private static final int[] STRINGS = {
-     GroovyLexer.STRING_CH,
-     GroovyLexer.STRING_CONSTRUCTOR,
-     GroovyLexer.STRING_CTOR_END,
-     GroovyLexer.STRING_CTOR_MIDDLE,
-     GroovyLexer.STRING_CTOR_START,
-     GroovyLexer.STRING_LITERAL,
-     GroovyLexer.STRING_NL,
-     GroovyLexer.REGEX_MATCH,
-     GroovyLexer.REGEX_FIND,
-     GroovyLexer.REGEXP_LITERAL,
-     GroovyLexer.REGEXP_CTOR_END,
-     GroovyLexer.REGEXP_SYMBOL,
-     GroovyLexer.DOLLAR_REGEXP_LITERAL,
-     GroovyLexer.DOLLAR_REGEXP_CTOR_END,
-     GroovyLexer.DOLLAR_REGEXP_SYMBOL,
-     GroovyLexer.DOLLAR,
-     GroovyLexer.ESCAPED_DOLLAR,
-     GroovyLexer.ESCAPED_SLASH
+    GroovyLexer.STRING_CH,
+    GroovyLexer.STRING_CONSTRUCTOR,
+    GroovyLexer.STRING_CTOR_END,
+    GroovyLexer.STRING_CTOR_MIDDLE,
+    GroovyLexer.STRING_CTOR_START,
+    GroovyLexer.STRING_LITERAL,
+    GroovyLexer.STRING_NL,
+    GroovyLexer.REGEX_MATCH,
+    GroovyLexer.REGEX_FIND,
+    GroovyLexer.REGEXP_LITERAL,
+    GroovyLexer.REGEXP_CTOR_END,
+    GroovyLexer.REGEXP_SYMBOL,
+    GroovyLexer.DOLLAR_REGEXP_LITERAL,
+    GroovyLexer.DOLLAR_REGEXP_CTOR_END,
+    GroovyLexer.DOLLAR_REGEXP_SYMBOL,
+    GroovyLexer.DOLLAR,
+    GroovyLexer.ESCAPED_DOLLAR,
+    GroovyLexer.ESCAPED_SLASH
   };
 
   private static final int[] CONSTANTS = {
@@ -173,7 +172,9 @@ public class GroovyHighlighterAndTokenizer {
         String text = token.getText();
         TypeOfText typeOfText = typeOfText(type, text).orElse(null);
         GroovySourceToken gst = (GroovySourceToken) token;
-        tokens.add(new GroovyToken(token.getLine(), token.getColumn(), gst.getLineLast(), gst.getColumnLast(), text, typeOfText));
+        if (StringUtils.isNotBlank(text)) {
+          tokens.add(new GroovyToken(token.getLine(), token.getColumn(), gst.getLineLast(), gst.getColumnLast(), getImage(token, text), typeOfText));
+        }
         token = tokenStream.nextToken();
         type = token.getType();
       }
@@ -184,17 +185,32 @@ public class GroovyHighlighterAndTokenizer {
     }
 
     if (!tokens.isEmpty()) {
-      NewCpdTokens cpdTokens = context.newCpdTokens().onFile(inputFile);
+      boolean isNotTest = inputFile.type() != InputFile.Type.TEST;
+      NewCpdTokens cpdTokens = isNotTest ? context.newCpdTokens().onFile(inputFile) : null;
       NewHighlighting highlighting = context.newHighlighting().onFile(inputFile);
       for (GroovyToken groovyToken : tokens) {
-        cpdTokens = cpdTokens.addToken(groovyToken.startLine, groovyToken.startColumn, groovyToken.endLine, groovyToken.endColumn, groovyToken.value);
+        if (isNotTest) {
+          cpdTokens = cpdTokens.addToken(groovyToken.startLine, groovyToken.startColumn, groovyToken.endLine, groovyToken.endColumn, groovyToken.value);
+        }
         if (groovyToken.typeOfText != null) {
           highlighting = highlighting.highlight(groovyToken.startLine, groovyToken.startColumn, groovyToken.endLine, groovyToken.endColumn, groovyToken.typeOfText);
         }
       }
       highlighting.save();
-      cpdTokens.save();
+      if (isNotTest) {
+        cpdTokens.save();
+      }
     }
+  }
+
+  private String getImage(Token token, String text) {
+    if (token.getType() == GroovyTokenTypes.STRING_LITERAL
+      || token.getType() == GroovyTokenTypes.STRING_CTOR_START
+      || token.getType() == GroovyTokenTypes.STRING_CTOR_MIDDLE
+      || token.getType() == GroovyTokenTypes.STRING_CTOR_END) {
+      return "LITERAL";
+    }
+    return text;
   }
 
   private Optional<TypeOfText> typeOfText(int type, String text) {

@@ -21,14 +21,14 @@ package org.sonar.plugins.groovy.jacoco;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
-import org.fest.assertions.Fail;
+import org.assertj.core.api.Fail;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.sonar.test.TestUtils;
+import org.sonar.plugins.groovy.TestUtils;
 
 import java.io.File;
 import java.util.Collection;

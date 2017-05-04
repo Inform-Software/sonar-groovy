@@ -23,7 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.sonar.test.TestUtils;
+import org.sonar.plugins.groovy.TestUtils;
 
 import java.io.File;
 

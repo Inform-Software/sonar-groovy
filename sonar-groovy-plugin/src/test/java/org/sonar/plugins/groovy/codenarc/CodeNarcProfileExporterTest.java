@@ -22,7 +22,7 @@ package org.sonar.plugins.groovy.codenarc;
 import org.apache.commons.lang.CharUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.fest.assertions.Fail;
+import org.assertj.core.api.Fail;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.Rule;
 import org.sonar.api.rules.RulePriority;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.test.TestUtils;
+import org.sonar.plugins.groovy.TestUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -41,7 +41,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeNarcProfileExporterTest {
 

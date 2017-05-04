@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.sonar.api.Plugin;
 import org.sonar.api.SonarQubeVersion;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GroovyPluginTest {
 
@@ -32,7 +32,7 @@ public class GroovyPluginTest {
     GroovyPlugin plugin = new GroovyPlugin();
     Plugin.Context context = new Plugin.Context(SonarQubeVersion.V5_6);
     plugin.define(context);
-    assertThat(context.getExtensions()).hasSize(16);
+    assertThat(context.getExtensions()).hasSize(17);
   }
 
 }

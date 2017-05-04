@@ -19,18 +19,17 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
+import java.io.File;
+import java.nio.file.Files;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.sensor.highlighting.TypeOfText;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.test.TestUtils;
+import org.sonar.plugins.groovy.TestUtils;
 
-import java.io.File;
-import java.nio.file.Files;
-
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GroovyHighlighterAndTokenizerTest {
 
@@ -63,6 +62,34 @@ public class GroovyHighlighterAndTokenizerTest {
     assertThat(context.highlightingTypeAt(":Greet.groovy", 12, 13)).containsOnly(TypeOfText.CONSTANT);
     assertThat(context.highlightingTypeAt(":Greet.groovy", 12, 17)).containsOnly(TypeOfText.COMMENT);
     Mockito.verify(context, Mockito.times(1)).newHighlighting();
+  }
+
+  @Test
+  public void should_tokenize_for_cpd() throws Exception {
+    File file = TestUtils.getResource("/org/sonar/plugins/groovy/foundation/Greet.groovy");
+
+    SensorContextTester context = SensorContextTester.create(file.getParentFile());
+    DefaultInputFile inputFile = new DefaultInputFile("", "Greet.groovy")
+      .setLanguage(Groovy.KEY)
+      .setType(Type.MAIN)
+      .initMetadata(new String(Files.readAllBytes(file.toPath()), "UTF-8"));
+    context.fileSystem().add(inputFile);
+
+    GroovyHighlighterAndTokenizer highlighter = new GroovyHighlighterAndTokenizer(inputFile);
+    context = Mockito.spy(context);
+    highlighter.processFile(context);
+
+    assertThat(context.cpdTokens(":Greet.groovy")).extracting("value").containsExactly("classGreet{",
+      "defname",
+      "Greet(who){name=who}",
+      "defsalute(){printlnLITERALnameLITERALnameLITERAL}",
+      "}",
+      "/** * Javadoc style */",
+      "@groovy.beans.Bindable",
+      "classCool{",
+      "doublex=1.4// Comment",
+      "}");
+    Mockito.verify(context, Mockito.times(1)).newCpdTokens();
   }
 
   @Test

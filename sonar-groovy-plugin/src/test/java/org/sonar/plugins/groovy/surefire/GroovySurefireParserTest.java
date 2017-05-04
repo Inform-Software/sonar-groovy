@@ -19,10 +19,12 @@
  */
 package org.sonar.plugins.groovy.surefire;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
+import java.io.File;
+import java.net.URISyntaxException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sonar.api.batch.fs.FileSystem;
@@ -41,15 +43,12 @@ import org.sonar.api.test.TestCase;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -95,7 +94,7 @@ public class GroovySurefireParserTest {
     MutableTestCase testCase = mock(MutableTestCase.class);
     when(testCase.setDurationInMs(anyLong())).thenReturn(testCase);
     when(testCase.setStatus(any(TestCase.Status.class))).thenReturn(testCase);
-    when(testCase.setMessage(anyString())).thenReturn(testCase);
+    when(testCase.setMessage(ArgumentMatchers.nullable(String.class))).thenReturn(testCase);
     when(testCase.setStackTrace(anyString())).thenReturn(testCase);
     when(testCase.setType(anyString())).thenReturn(testCase);
     MutableTestPlan testPlan = mock(MutableTestPlan.class);
@@ -109,15 +108,11 @@ public class GroovySurefireParserTest {
     verify(testPlan).addTestCase("testGetJDependsCollector");
   }
 
-  private static BaseMatcher<InputFile> inputFileMatcher(final String fileName) {
-    return new BaseMatcher<InputFile>() {
+  private static ArgumentMatcher<InputFile> inputFileMatcher(final String fileName) {
+    return new ArgumentMatcher<InputFile>() {
       @Override
-      public boolean matches(Object arg0) {
-        return fileName.equals(((InputFile) arg0).key());
-      }
-
-      @Override
-      public void describeTo(Description arg0) {
+      public boolean matches(InputFile arg0) {
+        return fileName.equals(arg0.key());
       }
     };
   }
