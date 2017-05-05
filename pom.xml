@@ -44,14 +44,14 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git@github.com:SonarSource/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:SonarSource/sonar-groovy.git</developerConnection>
-    <url>https://github.com/SonarSource/sonar-groovy</url>
+    <connection>scm:git:git@github.com:SonarQubeCommunity/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:SonarQubeCommunity/sonar-groovy.git</developerConnection>
+    <url>https://github.com/SonarQubeCommunity/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
-    <system>JIRA</system>
-    <url>http://jira.sonarsource.com/browse/SONARGROOV</url>
+    <system>GitHub</system>
+    <url>https://github.com/SonarQubeCommunity/sonar-groovy/issues</url>
   </issueManagement>
   
   <properties>

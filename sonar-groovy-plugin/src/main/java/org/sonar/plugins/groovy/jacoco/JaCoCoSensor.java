@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -58,7 +57,7 @@ public class JaCoCoSensor implements Sensor {
     }
   }
 
-  @VisibleForTesting
+  // VisibleForTesting
   boolean shouldExecuteOnProject() {
     File report = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getReportPath());
     boolean foundReport = report.exists() && report.isFile();

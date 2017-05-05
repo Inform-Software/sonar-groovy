@@ -19,8 +19,8 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.io.Files;
 import java.io.File;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -56,9 +56,9 @@ public class JaCoCoItSensorTest {
     File outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCoItSensorTests/");
     jacocoExecutionData = new File(outputDir, "jacoco-it.exec");
 
-    Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
+    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
       new File(jacocoExecutionData.getParentFile(), "Hello.class"));
-    Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
+    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
 
     Settings settings = new Settings();

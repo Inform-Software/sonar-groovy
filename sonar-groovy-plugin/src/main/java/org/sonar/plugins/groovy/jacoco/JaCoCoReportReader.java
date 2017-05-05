@@ -19,17 +19,6 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.base.Preconditions;
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.data.ExecutionDataReader;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.ExecutionDataWriter;
-import org.jacoco.core.data.IExecutionDataVisitor;
-import org.jacoco.core.data.ISessionInfoVisitor;
-
-import javax.annotation.Nullable;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -37,6 +26,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import javax.annotation.Nullable;
+import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.data.ExecutionDataReader;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.IExecutionDataVisitor;
+import org.jacoco.core.data.ISessionInfoVisitor;
 
 public class JaCoCoReportReader {
 
@@ -86,8 +83,9 @@ public class JaCoCoReportReader {
     }
     try (DataInputStream dis = new DataInputStream(new FileInputStream(jacocoExecutionData))) {
       byte firstByte = dis.readByte();
-      Preconditions.checkState(firstByte == ExecutionDataWriter.BLOCK_HEADER);
-      Preconditions.checkState(dis.readChar() == ExecutionDataWriter.MAGIC_NUMBER);
+      if (firstByte != ExecutionDataWriter.BLOCK_HEADER || dis.readChar() != ExecutionDataWriter.MAGIC_NUMBER) {
+        throw new IllegalStateException();
+      }
       char version = dis.readChar();
       boolean isCurrentFormat = version == ExecutionDataWriter.FORMAT_VERSION;
       if (!isCurrentFormat) {

@@ -19,9 +19,11 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
@@ -30,14 +32,9 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.plugins.groovy.utils.StaxParser;
 
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.util.List;
-
 public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
 
-  private final ImmutableList.Builder<CodeNarcViolation> result = ImmutableList.builder();
+  private final List<CodeNarcViolation> result = new ArrayList<>();
   private final FileSystem fileSystem;
 
   private CodeNarcXMLParser(final FileSystem fileSystem) {
@@ -51,14 +48,14 @@ public final class CodeNarcXMLParser implements StaxParser.XmlStreamHandler {
     } catch (XMLStreamException e) {
       throw new IllegalStateException("Unabel to parse file: " + file, e);
     }
-    return handler.result.build();
+    return handler.result;
   }
 
   @Override
   public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
     rootCursor.advance();
     SMInputCursor items = rootCursor.descendantElementCursor();
-    List<String> sourceDirectories = Lists.newLinkedList();
+    List<String> sourceDirectories = new LinkedList<>();
     while (items.getNext() != null) {
       String localName = items.getLocalName();
       if ("Project".equals(localName)) {

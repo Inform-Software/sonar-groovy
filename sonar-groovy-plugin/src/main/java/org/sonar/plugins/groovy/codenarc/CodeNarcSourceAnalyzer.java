@@ -19,11 +19,10 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.codenarc.analyzer.AbstractSourceAnalyzer;
@@ -37,7 +36,7 @@ import org.sonar.api.batch.fs.InputFile;
 
 public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
-  private final Map<InputFile, List<Violation>> violationsByFile = Maps.newHashMap();
+  private final Map<InputFile, List<Violation>> violationsByFile = new HashMap<>();
   private final List<InputFile> sourceFiles;
 
   public CodeNarcSourceAnalyzer(List<InputFile> sourceFiles) {
@@ -46,28 +45,29 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
   @Override
   public Results analyze(RuleSet ruleSet) {
-    Multimap<File, FileResults> resultsByFileByDirectory = processFiles(ruleSet);
+    Map<File, List<FileResults>> resultsByFileByDirectory = processFiles(ruleSet);
     DirectoryResults directoryResults = new DirectoryResults(".");
-    for (FileResults fileResults : resultsByFileByDirectory.values()) {
-      directoryResults.addChild(fileResults);
+    for (List<FileResults> fileResults : resultsByFileByDirectory.values()) {
+      fileResults.forEach(directoryResults::addChild);
     }
     return directoryResults;
   }
 
-  private Multimap<File, FileResults> processFiles(RuleSet ruleSet) {
-    Multimap<File, FileResults> results = LinkedListMultimap.create();
+  private Map<File, List<FileResults>> processFiles(RuleSet ruleSet) {
+    Map<File, List<FileResults>> results = new HashMap<>();
     for (InputFile inputFile : sourceFiles) {
       List<Violation> violations = collectViolations(new SourceFile(inputFile.file()), ruleSet);
       violationsByFile.put(inputFile, violations);
       FileResults result = new FileResults(inputFile.absolutePath(), violations);
-      results.put(inputFile.file().getParentFile(), result);
+      results.putIfAbsent(inputFile.file().getParentFile(), new LinkedList<>());
+      results.get(inputFile.file().getParentFile()).add(result);
     }
     return results;
   }
 
   @Override
   public List<?> getSourceDirectories() {
-    return ImmutableList.of();
+    return new ArrayList<>();
   }
 
   public Map<InputFile, List<Violation>> getViolationsByFile() {

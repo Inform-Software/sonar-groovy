@@ -19,8 +19,12 @@
  */
 package org.sonar.plugins.groovy.surefire;
 
-import com.google.common.collect.Lists;
-
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -44,13 +48,6 @@ import org.sonar.plugins.groovy.surefire.data.UnitTestIndex;
 import org.sonar.plugins.groovy.surefire.data.UnitTestResult;
 import org.sonar.plugins.groovy.utils.StaxParser;
 
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
 @BatchSide
 public class GroovySurefireParser {
 
@@ -64,7 +61,6 @@ public class GroovySurefireParser {
     this.perspectives = perspectives;
     this.fs = fs;
   }
-
 
   public void collect(SensorContext context, File reportsDir) {
     File[] xmlFiles = getReports(reportsDir);
@@ -181,7 +177,7 @@ public class GroovySurefireParser {
   }
 
   private static FilePredicate getFileNamePredicateFromSuffixes(FilePredicates p, String fileName, String[] suffixes) {
-    List<FilePredicate> fileNamePredicates = Lists.newArrayListWithCapacity(suffixes.length);
+    List<FilePredicate> fileNamePredicates = new ArrayList<>(suffixes.length);
     for (String suffix : suffixes) {
       fileNamePredicates.add(p.matchesPathPattern("**/" + fileName + suffix));
     }

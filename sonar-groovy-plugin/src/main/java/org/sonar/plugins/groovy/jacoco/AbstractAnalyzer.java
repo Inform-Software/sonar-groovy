@@ -19,9 +19,10 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.CheckForNull;
@@ -56,21 +57,21 @@ public abstract class AbstractAnalyzer {
 
   private List<String> getBinaryDirectories(Settings settings) {
     if (settings.hasKey(GroovyPlugin.SONAR_GROOVY_BINARIES)) {
-      return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
+      return Arrays.asList(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
     }
-    return ImmutableList.copyOf(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK));
+    return Arrays.asList(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES_FALLBACK));
   }
 
   private static List<File> getFiles(List<String> binaryDirectories, File baseDir) {
-    ImmutableList.Builder<File> builder = ImmutableList.builder();
+    List<File> result = new ArrayList<>();
     for (String directory : binaryDirectories) {
       File f = new File(directory);
       if (!f.isAbsolute()) {
         f = new File(baseDir, directory);
       }
-      builder.add(f);
+      result.add(f);
     }
-    return builder.build();
+    return result;
   }
 
   @CheckForNull
@@ -92,7 +93,7 @@ public abstract class AbstractAnalyzer {
       JaCoCoExtensions.logger().warn("Project coverage is set to 0% since there is no directories with classes.");
       return;
     }
-    classFilesCache = Maps.newHashMap();
+    classFilesCache = new HashMap<>();
     for (File classesDir : binaryDirs) {
       populateClassFilesCache(classFilesCache, classesDir, "");
     }

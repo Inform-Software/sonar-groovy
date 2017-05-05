@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.groovy;
 
-import com.google.common.collect.ImmutableList;
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
@@ -89,8 +88,7 @@ public class GroovyPlugin implements Plugin {
 
   @Override
   public void define(Context context) {
-    ImmutableList.Builder<Object> builder = ImmutableList.builder();
-    builder.add(
+    context.addExtensions(
       // CodeNarc
       CodeNarcRulesDefinition.class,
       CodeNarcSensor.class,
@@ -106,7 +104,6 @@ public class GroovyPlugin implements Plugin {
       GroovySurefireSensor.class,
       // Cobertura
       CoberturaSensor.class);
-    builder.addAll(JaCoCoExtensions.getExtensions());
-    context.addExtensions(builder.build());
+    context.addExtensions(JaCoCoExtensions.getExtensions());
   }
 }

@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class CoberturaSensorTest {
   @Before
   public void setUp() throws Exception {
     settings = new Settings();
-    settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml"));
+    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml");
     fileSystem = new DefaultFileSystem(new File("."));
     sensor = new CoberturaSensor(settings, fileSystem);
   }
@@ -173,7 +172,7 @@ public class CoberturaSensorTest {
   @Test
   public void should_not_parse_report_if_report_does_not_exist() {
     Settings settings = new Settings();
-    settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
+    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
     fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
@@ -189,7 +188,7 @@ public class CoberturaSensorTest {
   @Test
   public void should_use_relative_path_to_get_report() {
     Settings settings = new Settings();
-    settings.addProperties(ImmutableMap.of(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml"));
+    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
     fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));

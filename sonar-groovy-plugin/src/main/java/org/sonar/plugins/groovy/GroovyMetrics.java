@@ -19,14 +19,12 @@
  */
 package org.sonar.plugins.groovy;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.Arrays;
+import java.util.List;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.Metric.ValueType;
 import org.sonar.api.measures.Metrics;
-
-import java.util.List;
 
 public final class GroovyMetrics implements Metrics {
 
@@ -84,7 +82,7 @@ public final class GroovyMetrics implements Metrics {
 
   @Override
   public List<Metric> getMetrics() {
-    return ImmutableList.of(
+    return Arrays.asList(
       EFFERENT_COUPLING_AVERAGE,
       EFFERENT_COUPLING_TOTAL,
       AFFERENT_COUPLING_AVERAGE,

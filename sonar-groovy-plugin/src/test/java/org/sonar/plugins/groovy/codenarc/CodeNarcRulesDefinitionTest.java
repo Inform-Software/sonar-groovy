@@ -19,14 +19,12 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.collect.Lists;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,7 +43,7 @@ public class CodeNarcRulesDefinitionTest {
     List<Rule> rules = repository.rules();
     assertThat(rules).hasSize(347);
 
-    List<String> missingDebt = Lists.newLinkedList();
+    List<String> missingDebt = new LinkedList<>();
     for (Rule rule : rules) {
       assertThat(rule.key()).isNotNull();
       assertThat(rule.internalKey()).isNotNull();

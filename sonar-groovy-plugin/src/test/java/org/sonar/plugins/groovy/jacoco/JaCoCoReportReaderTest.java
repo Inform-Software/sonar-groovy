@@ -19,7 +19,9 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Fail;
 import org.jacoco.core.data.IExecutionDataVisitor;
@@ -29,9 +31,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.plugins.groovy.TestUtils;
-
-import java.io.File;
-import java.util.Collection;
 
 import static org.mockito.Mockito.mock;
 
@@ -59,14 +58,14 @@ public class JaCoCoReportReaderTest {
   @Test
   public void not_existing_class_files_should_not_be_analyzed_for_current() {
     File report = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCo_incompatible_merge/jacoco-0.7.5.exec");
-    Collection<File> classFile = Lists.newArrayList(dummy);
+    Collection<File> classFile = Arrays.asList(dummy);
     new JaCoCoReportReader(report).analyzeFiles(null, classFile);
   }
 
   @Test
   public void not_existing_class_files_should_not_be_analyzed_for_previous() {
     File report = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCo_incompatible_merge/jacoco-0.7.4.exec");
-    Collection<File> classFile = Lists.newArrayList(dummy);
+    Collection<File> classFile = Arrays.asList(dummy);
     new JaCoCoReportReader(report).analyzeFiles(null, classFile);
   }
 

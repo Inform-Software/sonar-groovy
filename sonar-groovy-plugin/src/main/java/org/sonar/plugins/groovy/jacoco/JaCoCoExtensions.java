@@ -19,12 +19,11 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-
-import java.util.List;
 
 public class JaCoCoExtensions {
 
@@ -34,18 +33,18 @@ public class JaCoCoExtensions {
   }
 
   public static List<Object> getExtensions() {
-    ImmutableList.Builder<Object> extensions = ImmutableList.builder();
+    List<Object> extensions = new ArrayList<>();
 
     extensions.addAll(JaCoCoConfiguration.getPropertyDefinitions());
-    extensions.add(
+    extensions.addAll(Arrays.asList(
       JaCoCoConfiguration.class,
       // Unit tests
       JaCoCoSensor.class,
       // Integration tests
       JaCoCoItSensor.class,
-      JaCoCoOverallSensor.class);
+      JaCoCoOverallSensor.class));
 
-    return extensions.build();
+    return extensions;
   }
 
   public static Logger logger() {

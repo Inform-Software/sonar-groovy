@@ -19,7 +19,8 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -33,10 +34,8 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +57,7 @@ public class SonarWayProfileTest {
     definition.define(context);
     RulesDefinition.Repository repository = context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
 
-    Map<String, RulesDefinition.Rule> rules = Maps.newHashMap();
+    Map<String, RulesDefinition.Rule> rules = new HashMap<>();
     for (RulesDefinition.Rule rule : repository.rules()) {
       rules.put(rule.key(), rule);
     }

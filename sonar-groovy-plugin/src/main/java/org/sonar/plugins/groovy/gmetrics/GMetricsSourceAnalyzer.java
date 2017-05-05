@@ -19,9 +19,15 @@
  */
 package org.sonar.plugins.groovy.gmetrics;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.gmetrics.GMetricsRunner;
@@ -39,16 +45,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputDir;
 import org.sonar.api.batch.fs.InputFile;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 public class GMetricsSourceAnalyzer {
 
   private static final List<org.gmetrics.metric.Metric> GMETRICS = Arrays.asList(
@@ -58,7 +54,7 @@ public class GMetricsSourceAnalyzer {
     new EfferentCouplingMetric(),
     new AfferentCouplingMetric());
 
-  private final Multimap<InputFile, ClassResultsNode> resultsByFile = ArrayListMultimap.create();
+  private final Map<InputFile, List<ClassResultsNode>> resultsByFile = new HashMap<>();
   private final Map<InputDir, PackageResultsNode> resultsByPackage = new HashMap<>();
 
   private final Map<String, InputFile> pathToInputFile = new HashMap<>();
@@ -77,7 +73,7 @@ public class GMetricsSourceAnalyzer {
     }
   }
 
-  public Multimap<InputFile, ClassResultsNode> resultsByFile() {
+  public Map<InputFile, List<ClassResultsNode>> resultsByFile() {
     return resultsByFile;
   }
 
@@ -132,7 +128,8 @@ public class GMetricsSourceAnalyzer {
     String filePath = resultNode.getFilePath();
     InputFile inputFile = pathToInputFile.get(filePath);
     if (inputFile != null) {
-      resultsByFile.put(inputFile, resultNode);
+      resultsByFile.putIfAbsent(inputFile, new ArrayList<>());
+      resultsByFile.get(inputFile).add(resultNode);
     }
   }
 

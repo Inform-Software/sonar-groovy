@@ -19,8 +19,8 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
-import com.google.common.collect.Lists;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.sonar.api.batch.BatchSide;
@@ -51,17 +51,23 @@ public class GroovyFileSystem {
 
   public List<File> sourceFiles() {
     Iterable<File> files = fileSystem.files(predicates.and(isGroovyLanguage, isMainTypeFile));
-    return Lists.newArrayList(files);
+    List<File> list = new ArrayList<>();
+    files.iterator().forEachRemaining(list::add);
+    return list;
   }
 
   public List<InputFile> groovyInputFiles() {
     Iterable<InputFile> inputFiles = fileSystem.inputFiles(isGroovyLanguage);
-    return Lists.newArrayList(inputFiles);
+    List<InputFile> list = new ArrayList<>();
+    inputFiles.iterator().forEachRemaining(list::add);
+    return list;
   }
 
   public List<InputFile> sourceInputFiles() {
     Iterable<InputFile> inputFiles = fileSystem.inputFiles(predicates.and(isGroovyLanguage, isMainTypeFile));
-    return Lists.newArrayList(inputFiles);
+    List<InputFile> list = new ArrayList<>();
+    inputFiles.iterator().forEachRemaining(list::add);
+    return list;
   }
 
   @CheckForNull

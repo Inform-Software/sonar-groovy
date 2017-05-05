@@ -19,9 +19,16 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
+import java.io.File;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.fs.FileSystem;
@@ -35,15 +42,6 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.utils.StaxParser;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Locale.ENGLISH;
 import static org.sonar.api.utils.ParsingUtils.parseNumber;
 
@@ -53,7 +51,7 @@ public class CoberturaReportParser {
 
   private final SensorContext context;
   private final FileSystem fileSystem;
-  private List<String> sourceDirs = Lists.newArrayList();
+  private List<String> sourceDirs = new ArrayList<>();
 
   public CoberturaReportParser(SensorContext context, final FileSystem fileSystem) {
     this.context = context;
@@ -81,7 +79,7 @@ public class CoberturaReportParser {
   }
 
   private static List<String> collectSourceDirs(SMInputCursor source) throws XMLStreamException {
-    List<String> directories = Lists.newLinkedList();
+    List<String> directories = new LinkedList<>();
     while (source.getNext() != null) {
       String sourceDir = cleanSourceDir(source.getElemStringValue());
       if (StringUtils.isNotBlank(sourceDir)) {
@@ -108,7 +106,7 @@ public class CoberturaReportParser {
 
   private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
     while (pack.getNext() != null) {
-      Map<String, ParsingResult> resultByFilename = Maps.newHashMap();
+      Map<String, ParsingResult> resultByFilename = new HashMap<>();
       collectFileMeasures(pack.descendantElementCursor("class"), resultByFilename);
       handleFileMeasures(resultByFilename);
     }
@@ -137,7 +135,7 @@ public class CoberturaReportParser {
   }
 
   private void collectFileMeasures(SMInputCursor clazz, Map<String, ParsingResult> resultByFilename)
-          throws XMLStreamException {
+    throws XMLStreamException {
     while (clazz.getNext() != null) {
       String fileName = clazz.getAttrValue("filename");
       ParsingResult parsingResult = resultByFilename.get(fileName);
@@ -190,7 +188,7 @@ public class CoberturaReportParser {
     }
 
     public boolean isValidLine(int lineId) {
-      return fileExists() && lineId> 0 && lineId <= inputFile.lines();
+      return fileExists() && lineId > 0 && lineId <= inputFile.lines();
     }
 
     public boolean fileExists() {

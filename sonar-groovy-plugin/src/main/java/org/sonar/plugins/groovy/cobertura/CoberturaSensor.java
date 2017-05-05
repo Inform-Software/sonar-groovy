@@ -19,8 +19,7 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import com.google.common.annotations.VisibleForTesting;
-
+import java.io.File;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -31,8 +30,6 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
-
-import java.io.File;
 
 public class CoberturaSensor implements Sensor {
 
@@ -61,7 +58,7 @@ public class CoberturaSensor implements Sensor {
     }
   }
 
-  @VisibleForTesting
+  // VisibleForTesting
   boolean shouldExecuteOnProject() {
     return groovyFileSystem.hasGroovyFiles();
   }

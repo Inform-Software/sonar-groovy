@@ -19,8 +19,8 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.io.Files;
 import java.io.File;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile.Type;
@@ -31,13 +31,13 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
+import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
-import org.sonar.plugins.groovy.TestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,9 +59,9 @@ public class JaCoCoOverallSensorTest {
     jacocoUTData = new File(outputDir, "jacoco-ut.exec");
     jacocoITData = new File(outputDir, "jacoco-it.exec");
 
-    Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
+    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello.class"));
-    Files.copy(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
+    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
 
     settings = new Settings();

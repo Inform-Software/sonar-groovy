@@ -19,6 +19,24 @@
  */
 package org.sonar.plugins.groovy;
 
+import groovyjarjarantlr.Token;
+import groovyjarjarantlr.TokenStream;
+import groovyjarjarantlr.TokenStreamException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.antlr.GroovySourceToken;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
@@ -49,26 +67,6 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.foundation.GroovyHighlighterAndTokenizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsSourceAnalyzer;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import groovyjarjarantlr.Token;
-import groovyjarjarantlr.TokenStream;
-import groovyjarjarantlr.TokenStreamException;
 
 public class GroovySensor implements Sensor {
   private static final Logger LOG = Loggers.get(GroovySensor.class);
@@ -117,7 +115,7 @@ public class GroovySensor implements Sensor {
 
     metricsAnalyzer.analyze();
 
-    for (Entry<InputFile, Collection<ClassResultsNode>> entry : metricsAnalyzer.resultsByFile().asMap().entrySet()) {
+    for (Entry<InputFile, List<ClassResultsNode>> entry : metricsAnalyzer.resultsByFile().entrySet()) {
       processFile(context, entry.getKey(), entry.getValue());
     }
 

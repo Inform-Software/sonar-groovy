@@ -19,18 +19,17 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
 
-import java.util.Map;
-
 public class ExecutionDataVisitor implements ISessionInfoVisitor, IExecutionDataVisitor {
 
-  private final Map<String, ExecutionDataStore> sessions = Maps.newHashMap();
+  private final Map<String, ExecutionDataStore> sessions = new HashMap<>();
 
   private ExecutionDataStore executionDataStore;
   private ExecutionDataStore merged = new ExecutionDataStore();
