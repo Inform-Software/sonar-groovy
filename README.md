@@ -1,5 +1,8 @@
-Sonar Groovy
+SonarQube plugin for Groovy
 ==========
+
+## /!\ This plugin is looking for a maintainer
+If you are interested, please ask on SonarQube user group.
 
 ### Build status
 
