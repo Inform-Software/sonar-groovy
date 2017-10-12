@@ -190,7 +190,12 @@ public abstract class AbstractAnalyzer {
       if (ignore) {
         continue;
       }
-      newCoverage.lineHits(lineId, hits);
+      try {
+        newCoverage.lineHits(lineId, hits);
+      }
+      catch (IllegalStateException stateException) {
+        JaCoCoExtensions.logger().warn("cannot set coverage {}", stateException.getMessage());
+      }
 
       ICounter branchCounter = line.getBranchCounter();
       int conditions = branchCounter.getTotalCount();
