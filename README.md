@@ -3,7 +3,7 @@ SonarQube plugin for Groovy
 
 ### Build status
 
-[![Build Status](https://api.travis-ci.org/SonarQubeCommunity/sonar-groovy.png)](https://travis-ci.org/SonarQubeCommunity/sonar-groovy)
+[![Build Status](https://api.travis-ci.org/pmayweg/sonar-groovy.png)](https://travis-ci.org/pmayweg/sonar-groovy)
 
 ## Description
 The plugin enables analysis of Groovy within SonarQube.
