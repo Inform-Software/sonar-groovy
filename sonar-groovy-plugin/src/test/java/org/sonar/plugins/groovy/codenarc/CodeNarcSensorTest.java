@@ -100,7 +100,7 @@ public class CodeNarcSensorTest {
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
     File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATH, reportUpdated.getAbsolutePath());
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -120,7 +120,7 @@ public class CodeNarcSensorTest {
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
     File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATH, reportUpdated.getAbsolutePath());
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -140,7 +140,7 @@ public class CodeNarcSensorTest {
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
     File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATH, reportUpdated.getAbsolutePath());
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 
@@ -170,7 +170,7 @@ public class CodeNarcSensorTest {
   @Test
   public void should_do_nothing_when_can_not_find_report_path() throws Exception {
 
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATH, "../missing_file.xml");
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, "../missing_file.xml");
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 

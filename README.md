@@ -25,7 +25,7 @@ GMetrics | 0.2 | 0.2 | 0.3  | 0.3  | 0.4    | 0.5  | 0.6  | 0.6  | 0.7   | 0.7  
 
 ## Notes
 *CodeNarc*
-It is possible to reuse a previously generated report from CodeNarc by setting the `sonar.groovy.codenarc.reportPath` property.
+It is possible to reuse a previously generated report from CodeNarc by setting the `sonar.groovy.codenarc.reportPaths` property.
 
 *Groovy File Suffixes*
 It is possible to define multiple groovy file suffixes to be recognized by setting the `sonar.groovy.file.suffixes` property. Note that by default, only files having `.groovy` as extension will be analyzed.

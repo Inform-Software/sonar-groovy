@@ -35,12 +35,13 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 @Properties({
   @Property(
-    key = GroovyPlugin.CODENARC_REPORT_PATH,
-    name = "CodeNarc Report",
-    description = "Path to the CodeNarc XML report. Path may be absolute or relative to the project base directory.",
+    key = GroovyPlugin.CODENARC_REPORT_PATHS,
+    name = "CodeNarc Reports",
+    description = "Path to the CodeNarc XML reports. Paths may be absolute or relative to the project base directory.",
     project = true,
     module = true,
-    global = true),
+    global = true,
+    deprecatedKey = GroovyPlugin.CODENARC_REPORT_PATH),
   @Property(
     key = GroovyPlugin.COBERTURA_REPORT_PATH,
     name = "Cobertura Report",
@@ -76,7 +77,9 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 })
 public class GroovyPlugin implements Plugin {
 
-  public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  @Deprecated public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  public static final String CODENARC_REPORT_PATHS = "sonar.groovy.codenarc.reportPaths";
+
   public static final String COBERTURA_REPORT_PATH = "sonar.groovy.cobertura.reportPath";
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 

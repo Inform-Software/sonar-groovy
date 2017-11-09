@@ -22,8 +22,8 @@ package org.sonar.plugins.groovy.codenarc;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -71,15 +71,25 @@ public class CodeNarcSensor implements Sensor {
   @Override
   public void execute(SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (context.settings().hasKey(GroovyPlugin.CODENARC_REPORT_PATH)) {
+    if (context.settings().hasKey(GroovyPlugin.CODENARC_REPORT_PATHS)) {
       // Yes
+      String[] codeNarcReportPaths = context.settings().getStringArray(GroovyPlugin.CODENARC_REPORT_PATHS);
       String codeNarcReportPath = context.settings().getString(GroovyPlugin.CODENARC_REPORT_PATH);
-      File report = context.fileSystem().resolvePath(codeNarcReportPath);
-      if (!report.isFile()) {
-        LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATH + " not found at {}", report);
-        return;
+      if (codeNarcReportPaths.length == 0) {
+        codeNarcReportPaths = new String[] { codeNarcReportPath };
       }
-      parseReport(context, Collections.singletonList(report));
+      List<File> reports = new ArrayList<File>();
+      for (String path : codeNarcReportPaths) {
+        File report = context.fileSystem().resolvePath(path);
+        if (!report.isFile() || !report.exists()) {
+          LOG.warn("Groovy report " + GroovyPlugin.CODENARC_REPORT_PATHS + " not found at {}", report);
+        } else {
+          reports.add(report);
+        }
+      }
+      if (!reports.isEmpty()) {
+        parseReport(context, reports);
+      }
     } else {
       // No, run CodeNarc
       runCodeNarc(context);
