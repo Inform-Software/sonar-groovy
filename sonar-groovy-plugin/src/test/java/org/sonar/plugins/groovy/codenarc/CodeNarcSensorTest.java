@@ -205,8 +205,9 @@ public class CodeNarcSensorTest {
   private File getReportWithUpdatedSourceDir() throws IOException {
     File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
     File reportUpdated = temp.newFile();
+    String newSourceDir = sensorContextTester.fileSystem().baseDir().toPath().resolve("src").toAbsolutePath().toString().replaceAll("\\\\", "/");
     FileUtils.write(reportUpdated,
-      FileUtils.readFileToString(report).replaceAll(Pattern.quote("[sourcedir]"), sensorContextTester.fileSystem().baseDir().toPath().resolve("src").toAbsolutePath().toString()));
+      FileUtils.readFileToString(report).replaceAll(Pattern.quote("[sourcedir]"), newSourceDir));
     return reportUpdated;
   }
 
