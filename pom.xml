@@ -29,6 +29,10 @@
 
   <developers>
     <developer>
+      <id>pmayweg</id>
+      <name>Patrick Mayweg</name>
+    </developer>
+    <developer>
       <id>m-g-sonar</id>
       <name>Michael Gumowski</name>
     </developer>
@@ -44,14 +48,14 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git@github.com:SonarQubeCommunity/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:SonarQubeCommunity/sonar-groovy.git</developerConnection>
-    <url>https://github.com/SonarQubeCommunity/sonar-groovy</url>
+    <connection>scm:git:git@github.com:pmayweg/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:pmayweg/sonar-groovy.git</developerConnection>
+    <url>https://github.com/pmayweg/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/SonarQubeCommunity/sonar-groovy/issues</url>
+    <url>https://github.com/pmayweg/sonar-groovy/issues</url>
   </issueManagement>
   
   <properties>
