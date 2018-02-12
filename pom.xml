@@ -15,10 +15,7 @@
 
   <name>Sonar Groovy</name>
   <inceptionYear>2010</inceptionYear>
-  <organization>
-    <name>SonarSource</name>
-    <url>http://www.sonarsource.com</url>
-  </organization>
+
   <licenses>
     <license>
       <name>GNU LGPL 3</name>
