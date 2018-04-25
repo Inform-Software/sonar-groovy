@@ -50,7 +50,7 @@ To display code coverage data:
 To display code coverage data:
 
 1. Prior to the SonarQube analysis, execute your tests and generate the JaCoCo exec file(s).
-1. In order to be able to read the exec report file, and as JaCoCo bases its analysis on binaries, set the sonar.binaries property.
+1. In order to be able to read the exec report file, and as JaCoCo bases its analysis on binaries, set the `sonar.groovy.binaries` property.
 1. Set the `sonar.groovy.jacoco.reportPath` property to the path to the JaCoCo exec file related to your unit tests.
 1. (Optional) If you are running integration tests on top of your unit tests, you may want to set the `sonar.groovy.jacoco.itReportPath` to the path to JaCoCo exec file related to the integration tests.
 1. Run the SonarQube analysis.
