@@ -148,8 +148,6 @@ public abstract class AbstractAnalyzer {
     if (fileToAnalyze == null || !fileToAnalyze.isFile()) {
       JaCoCoExtensions.logger().warn("Project coverage is set to 0% as no JaCoCo execution data has been dumped: {}", jacocoExecutionData);
       fileToAnalyze = null;
-    } else {
-      JaCoCoExtensions.logger().info("Analysing {}", fileToAnalyze);
     }
     JaCoCoReportReader jacocoReportReader = new JaCoCoReportReader(fileToAnalyze).readJacocoReport(executionDataVisitor, executionDataVisitor);
 
