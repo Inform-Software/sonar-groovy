@@ -134,7 +134,6 @@ public abstract class AbstractAnalyzer {
       JaCoCoExtensions.logger().warn("No binary directories defined.");
     }
     for (File binaryDir : binaryDirs) {
-      JaCoCoExtensions.logger().info("\tChecking binary directory: {}", binaryDir.toString());
       if (binaryDir.exists()) {
         return true;
       }
