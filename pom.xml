@@ -10,7 +10,7 @@
 
   <groupId>org.sonarsource.groovy</groupId>
   <artifactId>groovy</artifactId>
-  <version>1.6-RC4</version>
+  <version>1.6-RC5</version>
   <packaging>pom</packaging>
 
   <name>Sonar Groovy</name>

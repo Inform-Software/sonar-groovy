@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.groovy</groupId>
     <artifactId>groovy</artifactId>
-    <version>1.6-RC4</version>
+    <version>1.6-RC5</version>
   </parent>
 
   <artifactId>groovy-jacoco-previous</artifactId>

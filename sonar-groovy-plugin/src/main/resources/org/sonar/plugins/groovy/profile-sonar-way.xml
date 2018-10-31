@@ -412,11 +412,11 @@
       <key>org.codenarc.rule.design.ReturnsNullInsteadOfEmptyCollectionRule</key>
       <priority>MINOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.design.CompareToWithoutComparableRule</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.design.CompareToWithoutComparableRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.design.SimpleDateFormatMissingLocaleRule</key>
@@ -427,11 +427,11 @@
       <key>org.codenarc.rule.design.AbstractClassWithoutAbstractMethodRule</key>
       <priority>MINOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.design.CloseWithoutCloseableRule</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.design.CloseWithoutCloseableRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.design.ConstantsOnlyInterfaceRule</key>
@@ -472,11 +472,11 @@
       <key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed</key>
       <priority>MAJOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.design.CloneWithoutCloneableRule</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.design.CloneWithoutCloneableRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.design.LocaleSetDefaultRule</key>
@@ -872,11 +872,11 @@
       <key>org.codenarc.rule.junit.JUnitPublicFieldRule</key>
       <priority>MAJOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.junit.JUnitAssertEqualsConstantActualValueRule</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.junit.JUnitAssertEqualsConstantActualValueRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.junit.JUnitPublicPropertyRule.fixed</key>
@@ -1377,11 +1377,11 @@
       <key>org.codenarc.rule.security.NonFinalPublicFieldRule</key>
       <priority>MINOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.security.UnsafeImplementationAsMapRule</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.security.UnsafeImplementationAsMapRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.formatting.BracesForClassRule</key>
