@@ -123,7 +123,7 @@ public class Converter {
       org.codenarc.rule.imports.UnnecessaryGroovyImportRule.class,
       org.codenarc.rule.imports.UnusedImportRule.class,
       org.codenarc.rule.grails.GrailsPublicControllerMethodRule.class,
-      org.codenarc.rule.grails.GrailsSessionReferenceRule.class,
+      // org.codenarc.rule.grails.GrailsSessionReferenceRule.class, - deprecated in 0.9
       org.codenarc.rule.grails.GrailsServletContextReferenceRule.class,
       org.codenarc.rule.grails.GrailsStatelessServiceRule.class,
       org.codenarc.rule.generic.IllegalRegexRule.class,
@@ -472,6 +472,28 @@ public class Converter {
     insertRules(rules, "0.25", props, parametersByRule,
       org.codenarc.rule.convention.TrailingCommaRule.class,
       org.codenarc.rule.convention.NoTabCharacterRule.class);
+
+    insertRules(rules, "1.0", props, parametersByRule,
+      org.codenarc.rule.convention.CouldBeSwitchStatementRule.class,
+      org.codenarc.rule.unnecessary.UnnecessarySetterRule.class);
+
+    insertRules(rules, "1.1", props, parametersByRule,
+       org.codenarc.rule.enhanced.MissingOverrideAnnotationRule.class,
+       org.codenarc.rule.formatting.IndentationRule.class,
+       org.codenarc.rule.convention.InvertedConditionRule.class,
+       org.codenarc.rule.convention.MethodReturnTypeRequiredRule.class,
+       org.codenarc.rule.convention.MethodParameterTypeRequired.class,
+       org.codenarc.rule.convention.FieldTypeRequiredRule.class,
+       org.codenarc.rule.convention.VariableTypeRequiredRule.class,
+       org.codenarc.rule.formatting.BlockStartsWithBlankLineRule.class,
+       org.codenarc.rule.formatting.BlockEndsWithBlankLineRule.class);
+
+    insertRules(rules, "1.2", props, parametersByRule,
+       org.codenarc.rule.convention.StaticFieldsBeforeInstanceFieldsRule.class,
+       org.codenarc.rule.convention.StaticMethodsBeforeInstanceMethodsRule.class,
+       org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule.class,
+       org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule.class,
+       org.codenarc.rule.convention.NoJavaUtilDateRule.class);
 
     return rules;
   }
