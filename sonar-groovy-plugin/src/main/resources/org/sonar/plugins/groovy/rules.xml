@@ -3409,11 +3409,6 @@ for (int i = 0; i < 100; ++i) {
 ]]></description>
     <tag>bug</tag>
     <param>
-      <key>ignoreImports</key>
-      <description><![CDATA[If <true>, then do not check imports. ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-    <param>
       <key>ignoreStaticImports</key>
       <description><![CDATA[If <true>, then do not check static imports. ]]></description>
       <defaultValue>false</defaultValue>
