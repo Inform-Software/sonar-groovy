@@ -41,7 +41,7 @@ public class CodeNarcRulesDefinitionTest {
     assertThat(repository.language()).isEqualTo(Groovy.KEY);
 
     List<Rule> rules = repository.rules();
-    assertThat(rules).hasSize(347);
+    assertThat(rules).hasSize(361);
 
     List<String> missingDebt = new LinkedList<>();
     for (Rule rule : rules) {
