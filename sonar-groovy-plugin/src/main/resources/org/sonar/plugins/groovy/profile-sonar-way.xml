@@ -951,17 +951,17 @@
       <!--<key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</key>-->
       <!--<priority>MINOR</priority>-->
     <!--</rule>-->
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.naming.ClassNameRule</key>
-      <priority>MINOR</priority>
-    <parameters>
-      <parameter>
-        <key>doNotApplyToClassNames</key>
-        <value>([A-Z]\\w*\\$?)*</value>
-      </parameter>
-    </parameters>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.naming.ClassNameRule</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--<parameters>-->
+      <!--<parameter>-->
+        <!--<key>doNotApplyToClassNames</key>-->
+        <!--<value>([A-Z]\w*\$?)*</value>-->
+      <!--</parameter>-->
+    <!--</parameters>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.FieldNameRule.fixed</key>
@@ -991,32 +991,32 @@
       <!--<key>org.codenarc.rule.naming.InterfaceNameRule.fixed</key>-->
       <!--<priority>MINOR</priority>-->
     <!--</rule>-->
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.naming.MethodNameRule.fixed</key>
-      <priority>MINOR</priority>
-    <parameters>
-      <parameter>
-        <key>doNotApplyToClassNames</key>
-        <value>*Spec</value>
-      </parameter>
-      <parameter>
-        <key>regex</key>
-        <value>[a-z]\\w*</value>
-      </parameter>
-    </parameters>
-    </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.naming.PackageNameRule</key>
-      <priority>MINOR</priority>
-      <parameters>
-        <parameter>
-          <key>regex</key>
-          <value>[a-z]+[a-z0-9]*(\\.[a-z0-9]+)*</value>
-        </parameter>
-      </parameters>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.naming.MethodNameRule.fixed</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--<parameters>-->
+      <!--<parameter>-->
+        <!--<key>doNotApplyToClassNames</key>-->
+        <!--<value>*Spec</value>-->
+      <!--</parameter>-->
+      <!--<parameter>-->
+        <!--<key>regex</key>-->
+        <!--<value>[a-z]\w*</value>-->
+      <!--</parameter>-->
+    <!--</parameters>-->
+    <!--</rule>-->
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.naming.PackageNameRule</key>-->
+      <!--<priority>MINOR</priority>-->
+      <!--<parameters>-->
+        <!--<parameter>-->
+          <!--<key>regex</key>-->
+          <!--<value>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</value>-->
+        <!--</parameter>-->
+      <!--</parameters>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.ParameterNameRule.fixed</key>
@@ -1595,11 +1595,11 @@
       <key>org.codenarc.rule.formatting.SpaceAroundClosureArrowRule</key>
       <priority>MAJOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule</key>
-      <priority>MAJOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule</key>-->
+      <!--<priority>MAJOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule</key>
