@@ -506,21 +506,45 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.dry.DuplicateNumberLiteralRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>doNotApplyToClassNames</key>
+          <value>*Spec</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.dry.DuplicateStringLiteralRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>doNotApplyToClassNames</key>
+          <value>*Spec</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.dry.DuplicateMapLiteralRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>doNotApplyToClassNames</key>
+          <value>*Spec</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.dry.DuplicateListLiteralRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>doNotApplyToClassNames</key>
+          <value>*Spec</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -622,16 +646,16 @@
       <key>org.codenarc.rule.exceptions.ExceptionExtendsThrowableRule</key>
       <priority>MINOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.generic.IllegalRegexRule.fixed</key>
-      <priority>MAJOR</priority>
-    </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.generic.RequiredRegexRule.fixed</key>
-      <priority>MAJOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.generic.IllegalRegexRule.fixed</key>-->
+      <!--<priority>MAJOR</priority>-->
+    <!--</rule>-->
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.generic.RequiredRegexRule.fixed</key>-->
+      <!--<priority>MAJOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.RequiredStringRule.fixed</key>
@@ -922,50 +946,127 @@
       <key>org.codenarc.rule.logging.MultipleLoggersRule</key>
       <priority>MINOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.naming.AbstractClassNameRule.fixed</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.ClassNameRule</key>
       <priority>MINOR</priority>
+    <parameters>
+      <parameter>
+        <key>doNotApplyToClassNames</key>
+        <value>([A-Z]\\w*\\$?)*</value>
+      </parameter>
+    </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.FieldNameRule.fixed</key>
       <priority>MINOR</priority>
+    <parameters>
+      <parameter>
+        <key>ignoreFieldNames</key>
+        <value>log,serialVersionUID</value>
+      </parameter>
+      <parameter>
+        <key>regex</key>
+        <value>[a-z][a-zA-Z0-9]*</value>
+      </parameter>
+      <parameter>
+        <key>staticFinalRegex</key>
+        <value>[A-Z][A-Z0-9_]*</value>
+      </parameter>
+      <parameter>
+        <key>staticRegex</key>
+        <!-- to prevent missing final keyword -->
+        <value>[a-z][a-zA-Z0-9]*</value>
+      </parameter>
+    </parameters>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.naming.InterfaceNameRule.fixed</key>
-      <priority>MINOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.naming.InterfaceNameRule.fixed</key>-->
+      <!--<priority>MINOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.MethodNameRule.fixed</key>
       <priority>MINOR</priority>
+    <parameters>
+      <parameter>
+        <key>doNotApplyToClassNames</key>
+        <value>*Spec</value>
+      </parameter>
+      <parameter>
+        <key>regex</key>
+        <value>[a-z]\\w*</value>
+      </parameter>
+    </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.PackageNameRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>regex</key>
+          <value>[a-z]+[a-z0-9]*(\\.[a-z0-9]+)*</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.ParameterNameRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>regex</key>
+          <value>[a-z][a-zA-Z0-9]*</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.PropertyNameRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignorePropertyNames</key>
+          <value>log,serialVersionUID</value>
+        </parameter>
+        <parameter>
+          <key>regex</key>
+          <value>[a-z][a-zA-Z0-9]*</value>
+        </parameter>
+        <parameter>
+          <key>staticFinalRegex</key>
+          <value>[A-Z][A-Z0-9_]*</value>
+        </parameter>
+        <parameter>
+          <key>staticRegex</key>
+          <!-- to prevent missing final keyword -->
+          <value>[a-z][a-zA-Z0-9]*</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.VariableNameRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>regex</key>
+          <value>[a-z][a-zA-Z0-9]*</value>
+        </parameter>
+        <parameter>
+          <key>finalRegex</key>
+          <!-- to prevent missing final keyword -->
+          <value>[A-Z][A-Z0-9_]*</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -981,6 +1082,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.FactoryMethodNameRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>regex</key>
+          <value>(build.*\|create.*)</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -1152,11 +1259,11 @@
       <key>org.codenarc.rule.unnecessary.UnnecessaryOverridingMethodRule</key>
       <priority>MAJOR</priority>
     </rule>
-    <rule>
-      <repositoryKey>grvy</repositoryKey>
-      <key>org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule</key>
-      <priority>MAJOR</priority>
-    </rule>
+    <!--<rule>-->
+      <!--<repositoryKey>grvy</repositoryKey>-->
+      <!--<key>org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule</key>-->
+      <!--<priority>MAJOR</priority>-->
+    <!--</rule>-->
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule</key>
@@ -1391,6 +1498,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.formatting.LineLengthRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>length</key>
+          <value>160</value>
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
