@@ -32,9 +32,13 @@ import org.codenarc.results.Results;
 import org.codenarc.rule.Violation;
 import org.codenarc.ruleset.RuleSet;
 import org.codenarc.source.SourceFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.InputFile;
 
 public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CodeNarcSourceAnalyzer.class);
 
   private final Map<InputFile, List<Violation>> violationsByFile = new HashMap<>();
   private final List<InputFile> sourceFiles;
@@ -56,11 +60,16 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
   private Map<File, List<FileResults>> processFiles(RuleSet ruleSet) {
     Map<File, List<FileResults>> results = new HashMap<>();
     for (InputFile inputFile : sourceFiles) {
-      List<Violation> violations = collectViolations(new SourceFile(inputFile.file()), ruleSet);
-      violationsByFile.put(inputFile, violations);
-      FileResults result = new FileResults(inputFile.absolutePath(), violations);
-      results.putIfAbsent(inputFile.file().getParentFile(), new LinkedList<>());
-      results.get(inputFile.file().getParentFile()).add(result);
+      try {
+        List<Violation> violations = collectViolations(new SourceFile(inputFile.file()), ruleSet);
+        violationsByFile.put(inputFile, violations);
+        FileResults result = new FileResults(inputFile.absolutePath(), violations);
+        results.putIfAbsent(inputFile.file().getParentFile(), new LinkedList<>());
+        results.get(inputFile.file().getParentFile()).add(result);
+      } catch (Exception e) {
+        LOGGER.error("Exception processing file " + inputFile.relativePath(), e);
+      }
+
     }
     return results;
   }
