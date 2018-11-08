@@ -4007,7 +4007,7 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the class name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>([A-Z]\\w*\\$?)*</defaultValue>
+      <defaultValue>([A-Z]\w*\$?)*</defaultValue>
     </param>
   </rule>
 
@@ -4075,7 +4075,7 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the method name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>[a-z]\\w*</defaultValue>
+      <defaultValue>[a-z]\w*</defaultValue>
     </param>
   </rule>
 
@@ -4095,7 +4095,7 @@ for (int i = 0; i < 100; ++i) {
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty. ]]></description>
-      <defaultValue>[a-z]+[a-z0-9]*(\\.[a-z0-9]+)*</defaultValue>
+      <defaultValue>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</defaultValue>
     </param>
   </rule>
 
@@ -6512,13 +6512,13 @@ for (int i = 0; i < 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>characterAfterColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>\\S</defaultValue>
+      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\S/ matches any non-whitespace character and /\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <defaultValue>\S</defaultValue>
     </param>
     <param>
       <key>characterBeforeColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>\\S</defaultValue>
+      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\S/ matches any non-whitespace character and /\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <defaultValue>\S</defaultValue>
     </param>
   </rule>
 

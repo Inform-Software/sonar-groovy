@@ -21,6 +21,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.basic.EmptyCatchBlockRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreRegex</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -246,6 +252,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.braces.ElseBlockBracesRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>bracesRequiredForElseIf</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -471,6 +483,21 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreFieldNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreJpaEntities</key>
+          
+        </parameter>
+      </parameters>
+    </rule>
+    <rule>
+      <repositoryKey>grvy</repositoryKey>
+      <key>org.codenarc.rule.design.CloneWithoutCloneableRule</key>
+      <priority>MINOR</priority>
     </rule>
     <!--<rule>-->
       <!--<repositoryKey>grvy</repositoryKey>-->
@@ -491,6 +518,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.design.InstanceofRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreTypeNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -660,41 +693,125 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.RequiredStringRule.fixed</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>string</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.StatelessClassRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>addToIgnoreFieldNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreFieldNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreFieldTypes</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.IllegalPackageReferenceRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>packageNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.IllegalClassReferenceRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>classNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.IllegalClassMemberRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>allowedFieldModifiers</key>
+          
+        </parameter>
+        <parameter>
+          <key>allowedMethodModifiers</key>
+          
+        </parameter>
+        <parameter>
+          <key>allowedPropertyModifiers</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreMethodsWithAnnotationNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>illegalFieldModifiers</key>
+          
+        </parameter>
+        <parameter>
+          <key>illegalMethodModifiers</key>
+          
+        </parameter>
+        <parameter>
+          <key>illegalPropertyModifiers</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.IllegalStringRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>string</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.generic.IllegalSubclassRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>superclassNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.grails.GrailsPublicControllerMethodRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -705,6 +822,16 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.grails.GrailsStatelessServiceRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreFieldNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreFieldTypes</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -730,6 +857,16 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.grails.GrailsDomainReservedSqlKeywordNameRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>additionalHibernateBasicTypes</key>
+          
+        </parameter>
+        <parameter>
+          <key>additionalReservedSqlKeywords</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -780,6 +917,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.imports.NoWildcardImportsRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreStaticImports</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -835,6 +978,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.junit.UseAssertTrueInsteadOfAssertEqualsRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>checkAssertStatements</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -880,6 +1029,16 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.junit.SpockIgnoreRestUsedRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>specificationClassNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>specificationSuperclassNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -905,6 +1064,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.junit.JUnitPublicPropertyRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignorePropertyNames</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -1023,6 +1188,10 @@
       <priority>MINOR</priority>
       <parameters>
         <parameter>
+          <key>ignoreParameterNames</key>
+          
+        </parameter>
+        <parameter>
           <key>regex</key>
           <value>[a-z][a-zA-Z0-9]*</value>
         </parameter>
@@ -1033,6 +1202,10 @@
       <key>org.codenarc.rule.naming.PropertyNameRule.fixed</key>
       <priority>MINOR</priority>
       <parameters>
+        <parameter>
+          <key>finalRegex</key>
+          
+        </parameter>
         <parameter>
           <key>ignorePropertyNames</key>
           <value>log,serialVersionUID</value>
@@ -1098,6 +1271,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.naming.PackageNameMatchesFilePathRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>groupId</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -1113,41 +1292,141 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.ClassSizeRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>maxLines</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.CyclomaticComplexityRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassAverageMethodComplexity</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassComplexity</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxMethodComplexity</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.MethodCountRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>maxMethods</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.MethodSizeRule.fixed</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxLines</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.NestedBlockDepthRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreRegex</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxNestedBlockDepth</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.CrapMetricRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>coberturaXmlFile</key>
+          
+        </parameter>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassAverageMethodCrapScore</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassCrapScore</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxMethodCrapScore</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.AbcMetricRule.fixed</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreMethodNames</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassAbcScore</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxClassAverageMethodAbcScore</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxMethodAbcScore</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.size.ParameterCountRule</key>
       <priority>MINOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreOverriddenMethods</key>
+          
+        </parameter>
+        <parameter>
+          <key>maxParameters</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
@@ -1203,6 +1482,12 @@
       <repositoryKey>grvy</repositoryKey>
       <key>org.codenarc.rule.unnecessary.UnnecessaryConstructorRule</key>
       <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>ignoreAnnotations</key>
+          
+        </parameter>
+      </parameters>
     </rule>
     <rule>
       <repositoryKey>grvy</repositoryKey>
