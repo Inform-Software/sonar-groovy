@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>36</version>
+    <version>49</version>
   </parent>
 
   <groupId>org.sonarsource.groovy</groupId>
@@ -67,6 +67,7 @@
     <orchestrator.version>3.11</orchestrator.version>
     <!-- used for deployment to SonarSource Artifactory -->
     <gitRepositoryName>sonar-groovy</gitRepositoryName>
+    <license.owner>SonarSource SA &amp; Community</license.owner>
   </properties>
 
 </project>
