@@ -26,6 +26,10 @@
 
   <developers>
     <developer>
+      <id>TobiX</id>
+      <name>Tobias Gruetzmacher</name>
+    </developer>
+    <developer>
       <id>pmayweg</id>
       <name>Patrick Mayweg</name>
     </developer>
