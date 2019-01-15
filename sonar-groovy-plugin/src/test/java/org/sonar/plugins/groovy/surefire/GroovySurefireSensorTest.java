@@ -25,7 +25,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
@@ -62,8 +62,8 @@ public class GroovySurefireSensorTest {
   @Before
   public void before() {
     fs = new DefaultFileSystem(new File("."));
-    DefaultInputFile groovyFile = new DefaultInputFile("", "src/org/foo/grvy");
-    groovyFile.setLanguage(Groovy.KEY);
+    InputFile groovyFile = TestInputFileBuilder.create("", "src/org/foo/grvy")
+      .setLanguage(Groovy.KEY).build();
     fs.add(groovyFile);
     perspectives = mock(ResourcePerspectives.class);
 
@@ -136,8 +136,8 @@ public class GroovySurefireSensorTest {
     assertThat(context.measure(":org.sonar.core.ExtensionsFinderTest3", CoreMetrics.SKIPPED_TESTS).value()).isEqualTo(1);
   }
 
-  private static DefaultInputFile inputFile(String key) {
-    return new DefaultInputFile("", key).setType(InputFile.Type.TEST);
+  private static InputFile inputFile(String key) {
+    return TestInputFileBuilder.create("", key).setType(InputFile.Type.TEST).build();
   }
 
   @Test

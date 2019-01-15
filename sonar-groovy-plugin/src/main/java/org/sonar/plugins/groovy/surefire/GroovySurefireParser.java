@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.api.batch.BatchSide;
+import org.sonar.api.batch.ScannerSide;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
@@ -48,7 +48,7 @@ import org.sonar.plugins.groovy.surefire.data.UnitTestIndex;
 import org.sonar.plugins.groovy.surefire.data.UnitTestResult;
 import org.sonar.plugins.groovy.utils.StaxParser;
 
-@BatchSide
+@ScannerSide
 public class GroovySurefireParser {
 
   private static final Logger LOGGER = Loggers.get(GroovySurefireParser.class);

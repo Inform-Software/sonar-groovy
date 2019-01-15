@@ -22,14 +22,14 @@ package org.sonar.plugins.groovy.jacoco;
 import java.util.Arrays;
 import java.util.List;
 import org.sonar.api.PropertyType;
-import org.sonar.api.batch.BatchSide;
+import org.sonar.api.batch.ScannerSide;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-@BatchSide
+@ScannerSide
 public class JaCoCoConfiguration {
 
   public static final String REPORT_PATH_PROPERTY = "sonar.groovy.jacoco.reportPath";

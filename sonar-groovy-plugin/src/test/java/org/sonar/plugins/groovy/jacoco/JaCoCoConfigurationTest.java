@@ -22,9 +22,9 @@ package org.sonar.plugins.groovy.jacoco;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.config.PropertyDefinitions;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 import java.io.File;
@@ -33,13 +33,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JaCoCoConfigurationTest {
 
-  private Settings settings;
+  private MapSettings settings;
   private JaCoCoConfiguration jacocoSettings;
   private DefaultFileSystem fileSystem;
 
   @Before
   public void setUp() {
-    settings = new Settings(new PropertyDefinitions().addComponents(JaCoCoConfiguration.getPropertyDefinitions()));
+    settings = new MapSettings(new PropertyDefinitions().addComponents(JaCoCoConfiguration.getPropertyDefinitions()));
     fileSystem = new DefaultFileSystem(new File("."));
     jacocoSettings = new JaCoCoConfiguration(settings, fileSystem);
   }
@@ -50,11 +50,11 @@ public class JaCoCoConfigurationTest {
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isFalse();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 
-    fileSystem.add(new DefaultInputFile("", "src/foo/bar.java").setLanguage("java"));
+    fileSystem.add(TestInputFileBuilder.create("", "src/foo/bar.java").setLanguage("java").build());
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isFalse();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 
-    fileSystem.add(new DefaultInputFile("", "src/foo/bar.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(TestInputFileBuilder.create("", "src/foo/bar.groovy").setLanguage(Groovy.KEY).build());
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isTrue();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
 

@@ -23,12 +23,12 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
-import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
@@ -49,8 +49,8 @@ public class JaCoCoOverallSensorTest {
   private File jacocoUTData;
   private File jacocoITData;
   private File outputDir;
-  private DefaultInputFile inputFile;
-  private Settings settings;
+  private InputFile inputFile;
+  private MapSettings settings;
   private SensorContextTester context;
 
   @Before
@@ -64,16 +64,17 @@ public class JaCoCoOverallSensorTest {
     FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
 
-    settings = new Settings();
+    settings = new MapSettings();
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
     context = SensorContextTester.create(jacocoUTData.getParentFile());
+    context.fileSystem().setWorkDir(jacocoUTData.getParentFile().toPath());
 
-    context.fileSystem().setWorkDir(jacocoUTData.getParentFile());
-    inputFile = new DefaultInputFile("", "example/Hello.groovy")
+    inputFile = TestInputFileBuilder.create("", "example/Hello.groovy")
       .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN);
-    inputFile.setLines(50);
+      .setType(Type.MAIN)
+      .setLines(50)
+      .build();
     context.fileSystem().add(inputFile);
 
     configuration = mock(JaCoCoConfiguration.class);
@@ -127,16 +128,16 @@ public class JaCoCoOverallSensorTest {
 
   private void verifyOverallMetrics(SensorContextTester context, int[] zeroHitlines, int[] oneHitlines, int[] conditionLines, int[] coveredConditions) {
     for (int zeroHitline : zeroHitlines) {
-      assertThat(context.lineHits(inputFile.key(), CoverageType.OVERALL, zeroHitline)).isEqualTo(0);
+      assertThat(context.lineHits(inputFile.key(), zeroHitline)).isEqualTo(0);
     }
     for (int oneHitline : oneHitlines) {
-      assertThat(context.lineHits(inputFile.key(), CoverageType.OVERALL, oneHitline)).isEqualTo(1);
+      assertThat(context.lineHits(inputFile.key(), oneHitline)).isEqualTo(1);
     }
 
     for (int i = 0; i < conditionLines.length; i++) {
       int line = conditionLines[i];
-      assertThat(context.conditions(inputFile.key(), CoverageType.OVERALL, line)).isEqualTo(2);
-      assertThat(context.coveredConditions(inputFile.key(), CoverageType.OVERALL, line)).isEqualTo(coveredConditions[i]);
+      assertThat(context.conditions(inputFile.key(), line)).isEqualTo(2);
+      assertThat(context.coveredConditions(inputFile.key(), line)).isEqualTo(coveredConditions[i]);
     }
   }
 

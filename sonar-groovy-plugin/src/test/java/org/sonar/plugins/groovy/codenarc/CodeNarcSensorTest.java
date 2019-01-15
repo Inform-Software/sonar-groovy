@@ -30,13 +30,14 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.PropertyDefinitions;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rules.ActiveRule;
@@ -62,11 +63,11 @@ public class CodeNarcSensorTest {
   public void setUp() throws Exception {
 
     sensorContextTester = SensorContextTester.create(temp.newFolder());
-    sensorContextTester.fileSystem().setWorkDir(temp.newFolder());
+    sensorContextTester.fileSystem().setWorkDir(temp.newFolder().toPath());
 
     profile = mock(RulesProfile.class);
 
-    sensorContextTester.setSettings(new Settings(new PropertyDefinitions(GroovyPlugin.class)));
+    sensorContextTester.setSettings(new MapSettings(new PropertyDefinitions(GroovyPlugin.class)));
     groovy = new Groovy(sensorContextTester.settings());
     sensor = new CodeNarcSensor(profile, new GroovyFileSystem(sensorContextTester.fileSystem()));
   }
@@ -213,17 +214,18 @@ public class CodeNarcSensorTest {
 
   private void addFileWithFakeContent(String path) throws UnsupportedEncodingException, IOException {
     File sampleFile = FileUtils.toFile(getClass().getResource("parsing/Sample.groovy"));
-    sensorContextTester.fileSystem().add(new DefaultInputFile(sensorContextTester.module().key(), path)
+    sensorContextTester.fileSystem().add(TestInputFileBuilder.create(sensorContextTester.module().key(), path)
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)
-      .initMetadata(new String(Files.readAllBytes(sampleFile.toPath()), "UTF-8")));
+      .setContents(new String(Files.readAllBytes(sampleFile.toPath()), "UTF-8")).build());
   }
 
   private void addFileWithContent(String path, String content) throws UnsupportedEncodingException, IOException {
-    DefaultInputFile inputFile = new DefaultInputFile(sensorContextTester.module().key(), path)
+    InputFile inputFile = TestInputFileBuilder.create(sensorContextTester.module().key(), path)
       .setLanguage(Groovy.KEY)
       .setType(Type.MAIN)
-      .initMetadata(content);
+      .setContents(content)
+      .build();
     sensorContextTester.fileSystem().add(inputFile);
     FileUtils.write(inputFile.file(), content, StandardCharsets.UTF_8);
   }

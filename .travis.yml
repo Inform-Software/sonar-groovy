@@ -1,18 +1,19 @@
 language: java
-sudo: false
 
 jdk:
-- oraclejdk8
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
-
-install: true
-script: mvn verify -B -e -V
-
+- openjdk8
+env:
+- SONAR_VERSION=
+- SONAR_VERSION=7.3
+- SONAR_VERSION=7.5
 matrix:
-  fast_finish: true
+  allow_failures:
+  - env: SONAR_VERSION=7.5
+
+script:
+- if [ "$SONAR_VERSION" ]; then mvn verify -B -V -e -Dsonar.version=$SONAR_VERSION; else mvn verify -B -V -e; fi
+
+dist: xenial
 
 cache:
   directories:

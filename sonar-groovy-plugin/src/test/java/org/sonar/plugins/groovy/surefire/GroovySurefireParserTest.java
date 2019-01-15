@@ -31,7 +31,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.component.ResourcePerspectives;
@@ -82,7 +82,7 @@ public class GroovySurefireParserTest {
     doAnswer(new Answer<InputFile>() {
       @Override
       public InputFile answer(InvocationOnMock invocation) throws Throwable {
-        return new DefaultInputFile("", (String) invocation.getArguments()[0]);
+        return TestInputFileBuilder.create("", (String) invocation.getArguments()[0]).build();
       }
     }).when(parser).getUnitTestInputFile(anyString());
   }
@@ -214,9 +214,9 @@ public class GroovySurefireParserTest {
   @Test
   public void should_generate_correct_predicate() throws URISyntaxException {
     DefaultFileSystem fs = new DefaultFileSystem(new File("."));
-    DefaultInputFile inputFile = new DefaultInputFile("", "src/test/org/sonar/JavaNCSSCollectorTest.groovy")
+    InputFile inputFile = TestInputFileBuilder.create("", "src/test/org/sonar/JavaNCSSCollectorTest.groovy")
       .setLanguage(Groovy.KEY)
-      .setType(Type.TEST);
+      .setType(Type.TEST).build();
     fs.add(inputFile);
 
     parser = new GroovySurefireParser(groovy, perspectives, fs);

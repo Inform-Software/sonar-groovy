@@ -25,13 +25,13 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
-import org.sonar.api.batch.sensor.coverage.CoverageType;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 public class JaCoCoSensorTest {
 
   private File jacocoExecutionData;
-  private DefaultInputFile inputFile;
+  private InputFile inputFile;
   private JaCoCoConfiguration configuration;
   private PathResolver pathResolver;
   private JaCoCoSensor sensor;
@@ -66,7 +66,7 @@ public class JaCoCoSensorTest {
     FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
       new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
 
-    Settings settings = new Settings();
+    MapSettings settings = new MapSettings();
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
     configuration = mock(JaCoCoConfiguration.class);
@@ -75,10 +75,11 @@ public class JaCoCoSensorTest {
     when(configuration.getReportPath()).thenReturn(jacocoExecutionData.getPath());
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
-    inputFile = new DefaultInputFile("", "example/Hello.groovy")
+    inputFile = TestInputFileBuilder.create("", "example/Hello.groovy")
       .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN);
-    inputFile.setLines(50);
+      .setType(Type.MAIN)
+      .setLines(50)
+      .build();
     fileSystem.add(inputFile);
 
     pathResolver = mock(PathResolver.class);
@@ -142,15 +143,15 @@ public class JaCoCoSensorTest {
     int[] coveredConditions = {2, 1, 0};
 
     for (int zeroHitline : zeroHitlines) {
-      assertThat(context.lineHits(":example/Hello.groovy", CoverageType.UNIT, zeroHitline)).isEqualTo(0);
+      assertThat(context.lineHits(":example/Hello.groovy", zeroHitline)).isEqualTo(0);
     }
     for (int oneHitline : oneHitlines) {
-      assertThat(context.lineHits(":example/Hello.groovy", CoverageType.UNIT, oneHitline)).isEqualTo(1);
+      assertThat(context.lineHits(":example/Hello.groovy", oneHitline)).isEqualTo(1);
     }
     for (int i = 0; i < conditionLines.length; i++) {
       int conditionLine = conditionLines[i];
-      assertThat(context.conditions(":example/Hello.groovy", CoverageType.UNIT, conditionLine)).isEqualTo(2);
-      assertThat(context.coveredConditions(":example/Hello.groovy", CoverageType.UNIT, conditionLine)).isEqualTo(coveredConditions[i]);
+      assertThat(context.conditions(":example/Hello.groovy", conditionLine)).isEqualTo(2);
+      assertThat(context.coveredConditions(":example/Hello.groovy", conditionLine)).isEqualTo(coveredConditions[i]);
     }
   }
 }

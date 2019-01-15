@@ -23,8 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
-
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,10 +43,10 @@ public class GroovyFileSystemTest {
   public void isEnabled() {
     assertThat(groovyFileSystem.hasGroovyFiles()).isFalse();
 
-    fileSystem.add(new DefaultInputFile("", "fake.file"));
+    fileSystem.add(TestInputFileBuilder.create("", "fake.file").build());
     assertThat(groovyFileSystem.hasGroovyFiles()).isFalse();
 
-    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
     assertThat(groovyFileSystem.hasGroovyFiles()).isTrue();
   }
 
@@ -55,10 +54,10 @@ public class GroovyFileSystemTest {
   public void getSourceFile() {
     assertThat(groovyFileSystem.sourceFiles()).isEmpty();
 
-    fileSystem.add(new DefaultInputFile("", "fake.file"));
+    fileSystem.add(TestInputFileBuilder.create("", "fake.file").build());
     assertThat(groovyFileSystem.sourceFiles()).isEmpty();
 
-    fileSystem.add(new DefaultInputFile("", "fake.groovy").setLanguage(Groovy.KEY));
+    fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
     assertThat(groovyFileSystem.sourceFiles()).hasSize(1);
   }
 
@@ -66,13 +65,13 @@ public class GroovyFileSystemTest {
   public void inputFileFromRelativePath() {
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath(null)).isNull();
 
-    fileSystem.add(new DefaultInputFile("", "fake1.file"));
+    fileSystem.add(TestInputFileBuilder.create("", "fake1.file").build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake1.file")).isNull();
 
-    fileSystem.add(new DefaultInputFile("", "fake2.file").setType(Type.MAIN).setLanguage(Groovy.KEY));
+    fileSystem.add(TestInputFileBuilder.create("", "fake2.file").setType(Type.MAIN).setLanguage(Groovy.KEY).build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake2.file")).isNotNull();
 
-    fileSystem.add(new DefaultInputFile("", "org/sample/foo/fake3.file").setType(Type.MAIN).setLanguage(Groovy.KEY));
+    fileSystem.add(TestInputFileBuilder.create("", "org/sample/foo/fake3.file").setType(Type.MAIN).setLanguage(Groovy.KEY).build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("foo/fake3.file")).isNotNull();
   }
 }
