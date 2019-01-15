@@ -11,13 +11,20 @@ matrix:
   - env: SONAR_VERSION=7.5
 
 script:
-- if [ "$SONAR_VERSION" ]; then mvn verify -B -V -e -Dsonar.version=$SONAR_VERSION; else mvn verify -B -V -e; fi
+- if [ "$SONAR_VERSION" ]; then mvn verify -B -V -e -Dsonar.version=$SONAR_VERSION; else mvn verify sonar:sonar -B -V -e; fi
 
 dist: xenial
 
 cache:
   directories:
     - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+
+addons:
+  sonarcloud:
+    organization: "tobix-github"
+    token:
+      secure: "pYxJ0DaMAkDCTjuRrfvSbkMy4tM82JHMoFagVIIaqVY6fIaltfi9QB4U6p9a8OzXLs601Cr4btwWAPpqi5GfMaDbdOzCBxz2mfoO8skawCTr0M2Ij8yaStgiNoIornqCT1VyKRE4mOJMeX2ayqyiKvn0gCFliV8dwg+4zl1vv1bdCsUzSGLPKFRv2KWFRnPbBjeimwCySImdAzn5IMOA3r583kAkuTQqJNH2ai60QEAZpWRN9E98ZkwYwsf/+7i/1NbURL/a+km3Eq+E10unblx66zpARA5k10Ygg9xP8c4+PtvVOTW3zlQbLsvp+d1Bz+kkkvBjbX6rxhxtlQ5uMbw2H9zyXVgwUtZz/4Dq4J3pbWx//OA6K+NVKwVmEuogR2Kdxbbbehp3v1MjNx7YP+82sMx+6vSHR5aH/wmBe2VEtSXZeOmKPkpGNXlRduMOsgyP+yU3xqCUX9EFCMcepEcoM9wPWfTMxLUyfrD1MP1yzC5gTMRVBNoE5pO+WopE2JFUOYmtRz5hpU6DYLHjQ5dSDRl2g7Ig7/3FrDzaVrAd8XIDvIz34UGwTarpEDIQrIM2EmHglOXclRKtll0n4HhcU5eLVhLd7poJpBbtePNnxF+NcaYOk9Qww/i6SigYoA+jKZrNK9N2aQMBXROculcenLenoBUgQwG9yuPeeFw="
 
 notifications:
   email: false
