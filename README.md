@@ -54,3 +54,19 @@ To display code coverage data:
 1. Set the `sonar.groovy.jacoco.reportPath` property to the path to the JaCoCo exec file related to your unit tests.
 1. (Optional) If you are running integration tests on top of your unit tests, you may want to set the `sonar.groovy.jacoco.itReportPath` to the path to JaCoCo exec file related to the integration tests.
 1. Run the SonarQube analysis.
+
+## Contributions
+
+Contributions via GitHub [issues] and pull requests are very welcome. This
+project tries to adhere to the [Google Java Style], but we don't want a global
+reformat to keep the Git history readable. To help with this, you can use the
+[fmt-maven-plugin] to format your changes:
+
+    mvn fmt:format -DfilesNamePattern=TestUtils\.java
+
+You can use the `fileNamePattern` option to restrict the formatter to the files
+you changed.
+
+[issues]: https://github.com/Inform-Software/sonar-groovy/issues/new
+[Google Java Style]: https://google.github.io/styleguide/javaguide.html
+[fmt-maven-plugin]: https://github.com/coveo/fmt-maven-plugin
