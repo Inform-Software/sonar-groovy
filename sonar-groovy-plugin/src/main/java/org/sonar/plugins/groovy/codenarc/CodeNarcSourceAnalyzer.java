@@ -19,7 +19,7 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,10 +31,13 @@ import org.codenarc.results.FileResults;
 import org.codenarc.results.Results;
 import org.codenarc.rule.Violation;
 import org.codenarc.ruleset.RuleSet;
-import org.codenarc.source.SourceFile;
+import org.codenarc.source.SourceString;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
+  private static final Logger LOG = Loggers.get(CodeNarcSourceAnalyzer.class);
 
   private final Map<InputFile, List<Violation>> violationsByFile = new HashMap<>();
   private final List<InputFile> sourceFiles;
@@ -45,22 +48,23 @@ public class CodeNarcSourceAnalyzer extends AbstractSourceAnalyzer {
 
   @Override
   public Results analyze(RuleSet ruleSet) {
-    Map<File, List<FileResults>> resultsByFileByDirectory = processFiles(ruleSet);
+    List<FileResults> resultsByFile = processFiles(ruleSet);
     DirectoryResults directoryResults = new DirectoryResults(".");
-    for (List<FileResults> fileResults : resultsByFileByDirectory.values()) {
-      fileResults.forEach(directoryResults::addChild);
-    }
+    resultsByFile.forEach(directoryResults::addChild);
     return directoryResults;
   }
 
-  private Map<File, List<FileResults>> processFiles(RuleSet ruleSet) {
-    Map<File, List<FileResults>> results = new HashMap<>();
+  private List<FileResults> processFiles(RuleSet ruleSet) {
+    List<FileResults> results = new LinkedList<>();
     for (InputFile inputFile : sourceFiles) {
-      List<Violation> violations = collectViolations(new SourceFile(inputFile.file()), ruleSet);
-      violationsByFile.put(inputFile, violations);
-      FileResults result = new FileResults(inputFile.absolutePath(), violations);
-      results.putIfAbsent(inputFile.file().getParentFile(), new LinkedList<>());
-      results.get(inputFile.file().getParentFile()).add(result);
+      try {
+        List<Violation> violations = collectViolations(new SourceString(inputFile.contents()), ruleSet);
+        violationsByFile.put(inputFile, violations);
+        FileResults result = new FileResults(inputFile.uri().toString(), violations);
+        results.add(result);
+      } catch (IOException e) {
+        LOG.error("Could not read input file: " + inputFile.toString(), e);
+      }
     }
     return results;
   }

@@ -19,17 +19,29 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
@@ -45,30 +57,25 @@ import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class CodeNarcSensorTest {
-
-  private RulesProfile profile;
-  private CodeNarcSensor sensor;
-  private Groovy groovy;
-  private SensorContextTester sensorContextTester;
-
-  @org.junit.Rule
+  @Rule
   public TemporaryFolder temp = new TemporaryFolder();
+
+  @Rule
+  public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+
+  @Mock
+  private RulesProfile profile;
+
+  private CodeNarcSensor sensor;
+  private SensorContextTester sensorContextTester;
 
   @Before
   public void setUp() throws Exception {
-
     sensorContextTester = SensorContextTester.create(temp.newFolder());
     sensorContextTester.fileSystem().setWorkDir(temp.newFolder().toPath());
 
-    profile = mock(RulesProfile.class);
-
     sensorContextTester.setSettings(new MapSettings(new PropertyDefinitions(GroovyPlugin.class)));
-    groovy = new Groovy(sensorContextTester.settings());
     sensor = new CodeNarcSensor(profile, new GroovyFileSystem(sensorContextTester.fileSystem()));
   }
 
@@ -100,8 +107,8 @@ public class CodeNarcSensorTest {
     activeRulesBuilder = activateFakeRule(activeRulesBuilder, "UnusedImport");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
-    File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
+    Path reportUpdated = getReportWithUpdatedSourceDir();
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -120,8 +127,8 @@ public class CodeNarcSensorTest {
     activeRulesBuilder = activateFakeRule(activeRulesBuilder, "UnknownRule");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
-    File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
+    Path reportUpdated = getReportWithUpdatedSourceDir();
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -140,8 +147,8 @@ public class CodeNarcSensorTest {
     activeRulesBuilder = activateFakeRule(activeRulesBuilder, "BooleanInstantiation");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
-    File reportUpdated = getReportWithUpdatedSourceDir();
-    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.getAbsolutePath());
+    Path reportUpdated = getReportWithUpdatedSourceDir();
+    sensorContextTester.settings().setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 
@@ -203,12 +210,15 @@ public class CodeNarcSensorTest {
     assertThat(sensorContextTester.allIssues()).hasSize(2);
   }
 
-  private File getReportWithUpdatedSourceDir() throws IOException {
-    File report = FileUtils.toFile(getClass().getResource("parsing/sample.xml"));
-    File reportUpdated = temp.newFile();
-    String newSourceDir = sensorContextTester.fileSystem().baseDir().toPath().resolve("src").toAbsolutePath().toString().replaceAll("\\\\", "/");
-    FileUtils.write(reportUpdated,
-      FileUtils.readFileToString(report).replaceAll(Pattern.quote("[sourcedir]"), newSourceDir));
+  private Path getReportWithUpdatedSourceDir() throws IOException {
+    Path reportUpdated = temp.newFile().toPath();
+    String newSourceDir =
+        sensorContextTester.fileSystem().baseDirPath().resolve("src").toAbsolutePath().toString().replaceAll("\\\\", "/");
+    try (InputStream report = getClass().getResourceAsStream("parsing/sample.xml");
+        Writer reportWriter = Files.newBufferedWriter(reportUpdated)) {
+      IOUtils.write(IOUtils.toString(report, StandardCharsets.UTF_8)
+          .replaceAll(Pattern.quote("[sourcedir]"), newSourceDir), reportWriter);
+    }
     return reportUpdated;
   }
 
@@ -227,7 +237,6 @@ public class CodeNarcSensorTest {
       .setContents(content)
       .build();
     sensorContextTester.fileSystem().add(inputFile);
-    FileUtils.write(inputFile.file(), content, StandardCharsets.UTF_8);
   }
 
   private static ActiveRulesBuilder activateFakeRule(ActiveRulesBuilder activeRulesBuilder, String ruleKey) {
@@ -235,7 +244,8 @@ public class CodeNarcSensorTest {
   }
 
   private static ActiveRulesBuilder activateRule(ActiveRulesBuilder activeRulesBuilder, String ruleKey, String internalKey) {
-    return activeRulesBuilder.create(RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, ruleKey)).setInternalKey(internalKey).activate();
+    return activeRulesBuilder.create(RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, ruleKey))
+        .setInternalKey(internalKey).activate();
   }
 
 }
