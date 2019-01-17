@@ -19,14 +19,14 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
-import java.io.File;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GroovyFileSystemTest {
 
@@ -51,27 +51,24 @@ public class GroovyFileSystemTest {
   }
 
   @Test
-  public void getSourceFile() {
-    assertThat(groovyFileSystem.sourceFiles()).isEmpty();
-
-    fileSystem.add(TestInputFileBuilder.create("", "fake.file").build());
-    assertThat(groovyFileSystem.sourceFiles()).isEmpty();
-
-    fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
-    assertThat(groovyFileSystem.sourceFiles()).hasSize(1);
-  }
-
-  @Test
   public void inputFileFromRelativePath() {
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath(null)).isNull();
 
     fileSystem.add(TestInputFileBuilder.create("", "fake1.file").build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake1.file")).isNull();
 
-    fileSystem.add(TestInputFileBuilder.create("", "fake2.file").setType(Type.MAIN).setLanguage(Groovy.KEY).build());
+    fileSystem.add(
+        TestInputFileBuilder.create("", "fake2.file")
+            .setType(Type.MAIN)
+            .setLanguage(Groovy.KEY)
+            .build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("fake2.file")).isNotNull();
 
-    fileSystem.add(TestInputFileBuilder.create("", "org/sample/foo/fake3.file").setType(Type.MAIN).setLanguage(Groovy.KEY).build());
+    fileSystem.add(
+        TestInputFileBuilder.create("", "org/sample/foo/fake3.file")
+            .setType(Type.MAIN)
+            .setLanguage(Groovy.KEY)
+            .build());
     assertThat(groovyFileSystem.sourceInputFileFromRelativePath("foo/fake3.file")).isNotNull();
   }
 }

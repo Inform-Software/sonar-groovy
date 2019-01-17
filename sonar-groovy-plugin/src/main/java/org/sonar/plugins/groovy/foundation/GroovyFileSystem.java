@@ -49,13 +49,6 @@ public class GroovyFileSystem {
     return fileSystem.hasFiles(isGroovyLanguage);
   }
 
-  public List<File> sourceFiles() {
-    Iterable<File> files = fileSystem.files(predicates.and(isGroovyLanguage, isMainTypeFile));
-    List<File> list = new ArrayList<>();
-    files.iterator().forEachRemaining(list::add);
-    return list;
-  }
-
   public List<InputFile> groovyInputFiles() {
     Iterable<InputFile> inputFiles = fileSystem.inputFiles(isGroovyLanguage);
     List<InputFile> list = new ArrayList<>();
@@ -64,7 +57,8 @@ public class GroovyFileSystem {
   }
 
   public List<InputFile> sourceInputFiles() {
-    Iterable<InputFile> inputFiles = fileSystem.inputFiles(predicates.and(isGroovyLanguage, isMainTypeFile));
+    Iterable<InputFile> inputFiles =
+        fileSystem.inputFiles(predicates.and(isGroovyLanguage, isMainTypeFile));
     List<InputFile> list = new ArrayList<>();
     inputFiles.iterator().forEachRemaining(list::add);
     return list;
@@ -72,11 +66,12 @@ public class GroovyFileSystem {
 
   @CheckForNull
   public InputFile sourceInputFileFromRelativePath(String relativePath) {
-    return fileSystem.inputFile(predicates.and(predicates.matchesPathPattern("**/" + relativePath), isGroovyLanguage, isMainTypeFile));
+    return fileSystem.inputFile(
+        predicates.and(
+            predicates.matchesPathPattern("**/" + relativePath), isGroovyLanguage, isMainTypeFile));
   }
 
   public File baseDir() {
     return fileSystem.baseDir();
   }
-
 }
