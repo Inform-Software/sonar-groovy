@@ -1,0 +1,13 @@
+version: '{build}'
+
+cache:
+  - C:\Users\appveyor\.m2
+
+build_script:
+  - mvn verify -B -V -e
+
+artifacts:
+  - path: 'sonar-groovy-plugin\target\*.jar'
+
+on_failure:
+  - ps: Get-ChildItem *\target\surefire-reports\*.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
