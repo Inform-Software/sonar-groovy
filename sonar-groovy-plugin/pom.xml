@@ -16,9 +16,9 @@
   <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
 
   <scm>
-    <connection>scm:git:git@github.com:pmayweg/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:pmayweg/sonar-groovy.git</developerConnection>
-    <url>https://github.com/pmayweg/sonar-groovy</url>
+    <connection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</developerConnection>
+    <url>https://github.com/Inform-Software/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
 
