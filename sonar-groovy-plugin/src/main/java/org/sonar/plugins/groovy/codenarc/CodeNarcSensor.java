@@ -34,6 +34,7 @@ import org.codenarc.CodeNarcRunner;
 import org.codenarc.rule.Violation;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.ActiveRule;
+import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
@@ -52,11 +53,11 @@ public class CodeNarcSensor implements Sensor {
 
   private static final Logger LOG = Loggers.get(CodeNarcSensor.class);
 
-  private final RulesProfile rulesProfile;
+  private final ActiveRules activeRules;
   private final GroovyFileSystem groovyFileSystem;
 
-  public CodeNarcSensor(RulesProfile profile, GroovyFileSystem groovyFileSystem) {
-    this.rulesProfile = profile;
+  public CodeNarcSensor(ActiveRules activeRules, GroovyFileSystem groovyFileSystem) {
+    this.activeRules = activeRules;
     this.groovyFileSystem = groovyFileSystem;
   }
 
@@ -172,7 +173,7 @@ public class CodeNarcSensor implements Sensor {
   private void exportCodeNarcConfiguration(File file) {
     try {
       StringWriter writer = new StringWriter();
-      new CodeNarcProfileExporter(writer).exportProfile(rulesProfile);
+      new CodeNarcProfileExporter(writer).exportProfile(activeRules);
       FileUtils.writeStringToFile(file, writer.toString());
     } catch (IOException e) {
       throw new IllegalStateException("Can not generate CodeNarc configuration file", e);
