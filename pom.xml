@@ -60,7 +60,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>6.7</sonar.version>
+    <sonar.version>7.5</sonar.version>
     <jacoco.previous.version>0.7.4.201502262128</jacoco.previous.version>
     <jacoco.version>0.8.2</jacoco.version>
     <groovy.version>2.4.16</groovy.version>

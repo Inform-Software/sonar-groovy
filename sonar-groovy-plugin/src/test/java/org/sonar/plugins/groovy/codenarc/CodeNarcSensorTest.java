@@ -49,6 +49,7 @@ import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.rule.ActiveRule;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
+import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.PropertyDefinitions;
@@ -247,8 +248,10 @@ public class CodeNarcSensorTest {
   }
 
   private static ActiveRulesBuilder activateRule(ActiveRulesBuilder activeRulesBuilder, String ruleKey, String internalKey) {
-    return activeRulesBuilder.create(RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, ruleKey))
-        .setInternalKey(internalKey).activate();
+    return activeRulesBuilder.addRule(
+        new NewActiveRule.Builder().setRuleKey(RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, ruleKey))
+        .setInternalKey(internalKey)
+        .build());
   }
 
 }
