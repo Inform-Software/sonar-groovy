@@ -6,12 +6,14 @@ env:
 - SONAR_VERSION=
 - SONAR_VERSION=7.3
 - SONAR_VERSION=7.5
+- SONAR_VERSION=7.6
 matrix:
   allow_failures:
   - env: SONAR_VERSION=7.5
+  - env: SONAR_VERSION=7.6
 
 script:
-- if [ "$SONAR_VERSION" ]; then mvn verify -B -V -e -Dsonar.version=$SONAR_VERSION; else mvn verify sonar:sonar -B -V -e; fi
+- .github/travis-build.sh
 
 dist: xenial
 
