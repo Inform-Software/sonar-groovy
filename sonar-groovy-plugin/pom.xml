@@ -15,13 +15,6 @@
   <description>Enables scanning of Groovy source files.</description>
   <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
 
-  <scm>
-    <connection>scm:git:git@github.com:pmayweg/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:pmayweg/sonar-groovy.git</developerConnection>
-    <url>https://github.com/pmayweg/sonar-groovy</url>
-    <tag>HEAD</tag>
-  </scm>
-
   <properties>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
     <sonar.pluginName>Groovy</sonar.pluginName>
@@ -100,8 +93,7 @@
       <version>5.2.0</version>
     </dependency>
 
-    <dependency>
-      <!-- Needed by CodeNarc -->
+    <dependency><!-- Needed by CodeNarc -->
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>

@@ -9,9 +9,11 @@
   </parent>
 
   <artifactId>groovy-jacoco-previous</artifactId>
+
   <description>
     This module shades the required classes of previous version of JaCoCo to allow analysis of two JaCoCo binary format.
   </description>
+
   <dependencies>
     <dependency>
       <groupId>org.jacoco</groupId>
@@ -19,6 +21,7 @@
       <version>${jacoco.previous.version}</version>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>

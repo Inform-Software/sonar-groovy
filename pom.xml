@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -14,8 +14,8 @@
   <packaging>pom</packaging>
 
   <name>Sonar Groovy</name>
+  <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
   <inceptionYear>2010</inceptionYear>
-
   <licenses>
     <license>
       <name>GNU LGPL 3</name>
@@ -49,14 +49,14 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git@github.com:pmayweg/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:pmayweg/sonar-groovy.git</developerConnection>
-    <url>https://github.com/pmayweg/sonar-groovy</url>
+    <connection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</connection>
+    <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</developerConnection>
+    <url>https://github.com/Inform-Software/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/pmayweg/sonar-groovy/issues</url>
+    <url>https://github.com/Inform-Software/sonar-groovy/issues</url>
   </issueManagement>
 
   <properties>
