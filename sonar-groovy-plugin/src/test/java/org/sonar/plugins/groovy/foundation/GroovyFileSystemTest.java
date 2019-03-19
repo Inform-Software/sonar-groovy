@@ -21,7 +21,7 @@ package org.sonar.plugins.groovy.foundation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile.Type;
@@ -35,7 +35,7 @@ public class GroovyFileSystemTest {
 
   @Before
   public void setUp() {
-    fileSystem = new DefaultFileSystem(new File("."));
+    fileSystem = new DefaultFileSystem(Paths.get("."));
     groovyFileSystem = new GroovyFileSystem(fileSystem);
   }
 

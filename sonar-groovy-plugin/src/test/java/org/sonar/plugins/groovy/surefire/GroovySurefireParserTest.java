@@ -28,8 +28,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
@@ -54,7 +54,7 @@ public class GroovySurefireParserTest {
   @Before
   public void before() {
     context = mock(SensorContext.class);
-    fs = new DefaultFileSystem(new File("."));
+    fs = new DefaultFileSystem(Paths.get("."));
 
     Settings settings = mock(Settings.class);
     when(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY))
@@ -87,7 +87,7 @@ public class GroovySurefireParserTest {
 
   @Test
   public void shouldAggregateReports() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
 
     parser.collect(context, getDir("multipleReports"));
 
@@ -105,7 +105,7 @@ public class GroovySurefireParserTest {
   // SONAR-2841: if there's only a test suite report, then it should be read.
   @Test
   public void shouldUseTestSuiteReportIfAlone() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
 
     parser.collect(context, getDir("onlyTestSuiteReport"));
 
@@ -131,7 +131,7 @@ public class GroovySurefireParserTest {
 
   @Test
   public void shouldMergeInnerClasses() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("innerClasses"));
 
     assertThat(
@@ -156,7 +156,7 @@ public class GroovySurefireParserTest {
 
   @Test
   public void shouldMergeNestedInnerClasses() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("nestedInnerClasses"));
 
     assertThat(
@@ -168,7 +168,7 @@ public class GroovySurefireParserTest {
 
   @Test
   public void should_not_count_negative_tests() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("negativeTestTime"));
     // Test times : -1.120, 0.644, 0.015 -> computed time : 0.659, ignore negative time.
 
@@ -187,7 +187,7 @@ public class GroovySurefireParserTest {
 
   @Test
   public void should_generate_correct_predicate() throws URISyntaxException {
-    DefaultFileSystem fs = new DefaultFileSystem(new File("."));
+    DefaultFileSystem fs = new DefaultFileSystem(Paths.get("."));
     InputFile inputFile =
         TestInputFileBuilder.create("", "src/test/org/sonar/JavaNCSSCollectorTest.groovy")
             .setLanguage(Groovy.KEY)
@@ -197,7 +197,7 @@ public class GroovySurefireParserTest {
 
     parser = new GroovySurefireParser(groovy, fs);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.setFileSystem(fs);
     parser.collect(context, getDir("onlyTestSuiteReport"));
 

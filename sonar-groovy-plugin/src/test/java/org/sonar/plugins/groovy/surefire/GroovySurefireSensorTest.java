@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile;
@@ -46,14 +47,14 @@ import org.sonar.plugins.groovy.surefire.api.SurefireUtils;
 /** Created by iwarapter */
 public class GroovySurefireSensorTest {
 
-  private DefaultFileSystem fs = new DefaultFileSystem(new File("."));
+  private DefaultFileSystem fs = new DefaultFileSystem(Paths.get("."));
   private GroovySurefireSensor surefireSensor;
   private PathResolver pathResolver = new PathResolver();
   private Groovy groovy;
 
   @Before
   public void before() {
-    fs = new DefaultFileSystem(new File("."));
+    fs = new DefaultFileSystem(Paths.get("."));
     InputFile groovyFile =
         TestInputFileBuilder.create("", "src/org/foo/grvy").setLanguage(Groovy.KEY).build();
     fs.add(groovyFile);
@@ -94,7 +95,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void shouldHandleTestSuiteDetails() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context
         .fileSystem()
         .add(inputFile("org.sonar.core.ExtensionsFinderTest"))
@@ -190,7 +191,7 @@ public class GroovySurefireSensorTest {
   @Test
   public void shouldSaveErrorsAndFailuresInXML() throws URISyntaxException {
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context
         .fileSystem()
         .add(inputFile("org.sonar.core.ExtensionsFinderTest"))
@@ -218,7 +219,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void shouldManageClassesWithDefaultPackage() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().add(inputFile("NoPackagesTest"));
 
     surefireSensor.collect(
@@ -234,7 +235,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void successRatioIsZeroWhenAllTestsFail() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().add(inputFile("org.sonar.Foo"));
 
     surefireSensor.collect(
@@ -254,7 +255,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void measuresShouldNotIncludeSkippedTests() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().add(inputFile("org.sonar.Foo"));
 
     surefireSensor.collect(
@@ -275,7 +276,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void noSuccessRatioIfNoTests() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().add(inputFile("org.sonar.Foo"));
 
     surefireSensor.collect(
@@ -295,7 +296,7 @@ public class GroovySurefireSensorTest {
 
   @Test
   public void ignoreSuiteAsInnerClass() throws URISyntaxException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().add(inputFile("org.sonar.Foo"));
 
     surefireSensor.collect(

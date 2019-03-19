@@ -19,6 +19,15 @@
  */
 package org.sonar.plugins.groovy;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -36,24 +45,16 @@ import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class GroovySensorTest {
 
   private MapSettings settings = new MapSettings();
   private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
-  private DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+  private DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
   private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
 
   @Test
   public void do_nothing_when_no_groovy_file() throws IOException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context = Mockito.spy(context);
     sensor = new GroovySensor(settings, fileLinesContextFactory, context.fileSystem());
     sensor.execute(context);
@@ -78,13 +79,16 @@ public class GroovySensorTest {
     File sourceFile = TestUtils.getResource("/org/sonar/plugins/groovy/gmetrics/Greeting.groovy");
     fileSystem = context.fileSystem();
     fileSystem.add(new DefaultInputDir("", sourceFile.getParentFile().getPath()));
-    InputFile groovyFile = TestInputFileBuilder.create("", sourceFile.getParentFile(), sourceFile)
-      .setLanguage(Groovy.KEY)
-      .setContents(new String(Files.readAllBytes(sourceFile.toPath()), "UTF-8")).build();
+    InputFile groovyFile =
+        TestInputFileBuilder.create("", sourceFile.getParentFile(), sourceFile)
+            .setLanguage(Groovy.KEY)
+            .setContents(new String(Files.readAllBytes(sourceFile.toPath()), "UTF-8"))
+            .build();
     fileSystem.add(groovyFile);
 
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
-    when(fileLinesContextFactory.createFor(any(DefaultInputFile.class))).thenReturn(fileLinesContext);
+    when(fileLinesContextFactory.createFor(any(DefaultInputFile.class)))
+        .thenReturn(fileLinesContext);
 
     sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
     sensor.execute(context);
@@ -96,18 +100,26 @@ public class GroovySensorTest {
 
     assertThat(context.measure(key, CoreMetrics.LINES).value()).isEqualTo(33);
     assertThat(context.measure(key, CoreMetrics.NCLOC).value()).isEqualTo(17);
-    assertThat(context.measure(key, CoreMetrics.COMMENT_LINES).value()).isEqualTo(expectedCommentMetric);
+    assertThat(context.measure(key, CoreMetrics.COMMENT_LINES).value())
+        .isEqualTo(expectedCommentMetric);
 
     // FIXME: assertThat(context.measure(key, CoreMetrics.COMPLEXITY).value()).isEqualTo(4);
-    // FIXME: assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_CLASSES).value()).isEqualTo(4);
-    // FIXME: assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_FUNCTIONS).value()).isEqualTo(4);
+    // FIXME: assertThat(context.measure(key,
+    // CoreMetrics.COMPLEXITY_IN_CLASSES).value()).isEqualTo(4);
+    // FIXME: assertThat(context.measure(key,
+    // CoreMetrics.COMPLEXITY_IN_FUNCTIONS).value()).isEqualTo(4);
 
-    // FIXME: assertThat(context.measure(key, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
-    // FIXME: assertThat(context.measure(key, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
+    // FIXME: assertThat(context.measure(key,
+    // CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
+    // FIXME: assertThat(context.measure(key,
+    // CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
 
     // 11 times for comment because we register comment even when ignoring header comment
-    Mockito.verify(fileLinesContext, Mockito.times(11)).setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
-    Mockito.verify(fileLinesContext, Mockito.times(17)).setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
+    Mockito.verify(fileLinesContext, Mockito.times(11))
+        .setIntValue(
+            Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
+    Mockito.verify(fileLinesContext, Mockito.times(17))
+        .setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
     // Only "Greeting.groovy" is part of the file system.
@@ -117,15 +129,26 @@ public class GroovySensorTest {
   @Test
   @Ignore("Broken since SonarQube 6?")
   public void compute_coupling_metrics() throws IOException {
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
 
     fileSystem = context.fileSystem();
-    // package 'org' contains class 'Greeting', used by no other class, but using classes 'Bar' and 'Foo'
-    DefaultInputDir org = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org", "Greeting.groovy");
+    // package 'org' contains class 'Greeting', used by no other class, but using classes 'Bar' and
+    // 'Foo'
+    DefaultInputDir org =
+        addFileWithParentFolder(
+            "src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org",
+            "Greeting.groovy");
     // package 'org.foo' contains class 'Foo', used by class 'Greeting', and using class 'Bar'
-    DefaultInputDir org_foo = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/foo", "Foo.groovy");
-    // package 'org.bar' contains class 'Bar', used by classes 'Greeting' and 'Foo', but using no other class
-    DefaultInputDir org_bar = addFileWithParentFolder("src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/bar", "Bar.groovy");
+    DefaultInputDir org_foo =
+        addFileWithParentFolder(
+            "src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/foo",
+            "Foo.groovy");
+    // package 'org.bar' contains class 'Bar', used by classes 'Greeting' and 'Foo', but using no
+    // other class
+    DefaultInputDir org_bar =
+        addFileWithParentFolder(
+            "src/test/resources/org/sonar/plugins/groovy/gmetricswithcoupling/org/bar",
+            "Bar.groovy");
 
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
     when(fileLinesContextFactory.createFor(any(InputFile.class))).thenReturn(fileLinesContext);
@@ -138,22 +161,35 @@ public class GroovySensorTest {
     assertCouplingMeasureAre(context, org_bar.key(), 2, 2.0, 0, 0.0);
   }
 
-  private static void assertCouplingMeasureAre(SensorContextTester context, String key, Object afferentTot, Object afferentAvg, Object efferentTot, Object efferentAvg) {
-    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_TOTAL.key()).value()).isEqualTo(afferentTot);
-    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_AVERAGE.key()).value()).isEqualTo(afferentAvg);
+  private static void assertCouplingMeasureAre(
+      SensorContextTester context,
+      String key,
+      Object afferentTot,
+      Object afferentAvg,
+      Object efferentTot,
+      Object efferentAvg) {
+    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_TOTAL.key()).value())
+        .isEqualTo(afferentTot);
+    assertThat(context.measure(key, GroovyMetrics.AFFERENT_COUPLING_AVERAGE.key()).value())
+        .isEqualTo(afferentAvg);
 
-    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_TOTAL.key()).value()).isEqualTo(efferentTot);
-    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_AVERAGE.key()).value()).isEqualTo(efferentAvg);
+    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_TOTAL.key()).value())
+        .isEqualTo(efferentTot);
+    assertThat(context.measure(key, GroovyMetrics.EFFERENT_COUPLING_AVERAGE.key()).value())
+        .isEqualTo(efferentAvg);
   }
 
-  private DefaultInputDir addFileWithParentFolder(String dirPath, String fileName) throws IOException {
+  private DefaultInputDir addFileWithParentFolder(String dirPath, String fileName)
+      throws IOException {
     File dir = new File(dirPath);
     File file = new File(dir, fileName);
     DefaultInputDir inputDir = new DefaultInputDir("", dir.getPath());
     fileSystem.add(inputDir);
-    fileSystem.add(TestInputFileBuilder.create("", file.getPath())
-      .setLanguage(Groovy.KEY)
-      .initMetadata(new String(Files.readAllBytes(file.toPath()), "UTF-8")).build());
+    fileSystem.add(
+        TestInputFileBuilder.create("", file.getPath())
+            .setLanguage(Groovy.KEY)
+            .initMetadata(new String(Files.readAllBytes(file.toPath()), "UTF-8"))
+            .build());
     return inputDir;
   }
 
@@ -168,5 +204,4 @@ public class GroovySensorTest {
     sensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
-
 }

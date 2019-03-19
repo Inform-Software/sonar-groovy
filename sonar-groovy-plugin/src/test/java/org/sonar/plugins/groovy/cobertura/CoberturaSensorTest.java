@@ -19,7 +19,12 @@
  */
 package org.sonar.plugins.groovy.cobertura;
 
-import java.io.File;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -42,11 +47,6 @@ import org.sonar.api.config.internal.MapSettings;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class CoberturaSensorTest {
 
   private MapSettings settings;
@@ -56,8 +56,10 @@ public class CoberturaSensorTest {
   @Before
   public void setUp() throws Exception {
     settings = new MapSettings();
-    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml");
-    fileSystem = new DefaultFileSystem(new File("."));
+    settings.setProperty(
+        GroovyPlugin.COBERTURA_REPORT_PATH,
+        "src/test/resources/org/sonar/plugins/groovy/cobertura/coverage.xml");
+    fileSystem = new DefaultFileSystem(Paths.get("."));
     sensor = new CoberturaSensor(settings, fileSystem);
   }
 
@@ -68,9 +70,7 @@ public class CoberturaSensorTest {
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
-  /**
-   * See SONARPLUGINS-696
-   */
+  /** See SONARPLUGINS-696 */
   @Test
   public void should_parse_report() {
     FilePredicates fp = mock(FilePredicates.class);
@@ -89,12 +89,14 @@ public class CoberturaSensorTest {
       }
     }
 
-    when(fp.hasAbsolutePath(ArgumentMatchers.anyString())).thenAnswer(new Answer<FilePredicate>() {
-      @Override
-      public FilePredicate answer(InvocationOnMock invocation) throws Throwable {
-        return new CustomFilePredicate(invocation.<String>getArgument(0));
-      }
-    });
+    when(fp.hasAbsolutePath(ArgumentMatchers.anyString()))
+        .thenAnswer(
+            new Answer<FilePredicate>() {
+              @Override
+              public FilePredicate answer(InvocationOnMock invocation) throws Throwable {
+                return new CustomFilePredicate(invocation.<String>getArgument(0));
+              }
+            });
 
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fp);
@@ -102,29 +104,37 @@ public class CoberturaSensorTest {
 
     Map<String, InputFile> groovyFilesByName = new HashMap<>();
 
-    when(mockfileSystem.inputFile(any(FilePredicate.class))).thenAnswer(new Answer<InputFile>() {
-      boolean firstCall = true;
+    when(mockfileSystem.inputFile(any(FilePredicate.class)))
+        .thenAnswer(
+            new Answer<InputFile>() {
+              boolean firstCall = true;
 
-      @Override
-      public InputFile answer(InvocationOnMock invocation) throws Throwable {
-        if (firstCall) {
-          // The first class in the test coverage.xml is a java class and the rest are groovy
-          firstCall = false;
-          return TestInputFileBuilder.create("", "fake.java").setLanguage("java").build();
-        }
-        String fileName = invocation.<CustomFilePredicate>getArgument(0).fileName;
-        InputFile groovyFile;
-        if (!groovyFilesByName.containsKey(fileName)) {
-          // store groovy file as default input files
-          groovyFile = TestInputFileBuilder.create("", fileName).setLanguage(Groovy.KEY).setType(Type.MAIN).setLines(Integer.MAX_VALUE).build();
-          groovyFilesByName.put(fileName, groovyFile);
-        }
-        return groovyFilesByName.get(fileName);
-      }
-    });
+              @Override
+              public InputFile answer(InvocationOnMock invocation) throws Throwable {
+                if (firstCall) {
+                  // The first class in the test coverage.xml is a java class and the rest are
+                  // groovy
+                  firstCall = false;
+                  return TestInputFileBuilder.create("", "fake.java").setLanguage("java").build();
+                }
+                String fileName = invocation.<CustomFilePredicate>getArgument(0).fileName;
+                InputFile groovyFile;
+                if (!groovyFilesByName.containsKey(fileName)) {
+                  // store groovy file as default input files
+                  groovyFile =
+                      TestInputFileBuilder.create("", fileName)
+                          .setLanguage(Groovy.KEY)
+                          .setType(Type.MAIN)
+                          .setLines(Integer.MAX_VALUE)
+                          .build();
+                  groovyFilesByName.put(fileName, groovyFile);
+                }
+                return groovyFilesByName.get(fileName);
+              }
+            });
     sensor = new CoberturaSensor(settings, mockfileSystem);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     sensor.execute(context);
 
     // random pick groovy file
@@ -136,11 +146,15 @@ public class CoberturaSensorTest {
       assertThat(context.lineHits(filekey, line)).isEqualTo(1);
     }
     for (int line : lineNoHits) {
-      assertThat(context.lineHits(filekey,line)).isEqualTo(0);
+      assertThat(context.lineHits(filekey, line)).isEqualTo(0);
     }
 
     // No value for java file
-    assertThat(context.lineHits(":/Users/cpicat/myproject/grails-app/domain/com/test/web/EmptyResultException.java", 16)).isNull();
+    assertThat(
+            context.lineHits(
+                ":/Users/cpicat/myproject/grails-app/domain/com/test/web/EmptyResultException.java",
+                16))
+        .isNull();
   }
 
   @Test
@@ -158,7 +172,7 @@ public class CoberturaSensorTest {
 
   @Test
   public void should_not_parse_report_if_settings_does_not_contain_report_path() {
-    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
     sensor = new CoberturaSensor(new MapSettings(), fileSystem);
 
@@ -171,9 +185,10 @@ public class CoberturaSensorTest {
   @Test
   public void should_not_parse_report_if_report_does_not_exist() {
     MapSettings settings = new MapSettings();
-    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
+    settings.setProperty(
+        GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
 
     sensor = new CoberturaSensor(settings, fileSystem);
@@ -187,9 +202,11 @@ public class CoberturaSensorTest {
   @Test
   public void should_use_relative_path_to_get_report() {
     MapSettings settings = new MapSettings();
-    settings.setProperty(GroovyPlugin.COBERTURA_REPORT_PATH, "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
+    settings.setProperty(
+        GroovyPlugin.COBERTURA_REPORT_PATH,
+        "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
-    DefaultFileSystem fileSystem = new DefaultFileSystem(new File("."));
+    DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
 
     sensor = new CoberturaSensor(settings, fileSystem);
@@ -215,5 +232,4 @@ public class CoberturaSensorTest {
   public void test_toString() {
     assertThat(sensor.toString()).isEqualTo("Groovy CoberturaSensor");
   }
-
 }

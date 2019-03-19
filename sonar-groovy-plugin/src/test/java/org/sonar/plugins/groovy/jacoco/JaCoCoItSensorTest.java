@@ -19,7 +19,14 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
+import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,12 +44,6 @@ import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class JaCoCoItSensorTest {
 
   private File jacocoExecutionData;
@@ -56,10 +57,12 @@ public class JaCoCoItSensorTest {
     File outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCoItSensorTests/");
     jacocoExecutionData = new File(outputDir, "jacoco-it.exec");
 
-    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
-      new File(jacocoExecutionData.getParentFile(), "Hello.class"));
-    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
-      new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
+    FileUtils.copyFile(
+        TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
+        new File(jacocoExecutionData.getParentFile(), "Hello.class"));
+    FileUtils.copyFile(
+        TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
+        new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
 
     MapSettings settings = new MapSettings();
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
@@ -70,15 +73,17 @@ public class JaCoCoItSensorTest {
     when(configuration.getItReportPath()).thenReturn(jacocoExecutionData.getPath());
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
-    inputFile = TestInputFileBuilder.create("", "example/Hello.groovy")
-      .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN)
-      .setLines(50)
-      .build();
+    inputFile =
+        TestInputFileBuilder.create("", "example/Hello.groovy")
+            .setLanguage(Groovy.KEY)
+            .setType(Type.MAIN)
+            .setLines(50)
+            .build();
     fileSystem.add(inputFile);
 
     pathResolver = mock(PathResolver.class);
-    sensor = new JaCoCoItSensor(configuration, new GroovyFileSystem(fileSystem), pathResolver, settings);
+    sensor =
+        new JaCoCoItSensor(configuration, new GroovyFileSystem(fileSystem), pathResolver, settings);
   }
 
   @Test
@@ -94,7 +99,8 @@ public class JaCoCoItSensorTest {
     when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoExecutionData);
     assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoExecutionData.getParentFile());
+    when(pathResolver.relativeFile(any(File.class), eq("it.exec")))
+        .thenReturn(jacocoExecutionData.getParentFile());
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
 
     File outputDir = TestUtils.getResource(JaCoCoSensorTest.class, ".");
@@ -109,9 +115,10 @@ public class JaCoCoItSensorTest {
 
   @Test
   public void test_read_execution_data() {
-    when(pathResolver.relativeFile(any(File.class), ArgumentMatchers.endsWith(".exec"))).thenReturn(jacocoExecutionData);
+    when(pathResolver.relativeFile(any(File.class), ArgumentMatchers.endsWith(".exec")))
+        .thenReturn(jacocoExecutionData);
 
-    SensorContextTester context = SensorContextTester.create(new File(""));
+    SensorContextTester context = SensorContextTester.create(Paths.get("."));
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 25};
@@ -125,9 +132,8 @@ public class JaCoCoItSensorTest {
       assertThat(context.lineHits(":example/Hello.groovy", oneHitline)).isEqualTo(1);
     }
     for (int conditionLine : conditionLines) {
-      assertThat(context.conditions(":example/Hello.groovy",conditionLine)).isEqualTo(2);
+      assertThat(context.conditions(":example/Hello.groovy", conditionLine)).isEqualTo(2);
       assertThat(context.coveredConditions(":example/Hello.groovy", conditionLine)).isEqualTo(0);
     }
   }
-
 }
