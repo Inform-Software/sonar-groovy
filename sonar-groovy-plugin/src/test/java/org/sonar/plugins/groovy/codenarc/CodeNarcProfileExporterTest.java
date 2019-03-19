@@ -20,7 +20,7 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.io.File;
 import java.io.FileReader;
@@ -37,10 +37,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.sonar.api.batch.rule.ActiveRules;
-import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
-import org.sonar.api.rule.RuleKey;
-import org.sonar.api.rule.Severity;
 import org.sonar.plugins.groovy.TestUtils;
 
 public class CodeNarcProfileExporterTest {
@@ -56,23 +52,13 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldExportProfile() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY,
-                    "org.codenarc.rule.basic.AddEmptyStringRule"))
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.basic.AddEmptyStringRule")
             .setName("Add Empty String")
-            .setSeverity(Severity.MAJOR)
-            .activate()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule"))
-            .setName("Class Size")
-            .setSeverity(Severity.MAJOR)
-            .activate()
-            .build();
-    exporter.exportProfile(activeRules);
+            .addRule("org.codenarc.rule.size.ClassSizeRule")
+            .setName("Class Size");
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource("/org/sonar/plugins/groovy/codenarc/exportProfile/exportProfile.xml"),
@@ -86,7 +72,7 @@ public class CodeNarcProfileExporterTest {
     exporter = new CodeNarcProfileExporter(writer);
 
     try {
-      exporter.exportProfile(new ActiveRulesBuilder().build());
+      exporter.exportProfile(new ActiveRulesBuilderWrapper().build());
       Fail.fail("Should have failed");
     } catch (IllegalStateException e) {
       assertThat(e.getMessage()).contains("Fail to export CodeNarc profile");
@@ -95,18 +81,13 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldExportParameters() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule"))
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.size.ClassSizeRule")
             .setName("Class Size")
-            .setSeverity(Severity.MAJOR)
-            .setParam("maxLines", "20")
-            .activate()
-            .build();
+            .addParam("maxLines", "20");
 
-    exporter.exportProfile(activeRules);
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource(
@@ -116,18 +97,13 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldNotExportUnsetParameters() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule"))
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.size.ClassSizeRule")
             .setName("Class Size")
-            .setSeverity(Severity.MAJOR)
-            .setParam("maxLines", null)
-            .activate()
-            .build();
+            .addParam("maxLines", null);
 
-    exporter.exportProfile(activeRules);
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource(
@@ -137,18 +113,12 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldExportFixedRulesCorrectly() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY,
-                    "org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed"))
-            .setName("Private Field Could Be Final")
-            .setSeverity(Severity.MAJOR)
-            .activate()
-            .build();
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed")
+            .setName("Private Field Could Be Final");
 
-    exporter.exportProfile(activeRules);
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource(
@@ -160,18 +130,13 @@ public class CodeNarcProfileExporterTest {
   @Ignore(
       "Is this rule still pertinent, as the rule parameters are kept server-side? I assume defaults will be brought down as params")
   public void shouldNotExportParametersWithDefaultValue() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.size.ClassSizeRule"))
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.size.ClassSizeRule")
             .setName("Class Size")
-            .setSeverity(Severity.MAJOR)
-            .setParam("maxLines", "20")
-            .activate()
-            .build();
+            .addParam("maxLines", "20");
 
-    exporter.exportProfile(activeRules);
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource(
@@ -181,19 +146,13 @@ public class CodeNarcProfileExporterTest {
 
   @Test
   public void shouldEscapeExportedParameters() throws Exception {
-    ActiveRules activeRules =
-        new ActiveRulesBuilder()
-            .create(
-                RuleKey.of(
-                    CodeNarcRulesDefinition.REPOSITORY_KEY,
-                    "org.codenarc.rule.naming.ClassNameRule"))
+    ActiveRulesBuilderWrapper activeRulesBuilder =
+        new ActiveRulesBuilderWrapper()
+            .addRule("org.codenarc.rule.naming.ClassNameRule")
             .setName("Class Name")
-            .setSeverity(Severity.MAJOR)
-            .setParam("regex", "[A-Z]+[a-z&&[^bc]]")
-            .activate()
-            .build();
+            .addParam("regex", "[A-Z]+[a-z&&[^bc]]");
 
-    exporter.exportProfile(activeRules);
+    exporter.exportProfile(activeRulesBuilder.build());
 
     assertSimilarXml(
         TestUtils.getResource(
