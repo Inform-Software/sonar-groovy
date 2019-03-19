@@ -19,10 +19,14 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import java.io.File;
-import org.apache.commons.io.FileUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
@@ -35,53 +39,54 @@ import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class JaCoCoOverallSensorTest {
 
+  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+
   private JaCoCoConfiguration configuration;
-  private PathResolver pathResolver;
   private JaCoCoOverallSensor sensor;
-  private File jacocoUTData;
-  private File jacocoITData;
-  private File outputDir;
+  private Path outputDir;
   private InputFile inputFile;
-  private MapSettings settings;
+  private MapSettings settings = new MapSettings();
   private SensorContextTester context;
 
   @Before
   public void before() throws Exception {
-    outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCoOverallSensorTests/");
-    jacocoUTData = new File(outputDir, "jacoco-ut.exec");
-    jacocoITData = new File(outputDir, "jacoco-it.exec");
+    outputDir = tmpDir.newFolder().toPath();
 
-    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
-      new File(jacocoUTData.getParentFile(), "Hello.class"));
-    FileUtils.copyFile(TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
-      new File(jacocoUTData.getParentFile(), "Hello$InnerClass.class"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../JaCoCoOverallSensorTests/jacoco-ut.exec"),
+        outputDir.resolve("jacoco-ut.exec"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../JaCoCoOverallSensorTests/jacoco-it.exec"),
+        outputDir.resolve("jacoco-it.exec"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../Hello.class.toCopy"),
+        outputDir.resolve("Hello.class"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../Hello$InnerClass.class.toCopy"),
+        outputDir.resolve("Hello$InnerClass.class"));
 
-    settings = new MapSettings();
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
-    context = SensorContextTester.create(jacocoUTData.getParentFile());
-    context.fileSystem().setWorkDir(jacocoUTData.getParentFile().toPath());
+    context = SensorContextTester.create(outputDir);
+    context.fileSystem().setWorkDir(outputDir);
 
-    inputFile = TestInputFileBuilder.create("", "example/Hello.groovy")
-      .setLanguage(Groovy.KEY)
-      .setType(Type.MAIN)
-      .setLines(50)
-      .build();
+    inputFile =
+        TestInputFileBuilder.create("", "example/Hello.groovy")
+            .setLanguage(Groovy.KEY)
+            .setType(Type.MAIN)
+            .setLines(50)
+            .build();
     context.fileSystem().add(inputFile);
 
-    configuration = mock(JaCoCoConfiguration.class);
-    when(configuration.shouldExecuteOnProject(true)).thenReturn(true);
-    when(configuration.shouldExecuteOnProject(false)).thenReturn(false);
-    pathResolver = mock(PathResolver.class);
-    sensor = new JaCoCoOverallSensor(configuration, new GroovyFileSystem(context.fileSystem()), pathResolver, settings);
+    configuration = new JaCoCoConfiguration(settings, context.fileSystem());
+    sensor =
+        new JaCoCoOverallSensor(
+            configuration,
+            new GroovyFileSystem(context.fileSystem()),
+            new PathResolver(),
+            settings);
   }
 
   @Test
@@ -93,28 +98,22 @@ public class JaCoCoOverallSensorTest {
 
   @Test
   public void should_Execute_On_Project_only_if_at_least_one_exec_exists() {
-    when(configuration.getItReportPath()).thenReturn("it.exec");
-    when(configuration.getReportPath()).thenReturn("ut.exec");
-
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoITData);
-    when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(fakeExecFile());
+    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "jacoco-it.exec");
+    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "notexist.exec");
+    configReports(false, true);
     assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile());
-    when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(jacocoUTData);
+    configReports(true, false);
     assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile());
-    when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(fakeExecFile());
+    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "notexist.exec");
+    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "notexist.exec");
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
-
-    when(configuration.shouldExecuteOnProject(false)).thenReturn(true);
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
   }
 
   @Test
   public void test_read_execution_data_with_IT_and_UT() {
-    setMocks(true, true);
+    configReports(true, true);
 
     sensor.execute(context);
 
@@ -126,7 +125,12 @@ public class JaCoCoOverallSensorTest {
     verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
-  private void verifyOverallMetrics(SensorContextTester context, int[] zeroHitlines, int[] oneHitlines, int[] conditionLines, int[] coveredConditions) {
+  private void verifyOverallMetrics(
+      SensorContextTester context,
+      int[] zeroHitlines,
+      int[] oneHitlines,
+      int[] conditionLines,
+      int[] coveredConditions) {
     for (int zeroHitline : zeroHitlines) {
       assertThat(context.lineHits(inputFile.key(), zeroHitline)).isEqualTo(0);
     }
@@ -143,8 +147,8 @@ public class JaCoCoOverallSensorTest {
 
   @Test
   public void test_read_execution_data_with_IT_and_UT_and_binaryDirs_being_absolute() {
-    setMocks(true, true);
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, jacocoUTData.getParentFile().getAbsolutePath());
+    configReports(true, true);
+    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, outputDir.toAbsolutePath().toString());
 
     sensor.execute(context);
 
@@ -158,7 +162,7 @@ public class JaCoCoOverallSensorTest {
 
   @Test
   public void test_read_execution_data_with_only_UT() {
-    setMocks(true, false);
+    configReports(true, false);
 
     sensor.execute(context);
 
@@ -172,7 +176,7 @@ public class JaCoCoOverallSensorTest {
 
   @Test
   public void test_read_execution_data_with_only_IT() {
-    setMocks(false, true);
+    configReports(false, true);
 
     sensor.execute(context);
 
@@ -184,16 +188,11 @@ public class JaCoCoOverallSensorTest {
     verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
-  private void setMocks(boolean utReport, boolean itReport) {
-    when(configuration.getReportPath()).thenReturn("ut.exec");
-    when(pathResolver.relativeFile(any(File.class), eq("ut.exec"))).thenReturn(utReport ? jacocoUTData : fakeExecFile());
-    when(configuration.getItReportPath()).thenReturn("it.exec");
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(itReport ? jacocoITData : fakeExecFile());
-    File jacocoOverallData = new File(outputDir, "jacoco-overall.exec");
-    when(pathResolver.relativeFile(any(File.class), eq(jacocoOverallData.getAbsolutePath()))).thenReturn(jacocoOverallData);
-  }
-
-  private File fakeExecFile() {
-    return new File("fake.exec");
+  private void configReports(boolean utReport, boolean itReport) {
+    settings.setProperty(
+        JaCoCoConfiguration.REPORT_PATH_PROPERTY, utReport ? "jacoco-ut.exec" : "notexist-ut.exec");
+    settings.setProperty(
+        JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY,
+        itReport ? "jacoco-it.exec" : "notexist-it.exec");
   }
 }

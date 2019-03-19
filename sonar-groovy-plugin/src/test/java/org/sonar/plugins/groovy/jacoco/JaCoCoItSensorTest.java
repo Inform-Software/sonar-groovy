@@ -20,17 +20,14 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
+import org.junit.rules.TemporaryFolder;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
@@ -46,33 +43,31 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 public class JaCoCoItSensorTest {
 
-  private File jacocoExecutionData;
+  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+
+  private Path outputDir;
   private InputFile inputFile;
+  private MapSettings settings = new MapSettings();
   private JaCoCoConfiguration configuration;
-  private PathResolver pathResolver;
   private JaCoCoItSensor sensor;
 
   @Before
   public void setUp() throws Exception {
-    File outputDir = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCoItSensorTests/");
-    jacocoExecutionData = new File(outputDir, "jacoco-it.exec");
+    outputDir = tmpDir.newFolder().toPath();
+    Files.copy(
+        TestUtils.getResource(getClass(), "../JaCoCoItSensorTests/jacoco-it.exec"),
+        outputDir.resolve("jacoco-it.exec"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../Hello.class.toCopy"),
+        outputDir.resolve("Hello.class"));
+    Files.copy(
+        TestUtils.getResource(getClass(), "../Hello$InnerClass.class.toCopy"),
+        outputDir.resolve("Hello$InnerClass.class"));
 
-    FileUtils.copyFile(
-        TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello.class.toCopy"),
-        new File(jacocoExecutionData.getParentFile(), "Hello.class"));
-    FileUtils.copyFile(
-        TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/Hello$InnerClass.class.toCopy"),
-        new File(jacocoExecutionData.getParentFile(), "Hello$InnerClass.class"));
-
-    MapSettings settings = new MapSettings();
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
+    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "jacoco-it.exec");
 
-    configuration = mock(JaCoCoConfiguration.class);
-    when(configuration.shouldExecuteOnProject(true)).thenReturn(true);
-    when(configuration.shouldExecuteOnProject(false)).thenReturn(false);
-    when(configuration.getItReportPath()).thenReturn(jacocoExecutionData.getPath());
-
-    DefaultFileSystem fileSystem = new DefaultFileSystem(jacocoExecutionData.getParentFile());
+    DefaultFileSystem fileSystem = new DefaultFileSystem(outputDir);
     inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
             .setLanguage(Groovy.KEY)
@@ -80,10 +75,11 @@ public class JaCoCoItSensorTest {
             .setLines(50)
             .build();
     fileSystem.add(inputFile);
+    configuration = new JaCoCoConfiguration(settings, fileSystem);
 
-    pathResolver = mock(PathResolver.class);
     sensor =
-        new JaCoCoItSensor(configuration, new GroovyFileSystem(fileSystem), pathResolver, settings);
+        new JaCoCoItSensor(
+            configuration, new GroovyFileSystem(fileSystem), new PathResolver(), settings);
   }
 
   @Test
@@ -95,29 +91,17 @@ public class JaCoCoItSensorTest {
 
   @Test
   public void should_Execute_On_Project_only_if_exec_exists() {
-    when(configuration.getItReportPath()).thenReturn("it.exec");
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(jacocoExecutionData);
     assertThat(sensor.shouldExecuteOnProject()).isTrue();
 
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec")))
-        .thenReturn(jacocoExecutionData.getParentFile());
+    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, ".");
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
 
-    File outputDir = TestUtils.getResource(JaCoCoSensorTest.class, ".");
-    File fakeExecFile = new File(outputDir, "it.not.found.exec");
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile);
+    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "it.not.found.exec");
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
-
-    when(pathResolver.relativeFile(any(File.class), eq("it.exec"))).thenReturn(fakeExecFile);
-    when(configuration.shouldExecuteOnProject(false)).thenReturn(true);
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
   }
 
   @Test
   public void test_read_execution_data() {
-    when(pathResolver.relativeFile(any(File.class), ArgumentMatchers.endsWith(".exec")))
-        .thenReturn(jacocoExecutionData);
-
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     sensor.execute(context);
 

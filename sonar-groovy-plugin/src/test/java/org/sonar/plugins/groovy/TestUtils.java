@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -54,12 +55,12 @@ public final class TestUtils {
    *
    * @return the resource. Null if resource not found
    */
-  public static File getResource(Class<?> baseClass, String path) {
+  public static Path getResource(Class<?> baseClass, String path) {
     String resourcePath = StringUtils.replaceChars(baseClass.getCanonicalName(), '.', '/');
     if (!path.startsWith("/")) {
       resourcePath += "/";
     }
     resourcePath += path;
-    return getResource(resourcePath);
+    return getResource(resourcePath).toPath();
   }
 }

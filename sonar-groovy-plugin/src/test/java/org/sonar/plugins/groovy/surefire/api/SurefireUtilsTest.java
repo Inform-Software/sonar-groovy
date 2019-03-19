@@ -20,32 +20,20 @@
 package org.sonar.plugins.groovy.surefire.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
-import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.plugins.groovy.TestUtils;
 
 public class SurefireUtilsTest {
 
-  private FileSystem fs;
-  private PathResolver pathResolver;
-
-  @Before
-  public void setup() {
-    fs =
-        new DefaultFileSystem(
-            new File(
-                "src/test/resources/org/sonar/plugins/groovy/surefire/api/SurefireUtilsTest/shouldGetReportsFromProperty"));
-    pathResolver = new PathResolver();
-  }
+  private FileSystem fs =
+      new DefaultFileSystem(TestUtils.getResource(getClass(), "shouldGetReportsFromProperty"));
+  private PathResolver pathResolver = new PathResolver();
 
   @Test
   public void should_get_reports_from_property() {
@@ -68,10 +56,7 @@ public class SurefireUtilsTest {
   @Test
   public void return_default_value_if_can_not_read_file() throws Exception {
     MapSettings settings = new MapSettings();
-    settings.setProperty("sonar.junit.reportsPath", "target/surefire");
-    PathResolver pathResolver = mock(PathResolver.class);
-    when(pathResolver.relativeFile(any(File.class), anyString()))
-        .thenThrow(new IllegalStateException());
+    settings.setProperty("sonar.junit.reportsPath", "../target/\u0000:surefire");
     File directory = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
     assertThat(directory.getCanonicalPath())
         .endsWith("target" + File.separator + "surefire-reports");
