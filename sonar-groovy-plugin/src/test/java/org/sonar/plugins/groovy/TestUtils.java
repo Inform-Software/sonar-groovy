@@ -26,11 +26,11 @@ import org.apache.commons.lang.StringUtils;
 
 public final class TestUtils {
 
-  private TestUtils() {
-  }
+  private TestUtils() {}
 
   /**
-   * Search for a test resource in the classpath. For example getResource("org/sonar/MyClass/foo.txt");
+   * Search for a test resource in the classpath. For example
+   * getResource("org/sonar/MyClass/foo.txt");
    *
    * @param path the starting slash is optional
    * @return the resource. Null if resource not found
@@ -48,12 +48,13 @@ public final class TestUtils {
   }
 
   /**
-   * Search for a resource in the classpath. For example calling the method getResource(getClass(), "myTestName/foo.txt") from
-   * the class org.sonar.Foo loads the file $basedir/src/test/resources/org/sonar/Foo/myTestName/foo.txt
+   * Search for a resource in the classpath. For example calling the method getResource(getClass(),
+   * "myTestName/foo.txt") from the class org.sonar.Foo loads the file
+   * $basedir/src/test/resources/org/sonar/Foo/myTestName/foo.txt
    *
    * @return the resource. Null if resource not found
    */
-  public static File getResource(Class baseClass, String path) {
+  public static File getResource(Class<?> baseClass, String path) {
     String resourcePath = StringUtils.replaceChars(baseClass.getCanonicalName(), '.', '/');
     if (!path.startsWith("/")) {
       resourcePath += "/";
@@ -61,5 +62,4 @@ public final class TestUtils {
     resourcePath += path;
     return getResource(resourcePath);
   }
-
 }

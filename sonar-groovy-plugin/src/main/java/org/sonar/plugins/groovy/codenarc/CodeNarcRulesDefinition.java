@@ -19,18 +19,18 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.sonar.api.server.debt.DebtRemediationFunction;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.api.utils.MessageException;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class CodeNarcRulesDefinition implements RulesDefinition {
 
@@ -40,12 +40,14 @@ public class CodeNarcRulesDefinition implements RulesDefinition {
 
   @Override
   public void define(Context context) {
-    NewRepository repository = context
-      .createRepository(REPOSITORY_KEY, Groovy.KEY)
-      .setName(REPOSITORY_NAME);
+    NewRepository repository =
+        context.createRepository(REPOSITORY_KEY, Groovy.KEY).setName(REPOSITORY_NAME);
 
     RulesDefinitionXmlLoader ruleLoader = new RulesDefinitionXmlLoader();
-    ruleLoader.load(repository, CodeNarcRulesDefinition.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml"), "UTF-8");
+    ruleLoader.load(
+        repository,
+        CodeNarcRulesDefinition.class.getResourceAsStream("/org/sonar/plugins/groovy/rules.xml"),
+        "UTF-8");
     addRemediationCost(repository.rules());
     repository.done();
   }
@@ -55,7 +57,8 @@ public class CodeNarcRulesDefinition implements RulesDefinition {
     for (NewRule newRule : rules) {
       String ruleKey = newRule.key();
       if (costByRule.containsKey(ruleKey)) {
-        DebtRemediationFunction linear = newRule.debtRemediationFunctions().linear(costByRule.get(ruleKey));
+        DebtRemediationFunction linear =
+            newRule.debtRemediationFunctions().linear(costByRule.get(ruleKey));
         newRule.setDebtRemediationFunction(linear);
       }
     }
@@ -65,7 +68,10 @@ public class CodeNarcRulesDefinition implements RulesDefinition {
     Map<String, String> result = new HashMap<>();
     List<String> lines;
     try {
-      lines = IOUtils.readLines(CodeNarcRulesDefinition.class.getResourceAsStream(COST_FILE_PATH));
+      lines =
+          IOUtils.readLines(
+              CodeNarcRulesDefinition.class.getResourceAsStream(COST_FILE_PATH),
+              StandardCharsets.UTF_8);
     } catch (IOException e) {
       throw MessageException.of("Unable to load rules remediation function/factor", e);
     }
@@ -82,5 +88,4 @@ public class CodeNarcRulesDefinition implements RulesDefinition {
     String ruleCost = blocks[2];
     costByRule.put(ruleKey, ruleCost);
   }
-
 }

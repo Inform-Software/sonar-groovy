@@ -21,21 +21,20 @@ package org.sonar.plugins.groovy.codenarc.printer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.plugins.groovy.codenarc.Converter;
 import org.sonar.plugins.groovy.codenarc.Rule;
 import org.sonar.plugins.groovy.codenarc.RuleParameter;
 import org.sonar.plugins.groovy.codenarc.RuleSet;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public final class XMLPrinter implements Printer {
 
@@ -54,7 +53,9 @@ public final class XMLPrinter implements Printer {
   public XMLPrinter process(Multimap<RuleSet, Rule> rulesBySet) throws Exception {
     StringBuilder xmlStringBuilder = new StringBuilder();
 
-    String version = IOUtils.toString(Converter.class.getResourceAsStream("/codenarc-version.txt"));
+    String version =
+        IOUtils.toString(
+            Converter.class.getResourceAsStream("/codenarc-version.txt"), StandardCharsets.UTF_8);
     xmlStringBuilder.append("<!-- Generated using CodeNarc " + version + " -->");
     xmlStringBuilder.append(LINE_SEPARATOR);
 
@@ -112,9 +113,7 @@ public final class XMLPrinter implements Printer {
     xmlStringBuilder.append(LINE_SEPARATOR);
   }
 
-  /**
-   * Rule format based on {@link org.sonar.api.server.rule.RulesDefinitionXmlLoader}
-   */
+  /** Rule format based on {@link org.sonar.api.server.rule.RulesDefinitionXmlLoader} */
   private static void printAsXML(Rule rule, StringBuilder xmlStringBuilder) {
     if (rule.version != null) {
       xmlStringBuilder.append("  <!-- since " + rule.version + " -->");
@@ -141,23 +140,28 @@ public final class XMLPrinter implements Printer {
 
     if (!rule.parameters.isEmpty()) {
       List<RuleParameter> sortedParameters = Lists.newArrayList(rule.parameters);
-      Collections.sort(sortedParameters, new Comparator<RuleParameter>() {
-        @Override
-        public int compare(RuleParameter o1, RuleParameter o2) {
-          return o1.key.compareTo(o2.key);
-        }
-      });
+      Collections.sort(
+          sortedParameters,
+          new Comparator<RuleParameter>() {
+            @Override
+            public int compare(RuleParameter o1, RuleParameter o2) {
+              return o1.key.compareTo(o2.key);
+            }
+          });
       for (RuleParameter parameter : sortedParameters) {
         xmlStringBuilder.append("    <param>");
         xmlStringBuilder.append(LINE_SEPARATOR);
         xmlStringBuilder.append("      <key>" + parameter.key + "</key>");
         xmlStringBuilder.append(LINE_SEPARATOR);
         if (StringUtils.isNotBlank(parameter.description)) {
-          xmlStringBuilder.append("      <description><![CDATA[" + parameter.description + "]]></description>");
+          xmlStringBuilder.append(
+              "      <description><![CDATA[" + parameter.description + "]]></description>");
           xmlStringBuilder.append(LINE_SEPARATOR);
         }
-        if (StringUtils.isNotBlank(parameter.defaultValue) && !"null".equals(parameter.defaultValue)) {
-          xmlStringBuilder.append("      <defaultValue>" + parameter.defaultValue + "</defaultValue>");
+        if (StringUtils.isNotBlank(parameter.defaultValue)
+            && !"null".equals(parameter.defaultValue)) {
+          xmlStringBuilder.append(
+              "      <defaultValue>" + parameter.defaultValue + "</defaultValue>");
           xmlStringBuilder.append(LINE_SEPARATOR);
         }
         xmlStringBuilder.append("    </param>");
@@ -169,5 +173,4 @@ public final class XMLPrinter implements Printer {
     xmlStringBuilder.append(LINE_SEPARATOR);
     xmlStringBuilder.append(LINE_SEPARATOR);
   }
-
 }

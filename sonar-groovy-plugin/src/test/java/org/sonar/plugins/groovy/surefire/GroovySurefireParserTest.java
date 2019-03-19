@@ -26,7 +26,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -39,7 +38,7 @@ import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -56,9 +55,8 @@ public class GroovySurefireParserTest {
     context = mock(SensorContext.class);
     fs = new DefaultFileSystem(Paths.get("."));
 
-    Settings settings = mock(Settings.class);
-    when(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY))
-        .thenReturn(new String[] {".groovy", "grvy"});
+    MapSettings settings = new MapSettings();
+    settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy,grvy");
     groovy = new Groovy(settings);
 
     parser = spy(new GroovySurefireParser(groovy, fs));

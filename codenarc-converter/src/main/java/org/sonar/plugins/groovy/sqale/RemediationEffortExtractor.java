@@ -19,15 +19,6 @@
  */
 package org.sonar.plugins.groovy.sqale;
 
-import org.apache.commons.io.Charsets;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,6 +28,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 public class RemediationEffortExtractor {
   private static final String SQALE_MODEL_LOCATION = "src/test/files/groovy-model.xml";
@@ -62,12 +59,14 @@ public class RemediationEffortExtractor {
     if (!file.exists() || file.delete()) {
       try {
         Path path = Paths.get(file.getAbsolutePath());
-        Files.write(path, getLines(), Charsets.UTF_8);
+        Files.write(path, getLines());
       } catch (IOException e) {
-        throw new IllegalStateException("Unable to create file at this location: " + file.getAbsolutePath(), e);
+        throw new IllegalStateException(
+            "Unable to create file at this location: " + file.getAbsolutePath(), e);
       }
     } else {
-      throw new IllegalStateException("Unable to create file at this location: " + file.getAbsolutePath());
+      throw new IllegalStateException(
+          "Unable to create file at this location: " + file.getAbsolutePath());
     }
   }
 
@@ -76,7 +75,8 @@ public class RemediationEffortExtractor {
   }
 
   private List<String> getLines() {
-    List<String> rules = extractedRules.stream().sorted().map(ExtractedRule::toCSV).collect(Collectors.toList());
+    List<String> rules =
+        extractedRules.stream().sorted().map(ExtractedRule::toCSV).collect(Collectors.toList());
     rules.add(0, ExtractedRule.csvHeader());
     return rules;
   }
@@ -149,9 +149,12 @@ public class RemediationEffortExtractor {
   }
 
   private enum Property {
-    REMEDIATION_FUNCTION, REMEDIATION_FACTOR, OFFSET, OTHER;
+    REMEDIATION_FUNCTION,
+    REMEDIATION_FACTOR,
+    OFFSET,
+    OTHER;
 
-  private static Property getProp(String s) {
+    private static Property getProp(String s) {
       if ("remediationFunction".equals(s)) {
         return REMEDIATION_FUNCTION;
       } else if ("remediationFactor".equals(s)) {

@@ -19,24 +19,25 @@
  */
 package org.sonar.plugins.groovy;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.sonar.api.Plugin;
 import org.sonar.api.SonarQubeSide;
 import org.sonar.api.SonarRuntime;
 import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.utils.Version;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GroovyPluginTest {
   public static final Version VERSION_6_7 = Version.create(6, 7);
+
   @Test
   public void testExtensions() {
     GroovyPlugin plugin = new GroovyPlugin();
 
-    SonarRuntime runtime = SonarRuntimeImpl.forSonarQube(Version.create(5, 6), SonarQubeSide.SCANNER);
+    SonarRuntime runtime = SonarRuntimeImpl.forSonarQube(VERSION_6_7, SonarQubeSide.SCANNER);
     Plugin.Context context = new Plugin.Context(runtime);
     plugin.define(context);
     assertThat(context.getExtensions()).hasSize(17);
   }
-
 }

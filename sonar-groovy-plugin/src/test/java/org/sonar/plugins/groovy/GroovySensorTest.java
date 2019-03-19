@@ -20,7 +20,7 @@
 package org.sonar.plugins.groovy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
@@ -73,7 +72,7 @@ public class GroovySensorTest {
   }
 
   private void testMetrics(boolean headerComment, int expectedCommentMetric) throws IOException {
-    settings.appendProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, "" + headerComment);
+    settings.setProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, headerComment);
     SensorContextTester context = SensorContextTester.create(new File("src/test/resources"));
 
     File sourceFile = TestUtils.getResource("/org/sonar/plugins/groovy/gmetrics/Greeting.groovy");
@@ -116,10 +115,9 @@ public class GroovySensorTest {
 
     // 11 times for comment because we register comment even when ignoring header comment
     Mockito.verify(fileLinesContext, Mockito.times(11))
-        .setIntValue(
-            Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
+        .setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext, Mockito.times(17))
-        .setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), Matchers.anyInt(), Mockito.eq(1));
+        .setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
     // Only "Greeting.groovy" is part of the file system.
