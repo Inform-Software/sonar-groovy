@@ -20,8 +20,6 @@
 package org.sonar.plugins.groovy.codenarc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +29,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -39,15 +36,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.mockito.quality.Strictness;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
-import org.sonar.api.batch.rule.ActiveRule;
-import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
@@ -60,11 +51,6 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 public class CodeNarcSensorTest {
   @Rule public TemporaryFolder temp = new TemporaryFolder();
 
-  @Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
-
-  @Mock private ActiveRules activeRules;
-
-  private CodeNarcSensor sensor;
   private SensorContextTester sensorContextTester;
   private MapSettings settings = new MapSettings();
 
@@ -74,12 +60,12 @@ public class CodeNarcSensorTest {
     sensorContextTester.fileSystem().setWorkDir(temp.newFolder().toPath());
 
     sensorContextTester.setSettings(settings);
-    sensor =
-        new CodeNarcSensor(activeRules, new GroovyFileSystem(sensorContextTester.fileSystem()));
   }
 
   @Test
   public void test_description() {
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(null, new GroovyFileSystem(sensorContextTester.fileSystem()));
     DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
     sensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
@@ -115,6 +101,10 @@ public class CodeNarcSensorTest {
     addFileWithFakeContent("src/org/codenarc/sample/service/OtherService.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/SampleService.groovy");
 
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).hasSize(17);
@@ -136,6 +126,10 @@ public class CodeNarcSensorTest {
     addFileWithFakeContent("src/org/codenarc/sample/service/OtherService.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/SampleService.groovy");
 
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).isEmpty();
@@ -154,6 +148,10 @@ public class CodeNarcSensorTest {
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).isEmpty();
@@ -169,14 +167,10 @@ public class CodeNarcSensorTest {
         activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
-    ActiveRule activeRule = mock(ActiveRule.class);
-    when(activeRule.ruleKey())
-        .thenReturn(
-            RuleKey.of(
-                CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.basic.EmptyClassRule"));
-    when(activeRules.findByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
-        .thenReturn(Arrays.asList(activeRule));
-
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).hasSize(1);
@@ -194,6 +188,10 @@ public class CodeNarcSensorTest {
         activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).isEmpty();
@@ -210,14 +208,10 @@ public class CodeNarcSensorTest {
         activateRule(activeRulesBuilder, "org.codenarc.rule.basic.EmptyClassRule", "EmptyClass");
     sensorContextTester.setActiveRules(activeRulesBuilder.build());
 
-    ActiveRule activeRule = mock(ActiveRule.class);
-    when(activeRule.ruleKey())
-        .thenReturn(
-            RuleKey.of(
-                CodeNarcRulesDefinition.REPOSITORY_KEY, "org.codenarc.rule.basic.EmptyClassRule"));
-    when(activeRules.findByRepository(CodeNarcRulesDefinition.REPOSITORY_KEY))
-        .thenReturn(Arrays.asList(activeRule));
-
+    CodeNarcSensor sensor =
+        new CodeNarcSensor(
+            sensorContextTester.activeRules(),
+            new GroovyFileSystem(sensorContextTester.fileSystem()));
     sensor.execute(sensorContextTester);
 
     assertThat(sensorContextTester.allIssues()).hasSize(2);
