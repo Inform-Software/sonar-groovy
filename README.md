@@ -73,3 +73,20 @@ you changed.
 [issues]: https://github.com/Inform-Software/sonar-groovy/issues/new
 [Google Java Style]: https://google.github.io/styleguide/javaguide.html
 [fmt-maven-plugin]: https://github.com/coveo/fmt-maven-plugin
+
+### Updating CodeNarc
+
+In the directory `codenarc-converter` there is a little helper tool to convert
+CodeNarc rules to SonarQube rules. To do its job it needs a source copy of
+CodeNarc - this is currently achieved by including the used CodeNarc version as
+a git subbmodule. If you need to update CodeNarc, you need to update that
+submodule too:
+
+```
+git submodule init
+cd codenarc-converter/CodeNarc
+git checkout vX.Y.Z
+cd ..
+git add CodeNarc
+```
+

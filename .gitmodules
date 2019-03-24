@@ -1,0 +1,3 @@
+[submodule "codenarc-converter/CodeNarc"]
+	path = codenarc-converter/CodeNarc
+	url = ../../CodeNarc/CodeNarc.git

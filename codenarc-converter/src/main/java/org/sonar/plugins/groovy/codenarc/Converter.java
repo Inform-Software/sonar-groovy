@@ -41,8 +41,8 @@ public class Converter {
   /** location of the generated file */
   public static final File RESULTS_FOLDER = new File("target/results");
 
-  /** location of the apt files in the CodeNarc project (check out parallel to this repository) */
-  static final String RULES_APT_FILES_LOCATION = "../../CodeNarc/src/site/apt";
+  /** location of the apt files in the CodeNarc project (see git submodule) */
+  static final String RULES_APT_FILES_LOCATION = "CodeNarc/src/site/apt";
 
   private int count = 0;
   private Map<String, Integer> rulesByVersion = Maps.newHashMap();
