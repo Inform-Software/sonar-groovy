@@ -9,7 +9,7 @@ Get test builds from [AppVeyor](https://ci.appveyor.com/project/TobiX/sonar-groo
 
 ## Description
 
-The plugin enables analysis of Groovy within SonarQube.
+This plugin enables analysis of Groovy within SonarQube.
 
 It leverages [CodeNarc](http://codenarc.sourceforge.net/) to raise issues against coding rules, [GMetrics](http://gmetrics.sourceforge.net/) for cyclomatic complexity and [Cobertura](http://cobertura.sourceforge.net/) or [JaCoCo](http://www.eclemma.org/jacoco/) for code coverage.
 
