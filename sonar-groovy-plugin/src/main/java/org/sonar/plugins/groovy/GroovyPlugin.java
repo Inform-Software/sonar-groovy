@@ -35,45 +35,50 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 @Properties({
   @Property(
-    key = GroovyPlugin.CODENARC_REPORT_PATHS,
-    name = "CodeNarc Reports",
-    description = "Path to the CodeNarc XML reports. Paths may be absolute or relative to the project base directory.",
-    project = true,
-    module = true,
-    global = true,
-    deprecatedKey = GroovyPlugin.CODENARC_REPORT_PATH),
+      key = GroovyPlugin.CODENARC_REPORT_PATHS,
+      name = "CodeNarc Reports",
+      description =
+          "Path to the CodeNarc XML reports. Paths may be absolute or relative to the project base directory.",
+      project = true,
+      module = true,
+      global = true,
+      deprecatedKey = GroovyPlugin.CODENARC_REPORT_PATH),
   @Property(
-    key = GroovyPlugin.COBERTURA_REPORT_PATH,
-    name = "Cobertura Report",
-    description = "Path to the Cobertura XML report. Path may be absolute or relative to the project base directory.",
-    project = true,
-    module = true,
-    global = true),
+      key = GroovyPlugin.COBERTURA_REPORT_PATH,
+      name = "Cobertura Report",
+      description =
+          "Path to the Cobertura XML report. Path may be absolute or relative to the project base directory.",
+      project = true,
+      module = true,
+      global = true),
   @Property(
-    key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
-    defaultValue = "true",
-    name = "Ignore Header Comments",
-    description = "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. " +
-      "Thus metrics such as \"Comment lines\" do not get incremented. " +
-      "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
-    project = true,
-    global = true,
-    type = PropertyType.BOOLEAN),
+      key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
+      defaultValue = "true",
+      name = "Ignore Header Comments",
+      description =
+          "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. "
+              + "Thus metrics such as \"Comment lines\" do not get incremented. "
+              + "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
+      project = true,
+      global = true,
+      type = PropertyType.BOOLEAN),
   @Property(
-    key = GroovyPlugin.FILE_SUFFIXES_KEY,
-    defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
-    name = "File suffixes",
-    description = "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
-    project = true,
-    module = true,
-    global = true),
+      key = GroovyPlugin.FILE_SUFFIXES_KEY,
+      defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
+      name = "File suffixes",
+      description =
+          "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
+      project = true,
+      module = true,
+      global = true),
   @Property(
-    key = GroovyPlugin.SONAR_GROOVY_BINARIES,
-    name = "Binary directories",
-    description = "Comma-separated list of optional directories that contain the compiled groovy sources.",
-    project = true,
-    module = true,
-    global = true)
+      key = GroovyPlugin.SONAR_GROOVY_BINARIES,
+      name = "Binary directories",
+      description =
+          "Comma-separated list of optional directories that contain the compiled groovy sources.",
+      project = true,
+      module = true,
+      global = true)
 })
 public class GroovyPlugin implements Plugin {
 
@@ -92,21 +97,20 @@ public class GroovyPlugin implements Plugin {
   @Override
   public void define(Context context) {
     context.addExtensions(
-      // CodeNarc
-      CodeNarcRulesDefinition.class,
-      CodeNarcSensor.class,
-      SonarWayProfile.class,
-      // Foundation
-      Groovy.class,
-      GroovyFileSystem.class,
-      // Main sensor
-      GroovySensor.class,
-      GroovyMetrics.class,
-      // Surefire
-      GroovySurefireParser.class,
-      GroovySurefireSensor.class,
-      // Cobertura
-      CoberturaSensor.class);
+        // CodeNarc
+        CodeNarcRulesDefinition.class,
+        CodeNarcSensor.class,
+        SonarWayProfile.class,
+        // Foundation
+        Groovy.class,
+        GroovyFileSystem.class,
+        // Main sensor
+        GroovySensor.class,
+        // Surefire
+        GroovySurefireParser.class,
+        GroovySurefireSensor.class,
+        // Cobertura
+        CoberturaSensor.class);
     context.addExtensions(JaCoCoExtensions.getExtensions());
   }
 }

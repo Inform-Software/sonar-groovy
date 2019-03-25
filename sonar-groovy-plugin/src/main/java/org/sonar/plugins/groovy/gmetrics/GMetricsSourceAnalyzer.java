@@ -33,8 +33,6 @@ import org.apache.tools.ant.types.FileSet;
 import org.gmetrics.GMetricsRunner;
 import org.gmetrics.analyzer.SourceAnalyzer;
 import org.gmetrics.ant.AntFileSetSourceAnalyzer;
-import org.gmetrics.metric.coupling.AfferentCouplingMetric;
-import org.gmetrics.metric.coupling.EfferentCouplingMetric;
 import org.gmetrics.metric.cyclomatic.CyclomaticComplexityMetric;
 import org.gmetrics.metric.linecount.ClassLineCountMetric;
 import org.gmetrics.metric.linecount.MethodLineCountMetric;
@@ -47,12 +45,11 @@ import org.sonar.api.batch.fs.InputFile;
 
 public class GMetricsSourceAnalyzer {
 
-  private static final List<org.gmetrics.metric.Metric> GMETRICS = Arrays.asList(
-    new CyclomaticComplexityMetric(),
-    new ClassLineCountMetric(),
-    new MethodLineCountMetric(),
-    new EfferentCouplingMetric(),
-    new AfferentCouplingMetric());
+  private static final List<org.gmetrics.metric.Metric> GMETRICS =
+      Arrays.asList(
+          new CyclomaticComplexityMetric(),
+          new ClassLineCountMetric(),
+          new MethodLineCountMetric());
 
   private final Map<InputFile, List<ClassResultsNode>> resultsByFile = new HashMap<>();
   private final Map<InputDir, PackageResultsNode> resultsByPackage = new HashMap<>();
@@ -110,7 +107,8 @@ public class GMetricsSourceAnalyzer {
     }
   }
 
-  private void processPackageResults(PackageResultsNode resultNode, Map<String, InputFile> pathToInputFile) {
+  private void processPackageResults(
+      PackageResultsNode resultNode, Map<String, InputFile> pathToInputFile) {
     String path = resultNode.getPath();
     InputDir inputDir = fileSystem.inputDir(fileSystemBaseDir);
     if (path != null) {
@@ -124,7 +122,8 @@ public class GMetricsSourceAnalyzer {
     }
   }
 
-  private void processClassResults(ClassResultsNode resultNode, Map<String, InputFile> pathToInputFile) {
+  private void processClassResults(
+      ClassResultsNode resultNode, Map<String, InputFile> pathToInputFile) {
     String filePath = resultNode.getFilePath();
     InputFile inputFile = pathToInputFile.get(filePath);
     if (inputFile != null) {
@@ -132,5 +131,4 @@ public class GMetricsSourceAnalyzer {
       resultsByFile.get(inputFile).add(resultNode);
     }
   }
-
 }
