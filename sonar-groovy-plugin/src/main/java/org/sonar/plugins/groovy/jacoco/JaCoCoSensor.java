@@ -20,10 +20,10 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import java.io.File;
+import java.nio.file.Path;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.batch.sensor.coverage.CoverageType;
 import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -31,12 +31,18 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 public class JaCoCoSensor implements Sensor {
 
+  public static final String JACOCO_OVERALL = "jacoco-overall.exec";
+
   private final JaCoCoConfiguration configuration;
   private final GroovyFileSystem fileSystem;
   private final PathResolver pathResolver;
   private final Settings settings;
 
-  public JaCoCoSensor(JaCoCoConfiguration configuration, GroovyFileSystem fileSystem, PathResolver pathResolver, Settings settings) {
+  public JaCoCoSensor(
+      JaCoCoConfiguration configuration,
+      GroovyFileSystem fileSystem,
+      PathResolver pathResolver,
+      Settings settings) {
     this.configuration = configuration;
     this.fileSystem = fileSystem;
     this.pathResolver = pathResolver;
@@ -45,43 +51,31 @@ public class JaCoCoSensor implements Sensor {
 
   @Override
   public void describe(SensorDescriptor descriptor) {
-    descriptor
-      .name("Groovy JaCoCo")
-      .onlyOnLanguage(Groovy.KEY);
+    descriptor.name("Groovy JaCoCo Coverage").onlyOnLanguage(Groovy.KEY);
   }
 
   @Override
   public void execute(SensorContext context) {
+    File baseDir = fileSystem.baseDir();
+    File reportUTs = pathResolver.relativeFile(baseDir, configuration.getReportPath());
+    File reportITs = pathResolver.relativeFile(baseDir, configuration.getItReportPath());
     if (shouldExecuteOnProject()) {
-      new UnitTestsAnalyzer().analyse(context);
+      Path reportOverall = context.fileSystem().workDir().toPath().resolve(JACOCO_OVERALL);
+      JaCoCoReportMerger.mergeReports(reportOverall, reportUTs, reportITs);
+      new JaCoCoAnalyzer(fileSystem, settings, reportOverall).analyse(context);
     }
   }
 
   // VisibleForTesting
   boolean shouldExecuteOnProject() {
-    File report = pathResolver.relativeFile(fileSystem.baseDir(), configuration.getReportPath());
-    boolean foundReport = report.exists() && report.isFile();
-    boolean shouldExecute = configuration.shouldExecuteOnProject(foundReport);
-    if (!foundReport && shouldExecute) {
-      JaCoCoExtensions.logger().info("JaCoCoSensor: JaCoCo report not found.");
+    File baseDir = fileSystem.baseDir();
+    File reportUTs = pathResolver.relativeFile(baseDir, configuration.getReportPath());
+    File reportITs = pathResolver.relativeFile(baseDir, configuration.getItReportPath());
+    boolean foundOneReport = reportUTs.isFile() || reportITs.isFile();
+    boolean shouldExecute = configuration.shouldExecuteOnProject(foundOneReport);
+    if (!foundOneReport && shouldExecute) {
+      JaCoCoExtensions.logger().info("JaCoCoSensor: No JaCoCo report found.");
     }
     return shouldExecute;
   }
-
-  class UnitTestsAnalyzer extends AbstractAnalyzer {
-    public UnitTestsAnalyzer() {
-      super(fileSystem, pathResolver, settings);
-    }
-
-    @Override
-    protected String getReportPath() {
-      return configuration.getReportPath();
-    }
-
-    @Override
-    protected CoverageType coverageType() {
-      return CoverageType.UNIT;
-    }
-  }
-
 }

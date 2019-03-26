@@ -29,20 +29,17 @@ public class JaCoCoExtensions {
 
   private static final Logger LOG = Loggers.get(JaCoCoExtensions.class);
 
-  private JaCoCoExtensions() {
-  }
+  private JaCoCoExtensions() {}
 
   public static List<Object> getExtensions() {
     List<Object> extensions = new ArrayList<>();
 
     extensions.addAll(JaCoCoConfiguration.getPropertyDefinitions());
-    extensions.addAll(Arrays.asList(
-      JaCoCoConfiguration.class,
-      // Unit tests
-      JaCoCoSensor.class,
-      // Integration tests
-      JaCoCoItSensor.class,
-      JaCoCoOverallSensor.class));
+    extensions.addAll(
+        Arrays.asList(
+            JaCoCoConfiguration.class,
+            // Unit tests
+            JaCoCoSensor.class));
 
     return extensions;
   }
@@ -50,5 +47,4 @@ public class JaCoCoExtensions {
   public static Logger logger() {
     return LOG;
   }
-
 }

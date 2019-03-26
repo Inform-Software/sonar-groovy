@@ -19,6 +19,12 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.apache.commons.lang.BooleanUtils;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -26,32 +32,28 @@ import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfoStore;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 /**
  * Utility class to merge JaCoCo reports.
  *
- * This class handles two versions of JaCoCo binary format to merge.
+ * <p>This class handles two versions of JaCoCo binary format to merge.
  */
 public class JaCoCoReportMerger {
 
-  private JaCoCoReportMerger() {
-  }
+  private JaCoCoReportMerger() {}
 
   /**
    * Merge all reports in reportOverall.
+   *
    * @param reportOverall destination file of merge.
    * @param reports files to be merged.
    */
-  public static void mergeReports(File reportOverall, File... reports) {
+  public static void mergeReports(Path reportOverall, File... reports) {
     SessionInfoStore infoStore = new SessionInfoStore();
     ExecutionDataStore dataStore = new ExecutionDataStore();
     boolean isCurrentVersionFormat = loadSourceFiles(infoStore, dataStore, reports);
 
-    try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(reportOverall))) {
+    try (OutputStream fos = Files.newOutputStream(reportOverall);
+        BufferedOutputStream outputStream = new BufferedOutputStream(fos)) {
       Object visitor;
       if (isCurrentVersionFormat) {
         visitor = new ExecutionDataWriter(outputStream);
@@ -61,24 +63,27 @@ public class JaCoCoReportMerger {
       infoStore.accept((ISessionInfoVisitor) visitor);
       dataStore.accept((IExecutionDataVisitor) visitor);
     } catch (IOException e) {
-      throw new IllegalStateException(String.format("Unable to write overall coverage report %s", reportOverall.getAbsolutePath()), e);
+      throw new IllegalStateException(
+          String.format("Unable to write overall coverage report %s", reportOverall), e);
     }
   }
 
-  private static boolean loadSourceFiles(ISessionInfoVisitor infoStore, IExecutionDataVisitor dataStore, File... reports) {
+  private static boolean loadSourceFiles(
+      ISessionInfoVisitor infoStore, IExecutionDataVisitor dataStore, File... reports) {
     Boolean isCurrentVersionFormat = null;
     for (File report : reports) {
       if (report.isFile()) {
-        JaCoCoReportReader jacocoReportReader = new JaCoCoReportReader(report).readJacocoReport(dataStore, infoStore);
+        JaCoCoReportReader jacocoReportReader =
+            new JaCoCoReportReader(report).readJacocoReport(dataStore, infoStore);
         boolean reportFormatIsCurrent = jacocoReportReader.useCurrentBinaryFormat();
         if (isCurrentVersionFormat == null) {
           isCurrentVersionFormat = reportFormatIsCurrent;
         } else if (!isCurrentVersionFormat.equals(reportFormatIsCurrent)) {
-          throw new IllegalStateException("You are trying to merge two different JaCoCo binary formats. Please use only one version of JaCoCo.");
+          throw new IllegalStateException(
+              "You are trying to merge two different JaCoCo binary formats. Please use only one version of JaCoCo.");
         }
       }
     }
     return BooleanUtils.isNotFalse(isCurrentVersionFormat);
   }
-
 }

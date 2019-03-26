@@ -38,6 +38,6 @@ public class GroovyPluginTest {
     SonarRuntime runtime = SonarRuntimeImpl.forSonarQube(VERSION_6_7, SonarQubeSide.SCANNER);
     Plugin.Context context = new Plugin.Context(runtime);
     plugin.define(context);
-    assertThat(context.getExtensions()).hasSize(16);
+    assertThat(context.getExtensions()).hasSize(14);
   }
 }

@@ -44,7 +44,7 @@ public class JaCoCoOverallSensorTest {
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
   private JaCoCoConfiguration configuration;
-  private JaCoCoOverallSensor sensor;
+  private JaCoCoSensor sensor;
   private Path outputDir;
   private InputFile inputFile;
   private MapSettings settings = new MapSettings();
@@ -70,7 +70,7 @@ public class JaCoCoOverallSensorTest {
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
     context = SensorContextTester.create(outputDir);
-    context.fileSystem().setWorkDir(outputDir);
+    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
 
     inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
@@ -82,7 +82,7 @@ public class JaCoCoOverallSensorTest {
 
     configuration = new JaCoCoConfiguration(settings, context.fileSystem());
     sensor =
-        new JaCoCoOverallSensor(
+        new JaCoCoSensor(
             configuration,
             new GroovyFileSystem(context.fileSystem()),
             new PathResolver(),

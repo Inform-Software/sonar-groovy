@@ -19,15 +19,14 @@
  */
 package org.sonar.plugins.groovy.jacoco;
 
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class JaCoCoExtensionsTest {
 
   @Test
   public void testExtensions() {
-    assertThat(JaCoCoExtensions.getExtensions().size()).isEqualTo(7);
+    assertThat(JaCoCoExtensions.getExtensions().size()).isEqualTo(5);
   }
-
 }

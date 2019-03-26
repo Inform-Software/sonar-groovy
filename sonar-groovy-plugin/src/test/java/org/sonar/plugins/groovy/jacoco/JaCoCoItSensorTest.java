@@ -21,6 +21,7 @@ package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +35,7 @@ import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
@@ -47,9 +49,10 @@ public class JaCoCoItSensorTest {
 
   private Path outputDir;
   private InputFile inputFile;
-  private MapSettings settings = new MapSettings();
+  private MapSettings settings =
+      new MapSettings(new PropertyDefinitions(JaCoCoConfiguration.getPropertyDefinitions()));
   private JaCoCoConfiguration configuration;
-  private JaCoCoItSensor sensor;
+  private JaCoCoSensor sensor;
 
   @Before
   public void setUp() throws Exception {
@@ -78,7 +81,7 @@ public class JaCoCoItSensorTest {
     configuration = new JaCoCoConfiguration(settings, fileSystem);
 
     sensor =
-        new JaCoCoItSensor(
+        new JaCoCoSensor(
             configuration, new GroovyFileSystem(fileSystem), new PathResolver(), settings);
   }
 
@@ -101,8 +104,9 @@ public class JaCoCoItSensorTest {
   }
 
   @Test
-  public void test_read_execution_data() {
+  public void test_read_execution_data() throws IOException {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
+    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
     sensor.execute(context);
 
     int[] oneHitlines = {9, 10, 25};

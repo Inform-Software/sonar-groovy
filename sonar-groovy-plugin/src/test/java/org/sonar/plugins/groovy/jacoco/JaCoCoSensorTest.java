@@ -34,6 +34,7 @@ import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
@@ -45,7 +46,8 @@ public class JaCoCoSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private MapSettings settings = new MapSettings();
+  private MapSettings settings =
+      new MapSettings(new PropertyDefinitions(JaCoCoConfiguration.getPropertyDefinitions()));
   private InputFile inputFile;
   private JaCoCoConfiguration configuration;
   private JaCoCoSensor sensor;
@@ -107,6 +109,7 @@ public class JaCoCoSensorTest {
     initWithJaCoCoVersion("JaCoCoSensor_0_7_4");
 
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
+    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
     sensor.execute(context);
 
     verifyMeasures(context);
@@ -117,6 +120,7 @@ public class JaCoCoSensorTest {
     initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
 
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
+    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
     sensor.execute(context);
 
     verifyMeasures(context);
