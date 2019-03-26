@@ -4,14 +4,9 @@ jdk:
 - openjdk8
 env:
 - SONAR_VERSION=
-- SONAR_VERSION=7.3
 - SONAR_VERSION=7.5
 - SONAR_VERSION=7.6
 - SONAR_VERSION=7.7
-matrix:
-  allow_failures:
-  - env: SONAR_VERSION=7.6
-  - env: SONAR_VERSION=7.7
 
 script:
 - .github/travis-build.sh
