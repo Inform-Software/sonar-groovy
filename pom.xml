@@ -17,6 +17,9 @@
   <description>This plugin enables analysis of Groovy within SonarQube.</description>
   <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
   <inceptionYear>2010</inceptionYear>
+  <organization>
+    <name>SonarQube Community</name>
+  </organization>
   <licenses>
     <license>
       <name>GNU LGPL 3</name>
