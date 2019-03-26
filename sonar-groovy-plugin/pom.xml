@@ -12,8 +12,12 @@
   <packaging>sonar-plugin</packaging>
 
   <name>Sonar Groovy Plugin</name>
-  <description>Enables scanning of Groovy source files.</description>
-  <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
+  <description>Code Analyzer for Groovy</description>
+  <url>https://github.com/Inform-Software/sonar-groovy</url>
+  <!--
+    //TODO: use redirect link once it aktually points to this repository
+    <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
+  -->
 
   <properties>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
