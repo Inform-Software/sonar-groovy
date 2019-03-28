@@ -14,11 +14,11 @@
   <name>Sonar Groovy Plugin</name>
   <description>Code Analyzer for Groovy</description>
   <url>https://github.com/Inform-Software/sonar-groovy</url>
+
   <!--
     //TODO: use redirect link once it actually points to this repository
     <url>http://redirect.sonarsource.com/plugins/groovy.html</url>
   -->
-
   <properties>
     <sonar.pluginClass>org.sonar.plugins.groovy.GroovyPlugin</sonar.pluginClass>
     <sonar.pluginName>Groovy</sonar.pluginName>
@@ -129,20 +129,6 @@
                 </requireFilesSize>
               </rules>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco.version}</version>
-        <executions>
-          <execution>
-            <id>prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-              <goal>prepare-agent-integration</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
