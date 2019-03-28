@@ -93,23 +93,14 @@ public class GroovySensorTest {
     sensor.execute(context);
 
     String key = groovyFile.key();
-    assertThat(context.measure(key, CoreMetrics.FILES).value()).isEqualTo(1);
     assertThat(context.measure(key, CoreMetrics.CLASSES).value()).isEqualTo(2);
     assertThat(context.measure(key, CoreMetrics.FUNCTIONS).value()).isEqualTo(2);
 
-    assertThat(context.measure(key, CoreMetrics.LINES).value()).isEqualTo(33);
     assertThat(context.measure(key, CoreMetrics.NCLOC).value()).isEqualTo(17);
     assertThat(context.measure(key, CoreMetrics.COMMENT_LINES).value())
         .isEqualTo(expectedCommentMetric);
 
     assertThat(context.measure(key, CoreMetrics.COMPLEXITY).value()).isEqualTo(4);
-    assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_CLASSES).value()).isEqualTo(4);
-    assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_FUNCTIONS).value()).isEqualTo(4);
-
-    assertThat(context.measure(key, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value())
-        .isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
-    assertThat(context.measure(key, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value())
-        .isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
 
     // 11 times for comment because we register comment even when ignoring header comment
     Mockito.verify(fileLinesContext, Mockito.times(17))

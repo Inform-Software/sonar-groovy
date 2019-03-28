@@ -39,9 +39,7 @@ import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
 import org.gmetrics.result.MetricResult;
 import org.gmetrics.result.NumberMetricResult;
-import org.gmetrics.result.SingleNumberMetricResult;
 import org.gmetrics.resultsnode.ClassResultsNode;
-import org.gmetrics.resultsnode.ResultsNode;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
@@ -49,7 +47,6 @@ import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.ce.measure.RangeDistributionBuilder;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
@@ -65,9 +62,6 @@ public class GroovySensor implements Sensor {
   private static final Logger LOG = Loggers.get(GroovySensor.class);
 
   private static final String CYCLOMATIC_COMPLEXITY_METRIC_NAME = "CyclomaticComplexity";
-
-  private static final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12};
-  private static final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
   private static final Set<String> EMPTY_COMMENT_LINES =
       Arrays.stream(new String[] {"/**", "/*", "*", "*/", "//"}).collect(Collectors.toSet());
@@ -120,24 +114,11 @@ public class GroovySensor implements Sensor {
     int classes = 0;
     int methods = 0;
     int complexity = 0;
-    int complexityInFunctions = 0;
-
-    RangeDistributionBuilder functionsComplexityDistribution =
-        new RangeDistributionBuilder(FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
 
     for (ClassResultsNode result : results) {
       classes += 1;
 
-      for (ResultsNode resultsNode : result.getChildren().values()) {
-        methods += 1;
-        Optional<MetricResult> cyclomaticComplexity =
-            getCyclomaticComplexity(resultsNode.getMetricResults());
-        if (cyclomaticComplexity.isPresent()) {
-          int value = (Integer) ((SingleNumberMetricResult) cyclomaticComplexity.get()).getNumber();
-          functionsComplexityDistribution.add(value);
-          complexityInFunctions += value;
-        }
-      }
+      methods += result.getChildren().size();
 
       Optional<MetricResult> cyclomaticComplexity =
           getCyclomaticComplexity(result.getMetricResults());
@@ -148,26 +129,9 @@ public class GroovySensor implements Sensor {
       }
     }
 
-    saveMetric(context, sonarFile, CoreMetrics.FILES, 1);
     saveMetric(context, sonarFile, CoreMetrics.CLASSES, classes);
     saveMetric(context, sonarFile, CoreMetrics.FUNCTIONS, methods);
     saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY, complexity);
-    saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY_IN_CLASSES, complexity);
-    saveMetric(context, sonarFile, CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions);
-    saveMetric(
-        context,
-        sonarFile,
-        CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION,
-        functionsComplexityDistribution.build());
-
-    RangeDistributionBuilder fileComplexityDistribution =
-        new RangeDistributionBuilder(FILES_DISTRIB_BOTTOM_LIMITS);
-    fileComplexityDistribution.add(complexity);
-    saveMetric(
-        context,
-        sonarFile,
-        CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION,
-        fileComplexityDistribution.build());
   }
 
   private static Optional<MetricResult> getCyclomaticComplexity(List<MetricResult> metricResults) {
@@ -203,7 +167,6 @@ public class GroovySensor implements Sensor {
         nextToken = tokenStream.nextToken();
       }
       handleToken(token, nextToken.getLine(), lines);
-      saveMetric(context, groovyFile, CoreMetrics.LINES, nextToken.getLine());
       saveMetric(context, groovyFile, CoreMetrics.NCLOC, loc);
       saveMetric(context, groovyFile, CoreMetrics.COMMENT_LINES, comments);
     } catch (TokenStreamException e) {
