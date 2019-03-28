@@ -63,6 +63,10 @@
     <system>GitHub</system>
     <url>https://github.com/Inform-Software/sonar-groovy/issues</url>
   </issueManagement>
+  <ciManagement>
+    <system>travis-ci</system>
+    <url>https://travis-ci.com/Inform-Software/sonar-groovy</url>
+  </ciManagement>
 
   <properties>
     <sonar.version>6.7</sonar.version>
