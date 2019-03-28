@@ -24,9 +24,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -71,14 +72,16 @@ public class GroovySensorTest {
 
   private void testMetrics(boolean headerComment, int expectedCommentMetric) throws IOException {
     settings.setProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, headerComment);
-    SensorContextTester context = SensorContextTester.create(new File("src/test/resources"));
 
-    File sourceFile = TestUtils.getResource("/org/sonar/plugins/groovy/gmetrics/Greeting.groovy");
+    Path sourceFile = TestUtils.getResource(getClass(), "../gmetrics/Greeting.groovy");
+    SensorContextTester context = SensorContextTester.create(sourceFile.getParent());
+
     fileSystem = context.fileSystem();
     InputFile groovyFile =
-        TestInputFileBuilder.create("", sourceFile.getParentFile(), sourceFile)
+        TestInputFileBuilder.create("", sourceFile.getParent().toFile(), sourceFile.toFile())
             .setLanguage(Groovy.KEY)
-            .setContents(new String(Files.readAllBytes(sourceFile.toPath()), "UTF-8"))
+            .setContents(new String(Files.readAllBytes(sourceFile), StandardCharsets.UTF_8))
+            .setCharset(StandardCharsets.UTF_8)
             .build();
     fileSystem.add(groovyFile);
 
@@ -90,25 +93,23 @@ public class GroovySensorTest {
     sensor.execute(context);
 
     String key = groovyFile.key();
-    // FIXME: assertThat(context.measure(key, CoreMetrics.FILES).value()).isEqualTo(1);
-    // FIXME: assertThat(context.measure(key, CoreMetrics.CLASSES).value()).isEqualTo(2);
-    // FIXME: assertThat(context.measure(key, CoreMetrics.FUNCTIONS).value()).isEqualTo(2);
+    assertThat(context.measure(key, CoreMetrics.FILES).value()).isEqualTo(1);
+    assertThat(context.measure(key, CoreMetrics.CLASSES).value()).isEqualTo(2);
+    assertThat(context.measure(key, CoreMetrics.FUNCTIONS).value()).isEqualTo(2);
 
     assertThat(context.measure(key, CoreMetrics.LINES).value()).isEqualTo(33);
     assertThat(context.measure(key, CoreMetrics.NCLOC).value()).isEqualTo(17);
     assertThat(context.measure(key, CoreMetrics.COMMENT_LINES).value())
         .isEqualTo(expectedCommentMetric);
 
-    // FIXME: assertThat(context.measure(key, CoreMetrics.COMPLEXITY).value()).isEqualTo(4);
-    // FIXME: assertThat(context.measure(key,
-    // CoreMetrics.COMPLEXITY_IN_CLASSES).value()).isEqualTo(4);
-    // FIXME: assertThat(context.measure(key,
-    // CoreMetrics.COMPLEXITY_IN_FUNCTIONS).value()).isEqualTo(4);
+    assertThat(context.measure(key, CoreMetrics.COMPLEXITY).value()).isEqualTo(4);
+    assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_CLASSES).value()).isEqualTo(4);
+    assertThat(context.measure(key, CoreMetrics.COMPLEXITY_IN_FUNCTIONS).value()).isEqualTo(4);
 
-    // FIXME: assertThat(context.measure(key,
-    // CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
-    // FIXME: assertThat(context.measure(key,
-    // CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
+    assertThat(context.measure(key, CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION).value())
+        .isEqualTo("1=0;2=2;4=0;6=0;8=0;10=0;12=0");
+    assertThat(context.measure(key, CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value())
+        .isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
 
     // 11 times for comment because we register comment even when ignoring header comment
     Mockito.verify(fileLinesContext, Mockito.times(17))

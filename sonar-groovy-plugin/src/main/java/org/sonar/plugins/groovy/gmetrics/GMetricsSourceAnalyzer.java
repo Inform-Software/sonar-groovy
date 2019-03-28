@@ -40,7 +40,6 @@ import org.gmetrics.resultsnode.ClassResultsNode;
 import org.gmetrics.resultsnode.PackageResultsNode;
 import org.gmetrics.resultsnode.ResultsNode;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputDir;
 import org.sonar.api.batch.fs.InputFile;
 
 public class GMetricsSourceAnalyzer {
@@ -52,16 +51,13 @@ public class GMetricsSourceAnalyzer {
           new MethodLineCountMetric());
 
   private final Map<InputFile, List<ClassResultsNode>> resultsByFile = new HashMap<>();
-  private final Map<InputDir, PackageResultsNode> resultsByPackage = new HashMap<>();
 
   private final Map<String, InputFile> pathToInputFile = new HashMap<>();
   private final Set<File> files = new HashSet<>();
 
-  private final FileSystem fileSystem;
   private final File fileSystemBaseDir;
 
   public GMetricsSourceAnalyzer(FileSystem fileSystem, List<InputFile> sourceFiles) {
-    this.fileSystem = fileSystem;
     this.fileSystemBaseDir = fileSystem.baseDir();
 
     for (InputFile inputFile : sourceFiles) {
@@ -72,10 +68,6 @@ public class GMetricsSourceAnalyzer {
 
   public Map<InputFile, List<ClassResultsNode>> resultsByFile() {
     return resultsByFile;
-  }
-
-  public Map<InputDir, PackageResultsNode> resultsByPackage() {
-    return resultsByPackage;
   }
 
   public void analyze() {
@@ -109,14 +101,6 @@ public class GMetricsSourceAnalyzer {
 
   private void processPackageResults(
       PackageResultsNode resultNode, Map<String, InputFile> pathToInputFile) {
-    String path = resultNode.getPath();
-    InputDir inputDir = fileSystem.inputDir(fileSystemBaseDir);
-    if (path != null) {
-      inputDir = fileSystem.inputDir(new File(fileSystemBaseDir, path));
-    }
-    if (inputDir != null) {
-      resultsByPackage.put(inputDir, resultNode);
-    }
     for (Entry<String, ResultsNode> entry : resultNode.getChildren().entrySet()) {
       processResults(entry.getValue(), pathToInputFile);
     }

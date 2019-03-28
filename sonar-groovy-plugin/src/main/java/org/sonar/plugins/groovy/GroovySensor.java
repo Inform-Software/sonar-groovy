@@ -22,12 +22,9 @@ package org.sonar.plugins.groovy;
 import groovyjarjarantlr.Token;
 import groovyjarjarantlr.TokenStream;
 import groovyjarjarantlr.TokenStreamException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +33,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.groovy.antlr.GroovySourceToken;
 import org.codehaus.groovy.antlr.parser.GroovyLexer;
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
@@ -174,8 +171,7 @@ public class GroovySensor implements Sensor {
   }
 
   private static Optional<MetricResult> getCyclomaticComplexity(List<MetricResult> metricResults) {
-    return metricResults
-        .stream()
+    return metricResults.stream()
         .filter(
             metricResult ->
                 CYCLOMATIC_COMPLEXITY_METRIC_NAME.equals(metricResult.getMetric().getName()))
@@ -189,37 +185,33 @@ public class GroovySensor implements Sensor {
   }
 
   private void computeBaseMetrics(SensorContext context, InputFile groovyFile) {
-    File file = groovyFile.file();
-    if (file.exists()) {
-      loc = 0;
-      comments = 0;
-      currentLine = 0;
-      fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
-      Charset encoding = context.fileSystem().encoding();
-      try (InputStreamReader streamReader =
-          new InputStreamReader(new FileInputStream(file), encoding)) {
-        List<String> lines = FileUtils.readLines(file, encoding);
-        GroovyLexer groovyLexer = new GroovyLexer(streamReader);
-        groovyLexer.setWhitespaceIncluded(true);
-        TokenStream tokenStream = groovyLexer.plumb();
-        Token token = tokenStream.nextToken();
-        Token nextToken = tokenStream.nextToken();
-        while (nextToken.getType() != Token.EOF_TYPE) {
-          handleToken(token, nextToken.getLine(), lines);
-          token = nextToken;
-          nextToken = tokenStream.nextToken();
-        }
+    loc = 0;
+    comments = 0;
+    currentLine = 0;
+    fileLinesContext = fileLinesContextFactory.createFor(groovyFile);
+    try (InputStreamReader streamReader =
+        new InputStreamReader(groovyFile.inputStream(), groovyFile.charset())) {
+      List<String> lines = IOUtils.readLines(groovyFile.inputStream(), groovyFile.charset());
+      GroovyLexer groovyLexer = new GroovyLexer(streamReader);
+      groovyLexer.setWhitespaceIncluded(true);
+      TokenStream tokenStream = groovyLexer.plumb();
+      Token token = tokenStream.nextToken();
+      Token nextToken = tokenStream.nextToken();
+      while (nextToken.getType() != Token.EOF_TYPE) {
         handleToken(token, nextToken.getLine(), lines);
-        saveMetric(context, groovyFile, CoreMetrics.LINES, nextToken.getLine());
-        saveMetric(context, groovyFile, CoreMetrics.NCLOC, loc);
-        saveMetric(context, groovyFile, CoreMetrics.COMMENT_LINES, comments);
-      } catch (TokenStreamException e) {
-        LOG.error("Unexpected token when lexing file : " + file.getName(), e);
-      } catch (IOException e) {
-        LOG.error("Unable to read file: " + file.getName(), e);
+        token = nextToken;
+        nextToken = tokenStream.nextToken();
       }
-      fileLinesContext.save();
+      handleToken(token, nextToken.getLine(), lines);
+      saveMetric(context, groovyFile, CoreMetrics.LINES, nextToken.getLine());
+      saveMetric(context, groovyFile, CoreMetrics.NCLOC, loc);
+      saveMetric(context, groovyFile, CoreMetrics.COMMENT_LINES, comments);
+    } catch (TokenStreamException e) {
+      LOG.error("Unexpected token when lexing file: {}", groovyFile, e);
+    } catch (IOException e) {
+      LOG.error("Unable to read file: {}", groovyFile, e);
     }
+    fileLinesContext.save();
   }
 
   private static void highlightFiles(SensorContext context, List<InputFile> inputFiles) {
