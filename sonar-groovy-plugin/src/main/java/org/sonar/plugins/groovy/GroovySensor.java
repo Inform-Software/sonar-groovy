@@ -240,9 +240,6 @@ public class GroovySensor implements Sensor {
       if (isNotHeaderComment(tokenLine)) {
         comments += nextTokenLine - tokenLine + 1 - numberEmptyLines(token, lines);
       }
-      for (int commentLineNb = tokenLine; commentLineNb <= nextTokenLine; commentLineNb++) {
-        fileLinesContext.setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, commentLineNb, 1);
-      }
     } else if (isNotWhitespace(tokenType) && tokenLine != currentLine) {
       loc++;
       fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, tokenLine, 1);

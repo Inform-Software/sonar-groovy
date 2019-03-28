@@ -111,11 +111,8 @@ public class GroovySensorTest {
     // CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION).value()).isEqualTo("0=1;5=0;10=0;20=0;30=0;60=0;90=0");
 
     // 11 times for comment because we register comment even when ignoring header comment
-    Mockito.verify(fileLinesContext, Mockito.times(11))
-        .setIntValue(Mockito.eq(CoreMetrics.COMMENT_LINES_DATA_KEY), anyInt(), Mockito.eq(1));
     Mockito.verify(fileLinesContext, Mockito.times(17))
         .setIntValue(Mockito.eq(CoreMetrics.NCLOC_DATA_KEY), anyInt(), Mockito.eq(1));
-    Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.COMMENT_LINES_DATA_KEY, 18, 1);
     Mockito.verify(fileLinesContext).setIntValue(CoreMetrics.NCLOC_DATA_KEY, 18, 1);
     // Only "Greeting.groovy" is part of the file system.
     Mockito.verify(fileLinesContext, Mockito.times(1)).save();
