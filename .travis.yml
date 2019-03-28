@@ -8,6 +8,9 @@ env:
 - SONAR_VERSION=7.6
 - SONAR_VERSION=7.7
 
+# Install step is reduntant
+install: true
+
 script:
 - .github/travis-build.sh
 
