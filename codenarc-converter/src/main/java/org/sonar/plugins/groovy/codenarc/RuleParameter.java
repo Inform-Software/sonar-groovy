@@ -26,8 +26,7 @@ public class RuleParameter implements Comparable<RuleParameter> {
   public String description = "";
   public String defaultValue = "";
 
-  public RuleParameter() {
-  }
+  public RuleParameter() {}
 
   public RuleParameter(String key) {
     this.key = key;
@@ -70,7 +69,9 @@ public class RuleParameter implements Comparable<RuleParameter> {
   }
 
   public boolean isEmpty() {
-    return StringUtils.isBlank(key) && StringUtils.isBlank(defaultValue) && StringUtils.isBlank(description);
+    return StringUtils.isBlank(key)
+        && StringUtils.isBlank(defaultValue)
+        && StringUtils.isBlank(description);
   }
 
   public boolean hasDefaultValue() {
@@ -97,12 +98,17 @@ public class RuleParameter implements Comparable<RuleParameter> {
     if (description.length() > 30) {
       smallDescr = description.substring(0, 30) + "...";
     }
-    return "RuleParameter [key=" + key + ", defaultValue=" + defaultValue + ", description=" + smallDescr + "]";
+    return "RuleParameter [key="
+        + key
+        + ", defaultValue="
+        + defaultValue
+        + ", description="
+        + smallDescr
+        + "]";
   }
 
   @Override
   public int compareTo(RuleParameter o) {
     return key.compareTo(o.key);
   }
-
 }

@@ -20,13 +20,16 @@
 package org.sonar.plugins.groovy.codenarc.apt;
 
 import com.google.common.collect.Sets;
-
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.codenarc.RuleParameter;
 
-import java.util.Set;
-
 public class AptResult {
+
+  private static final Logger log = LoggerFactory.getLogger(AptResult.class);
+
   String rule;
   Set<RuleParameter> parameters = Sets.newHashSet();
   String description = "";
@@ -36,21 +39,19 @@ public class AptResult {
   }
 
   void display(int ruleFileCounter, int ruleTotalCounter, String filename) {
-    System.out.println("==========================================");
-    System.out.println("Rule #" + ruleTotalCounter + " : " + rule + " (" + filename + " #" + ruleFileCounter
-      + ")");
+    log.info("==========================================");
+    log.info("Rule #{} : {} ({} #{})", ruleTotalCounter, rule, filename, ruleFileCounter);
     if (StringUtils.isNotBlank(description)) {
-      System.out.println("------------------------------------------");
-      System.out.println(description);
+      log.info("------------------------------------------");
+      log.info(description);
     }
     if (!parameters.isEmpty()) {
-      System.out.println("------------------------------------------");
-      System.out.println("Parameters: ");
+      log.info("------------------------------------------");
+      log.info("Parameters: ");
       for (RuleParameter parameter : parameters) {
-        System.out.println("  * \"" + parameter.key + "\"");
-        System.out.println("    - defaultValue: "
-          + (parameter.defaultValue == null ? "" : parameter.defaultValue));
-        System.out.println("    - description: " + parameter.description);
+        log.info("  * \"{}\"", parameter.key);
+        log.info("    - defaultValue: {}", parameter.defaultValue);
+        log.info("    - description: {}", parameter.description);
       }
     }
   }

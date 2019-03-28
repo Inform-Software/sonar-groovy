@@ -26,10 +26,13 @@ import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -39,12 +42,17 @@ import javax.xml.transform.stream.StreamResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.codenarc.printer.XMLPrinter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class ConverterTest {
+
+  private static final Logger log = LoggerFactory.getLogger(ConverterTest.class);
 
   private static final String PLUGIN_RULES_FILE_LOCATION =
       "../sonar-groovy-plugin/src/main/resources/org/sonar/plugins/groovy/rules.xml";
@@ -52,10 +60,9 @@ public class ConverterTest {
   @org.junit.Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Test
-  public void test_xml_equivalence() throws Exception {
-    // Only run this test if CodeNarc was put in the correct location.
-    // FIXME: We should probably source this info in some other way, since this is
-    // cumbersome and error-prone...
+  public void testXmlEquivalence() throws Exception {
+    // Only run this test if CodeNarc was put in the correct location (this is guaranteed by a Git
+    // submodule)
     assumeTrue(new File(Converter.RULES_APT_FILES_LOCATION).isDirectory());
     assertSimilarXml(getGeneratedXmlRulesFile(), new File(PLUGIN_RULES_FILE_LOCATION));
   }
@@ -65,12 +72,12 @@ public class ConverterTest {
   }
 
   static void showDelta(String ruleName, List<String> s1, List<String> s2) {
-    System.out.println(
+    log.info(
         "------------------------------------------------------------------------------------------");
-    System.out.println("DIFFERENCE! " + ruleName);
+    log.info("DIFFERENCE in {}", ruleName);
     Patch p = DiffUtils.diff(s1, s2);
     for (Delta delta : p.getDeltas()) {
-      System.out.println(delta);
+      log.info("{}", delta);
     }
   }
 
@@ -83,11 +90,14 @@ public class ConverterTest {
   }
 
   private static void assertSimilarXml(File generatedRulesXML, File rulesFromPluginXML)
-      throws Exception {
+      throws IOException, ParserConfigurationException, SAXException {
     int nbrDiff = 0;
     int nbrMissing = 0;
 
-    DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    DocumentBuilder dBuilder = dbf.newDocumentBuilder();
+
     Document generatedDoc = dBuilder.parse(generatedRulesXML);
     Document pluginDoc = dBuilder.parse(rulesFromPluginXML);
 
@@ -124,9 +134,9 @@ public class ConverterTest {
               Lists.newArrayList(pluginRuleString.split("\\r?\\n")));
         } else if (!found) {
           nbrMissing++;
-          System.out.println(
+          log.info(
               "------------------------------------------------------------------------------------------");
-          System.out.println("NOT FOUND! " + getRuleKey(generatedRule));
+          log.info("NOT FOUND: {}", getRuleKey(generatedRule));
         }
       }
     }
@@ -141,19 +151,22 @@ public class ConverterTest {
     Assert.assertEquals(3, nbrDiff);
   }
 
-  private static String getRuleKey(Node Rule) {
-    return Rule.getChildNodes().item(1).getFirstChild().getNodeValue();
+  private static String getRuleKey(Node rule) {
+    return rule.getChildNodes().item(1).getFirstChild().getNodeValue();
   }
 
   private static String nodeToString(Node node) {
     StringWriter sw = new StringWriter();
     try {
-      Transformer t = TransformerFactory.newInstance().newTransformer();
+      TransformerFactory tf = TransformerFactory.newInstance();
+      tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+      tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+      Transformer t = tf.newTransformer();
       t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
       t.setOutputProperty(OutputKeys.INDENT, "yes");
       t.transform(new DOMSource(node), new StreamResult(sw));
     } catch (TransformerException te) {
-      System.out.println("nodeToString Transformer Exception");
+      log.error("nodeToString Transformer Exception", te);
     }
     return sw.toString();
   }

@@ -20,17 +20,19 @@
 package org.sonar.plugins.groovy.codenarc.apt;
 
 import com.google.common.collect.Maps;
-
-import org.apache.commons.lang.StringUtils;
-import org.sonar.plugins.groovy.codenarc.RuleParameter;
-
 import java.io.File;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sonar.plugins.groovy.codenarc.RuleParameter;
 
 public class AptParser {
+
+  private static final Logger log = LoggerFactory.getLogger(AptParser.class);
 
   private static final String LIST_PREFIX = "* {{";
   private static final String NEW_RULE_PREFIX = "* ";
@@ -51,9 +53,9 @@ public class AptParser {
     return results;
   }
 
-  private Map<String, AptResult> readFile(File file) throws Exception {
+  private Map<String, AptResult> readFile(File file) throws IOException {
     Map<String, AptResult> results = Maps.newHashMap();
-    List<String> lines = Files.readAllLines(file.toPath(), Charset.forName("UTF-8"));
+    List<String> lines = Files.readAllLines(file.toPath());
 
     boolean inRule = false;
     boolean inParameters = false;
@@ -86,12 +88,21 @@ public class AptParser {
         inExample = true;
         inDescription = false;
         currentResult.description += "<pre>\n";
-      } else if (inRule && !inExample && !inDescription && !inParameters && isValidDescriptionLine(line)) {
+      } else if (inRule
+          && !inExample
+          && !inDescription
+          && !inParameters
+          && isValidDescriptionLine(line)) {
         inDescription = true;
         if (StringUtils.isNotBlank(line)) {
           currentResult.description += "<p>" + line;
         }
-      } else if (inRule && !inExample && inDescription && !inParameters && !currentResult.description.endsWith("</pre>\n") && isValidDescriptionLine(line)) {
+      } else if (inRule
+          && !inExample
+          && inDescription
+          && !inParameters
+          && !currentResult.description.endsWith("</pre>\n")
+          && isValidDescriptionLine(line)) {
         if (isEndOfParagraph(currentResult, line)) {
           currentResult.description += "</p>\n";
         } else {
@@ -126,7 +137,8 @@ public class AptParser {
             currentParameter.defaultValue = cleanDefaultValue(defaultValue);
           }
           if (StringUtils.isNotBlank(description)) {
-            currentParameter.description = currentParameter.description + cleanDescription(description, true) + " ";
+            currentParameter.description =
+                currentParameter.description + cleanDescription(description, true) + " ";
           }
         }
       } else if (inRule && inParameters && isParameterSeparator(line)) {
@@ -157,17 +169,23 @@ public class AptParser {
   }
 
   private static String getParagraphLine(AptResult currentResult, String line) {
-    return (StringUtils.isNotBlank(line) && currentResult.description.endsWith("\n") || StringUtils.isBlank(currentResult.description) ? "<p>" : "")
-      + cleanDescription(line, false)
-      + " ";
+    return (StringUtils.isNotBlank(line) && currentResult.description.endsWith("\n")
+                || StringUtils.isBlank(currentResult.description)
+            ? "<p>"
+            : "")
+        + cleanDescription(line, false)
+        + " ";
   }
 
   private static boolean isEndOfParagraph(AptResult currentResult, String line) {
-    return StringUtils.isBlank(line) && StringUtils.isNotBlank(currentResult.description) && !currentResult.description.endsWith("</p>\n");
+    return StringUtils.isBlank(line)
+        && StringUtils.isNotBlank(currentResult.description)
+        && !currentResult.description.endsWith("</p>\n");
   }
 
   private static boolean isValidDescriptionLine(String line) {
-    return !startsWith(line, "<Since", "~~~", "<New", "** ", "[]", "*----", "+----", "|") && !isParameterSeparator(line);
+    return !startsWith(line, "<Since", "~~~", "<New", "** ", "[]", "*----", "+----", "|")
+        && !isParameterSeparator(line);
   }
 
   private static boolean startsWith(String line, String... prefixes) {
@@ -205,9 +223,9 @@ public class AptParser {
     result = result.replaceAll(">>>", "");
     result = result.replaceAll(">>", "");
     if (isBetween(result, "'", "'")
-      || isBetween(result, "<", ">")
-      || isBetween(result, "\"", "\"")
-      || isBetween(result, "/", "/")) {
+        || isBetween(result, "<", ">")
+        || isBetween(result, "\"", "\"")
+        || isBetween(result, "/", "/")) {
       result = result.substring(1, result.length() - 1);
     }
     return result;
@@ -234,14 +252,17 @@ public class AptParser {
     if (result.endsWith("Rule")) {
       result = result.substring(0, result.length() - 4);
     }
-    if (StringUtils.isAllLowerCase(result) || !StringUtils.isAlphanumeric(result) || "References".equals(result)) {
+    if (StringUtils.isAllLowerCase(result)
+        || !StringUtils.isAlphanumeric(result)
+        || "References".equals(result)) {
       // false positive
       return null;
     }
     return result;
   }
 
-  private static void mergeParameters(Map<String, AptResult> results, Map<String, AptResult> parametersByFile) {
+  private static void mergeParameters(
+      Map<String, AptResult> results, Map<String, AptResult> parametersByFile) {
     for (String rule : parametersByFile.keySet()) {
       AptResult currentRuleResult = results.get(rule);
       if (currentRuleResult == null) {
@@ -260,13 +281,12 @@ public class AptParser {
       if (!alreadyHasExample && provideNewExample) {
         currentRuleResult.description = resultForRuleInFile.description;
       } else if (alreadyHasExample && provideNewExample) {
-        System.out.println("CONFLICT RULE " + rule);
-        System.out.println(currentRuleResult.description);
-        System.out.println("WITH");
-        System.out.println(resultForRuleInFile.description);
+        log.info("CONFLICT RULE: {}", rule);
+        log.info(currentRuleResult.description);
+        log.info("WITH");
+        log.info(resultForRuleInFile.description);
       }
       results.put(rule, currentRuleResult);
     }
-
   }
 }

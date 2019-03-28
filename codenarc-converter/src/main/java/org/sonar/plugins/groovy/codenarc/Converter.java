@@ -31,12 +31,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.codenarc.rule.AbstractRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.codenarc.apt.AptParser;
 import org.sonar.plugins.groovy.codenarc.apt.AptResult;
 import org.sonar.plugins.groovy.codenarc.printer.Printer;
 import org.sonar.plugins.groovy.codenarc.printer.XMLPrinter;
 
 public class Converter {
+
+  private static final Logger log = LoggerFactory.getLogger(Converter.class);
 
   /** location of the generated file */
   public static final File RESULTS_FOLDER = new File("target/results");
@@ -56,8 +60,7 @@ public class Converter {
 
     converter.resultsByCategory();
     converter.resultsByVersion();
-    System.out.println();
-    System.out.println(converter.count + " rules processed");
+    log.info("{} rules processed", converter.count);
   }
 
   private static void process(Converter converter, Printer printer) throws Exception {
@@ -542,7 +545,7 @@ public class Converter {
       Properties props,
       Map<String, AptResult> parametersByRule,
       Class<? extends AbstractRule>... ruleClasses)
-      throws Exception {
+      throws ReflectiveOperationException {
 
     for (Class<? extends AbstractRule> ruleClass : ruleClasses) {
       rules.put(
@@ -587,26 +590,26 @@ public class Converter {
   }
 
   private void resultsByVersion() {
-    System.out.println("Rules by Version:");
+    log.info("Rules by Version:");
     List<String> versions = Lists.newArrayList(rulesByVersion.keySet());
     Collections.sort(versions);
     for (String version : versions) {
-      System.out.println("  - " + version + " : " + rulesByVersion.get(version));
+      log.info("  - {} : {}", version, rulesByVersion.get(version));
     }
   }
 
   private void resultsByCategory() {
-    System.out.println("Rules by category:");
+    log.info("Rules by category:");
     List<String> categories = Lists.newArrayList(rulesByTags.keySet());
     Collections.sort(categories);
     for (String category : categories) {
-      System.out.println("  - " + category + " : " + rulesByTags.get(category));
+      log.info("  - {} : {}", category, rulesByTags.get(category));
     }
   }
 
   public void startPrintingRule(Rule rule) {
     if (duplications.contains(rule.key)) {
-      System.out.println("Duplicated rule " + rule.key);
+      log.info("Duplicated rule {}", rule.key);
     } else {
       duplications.add(rule.key);
     }

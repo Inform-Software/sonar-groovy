@@ -22,17 +22,15 @@ package org.sonar.plugins.groovy.codenarc;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import org.apache.commons.lang.StringUtils;
-import org.codenarc.rule.AbstractRule;
-import org.sonar.plugins.groovy.codenarc.apt.AptResult;
-
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.codenarc.rule.AbstractRule;
+import org.sonar.plugins.groovy.codenarc.apt.AptResult;
 
 public class Rule {
 
@@ -76,7 +74,12 @@ public class Rule {
     "org.codenarc.rule.unused.UnusedVariableRule"
   };
 
-  public Rule(Class<? extends AbstractRule> ruleClass, String since, Properties props, Map<String, AptResult> parametersByRule) throws Exception {
+  public Rule(
+      Class<? extends AbstractRule> ruleClass,
+      String since,
+      Properties props,
+      Map<String, AptResult> parametersByRule)
+      throws ReflectiveOperationException {
     ruleInstance = ruleClass.newInstance();
     key = ruleClass.getCanonicalName();
     internalKey = StringUtils.removeEnd(ruleClass.getSimpleName(), "Rule");
@@ -131,13 +134,15 @@ public class Rule {
     }
   }
 
-  private void addParameters(String[] parameterNames, AbstractRule ruleInstance, Map<String, RuleParameter> parameters) {
+  private void addParameters(
+      String[] parameterNames, AbstractRule ruleInstance, Map<String, RuleParameter> parameters) {
     for (String parameterName : parameterNames) {
       addParameter(parameterName, ruleInstance, parameters);
     }
   }
 
-  private void addParameter(String parameterName, AbstractRule ruleInstance, Map<String, RuleParameter> parameters) {
+  private void addParameter(
+      String parameterName, AbstractRule ruleInstance, Map<String, RuleParameter> parameters) {
     RuleParameter current = parameters.get(parameterName);
     RuleParameter parameter = new RuleParameter(parameterName);
     parameter.defaultValue = extractDefaultValue(parameterName, ruleInstance);
@@ -147,7 +152,6 @@ public class Rule {
       current.merge(parameter);
     }
     parameters.put(current.key, current);
-
   }
 
   private String extractDefaultValue(String parameterName, AbstractRule ruleInstance) {
@@ -160,12 +164,10 @@ public class Rule {
       if (value != null) {
         return value.toString();
       }
-    } catch (NoSuchFieldException e) {
-      // do nothing, there is probably no default value
-    } catch (IllegalArgumentException e) {
-      // do nothing, that's probably not the correct name
-    } catch (IllegalAccessException e) {
-      // do nothing, can not access field
+    } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+      // NoSuchFieldException: do nothing, there is probably no default value
+      // IllegalArgumentException: do nothing, that's probably not the correct name
+      // IllegalAccessException: do nothing, can not access field
     }
     return result;
   }
@@ -250,7 +252,8 @@ public class Rule {
       results.add("unused");
     } else if ("ExplicitGarbageCollection".equals(internalKey)) {
       results.add("unpredictable");
-    } else if ("HardCodedWindowsFileSeparator".equals(internalKey) || "HardCodedWindowsRootDirectory".equals(internalKey)) {
+    } else if ("HardCodedWindowsFileSeparator".equals(internalKey)
+        || "HardCodedWindowsRootDirectory".equals(internalKey)) {
       results.add("pitfall");
     } else if ("ForLoopShouldBeWhileLoop".equals(internalKey)) {
       results.add("clumsy");
@@ -277,9 +280,9 @@ public class Rule {
 
   /**
    * Covers URLs such as:
-   * {{http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html}} <--- direct link
-   * {{{http://en.wikipedia.org/wiki/Double-checked_locking}}}                        <--- direct link
-   * {{{http://jira.codehaus.org/browse/JETTY-352}JETTY-352}}                         <--- renamed link
+   * {{http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html}} <--- direct
+   * link {{{http://en.wikipedia.org/wiki/Double-checked_locking}}} <--- direct link
+   * {{{http://jira.codehaus.org/browse/JETTY-352}JETTY-352}} <--- renamed link
    */
   private String handleUrls(String description) {
     String result = description;
@@ -298,7 +301,10 @@ public class Rule {
             copy = "<a href=\"" + copy.replace("{", "").replace("}", "\">") + "</a>";
           }
         } else if (copy.startsWith("{./")) {
-          copy = "<a href=\"http://codenarc.sourceforge.net/" + copy.replace("{./", "").replace("}", "\">") + "</a>";
+          copy =
+              "<a href=\"http://codenarc.sourceforge.net/"
+                  + copy.replace("{./", "").replace("}", "\">")
+                  + "</a>";
         }
         result = result.replace("{{" + url + "}}" + (trailingAcc ? "}" : ""), copy);
       }
