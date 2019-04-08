@@ -49,9 +49,9 @@ public class AptResult {
       log.info("------------------------------------------");
       log.info("Parameters: ");
       for (RuleParameter parameter : parameters) {
-        log.info("  * \"{}\"", parameter.key);
-        log.info("    - defaultValue: {}", parameter.defaultValue);
-        log.info("    - description: {}", parameter.description);
+        log.info("  * \"{}\"", parameter.key());
+        log.info("    - defaultValue: {}", parameter.defaultValue());
+        log.info("    - description: {}", parameter.description());
       }
     }
   }

@@ -117,7 +117,7 @@ public class AptParser {
       } else if (inRule && !inParameters && line.matches(PARAMETER_START_SEPARATOR)) {
         inDescription = false;
         inParameters = true;
-        currentParameter = new RuleParameter();
+        currentParameter = RuleParameter.createEmpty();
         splits[0] = line.indexOf('*') + 1;
         splits[1] = line.indexOf('+', splits[0]) + 1;
         splits[2] = line.indexOf('+', splits[1]) + 1;
@@ -131,26 +131,27 @@ public class AptParser {
           String description = blocks[1].trim();
           String defaultValue = blocks[2].trim();
           if (StringUtils.isNotBlank(key)) {
-            currentParameter.key = currentParameter.key + key.replaceAll("(-)+", "");
+            currentParameter = currentParameter.withExpandedKey(key.replaceAll("(-)+", ""));
           }
           if (StringUtils.isNotBlank(defaultValue) && !currentParameter.hasDefaultValue()) {
-            currentParameter.defaultValue = cleanDefaultValue(defaultValue);
+            currentParameter =
+                currentParameter.withNewDefaultValue(cleanDefaultValue(defaultValue));
           }
           if (StringUtils.isNotBlank(description)) {
-            currentParameter.description =
-                currentParameter.description + cleanDescription(description, true) + " ";
+            currentParameter =
+                currentParameter.withExpandedDescription(cleanDescription(description, true) + " ");
           }
         }
       } else if (inRule && inParameters && isParameterSeparator(line)) {
         if (!currentParameter.isEmpty()) {
           currentResult.parameters.add(currentParameter);
         }
-        currentParameter = new RuleParameter();
+        currentParameter = RuleParameter.createEmpty();
       } else if (inRule && inParameters) {
         if (!currentParameter.isEmpty()) {
           currentResult.parameters.add(currentParameter);
         }
-        currentParameter = new RuleParameter();
+        currentParameter = RuleParameter.createEmpty();
         inParameters = false;
         inDescription = true;
       }

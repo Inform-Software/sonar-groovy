@@ -19,70 +19,60 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang.StringUtils;
 
-public class RuleParameter implements Comparable<RuleParameter> {
-  public String key = "";
-  public String description = "";
-  public String defaultValue = "";
+@AutoValue
+public abstract class RuleParameter implements Comparable<RuleParameter> {
 
-  public RuleParameter() {}
+  public abstract String key();
 
-  public RuleParameter(String key) {
-    this.key = key;
+  public abstract String description();
+
+  public abstract String defaultValue();
+
+  public static RuleParameter createEmpty() {
+    return create("", "", "");
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    RuleParameter other = (RuleParameter) obj;
-    if (defaultValue == null) {
-      if (other.defaultValue != null) {
-        return false;
-      }
-    } else if (!defaultValue.equals(other.defaultValue)) {
-      return false;
-    }
-    if (description == null) {
-      if (other.description != null) {
-        return false;
-      }
-    } else if (!description.equals(other.description)) {
-      return false;
-    }
-    if (key == null) {
-      if (other.key != null) {
-        return false;
-      }
-    } else if (!key.equals(other.key)) {
-      return false;
-    }
-    return true;
+  public static RuleParameter create(String key, String defaultValue) {
+    return create(key, "", defaultValue);
+  }
+
+  public static RuleParameter create(String key, String description, String defaultValue) {
+    return new AutoValue_RuleParameter(key, description, defaultValue);
   }
 
   public boolean isEmpty() {
-    return StringUtils.isBlank(key)
-        && StringUtils.isBlank(defaultValue)
-        && StringUtils.isBlank(description);
+    return StringUtils.isBlank(key())
+        && StringUtils.isBlank(defaultValue())
+        && StringUtils.isBlank(description());
   }
 
   public boolean hasDefaultValue() {
-    return StringUtils.isNotBlank(defaultValue);
+    return StringUtils.isNotBlank(defaultValue());
   }
 
-  public void merge(RuleParameter parameter) {
-    if (key != null && key.equals(parameter.key)) {
-      description = selectValue(description, parameter.description);
-      defaultValue = selectValue(defaultValue, parameter.defaultValue);
+  public RuleParameter merge(RuleParameter parameter) {
+    if (key() != null && key().equals(parameter.key())) {
+      String newDescription = selectValue(description(), parameter.description());
+      String newDefaultValue = selectValue(defaultValue(), parameter.defaultValue());
+      return create(key(), newDescription, newDefaultValue);
+    } else {
+      return this;
     }
+  }
+
+  public RuleParameter withExpandedKey(String keyAdd) {
+    return create(key() + keyAdd, description(), defaultValue());
+  }
+
+  public RuleParameter withNewDefaultValue(String newDefaultValue) {
+    return create(key(), description(), newDefaultValue);
+  }
+
+  public RuleParameter withExpandedDescription(String descAdd) {
+    return create(key(), description() + descAdd, defaultValue());
   }
 
   private static String selectValue(String currentValue, String newValue) {
@@ -94,21 +84,17 @@ public class RuleParameter implements Comparable<RuleParameter> {
 
   @Override
   public String toString() {
-    String smallDescr = description;
-    if (description.length() > 30) {
-      smallDescr = description.substring(0, 30) + "...";
-    }
     return "RuleParameter [key="
-        + key
+        + key()
         + ", defaultValue="
-        + defaultValue
+        + defaultValue()
         + ", description="
-        + smallDescr
+        + StringUtils.abbreviate(description(), 30)
         + "]";
   }
 
   @Override
   public int compareTo(RuleParameter o) {
-    return key.compareTo(o.key);
+    return key().compareTo(o.key());
   }
 }

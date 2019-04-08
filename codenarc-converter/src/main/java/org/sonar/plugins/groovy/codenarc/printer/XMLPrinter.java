@@ -27,7 +27,6 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -140,28 +139,21 @@ public final class XMLPrinter implements Printer {
 
     if (!rule.parameters.isEmpty()) {
       List<RuleParameter> sortedParameters = Lists.newArrayList(rule.parameters);
-      Collections.sort(
-          sortedParameters,
-          new Comparator<RuleParameter>() {
-            @Override
-            public int compare(RuleParameter o1, RuleParameter o2) {
-              return o1.key.compareTo(o2.key);
-            }
-          });
+      Collections.sort(sortedParameters);
       for (RuleParameter parameter : sortedParameters) {
         xmlStringBuilder.append("    <param>");
         xmlStringBuilder.append(LINE_SEPARATOR);
-        xmlStringBuilder.append("      <key>" + parameter.key + "</key>");
+        xmlStringBuilder.append("      <key>" + parameter.key() + "</key>");
         xmlStringBuilder.append(LINE_SEPARATOR);
-        if (StringUtils.isNotBlank(parameter.description)) {
+        if (StringUtils.isNotBlank(parameter.description())) {
           xmlStringBuilder.append(
-              "      <description><![CDATA[" + parameter.description + "]]></description>");
+              "      <description><![CDATA[" + parameter.description() + "]]></description>");
           xmlStringBuilder.append(LINE_SEPARATOR);
         }
-        if (StringUtils.isNotBlank(parameter.defaultValue)
-            && !"null".equals(parameter.defaultValue)) {
+        if (StringUtils.isNotBlank(parameter.defaultValue())
+            && !"null".equals(parameter.defaultValue())) {
           xmlStringBuilder.append(
-              "      <defaultValue>" + parameter.defaultValue + "</defaultValue>");
+              "      <defaultValue>" + parameter.defaultValue() + "</defaultValue>");
           xmlStringBuilder.append(LINE_SEPARATOR);
         }
         xmlStringBuilder.append("    </param>");

@@ -129,7 +129,7 @@ public class Rule {
   private static void addParameters(AptResult results, Map<String, RuleParameter> parameters) {
     if (results.hasParameters()) {
       for (RuleParameter param : results.getParameters()) {
-        parameters.put(param.key, param);
+        parameters.put(param.key(), param);
       }
     }
   }
@@ -144,14 +144,14 @@ public class Rule {
   private void addParameter(
       String parameterName, AbstractRule ruleInstance, Map<String, RuleParameter> parameters) {
     RuleParameter current = parameters.get(parameterName);
-    RuleParameter parameter = new RuleParameter(parameterName);
-    parameter.defaultValue = extractDefaultValue(parameterName, ruleInstance);
+    RuleParameter parameter =
+        RuleParameter.create(parameterName, extractDefaultValue(parameterName, ruleInstance));
     if (current == null) {
       current = parameter;
     } else {
-      current.merge(parameter);
+      current = current.merge(parameter);
     }
-    parameters.put(current.key, current);
+    parameters.put(current.key(), current);
   }
 
   private String extractDefaultValue(String parameterName, AbstractRule ruleInstance) {
@@ -346,7 +346,7 @@ public class Rule {
 
   private boolean hasNullParameters() {
     for (RuleParameter parameter : parameters) {
-      if ("null".equals(parameter.defaultValue)) {
+      if ("null".equals(parameter.defaultValue())) {
         return true;
       }
     }
