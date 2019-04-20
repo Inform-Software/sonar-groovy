@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.25.2 -->
+<!-- Generated using CodeNarc 0.26.0 -->
 <rules>
   <!-- basic rules -->
 
@@ -2645,6 +2645,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>This rule checks for duplicate number literals within the current class.</p>
 <p>Code containing duplicate <i>Number</i> literals can usually be improved by declaring the <i>Number</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>* This rule ignores Long/long values within enums, because the generated code may include generated long id values and produce false positive rule violations.</p>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateNumberLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
@@ -2721,6 +2722,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Duplicate List Literal]]></name>
     <internalKey><![CDATA[DuplicateListLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate <i>List</i> literals within the current class. This rule only checks for <i>List</i>s where values are all constants or literals.</p>
+<p>List literals within annotations are ignored.</p>
 <p>Code containing duplicate <i>List</i> literals can usually be improved by declaring the <i>List</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
@@ -4309,31 +4311,38 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>The <code>groovy.lang.Immutable</code> annotation has been deprecated and replaced by <code>groovy.transform.Immutable</code>. Do not use the <code>Immutable</code> in <code>groovy.lang</code>.</p>
 <p>Example of violations:</p>
 <pre>
-    @Immutable
+    @Immutable                          // Violation (no import means groovy.lang.Immutable)
     class Person { }
 
-    @groovy.lang.Immutable
+    @groovy.lang.Immutable              // Violation
     class Person { }
 
     import groovy.lang.Immutable as Imtl
-    @Imtl
+    @Imtl                               // Violation
     class Person { }
 
-    // the following code is OK
-    @groovy.transform.Immutable
+</pre>
+<p>Example of valid use of @Immutable:</p>
+<pre>
+
+    @groovy.transform.Immutable                 // OK
     class Person { }
 
-    import groovy.transform.Immutable
+    import groovy.transform.Immutable           // OK
     @Immutable
     class Person { }
 
     import groovy.transform.*
-    @Immutable
+    @Immutable                                  // OK
     class Person { }
 
     import groovy.transform.Immutable as Imtl
-    @Imtl
+    @Imtl                                       // OK
     class Person { }
+
+    @javax.annotation.concurrent.Immutable      // OK
+    class MyClass { }
+
 </pre>]]></description>
     <tag>groovyism</tag>
   </rule>
@@ -4466,6 +4475,11 @@ def (f, g) = [1, 2]    // ok
     }
 </pre>]]></description>
     <tag>groovyism</tag>
+    <param>
+      <key>ignoreMethodsWithOverrideAnnotation</key>
+      <description><![CDATA[If true, then do not check methods annotated with @Override.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.16 -->
@@ -4776,6 +4790,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Set Up Calls Super]]></name>
     <internalKey><![CDATA[JUnitSetUpCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>setUp</code> method is defined, that it includes a call to <code>super.setUp()</code>.</p>
+<p>This rule ignored methods annotated with <code>@Before</code> or <code>@BeforeClass</code>.</p>
 <p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
@@ -4786,6 +4801,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Tear Down Calls Super]]></name>
     <internalKey><![CDATA[JUnitTearDownCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>tearDown</code> method is defined, that it includes a call to <code>super.tearDown()</code>.</p>
+<p>This rule ignored methods annotated with <code>@After</code> or <code>@AfterClass</code>.</p>
 <p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
@@ -6451,6 +6467,11 @@ println list.collectNested { it * 2 } // same functionality, better readability
     }
 </pre>]]></description>
     <tag>clumsy</tag>
+    <param>
+      <key>ignoreAnnotations</key>
+      <description><![CDATA[If true, then do not report violations if a constructor has one or more annotations.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.12 -->
@@ -6888,6 +6909,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unnecessary Public Modifier]]></name>
     <internalKey><![CDATA[UnnecessaryPublicModifier]]></internalKey>
     <description><![CDATA[<p>The 'public' modifier is not required on methods, constructors or classes.</p>
+<p>Because of Groovy parsing limitations, this rule ignores methods (and constructors) that include Generic types in the method declaration.</p>
 <p>Example of violations:</p>
 <pre>
     // violation on class
@@ -7444,6 +7466,16 @@ println list.collectNested { it * 2 } // same functionality, better readability
     }
 </pre>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreClassRegex</key>
+      <description><![CDATA[Regex that specifies the names of the classes to skip checking.]]></description>
+      <defaultValue>.*Category</defaultValue>
+    </param>
+    <param>
+      <key>ignoreRegex</key>
+      <description><![CDATA[Regex that specifies the parameter names to ignore.]]></description>
+      <defaultValue>ignore|ignored</defaultValue>
+    </param>
   </rule>
 
 </rules>
