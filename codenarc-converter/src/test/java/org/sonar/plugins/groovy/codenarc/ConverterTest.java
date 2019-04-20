@@ -65,7 +65,7 @@ public class ConverterTest {
     // Only run this test if CodeNarc was put in the correct location (this is guaranteed by a Git
     // submodule)
     Path codeNarcDir = Paths.get(".");
-    assumeTrue(Files.isDirectory(codeNarcDir));
+    assumeTrue(Files.isDirectory(codeNarcDir.resolve("src")));
     assertSimilarXml(getGeneratedXmlRulesFile(codeNarcDir), Paths.get(PLUGIN_RULES_FILE_LOCATION));
   }
 
