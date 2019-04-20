@@ -24,6 +24,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -35,18 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.groovy.codenarc.apt.AptParser;
 import org.sonar.plugins.groovy.codenarc.apt.AptResult;
-import org.sonar.plugins.groovy.codenarc.printer.Printer;
 import org.sonar.plugins.groovy.codenarc.printer.XMLPrinter;
 
 public class Converter {
-
   private static final Logger log = LoggerFactory.getLogger(Converter.class);
 
-  /** location of the generated file */
-  public static final File RESULTS_FOLDER = new File("target/results");
-
   /** location of the apt files in the CodeNarc project (see git submodule) */
-  static final String RULES_APT_FILES_LOCATION = "CodeNarc/src/site/apt";
+  private static final String RULES_APT_FILES_LOCATION = "CodeNarc/src/site/apt";
 
   private int count = 0;
   private Map<String, Integer> rulesByVersion = Maps.newHashMap();
@@ -54,29 +53,37 @@ public class Converter {
   private Set<String> duplications = new HashSet<>();
 
   public static void main(String[] args) throws Exception {
-    Converter converter = new Converter();
+    Path baseDir = Paths.get(".");
+    if (args.length > 0) baseDir = Paths.get(args[0]);
 
-    process(converter, new XMLPrinter());
+    Path targetFile = getResultFile(baseDir);
+    Converter converter = process(baseDir, targetFile);
 
     converter.resultsByCategory();
     converter.resultsByVersion();
     log.info("{} rules processed", converter.count);
   }
 
-  private static void process(Converter converter, Printer printer) throws Exception {
-    checkResultFolder();
-    printer.init(converter).process(Converter.loadRules()).printAll(RESULTS_FOLDER);
+  public static Converter process(Path codeNarcDir, Path targetFile)
+      throws IOException, ReflectiveOperationException {
+    Path aptDir = codeNarcDir.resolve(RULES_APT_FILES_LOCATION);
+    Converter converter = new Converter();
+    new XMLPrinter().init(converter).process(Converter.loadRules(aptDir)).printAll(targetFile);
+    return converter;
   }
 
-  private static void checkResultFolder() {
-    RESULTS_FOLDER.mkdirs();
+  private static Path getResultFile(Path baseDir) throws IOException {
+    Path folder = baseDir.resolve("target/results/rules.xml");
+    Files.createDirectories(folder.getParent());
+    return folder;
   }
 
-  public static Multimap<RuleSet, Rule> loadRules() throws Exception {
+  public static Multimap<RuleSet, Rule> loadRules(Path aptDir)
+      throws IOException, ReflectiveOperationException {
     Properties props = new Properties();
     props.load(Converter.class.getResourceAsStream("/codenarc-base-messages.properties"));
 
-    Map<String, AptResult> parametersByRule = retrieveRulesParameters();
+    Map<String, AptResult> parametersByRule = retrieveRulesParameters(aptDir);
 
     Multimap<RuleSet, Rule> rules = LinkedListMultimap.create();
 
@@ -553,19 +560,16 @@ public class Converter {
     }
   }
 
-  private static Map<String, AptResult> retrieveRulesParameters() throws Exception {
-    return new AptParser().parse(getRulesAptFile());
+  private static Map<String, AptResult> retrieveRulesParameters(Path aptDir) throws IOException {
+    return new AptParser().parse(getRulesAptFile(aptDir));
   }
 
-  private static List<File> getRulesAptFile() {
-    File aptDir = new File(RULES_APT_FILES_LOCATION);
+  private static List<File> getRulesAptFile(Path aptDir) {
     List<File> rulesAptFiles = Lists.newArrayList();
-    if (aptDir.exists() && aptDir.isDirectory()) {
-      File[] files = aptDir.listFiles();
-      for (File file : files) {
-        if (file.getName().startsWith("codenarc-rules-")) {
-          rulesAptFiles.add(file);
-        }
+    File[] files = aptDir.toFile().listFiles();
+    for (File file : files) {
+      if (file.getName().startsWith("codenarc-rules-")) {
+        rulesAptFiles.add(file);
       }
     }
     return rulesAptFiles;

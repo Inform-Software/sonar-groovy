@@ -19,15 +19,17 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.junit.Assume.*;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.Lists;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -44,7 +46,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.plugins.groovy.codenarc.printer.XMLPrinter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -63,8 +64,9 @@ public class ConverterTest {
   public void testXmlEquivalence() throws Exception {
     // Only run this test if CodeNarc was put in the correct location (this is guaranteed by a Git
     // submodule)
-    assumeTrue(new File(Converter.RULES_APT_FILES_LOCATION).isDirectory());
-    assertSimilarXml(getGeneratedXmlRulesFile(), new File(PLUGIN_RULES_FILE_LOCATION));
+    Path codeNarcDir = Paths.get(".");
+    assumeTrue(Files.isDirectory(codeNarcDir));
+    assertSimilarXml(getGeneratedXmlRulesFile(codeNarcDir), Paths.get(PLUGIN_RULES_FILE_LOCATION));
   }
 
   static void showDelta(String ruleName, String s1, String s2) {
@@ -81,15 +83,13 @@ public class ConverterTest {
     }
   }
 
-  private File getGeneratedXmlRulesFile() throws Exception {
-    File generatedRules = tmpDir.newFolder("xml");
-    return new XMLPrinter()
-        .init(new Converter())
-        .process(Converter.loadRules())
-        .printAll(generatedRules);
+  private Path getGeneratedXmlRulesFile(Path codeNarcDir) throws Exception {
+    Path generatedRules = tmpDir.newFile("rules.xml").toPath();
+    Converter.process(codeNarcDir, generatedRules);
+    return generatedRules;
   }
 
-  private static void assertSimilarXml(File generatedRulesXML, File rulesFromPluginXML)
+  private static void assertSimilarXml(Path generatedRulesXML, Path rulesFromPluginXML)
       throws IOException, ParserConfigurationException, SAXException {
     int nbrDiff = 0;
     int nbrMissing = 0;
@@ -98,8 +98,8 @@ public class ConverterTest {
     dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     DocumentBuilder dBuilder = dbf.newDocumentBuilder();
 
-    Document generatedDoc = dBuilder.parse(generatedRulesXML);
-    Document pluginDoc = dBuilder.parse(rulesFromPluginXML);
+    Document generatedDoc = dBuilder.parse(generatedRulesXML.toFile());
+    Document pluginDoc = dBuilder.parse(rulesFromPluginXML.toFile());
 
     NodeList generatedNodes = generatedDoc.getChildNodes().item(1).getChildNodes();
     NodeList pluginNodes = pluginDoc.getChildNodes().item(1).getChildNodes();

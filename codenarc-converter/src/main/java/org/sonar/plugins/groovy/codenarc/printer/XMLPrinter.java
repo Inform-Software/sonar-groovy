@@ -21,10 +21,11 @@ package org.sonar.plugins.groovy.codenarc.printer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,21 +36,19 @@ import org.sonar.plugins.groovy.codenarc.Rule;
 import org.sonar.plugins.groovy.codenarc.RuleParameter;
 import org.sonar.plugins.groovy.codenarc.RuleSet;
 
-public final class XMLPrinter implements Printer {
+public final class XMLPrinter {
 
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
   private Converter converter;
   private String resultAsXML;
 
-  @Override
   public XMLPrinter init(Converter converter) {
     this.converter = converter;
     return this;
   }
 
-  @Override
-  public XMLPrinter process(Multimap<RuleSet, Rule> rulesBySet) throws Exception {
+  public XMLPrinter process(Multimap<RuleSet, Rule> rulesBySet) throws IOException {
     StringBuilder xmlStringBuilder = new StringBuilder();
 
     String version =
@@ -77,23 +76,10 @@ public final class XMLPrinter implements Printer {
     return resultAsXML;
   }
 
-  @Override
-  public File printAll(File resultDir) throws Exception {
-    File resultFile = setUpRulesFile(resultDir);
-    PrintStream out = new PrintStream(resultFile, "UTF-8");
-    out.print(resultAsXML);
-    out.flush();
-    out.close();
-    return resultFile;
-  }
-
-  private static File setUpRulesFile(File resultDir) throws IOException {
-    File rules = new File(resultDir, "rules.xml");
-    if (rules.exists()) {
-      rules.delete();
+  public void printAll(Path resultFile) throws IOException {
+    try (Writer out = Files.newBufferedWriter(resultFile)) {
+      out.write(resultAsXML);
     }
-    rules.createNewFile();
-    return rules;
   }
 
   private static void startSet(StringBuilder xmlStringBuilder, String name) {

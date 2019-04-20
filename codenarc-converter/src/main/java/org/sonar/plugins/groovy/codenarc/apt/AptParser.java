@@ -42,7 +42,7 @@ public class AptParser {
   private static final String EXAMPLE_SEPARATOR_1 = "(-)+";
   private static final String EXAMPLE_SEPARATOR_2 = "\\+(-)+";
 
-  public Map<String, AptResult> parse(List<File> files) throws Exception {
+  public Map<String, AptResult> parse(List<File> files) throws IOException {
     Map<String, AptResult> results = Maps.newHashMap();
     if (!files.isEmpty()) {
       for (File file : files) {
