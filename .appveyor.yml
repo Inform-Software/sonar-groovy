@@ -3,6 +3,9 @@ version: '{build}'
 cache:
   - C:\Users\appveyor\.m2
 
+install:
+  - git submodule update --init --recursive
+
 build_script:
   - mvn verify -B -V -e
 
