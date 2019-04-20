@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.26.0 -->
+<!-- Generated using CodeNarc 0.27.0 -->
 <rules>
   <!-- basic rules -->
 
@@ -2082,7 +2082,7 @@
     <name><![CDATA[No Def]]></name>
     <internalKey><![CDATA[NoDef]]></internalKey>
     <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of a <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
@@ -2133,7 +2133,8 @@
     <severity>MAJOR</severity>
     <name><![CDATA[No Tab Character]]></name>
     <internalKey><![CDATA[NoTabCharacter]]></internalKey>
-    <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>]]></description>
+    <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -3000,7 +3001,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Braces For Class]]></name>
     <internalKey><![CDATA[BracesForClass]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for classes. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this.</p>
-<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>.</p>]]></description>
+<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
     <param>
       <key>sameLine</key>
@@ -3116,7 +3118,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Class Javadoc]]></name>
     <internalKey><![CDATA[ClassJavadoc]]></internalKey>
-    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true.</p>]]></description>
+    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3541,7 +3544,8 @@ for (int i = 0; i &lt; 100; ++i) {
 
 
     def id
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3551,7 +3555,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Blank Line Before Package]]></name>
     <internalKey><![CDATA[BlankLineBeforePackage]]></internalKey>
-    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file.</p>]]></description>
+    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3561,7 +3566,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[File Ends Without Newline]]></name>
     <internalKey><![CDATA[FileEndsWithoutNewline]]></internalKey>
-    <description><![CDATA[<p>Makes sure each source file ends with a newline character.</p>]]></description>
+    <description><![CDATA[<p>Makes sure each source file ends with a newline character.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3576,7 +3582,8 @@ for (int i = 0; i &lt; 100; ++i) {
 <pre>
     import org.apache.commons.lang.StringUtils
     class MyClass { }                       // violation
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3595,7 +3602,8 @@ for (int i = 0; i &lt; 100; ++i) {
   class MyClass {
       void go() { /* ... */ }
   }
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3605,7 +3613,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Trailing Whitespace]]></name>
     <internalKey><![CDATA[TrailingWhitespace]]></internalKey>
-    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters.</p>]]></description>
+    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3618,7 +3627,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[IllegalRegex]]></internalKey>
     <description><![CDATA[<p>Checks for a specified illegal regular expression within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>regex</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>regex</key>
@@ -3633,7 +3642,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[RequiredRegex]]></internalKey>
     <description><![CDATA[<p>Checks for a specified regular expression that must exist within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>regex</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>regex</key>
@@ -3648,7 +3657,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[RequiredString]]></internalKey>
     <description><![CDATA[<p>Checks for a specified text string that must exist within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>string</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>string</key>
@@ -3837,7 +3846,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[IllegalString]]></internalKey>
     <description><![CDATA[<p>Checks for a specified illegal string within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>string</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>string</key>
@@ -4572,7 +4581,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Duplicate Import]]></name>
     <internalKey><![CDATA[DuplicateImport]]></internalKey>
-    <description><![CDATA[<p>Checks for a duplicate <i>import</i> statements.</p>]]></description>
+    <description><![CDATA[<p>Checks for a duplicate <i>import</i> statements.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4581,7 +4591,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Import From Same Package]]></name>
     <internalKey><![CDATA[ImportFromSamePackage]]></internalKey>
-    <description><![CDATA[<p>Checks for an <i>import</i> of a class that is within the same package as the importing class.</p>]]></description>
+    <description><![CDATA[<p>Checks for an <i>import</i> of a class that is within the same package as the importing class.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4590,7 +4601,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Groovy Import]]></name>
     <internalKey><![CDATA[UnnecessaryGroovyImport]]></internalKey>
-    <description><![CDATA[<p>Checks for an <i>import</i> from any package that is already automatically imported for Groovy files. A Groovy file does not need to include an import for classes from <i>java.lang</i>, <i>java.util</i>, <i>java.io</i>, <i>java.net</i>, <i>groovy.lang</i> and <i>groovy.util</i>, as well as the classes <i>java.math.BigDecimal</i> and <i>java.math.BigInteger</i>.</p>]]></description>
+    <description><![CDATA[<p>Checks for an <i>import</i> from any package that is already automatically imported for Groovy files. A Groovy file does not need to include an import for classes from <i>java.lang</i>, <i>java.util</i>, <i>java.io</i>, <i>java.net</i>, <i>groovy.lang</i> and <i>groovy.util</i>, as well as the classes <i>java.math.BigDecimal</i> and <i>java.math.BigInteger</i>.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4602,7 +4614,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <description><![CDATA[<p>Checks for <i>import</i> statements for classes that are never referenced within the source file. Also checks static imports.</p>
 <p>Known limitations:</p>
 <p>* Does not check for unused imports containing wildcards (e.g. <code>import org.codenarc.*</code>)</p>
-<p>* Misses unused imports if the class/alias name is contained within strings, comments or other (longer) names (i.e., if that string shows up almost anywhere within the source code).</p>]]></description>
+<p>* Misses unused imports if the class/alias name is contained within strings, comments or other (longer) names (i.e., if that string shows up almost anywhere within the source code).</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4619,7 +4632,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     import sun.misc.foo as Foo
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4637,7 +4651,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     import static foo.bar
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>comesBefore</key>
@@ -4659,7 +4674,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     import static foo.bar.*
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -5627,7 +5643,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Class Name Same As Filename]]></name>
     <internalKey><![CDATA[ClassNameSameAsFilename]]></internalKey>
-    <description><![CDATA[<p>Reports files containing only one top level class / enum / interface which is named differently than the file.</p>]]></description>
+    <description><![CDATA[<p>Reports files containing only one top level class / enum / interface which is named differently than the file.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -5637,7 +5654,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Package Name Matches File Path]]></name>
     <internalKey><![CDATA[PackageNameMatchesFilePath]]></internalKey>
-    <description><![CDATA[<p>A package source file's path should match the package declaration.</p>]]></description>
+    <description><![CDATA[<p>A package source file's path should match the package declaration.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>groupId</key>
@@ -7391,6 +7409,10 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* Does not differentiate between multiple private methods with the same name but different parameters (i.e., overloaded)</p>
 <p>* Does not check for unused constructors</p>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreMethodsWithAnnotationNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names that mark private methods that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
   </rule>
 
   <rule>
