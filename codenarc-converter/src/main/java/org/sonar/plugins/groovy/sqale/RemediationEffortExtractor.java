@@ -28,12 +28,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class RemediationEffortExtractor {
   private static final String SQALE_MODEL_LOCATION = "src/test/files/groovy-model.xml";
@@ -56,17 +59,12 @@ public class RemediationEffortExtractor {
 
   public void toCSV(String remediationFileLocation) {
     File file = new File(remediationFileLocation);
-    if (!file.exists() || file.delete()) {
-      try {
-        Path path = Paths.get(file.getAbsolutePath());
-        Files.write(path, getLines());
-      } catch (IOException e) {
-        throw new IllegalStateException(
-            "Unable to create file at this location: " + file.getAbsolutePath(), e);
-      }
-    } else {
+    try {
+      Path path = Paths.get(file.getAbsolutePath());
+      Files.write(path, getLines());
+    } catch (IOException e) {
       throw new IllegalStateException(
-          "Unable to create file at this location: " + file.getAbsolutePath());
+          "Unable to create file at this location: " + file.getAbsolutePath(), e);
     }
   }
 
@@ -225,8 +223,10 @@ public class RemediationEffortExtractor {
     return node.getFirstChild().getTextContent();
   }
 
-  private static Document parseXml(File f) throws Exception {
+  private static Document parseXml(File f)
+      throws ParserConfigurationException, IOException, SAXException {
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+    documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     DocumentBuilder documentBuilder;
     documentBuilder = documentBuilderFactory.newDocumentBuilder();
     InputSource is = new InputSource();
