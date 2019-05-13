@@ -19,6 +19,11 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -34,45 +39,49 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class SonarWayProfileTest {
 
   @Test
   public void shouldCreateProfile() {
-    ProfileDefinition profileDefinition = new SonarWayProfile(new XMLProfileParser(newRuleFinder()));
+    ProfileDefinition profileDefinition =
+        new SonarWayProfile(new XMLProfileParser(newRuleFinder()));
     ValidationMessages messages = ValidationMessages.create();
     RulesProfile profile = profileDefinition.createProfile(messages);
 
     assertThat(profile.getName()).isEqualTo("Sonar way");
     assertThat(profile.getLanguage()).isEqualTo(Groovy.KEY);
-    assertThat(profile.getActiveRules()).hasSize(59);
+    assertThat(profile.getActiveRules()).hasSize(58);
     assertThat(messages.hasErrors()).isFalse();
 
     CodeNarcRulesDefinition definition = new CodeNarcRulesDefinition();
     RulesDefinition.Context context = new RulesDefinition.Context();
     definition.define(context);
-    RulesDefinition.Repository repository = context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
+    RulesDefinition.Repository repository =
+        context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
 
     Map<String, RulesDefinition.Rule> rules = new HashMap<>();
     for (RulesDefinition.Rule rule : repository.rules()) {
       rules.put(rule.key(), rule);
     }
     for (ActiveRule activeRule : profile.getActiveRules()) {
-      assertThat(rules.containsKey(activeRule.getConfigKey())).as("No such rule: " + activeRule.getConfigKey()).isTrue();
+      assertThat(rules.containsKey(activeRule.getConfigKey()))
+          .as("No such rule: " + activeRule.getConfigKey())
+          .isTrue();
     }
   }
 
   private RuleFinder newRuleFinder() {
     RuleFinder ruleFinder = mock(RuleFinder.class);
-    when(ruleFinder.findByKey(anyString(), anyString())).thenAnswer(new Answer<Rule>() {
-      public Rule answer(InvocationOnMock iom) throws Throwable {
-        return Rule.create((String) iom.getArguments()[0], (String) iom.getArguments()[1], (String) iom.getArguments()[1]);
-      }
-    });
+    when(ruleFinder.findByKey(anyString(), anyString()))
+        .thenAnswer(
+            new Answer<Rule>() {
+              public Rule answer(InvocationOnMock iom) throws Throwable {
+                return Rule.create(
+                    (String) iom.getArguments()[0],
+                    (String) iom.getArguments()[1],
+                    (String) iom.getArguments()[1]);
+              }
+            });
     return ruleFinder;
   }
 }

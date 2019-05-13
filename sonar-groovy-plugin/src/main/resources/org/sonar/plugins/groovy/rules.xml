@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.27.0 -->
+<!-- Generated using CodeNarc 1.0 -->
 <rules>
   <!-- basic rules -->
 
@@ -2081,8 +2081,7 @@
     <severity>MAJOR</severity>
     <name><![CDATA[No Def]]></name>
     <internalKey><![CDATA[NoDef]]></internalKey>
-    <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>
-<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
+    <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
@@ -2135,6 +2134,57 @@
     <internalKey><![CDATA[NoTabCharacter]]></internalKey>
     <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>
 <p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.0 -->
+  <rule>
+    <key>org.codenarc.rule.convention.CouldBeSwitchStatementRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Could Be Switch Statement]]></name>
+    <internalKey><![CDATA[CouldBeSwitchStatement]]></internalKey>
+    <description><![CDATA[<p>Checks for three of more if statements that could be converted to a switch. Only applies to equality and instanceof.</p>
+<p>Example of violations:</p>
+<pre>
+    if (x == 1) {                       // violation
+       y = x
+    } else if (x == 2) {
+       y = x * 2
+    } else if (x == 3) {
+       y = x * 3
+    } else {
+       y = 0
+    }
+
+    if (y instanceof Integer) {         // violation
+       x = y + 1
+    }
+    if (y instanceof String) {
+       x = y + '1'
+    } else if (y instanceof Boolean) {
+       x = !y
+    } else {
+       x = null
+    }
+
+    if (x == 1) {                       // OK
+        y = x
+    }
+    if (x == 2) {
+        y = x * 2
+    } else {
+        y = 0
+    }
+
+    if (!x &amp;&amp; y) {                      // OK
+        doSomething()
+    } else if (!x &amp;&amp; z) {
+        doSomethingElse()
+    } else if (!x &amp;&amp; i) {
+        doAnotherThing()
+    }
+
+</pre>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2254,7 +2304,9 @@
     class BadClass {
         int compareTo(Object o) { ... }
     }
-</pre>]]></description>
+</pre>
+<p>Known limitations:</p>
+<p>* This rule is not able to determine if the class extends a superclass that itself implements <code>Comparable</code>, or if it implements an interface that extends <code>Comparable</code>. In those cases, this rule produces a false violation.</p>]]></description>
     <tag>design</tag>
   </rule>
 
@@ -3888,19 +3940,6 @@ for (int i = 0; i &lt; 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.grails.GrailsSessionReferenceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Grails Session Reference]]></name>
-    <internalKey><![CDATA[GrailsSessionReference]]></internalKey>
-    <description><![CDATA[<p>Rule that checks for references to the <code>session</code> object from within Grails controller and taglib classes.</p>
-<p>This rule is intended as a "governance" rule to enable monitoring and controlling access to the <code>session</code> from within application source code. Storing objects in the <code>session</code> may inhibit scalability and/or performance and should be carefully considered.</p>
-<p>Note that this rule does not check for direct access to the <code>session</code> from within GSP (Groovy Server Pages) files.</p>
-<p>Enabling this rule may make most sense in a team environment where team members exhibit a broad range of skill and experience levels. Appropriate <code>session</code> access can be configured as exceptions to this rule by configuring either the <code>doNotApplyToFilenames</code> or <code>doNotApplyToFilesMatching</code> property of the rule. And, as always, it is easy to just <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Turning_Off_A_Rule">turn off the rule</a> if it does not make sense it your environment.</p>
-<p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/controllers' or 'grails-app/taglib' folders. You can override this with a different regular expression value if appropriate.</p>]]></description>
-    <tag>grails</tag>
-  </rule>
-
-  <rule>
     <key>org.codenarc.rule.grails.GrailsServletContextReferenceRule</key>
     <severity>MINOR</severity>
     <name><![CDATA[Grails Servlet Context Reference]]></name>
@@ -5276,9 +5315,9 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>Here are examples of <b>Log4J</b> or <b>Java Logging API</b> code that cause violations:</p>
 <pre>
     class MyClass {
-        private static final LOG = Logger.getLogger(SomeOtherClass)  // violation
-        def log1 = Logger.getLogger(SomeOtherClass.class)            // violation
-        def log2 = Logger.getLogger(SomeOtherClass.class.name)       // violation
+        private static final LOG = LoggerFactory.getLogger(SomeOtherClass)  // violation
+        def log1 = LoggerFactory.getLogger(SomeOtherClass.class)            // violation
+        def log2 = LoggerFactory.getLogger(SomeOtherClass.class.name)       // violation
     }
 </pre>
 <p>Here are examples of <b>Commons Logging</b> code that cause violations:</p>
@@ -5294,12 +5333,12 @@ println list.collectNested { it * 2 } // same functionality, better readability
     // Log4J or Java Logging API
 
     class MyClass {
-        private static final LOG = Logger.getLogger(MyClass)                    // ok
-        def log2 = Logger.getLogger(MyClass.class)                              // ok
-        private static log3 = Logger.getLogger(MyClass.getClass().getName())    // ok
-        private static log4 = Logger.getLogger(MyClass.getClass().name)         // ok
-        private static log5 = Logger.getLogger(MyClass.class.getName())         // ok
-        private static log6 = Logger.getLogger(MyClass.class.name)              // ok
+        private static final LOG = LoggerFactory.getLogger(MyClass)                    // ok
+        def log2 = LoggerFactory.getLogger(MyClass.class)                              // ok
+        private static log3 = LoggerFactory.getLogger(MyClass.getClass().getName())    // ok
+        private static log4 = LoggerFactory.getLogger(MyClass.getClass().name)         // ok
+        private static log5 = LoggerFactory.getLogger(MyClass.class.getName())         // ok
+        private static log6 = LoggerFactory.getLogger(MyClass.class.name)              // ok
     }
 
     // Commons Logging
@@ -6197,12 +6236,21 @@ println list.collectNested { it * 2 } // same functionality, better readability
     void someMethod(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) { // violation
     }
 
+    @Override
+    void someMethod(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) { // no violation if ignoreOverriddenMethods == true
+    }
+
     class SampleClass {
         SampleClass(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) { // violation
         }
     }
 </pre>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreOverriddenMethods</key>
+      <description><![CDATA[Ignore number of parameters for methods with @Override annotation]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
     <param>
       <key>maxParameters</key>
       <description><![CDATA[The maximum number of parameters in method/constructor]]></description>
@@ -7322,6 +7370,29 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <tag>clumsy</tag>
   </rule>
 
+  <!-- since 1.0 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessarySetterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Setter]]></name>
+    <internalKey><![CDATA[UnnecessarySetter]]></internalKey>
+    <description><![CDATA[<p>Checks for explicit calls to setter methods which can, for the most part, be replaced by assignment to property. A setter is defined as a method call that matches set[A-Z] but not set[A-Z][A-Z] such as setURL(). Setters take one method argument.</p>
+<p>These bits of code produce violations:</p>
+<pre>
+  x.setProperty(1)
+  x.setProperty(this.getA())
+  x.setProperty([])
+</pre>
+<p>These bits of code do not:</p>
+<pre>
+  x.set(1)
+  x.setup(2)
+  x.setURL('')
+  x.setSomething('arg1', 'arg2')
+</pre>]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
   <!-- unused rules -->
 
   <rule>
@@ -7384,7 +7455,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Unused Private Field]]></name>
     <internalKey><![CDATA[UnusedPrivateField]]></internalKey>
-    <description><![CDATA[<p>Checks for private fields that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). By default, fields named <code>serialVersionUID</code> are ignored. The rule has a property named ignoreFieldNames, which can be set to ignore other field names as well. For instance, to ignore fields named 'fieldx', set the property to the 'fieldx, serialVersionUID'</p>
+    <description><![CDATA[<p>Checks for private fields that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes).</p>
+<p>By default, fields named <code>serialVersionUID</code>, and fields annotated with <code>groovy.lang.Delegate</code> are ignored. The rule has a property named <i>ignoreFieldNames</i>, which can be set to ignore other field names as well. For instance, to also ignore fields named 'fieldx', set the property to the 'fieldx, serialVersionUID'</p>
 <p>Known limitations:</p>
 <p>* Does not recognize field access when field name is a GString (e.g. <code>this."${fieldName}"</code>)</p>
 <p>* Does not recognize access of private field of another instance (i.e. other than <code>this</code>)</p>]]></description>
@@ -7420,7 +7492,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Unused Variable]]></name>
     <internalKey><![CDATA[UnusedVariable]]></internalKey>
-    <description><![CDATA[<p>Checks for variables that are never referenced.</p>
+    <description><![CDATA[<p>Checks for variables that are never referenced. An assignment to the variable is not considered a reference.</p>
 <p>The rule has a property named ignoreVariableNames, which can be set to ignore some variable names. For instance, to ignore fields named 'unused', set the property to 'unused'.</p>
 <p>Known limitations:</p>
 <p>* Incorrectly considers a variable referenced if another variable with the same name is referenced elsewhere (in another scope/block).</p>]]></description>

@@ -74,6 +74,7 @@ org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule;linear;1h
 org.codenarc.rule.concurrency.WaitOutsideOfWhileLoopRule;linear;1h
 org.codenarc.rule.convention.ConfusingTernaryRule;linear;10min
 org.codenarc.rule.convention.CouldBeElvisRule;linear;10min
+org.codenarc.rule.convention.CouldBeSwitchStatementRule;linear;5min
 org.codenarc.rule.convention.HashtableIsObsoleteRule;linear;10min
 org.codenarc.rule.convention.IfStatementCouldBeTernaryRule;linear;5min
 org.codenarc.rule.convention.InvertedIfElseRule;linear;10min
@@ -176,7 +177,6 @@ org.codenarc.rule.grails.GrailsDuplicateMappingRule;linear;20min
 org.codenarc.rule.grails.GrailsMassAssignmentRule;linear;20min
 org.codenarc.rule.grails.GrailsPublicControllerMethodRule.fixed;linear;20min
 org.codenarc.rule.grails.GrailsServletContextReferenceRule;linear;20min
-org.codenarc.rule.grails.GrailsSessionReferenceRule;linear;20min
 org.codenarc.rule.grails.GrailsStatelessServiceRule;linear;20min
 org.codenarc.rule.groovyism.AssignCollectionSortRule;linear;5min
 org.codenarc.rule.groovyism.AssignCollectionUniqueRule;linear;5min
@@ -333,6 +333,7 @@ org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessarySafeNavigationOperatorRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessarySelfAssignmentRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessarySemicolonRule;linear;5min
+org.codenarc.rule.unnecessary.UnnecessarySetterRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessaryStringInstantiationRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessarySubstringRule;linear;5min
 org.codenarc.rule.unnecessary.UnnecessaryTernaryExpressionRule;linear;5min

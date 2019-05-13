@@ -42,6 +42,7 @@ import org.sonar.plugins.groovy.codenarc.apt.AptResult;
 import org.sonar.plugins.groovy.codenarc.printer.XMLPrinter;
 
 public class Converter {
+
   private static final Logger log = LoggerFactory.getLogger(Converter.class);
 
   /** location of the apt files in the CodeNarc project (see git submodule) */
@@ -54,7 +55,9 @@ public class Converter {
 
   public static void main(String[] args) throws Exception {
     Path baseDir = Paths.get(".");
-    if (args.length > 0) baseDir = Paths.get(args[0]);
+    if (args.length > 0) {
+      baseDir = Paths.get(args[0]);
+    }
 
     Path targetFile = getResultFile(baseDir);
     Converter converter = process(baseDir, targetFile);
@@ -131,7 +134,8 @@ public class Converter {
         org.codenarc.rule.imports.UnnecessaryGroovyImportRule.class,
         org.codenarc.rule.imports.UnusedImportRule.class,
         org.codenarc.rule.grails.GrailsPublicControllerMethodRule.class,
-        org.codenarc.rule.grails.GrailsSessionReferenceRule.class,
+        // org.codenarc.rule.grails.GrailsSessionReferenceRule.class,
+        // - removed in 1.0 (was already depreacted since 0.9)
         org.codenarc.rule.grails.GrailsServletContextReferenceRule.class,
         org.codenarc.rule.grails.GrailsStatelessServiceRule.class,
         org.codenarc.rule.generic.IllegalRegexRule.class,
@@ -310,8 +314,8 @@ public class Converter {
         org.codenarc.rule.basic.EmptyMethodRule.class,
         org.codenarc.rule.basic.EmptyStaticInitializerRule.class,
         org.codenarc.rule.basic.IntegerGetIntegerRule.class,
-        // org.codenarc.rule.basic.SerializableClassMustDefineSerialVersionUIDRule.class - removed
-        // in 0.14
+        // org.codenarc.rule.basic.SerializableClassMustDefineSerialVersionUIDRule.class
+        // - removed in 0.14
         org.codenarc.rule.concurrency.BusyWaitRule.class,
         org.codenarc.rule.concurrency.DoubleCheckedLockingRule.class,
         org.codenarc.rule.concurrency.InconsistentPropertyLockingRule.class,
@@ -541,6 +545,14 @@ public class Converter {
         parametersByRule,
         org.codenarc.rule.convention.TrailingCommaRule.class,
         org.codenarc.rule.convention.NoTabCharacterRule.class);
+
+    insertRules(
+        rules,
+        "1.0",
+        props,
+        parametersByRule,
+        org.codenarc.rule.convention.CouldBeSwitchStatementRule.class,
+        org.codenarc.rule.unnecessary.UnnecessarySetterRule.class);
 
     return rules;
   }
