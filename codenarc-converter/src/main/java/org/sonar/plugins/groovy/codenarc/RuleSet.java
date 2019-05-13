@@ -23,32 +23,26 @@ import org.codenarc.rule.AbstractRule;
 
 public enum RuleSet {
   BASIC("basic"),
-  // new rule set in 0.14
-  SERIALIZATION("serialization"),
   BRACES("braces"),
   CONCURRENCY("concurrency"),
+  CONVENTION("convention"), // new in 0.16
   DESIGN("design"),
   DRY("dry"),
   EXCEPTIONS("exceptions"),
+  FORMATTING("formatting"), // new in 0.15
   GENERIC("generic"),
   GRAILS("grails"),
+  GROOVYISM("groovyism"), // new in 0.16
   IMPORTS("imports"),
+  JDBC("jdbc"), // new in 0.14
   JUNIT("junit"),
   LOGGING("logging"),
   NAMING("naming"),
+  SECURITY("security"), // new in 0.14
+  SERIALIZATION("serialization"), // new in 0.14
   SIZE("size"),
   UNNECESSARY("unnecessary"),
-  UNUSED("unused"),
-  // new rule set in 0.14
-  JDBC("jdbc"),
-  // new rule set in 0.14
-  SECURITY("security"),
-  // new rule set in 0.15
-  FORMATTING("formatting"),
-  // new rule set in 0.16
-  CONVENTION("convention"),
-  // new rule set in 0.16
-  GROOVYISM("groovyism");
+  UNUSED("unused");
 
   private final String label;
 
