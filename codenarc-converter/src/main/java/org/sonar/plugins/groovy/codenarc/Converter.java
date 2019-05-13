@@ -554,6 +554,20 @@ public class Converter {
         org.codenarc.rule.convention.CouldBeSwitchStatementRule.class,
         org.codenarc.rule.unnecessary.UnnecessarySetterRule.class);
 
+    insertRules(
+        rules,
+        "1.1",
+        props,
+        parametersByRule,
+        org.codenarc.rule.convention.FieldTypeRequiredRule.class,
+        org.codenarc.rule.convention.InvertedConditionRule.class,
+        org.codenarc.rule.convention.MethodReturnTypeRequiredRule.class,
+        org.codenarc.rule.convention.VariableTypeRequiredRule.class,
+        org.codenarc.rule.enhanced.MissingOverrideAnnotationRule.class,
+        org.codenarc.rule.formatting.BlockEndsWithBlankLineRule.class,
+        org.codenarc.rule.formatting.BlockStartsWithBlankLineRule.class,
+        org.codenarc.rule.formatting.IndentationRule.class);
+
     return rules;
   }
 

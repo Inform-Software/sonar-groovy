@@ -28,6 +28,7 @@ public enum RuleSet {
   CONVENTION("convention"), // new in 0.16
   DESIGN("design"),
   DRY("dry"),
+  ENHANCED("enhanced"), // new in 1.1
   EXCEPTIONS("exceptions"),
   FORMATTING("formatting"), // new in 0.15
   GENERIC("generic"),

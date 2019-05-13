@@ -75,15 +75,19 @@ org.codenarc.rule.concurrency.WaitOutsideOfWhileLoopRule;linear;1h
 org.codenarc.rule.convention.ConfusingTernaryRule;linear;10min
 org.codenarc.rule.convention.CouldBeElvisRule;linear;10min
 org.codenarc.rule.convention.CouldBeSwitchStatementRule;linear;5min
+org.codenarc.rule.convention.FieldTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.HashtableIsObsoleteRule;linear;10min
 org.codenarc.rule.convention.IfStatementCouldBeTernaryRule;linear;5min
+org.codenarc.rule.convention.InvertedConditionRule;linear;5min
 org.codenarc.rule.convention.InvertedIfElseRule;linear;10min
 org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule;linear;5min
+org.codenarc.rule.convention.MethodReturnTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.NoDefRule;linear;5min
 org.codenarc.rule.convention.NoTabCharacterRule;linear;2min
 org.codenarc.rule.convention.ParameterReassignmentRule;linear;20min
 org.codenarc.rule.convention.TernaryCouldBeElvisRule;linear;10min
 org.codenarc.rule.convention.TrailingCommaRule;linear;5min
+org.codenarc.rule.convention.VariableTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.VectorIsObsoleteRule;linear;20min
 org.codenarc.rule.design.AbstractClassWithPublicConstructorRule;linear;5min
 org.codenarc.rule.design.AbstractClassWithoutAbstractMethodRule;linear;5min
@@ -112,6 +116,7 @@ org.codenarc.rule.dry.DuplicateListLiteralRule;linear;5min
 org.codenarc.rule.dry.DuplicateMapLiteralRule;linear;5min
 org.codenarc.rule.dry.DuplicateNumberLiteralRule;linear;5min
 org.codenarc.rule.dry.DuplicateStringLiteralRule;linear;5min
+org.codenarc.rule.enhanced.MissingOverrideAnnotationRule;linear;5min
 org.codenarc.rule.exceptions.CatchArrayIndexOutOfBoundsExceptionRule;linear;10min
 org.codenarc.rule.exceptions.CatchErrorRule;linear;1h
 org.codenarc.rule.exceptions.CatchExceptionRule;linear;20min
@@ -133,6 +138,8 @@ org.codenarc.rule.exceptions.ThrowNullPointerExceptionRule;linear;20min
 org.codenarc.rule.exceptions.ThrowRuntimeExceptionRule;linear;20min
 org.codenarc.rule.exceptions.ThrowThrowableRule;linear;20min
 org.codenarc.rule.formatting.BlankLineBeforePackageRule;linear;5min
+org.codenarc.rule.formatting.BlockEndsWithBlankLineRule;linear;5min
+org.codenarc.rule.formatting.BlockStartsWithBlankLineRule;linear;5min
 org.codenarc.rule.formatting.BracesForClassRule;linear;5min
 org.codenarc.rule.formatting.BracesForForLoopRule;linear;5min
 org.codenarc.rule.formatting.BracesForIfElseRule;linear;5min
@@ -142,6 +149,7 @@ org.codenarc.rule.formatting.ClassJavadocRule;linear;10min
 org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule;linear;10min
 org.codenarc.rule.formatting.ConsecutiveBlankLinesRule;linear;5min
 org.codenarc.rule.formatting.FileEndsWithoutNewlineRule;linear;5min
+org.codenarc.rule.formatting.IndentationRule;linear;5min
 org.codenarc.rule.formatting.LineLengthRule;linear;10min
 org.codenarc.rule.formatting.MissingBlankLineAfterImportsRule;linear;5min
 org.codenarc.rule.formatting.MissingBlankLineAfterPackageRule;linear;5min
