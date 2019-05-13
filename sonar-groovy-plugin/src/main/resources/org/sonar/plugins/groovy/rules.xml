@@ -926,76 +926,6 @@
     <tag>bug</tag>
   </rule>
 
-  <!-- serialization rules -->
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.serialization.SerialVersionUIDRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Serial Version UID]]></name>
-    <internalKey><![CDATA[SerialVersionUID]]></internalKey>
-    <description><![CDATA[<p> A <code>serialVersionUID</code> is normally intended to be used with Serialization. It needs to be of type <code>long</code>, <code>static</code>, and <code>final</code>. Also, it should be declared <code>private</code>. Providing no modifier creates a <Property> and Groovy generates a <getter>, which is probably not intended. </p>
-<p>From API javadoc for <code>java.io.Serializable</code>: <It is also strongly advised that explicit serialVersionUID declarations use the private modifier where possible, since such declarations apply only to the immediately declaring class--serialVersionUID fields are not useful as inherited members.> </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.serialization.SerializableClassMustDefineSerialVersionUIDRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Serializable Class Must Define Serial Version UID]]></name>
-    <internalKey><![CDATA[SerializableClassMustDefineSerialVersionUID]]></internalKey>
-    <description><![CDATA[<p>Classes that implement <code>Serializable</code> should define a <code>serialVersionUID</code>. Deserialization uses this number to ensure that a loaded class corresponds exactly to a serialized object. If you don't define serialVersionUID, the system will make one by hashing most of your class's features. Then if you change anything, the UID will change and Java won't let you reload old data. </p>
-<p>An example of a missing serialVersionUID: </p>
-<pre>
-    class MyClass imlements Serializable {
-        // missing serialVersionUID
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.serialization.SerialPersistentFieldsRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Serial Persistent Fields]]></name>
-    <internalKey><![CDATA[SerialPersistentFields]]></internalKey>
-    <description><![CDATA[<p>To use a <code>Serializable</code> object's <code>serialPersistentFields</code> correctly, it must be declared <code>private</code>, <code>static</code>, and <code>final</code>. </p>
-<p>The Java Object Serialization Specification allows developers to manually define <code>Serializable</code> fields for a class by specifying them in the <code>serialPersistentFields</code> array. This feature will only work if <code>serialPersistentFields</code> is declared as <code>private</code>, <code>static</code>, and <code>final</code>. Also, specific to Groovy, the field must be of type <code>ObjectStreamField[]</code>, and cannot be <code>Object</code>. </p>
-<p>References: </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule>
-    <key>org.codenarc.rule.serialization.EnumCustomSerializationIgnoredRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Enum Custom Serialization Ignored]]></name>
-    <internalKey><![CDATA[EnumCustomSerializationIgnored]]></internalKey>
-    <description><![CDATA[<p>Checks for enums that define <code>writeObject()</code> or <code>writeReplace()</code> methods, or declare <code>serialPersistentFields</code> or <code>serialVersionUID</code> fields, all of which are ignored for enums. </p>
-<p>From the javadoc for <code>ObjectOutputStream</code>: </p>
-<p><The process by which enum constants are serialized cannot be customized; any class-specific writeObject and writeReplace methods defined by enum types are ignored during serialization. Similarly, any serialPersistentFields or serialVersionUID field declarations are also ignored--all enum types have a fixed serialVersionUID of 0L.> </p>
-<p>Example of violations: </p>
-<pre>
-    enum MyEnum {
-        ONE, TWO, THREE
-        private static final long serialVersionUID = 1234567L               // violation
-        private static final ObjectStreamField[] serialPersistentFields =   // violation
-            { new ObjectStreamField("name", String.class) }
-        String name;
-
-        Object writeReplace() throws ObjectStreamException { .. }      // violation
-        private void writeObject(ObjectOutputStream stream) { .. }     // violation
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
   <!-- braces rules -->
 
   <rule>
@@ -2019,6 +1949,246 @@
     <tag>multi-threading</tag>
   </rule>
 
+  <!-- convention rules -->
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.convention.InvertedIfElseRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Inverted If Else]]></name>
+    <internalKey><![CDATA[InvertedIfElse]]></internalKey>
+    <description><![CDATA[<p>An inverted <if-else> statement is one in which there is a single <code>if</code> statement with a single <code>else</code> branch and the boolean test of the <code>if</code> is negated. For instance <code>if (!x) false else true</code>. It is usually clearer to write this as <code>if (x) true else false</code>. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.12 -->
+  <rule>
+    <key>org.codenarc.rule.convention.ConfusingTernaryRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Confusing Ternary]]></name>
+    <internalKey><![CDATA[ConfusingTernary]]></internalKey>
+    <description><![CDATA[<p>In a ternary expression avoid negation in the test. For example, rephrase: <code>(x != y) ? diff : same</code> as: <code>(x == y) ? same : diff</code>. Consistent use of this rule makes the code easier to read. Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?". </p>
+<p>Example: </p>
+<pre>
+    (x != y) ? diff : same      // triggers violation
+    (!x) ? diff : same          // triggers violation
+
+    (x == y) ? same : diff      // OK
+    (x) ? same : diff           // OK
+
+    // this is OK, because of GroovyTruth there is no inverse of != null
+    (x != null) ? diff : same
+
+    // this is OK, because of GroovyTruth there is no inverse of != true
+    (x != true) ? diff : same
+
+    // this is OK, because of GroovyTruth there is no inverse of != false
+    (x != false) ? diff : same
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.convention.CouldBeElvisRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Could Be Elvis]]></name>
+    <internalKey><![CDATA[CouldBeElvis]]></internalKey>
+    <description><![CDATA[<p>Catch an if block that could be written as an elvis expression. </p>
+<p>Example of violations: </p>
+<pre>
+    if (!x) {                   // violation
+        x = 'some value'
+    }
+
+    if (!x)                     // violation
+        x = "some value"
+
+    if (!params.max) {          // violation
+      params.max = 10
+    }
+
+    x ?: 'some value'           // OK
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Long Literal With Lower Case L]]></name>
+    <internalKey><![CDATA[LongLiteralWithLowerCaseL]]></internalKey>
+    <description><![CDATA[<p>In Java and Groovy, you can specify long literals with the L or l character, for instance 55L or 24l. It is best practice to always use an uppercase L and never a lowercase l. This is because 11l rendered in some fonts may look like 111 instead of 11L. </p>
+<p>Example of violations: </p>
+<pre>
+    def x = 1l
+    def y = 55l
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule>
+    <key>org.codenarc.rule.convention.ParameterReassignmentRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Parameter Reassignment]]></name>
+    <internalKey><![CDATA[ParameterReassignment]]></internalKey>
+    <description><![CDATA[<p>Checks for a method or closure parameter being reassigned to a new value within the body of the method/closure, which is a confusing and questionable practice. Use a temporary variable instead. </p>
+<p>Example of violations: </p>
+<pre>
+    void myMethod(int a, String b) {
+        println a
+        b = 'new value'     // violation
+    }
+
+    def myClosure1 = { int a, b ->
+        a = 123             // violation
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule>
+    <key>org.codenarc.rule.convention.TernaryCouldBeElvisRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Ternary Could Be Elvis]]></name>
+    <internalKey><![CDATA[TernaryCouldBeElvis]]></internalKey>
+    <description><![CDATA[<p>Checks for ternary expressions where the <boolean> and <true> expressions are the same. These can be simplified to an <Elvis> expression. </p>
+<p>Example of violations: </p>
+<pre>
+    x ? x : false               // violation; can simplify to x ?: false
+
+    foo() ? foo() : bar()       // violation; can simplify to foo() ?: bar()
+    foo(1) ? foo(1) : 123       // violation; can simplify to foo(1) ?: 123
+
+    (x == y) ? same : diff      // OK
+    x ? y : z                   // OK
+    x ? x + 1 : x + 2           // OK
+    x ? 1 : 0                   // OK
+    x ? !x : x                  // OK
+    !x ? x : null               // OK
+
+    foo() ? bar() : 123         // OK
+    foo() ? foo(99) : 123       // OK
+    foo(x) ? foo() : 123        // OK
+    foo(1) ? foo(2) : 123       // OK
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule>
+    <key>org.codenarc.rule.convention.VectorIsObsoleteRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Vector Is Obsolete]]></name>
+    <internalKey><![CDATA[VectorIsObsolete]]></internalKey>
+    <description><![CDATA[<p>Checks for references to the (<effectively>) obsolete <code>java.util.Vector</code> class. Use the <code>Java Collections Framework</code> classes instead, including <code>ArrayList</code> or <code>Collections.synchronizedList()</code>. See the JDK javadoc. </p>
+<p>Example of violations: </p>
+<pre>
+    def myList = new Vector()           // violation
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.17 -->
+  <rule>
+    <key>org.codenarc.rule.convention.HashtableIsObsoleteRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Hashtable Is Obsolete]]></name>
+    <internalKey><![CDATA[HashtableIsObsolete]]></internalKey>
+    <description><![CDATA[<p>Checks for references to the (<effectively>) obsolete <code>java.util.Hashtable</code> class. Use the <code>Java Collections Framework</code> classes instead, including <code>HashMap</code> or <code>ConcurrentHashMap</code>. See the JDK javadoc. </p>
+<p>Example of violations: </p>
+<pre>
+    def myMap = new Hashtable()           // violation
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.convention.IfStatementCouldBeTernaryRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[If Statement Could Be Ternary]]></name>
+    <internalKey><![CDATA[IfStatementCouldBeTernary]]></internalKey>
+    <description><![CDATA[<p>Checks for: </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.22 -->
+  <rule>
+    <key>org.codenarc.rule.convention.NoDefRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[No Def]]></name>
+    <internalKey><![CDATA[NoDef]]></internalKey>
+    <description><![CDATA[<p> Do not allow using the <code>def</code> keyword in code. Use a specific type instead. </p>
+<p><code>NOTE:</code> This rule applies to the text contents of a <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
+]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>excludeRegex</key>
+      <description><![CDATA[Regular expression describing names of attributes, parameters or methods that could be precede by the def keyword. ]]></description>
+    </param>
+  </rule>
+
+  <!-- since 0.25 -->
+  <rule>
+    <key>org.codenarc.rule.convention.TrailingCommaRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Trailing Comma]]></name>
+    <internalKey><![CDATA[TrailingComma]]></internalKey>
+    <description><![CDATA[<p>Check whether list and map literals contain optional trailing comma. Rationale: Putting this comma in make is easier to change the order of the elements or add new elements on the end. </p>
+<p>This is valid code: </p>
+<pre>
+  int[] array1 = [] // one line declaration
+  int[] array2 = [ // empty list
+                 ]
+  int[] array3 = [1,2,3] // one line declaration
+  int[] array4 = [1,
+                  2,
+                  3, // contains trailing comma
+                 ]
+</pre>
+<pre>
+  int[] array2 = [1,
+                  2 // there is no trailing comma
+                 ]
+</pre>
+]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>checkList</key>
+      <description><![CDATA[To disable checking List literals, set this property to false ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>checkMap</key>
+      <description><![CDATA[To disable checking Map literals, set this property to false ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.25 -->
+  <rule>
+    <key>org.codenarc.rule.convention.NoTabCharacterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[No Tab Character]]></name>
+    <internalKey><![CDATA[NoTabCharacter]]></internalKey>
+    <description><![CDATA[<p>Checks that all source files do not contain the tab character. </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
   <!-- design rules -->
 
   <rule>
@@ -2858,6 +3028,518 @@ for (int i = 0; i < 100; ++i) {
     <tag>error-handling</tag>
   </rule>
 
+  <!-- formatting rules -->
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BracesForClassRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Braces For Class]]></name>
+    <internalKey><![CDATA[BracesForClass]]></internalKey>
+    <description><![CDATA[<p>Checks the location of the opening brace (\{) for classes. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
+<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>. </p>
+ ]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>sameLine</key>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.LineLengthRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Line Length]]></name>
+    <internalKey><![CDATA[LineLength]]></internalKey>
+    <description><![CDATA[<p>Checks the maximum length for each line of source code. It checks for number of characters, so lines that include tabs may appear longer than the allowed number when viewing the file. The maximum line length can be configured by setting the length property, which defaults to 120. </p>
+<p>NOTE: This rule does not support the @SuppressAnnotations annotation or the classname-based rule properties (applyToClassNames, doNotApplyToClassNames) to enable/disable the rule. If you want to specify or restrict where this rule is applied, you must use the file-based rule properties: applyToFileNames, doNotApplyToFileNames, applyToFilesMatching and doNotApplyToFilesMatching. </p>
+ ]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>ignoreImportStatements</key>
+      <description><![CDATA[If true, then do not apply this rule to import statements. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreLineRegex</key>
+      <description><![CDATA[If specified, then ignore lines matching this regular expression. ]]></description>
+    </param>
+    <param>
+      <key>ignorePackageStatements</key>
+      <description><![CDATA[If true, then do not apply this rule to package statements. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>length</key>
+      <description><![CDATA[The maximum line length allowed. ]]></description>
+      <defaultValue>120</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BracesForForLoopRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Braces For For Loop]]></name>
+    <internalKey><![CDATA[BracesForForLoop]]></internalKey>
+    <description><![CDATA[<p>Checks the location of the opening brace (\{) for for loops. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
+ ]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>sameLine</key>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BracesForIfElseRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Braces For If Else]]></name>
+    <internalKey><![CDATA[BracesForIfElse]]></internalKey>
+    <description><![CDATA[<p>Checks the location of the opening brace (\{) for if statements. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>elseOnSameLineAsClosingBrace</key>
+      <description><![CDATA[If true, then the else statement should be on the same line as closing brace (\}) ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>elseOnSameLineAsOpeningBrace</key>
+      <description><![CDATA[If true, then the else statement should be on the same line as opening brace (\{) ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>sameLine</key>
+      <description><![CDATA[If true, then the opening brace (\{) for if statement should be on the same line. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>validateElse</key>
+      <description><![CDATA[To enable else checking, set the property to true ]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BracesForMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Braces For Method]]></name>
+    <internalKey><![CDATA[BracesForMethod]]></internalKey>
+    <description><![CDATA[<p>Checks the location of the opening brace (\{) for constructors and methods. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
+ ]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>sameLine</key>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BracesForTryCatchFinallyRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Braces For Try Catch Finally]]></name>
+    <internalKey><![CDATA[BracesForTryCatchFinally]]></internalKey>
+    <description><![CDATA[<p>Checks the location of the opening brace (\{) for try statements. By default, requires them on the line, but the <code>sameLine</code> property can be set to false to override this. </p>
+ ]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>sameLine</key>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.ClassJavadocRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Class Javadoc]]></name>
+    <internalKey><![CDATA[ClassJavadoc]]></internalKey>
+    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true. </p>
+ ]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterCommaRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Comma]]></name>
+    <internalKey><![CDATA[SpaceAfterComma]]></internalKey>
+    <description><![CDATA[<p>Checks that there is at least one space or whitespace following each comma. That includes checks for method and closure declaration parameter lists, method call parameter lists, Map literals and List literals. </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterSemicolonRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Semicolon]]></name>
+    <internalKey><![CDATA[SpaceAfterSemicolon]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace following a semicolon that separates: </p>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAroundOperatorRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Around Operator]]></name>
+    <internalKey><![CDATA[SpaceAroundOperator]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator, including: +, -, *, /, \>\>, \<\<, &&, ||, &, |, ?:, =, "as". </p>
+<p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.). Do not check array ('[') operator. </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceBeforeOpeningBraceRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Before Opening Brace]]></name>
+    <internalKey><![CDATA[SpaceBeforeOpeningBrace]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>checkClosureMapEntryValue</key>
+      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterOpeningBraceRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Opening Brace]]></name>
+    <internalKey><![CDATA[SpaceAfterOpeningBrace]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
+ Examples of violations: </p>
+<pre>
+    class MyClass{int count }                   // violation
+
+    interface MyInterface {static final OK = 1 }// violation
+
+    enum MyEnum {OK, BAD }                      // violation
+
+    def myMethod() {int count }                 // violation
+
+    if (ready) {println 9 }                     // violation
+
+    if (ready) {
+    } else {println 99}                         // violation
+
+    for (int i=0; i<10; i++) {println i }       // violation
+
+    for (String name in names) {println name }  // violation
+
+    for (String name: names) {println name }    // violation
+
+    while (ready) {println time }               // violation
+
+    try {doStuff()                              // violation
+    } catch(Exception e) {x=77 }                // violation
+    } finally {println 'error' }                // violation
+
+    list.each {name -> }                        // violation
+
+    shouldFail(Exception) {doStuff() }          // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>checkClosureMapEntryValue</key>
+      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreEmptyBlock</key>
+      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterClosingBraceRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Closing Brace]]></name>
+    <internalKey><![CDATA[SpaceAfterClosingBrace]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each closing brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
+<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation. </p>
+ Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>checkClosureMapEntryValue</key>
+      <description><![CDATA[If false, then do not check for whitespace after closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceBeforeClosingBraceRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Before Closing Brace]]></name>
+    <internalKey><![CDATA[SpaceBeforeClosingBrace]]></internalKey>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each closing brace ("\}") for method/class/interface declarations, closure expressions and block statements. </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>checkClosureMapEntryValue</key>
+      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreEmptyBlock</key>
+      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterIfRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After If]]></name>
+    <internalKey><![CDATA[SpaceAfterIf]]></internalKey>
+    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>if</code> keyword and before the opening parenthesis. </p>
+<p>Examples of violations: </p>
+<pre>
+    if(true) { }                            // violation
+    if  (true) { }                          // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterWhileRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After While]]></name>
+    <internalKey><![CDATA[SpaceAfterWhile]]></internalKey>
+    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>while</code> keyword and before the opening parenthesis. </p>
+<p>Examples of violations: </p>
+<pre>
+    while(true) { }             // violation
+    while  (true) { }           // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterForRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After For]]></name>
+    <internalKey><![CDATA[SpaceAfterFor]]></internalKey>
+    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>for</code> keyword and before the opening parenthesis. </p>
+<p>Examples of violations: </p>
+<pre>
+    for(name in names) { }                  // violation
+    for  (int i=0; i < 10; i++) { }         // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterSwitchRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Switch]]></name>
+    <internalKey><![CDATA[SpaceAfterSwitch]]></internalKey>
+    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>switch</code> keyword and before the opening parenthesis. </p>
+<p>Examples of violations: </p>
+<pre>
+    switch(x) {                                 // violation
+        case 1: println 'one'
+    }
+    switch  (x) {                               // violation
+        case 1: println 'one'
+    }
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.18 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterCatchRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Catch]]></name>
+    <internalKey><![CDATA[SpaceAfterCatch]]></internalKey>
+    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>catch</code> keyword and before the opening parenthesis. </p>
+<p>Examples of violations: </p>
+<pre>
+    try { } catch(Exception e) { }          // violation
+    try { } catch  (Exception e) { }        // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAroundClosureArrowRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Around Closure Arrow]]></name>
+    <internalKey><![CDATA[SpaceAroundClosureArrow]]></internalKey>
+    <description><![CDATA[<p>Checks that there is at least one space (blank) or whitespace around each closure arrow (->) symbol. </p>
+<p>Known limitations: </p>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Around Map Entry Colon]]></name>
+    <internalKey><![CDATA[SpaceAroundMapEntryColon]]></internalKey>
+    <description><![CDATA[<p>Check for proper formatting of whitespace around colons for literal Map entries. By default, no whitespace is allowed either before or after the Map entry colon, but you can change that through the configuration properties below. </p>
+<p>Example of violations: </p>
+<pre>
+    Map m1 = [myKey : 12345]            // violation (both before and after the colon)
+    println [a :[1:11, 2:22],           // violation on a (before colon)
+                b:[(Integer): 33]]      // violation on Integer (after colon)
+</pre>
+]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>characterAfterColonRegex</key>
+      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <defaultValue>\\S</defaultValue>
+    </param>
+    <param>
+      <key>characterBeforeColonRegex</key>
+      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
+      <defaultValue>\\S</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 0.20 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Closure Statement On Opening Line Of Multiple Line Closure]]></name>
+    <internalKey><![CDATA[ClosureStatementOnOpeningLineOfMultipleLineClosure]]></internalKey>
+    <description><![CDATA[<p>Checks for closure logic on first line (after <code>-\</code</code>) for a multi-line closure. That breaks the symmetry of indentation (if the subsequent statements are indented normally), and that first statement can be easily missed when reading the code. </p>
+<p>Example of violations: </p>
+<pre>
+    def closure = { name -> println name
+        addToCounts()
+        println “done” }
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.ConsecutiveBlankLinesRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Consecutive Blank Lines]]></name>
+    <internalKey><![CDATA[ConsecutiveBlankLines]]></internalKey>
+    <description><![CDATA[<p>Makes sure there are no consecutive lines that are either blank or whitespace only. This reduces the need to scroll further than necessary when reading code, and increases the likelihood that a logical block of code will fit on one screen for easier comprehension. </p>
+<p>Example of violation: </p>
+<pre>
+    def name
+
+
+    def value
+
+
+
+    def id
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BlankLineBeforePackageRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Blank Line Before Package]]></name>
+    <internalKey><![CDATA[BlankLineBeforePackage]]></internalKey>
+    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file. </p>
+ ]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.FileEndsWithoutNewlineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[File Ends Without Newline]]></name>
+    <internalKey><![CDATA[FileEndsWithoutNewline]]></internalKey>
+    <description><![CDATA[<p>Makes sure each source file ends with a newline character. </p>
+ ]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.MissingBlankLineAfterImportsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Missing Blank Line After Imports]]></name>
+    <internalKey><![CDATA[MissingBlankLineAfterImports]]></internalKey>
+    <description><![CDATA[<p>Makes sure there is a blank line after the imports of a source code file. </p>
+<p>Example of violation: </p>
+<pre>
+    import org.apache.commons.lang.StringUtils
+    class MyClass { }                       // violation
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.MissingBlankLineAfterPackageRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Missing Blank Line After Package]]></name>
+    <internalKey><![CDATA[MissingBlankLineAfterPackage]]></internalKey>
+    <description><![CDATA[<p>Makes sure there is a blank line after the package statement of a source code file. </p>
+<p>Example of violation: </p>
+<pre>
+  package org.codenarc
+  import java.util.Date                     // violation
+
+  class MyClass {
+      void go() { /* ... */ }
+  }
+</pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 0.21 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.TrailingWhitespaceRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Trailing Whitespace]]></name>
+    <internalKey><![CDATA[TrailingWhitespace]]></internalKey>
+    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters. </p>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
   <!-- generic rules -->
 
   <rule>
@@ -3278,6 +3960,526 @@ for (int i = 0; i < 100; ++i) {
     <tag>grails</tag>
   </rule>
 
+  <!-- groovyism rules -->
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitArrayListInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Array List Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitArrayListInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>ArrayList</code>. In Groovy, it is best to write <code>new ArrayList() as []</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To And Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToAndMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>and(Object)</code> method is called directly in code instead of using the <code>&</code> operator. A groovier way to express this: <code>a.and(b)</code> is this: <code>a & b</code>. This rule can be configured to ignore <code>this.and(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>and(x)</code> will not trigger a violation. The default is <true> because <code>and</code> appears commonly in Grails criteria. </p>
+<p>This rule also ignores all calls to <code>super.and(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Compare To Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToCompareToMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>compareTo(Object)</code> method is called directly in code instead of using the \<\=\>, \>, \>\=, \<, and \<\= operators. A groovier way to express this: <code>a.compareTo(b)</code> is this: <code>a \<\=\> b</code>, or using the other operators. Here are some other ways to write groovier code: </p>
+<pre>
+    a.compareTo(b) == 0               // can be replaced by: a == b
+    a.compareTo(b)                    // can be replaced by: a <=> b
+    a.compareTo(b) > 0                // can be replaced by: a > b
+    a.compareTo(b) >= 0               // can be replaced by: a >= b
+    a.compareTo(b) < 0                // can be replaced by: a < b
+    a.compareTo(b) <= 0               // can be replaced by: a <= b
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToDivMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Div Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToDivMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>div(Object)</code> method is called directly in code instead of using the <code>/</code> operator. A groovier way to express this: <code>a.div(b)</code> is this: <code>a / b</code>. This rule can be configured to ignore <code>div.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>div(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.div(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToEqualsMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Equals Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToEqualsMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>equals(Object)</code> method is called directly in code instead of using the <code>==</code> or <code>!=</code> operator. A groovier way to express this: <code>a.equals(b)</code> is this: <code>a == b</code> and a groovier way to express : <code>!a.equals(b)</code> is: <code>a != b</code>. This rule can be configured to ignore <code>this.equals(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>equals(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.equals(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToGetAtMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Get At Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToGetAtMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>getAt(Object)</code> method is called directly in code instead of using the <code>[]</code> index operator. A groovier way to express this: <code>a.getAt(b)</code> is this: <code>a[b]</code>. This rule can be configured to ignore <code>this.getAt(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>getAt(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.getAt(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToLeftShiftMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Left Shift Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToLeftShiftMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>leftShift(Object)</code> method is called directly in code instead of using the \<\< operator. A groovier way to express this: <code>a.leftShift(b)</code> is this: <code>a \<\< b</code>. This rule can be configured to ignore <code>this.leftShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>leftShift(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.leftShift(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToMinusMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Minus Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToMinusMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>minus(Object)</code> method is called directly in code instead of using the <code>-</code> operator. A groovier way to express this: <code>a.minus(b)</code> is this: <code>a - b</code>. This rule can be configured to ignore <code>minus.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>minus(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.minus(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToMultiplyMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Multiply Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToMultiplyMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>multiply(Object)</code> method is called directly in code instead of using the <code>*</code> operator. A groovier  way to express this: <code>a.multiply(b)</code> is this: <code>a * b</code>. This rule can be configured to ignore <code>this.multiply(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>multiply(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.multiply(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToModMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Mod Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToModMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>mod(Object)</code> method is called directly in code instead of using the <code>%</code> operator. A groovier way to express this: <code>a.mod(b)</code> is this: <code>a % b</code>. This rule can be configured to ignore <code>this.mod(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>mod(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.mod(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Or Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToOrMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>or(Object)</code> method is called directly in code instead of using the <code>|</code> operator. A groovier way to express this: <code>a.or(b)</code> is this: <code>a | b</code>. This rule can be configured to ignore <code>this.or(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>or(x)</code> will not trigger a violation. This is the default because it is commonly used in Grails criteria. </p>
+<p>This rule also ignores all calls to <code>super.or(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToPlusMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Plus Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToPlusMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>plus(Object)</code> method is called directly in code instead of using the <code>+</code> operator. A groovier way to express this: <code>a.plus(b)</code> is this: <code>a + b</code>. This rule can be configured to ignore <code>this.plus(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>plus(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.plus(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToPowerMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Power Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToPowerMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>power(Object)</code> method is called directly in code instead of using the <code>**</code> operator. A groovier way to express this: <code>a.power(b)</code> is this: <code>a ** b</code>. This rule can be configured to ignore <code>this.power(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>power(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.power(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToRightShiftMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Right Shift Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToRightShiftMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>rightShift(Object)</code> method is called directly in code instead of using the \>\> operator. A groovier way to express this: <code>a.rightShift(b)</code> is this: <code>a \>\> b</code>. This rule can be configured to ignore <code>this.rightShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>rightShift(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.rightShift(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToXorMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Xor Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToXorMethod]]></internalKey>
+    <description><![CDATA[<p>This rule detects when the <code>xor(Object)</code> method is called directly in code instead of using the <code>^</code> operator. A groovier way to express this: <code>a.xor(b)</code> is this: <code>a ^ b</code>. This rule can be configured to ignore <code>this.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>xor(x)</code> will trigger a violation. </p>
+<p>This rule also ignores all calls to <code>super.xor(Object)</code>. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitHashMapInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Hash Map Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitHashMapInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashMap</code>. In Groovy, it is best to replace <code>new HashMap()</code> with <code>[:]</code>, which creates (mostly) the same object. <code>[:]</code> is technically a LinkedHashMap but it is very rare that someone absolutely needs an instance of <code>HashMap</code> and not a subclass. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitHashSetInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Hash Set Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitHashSetInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashSet</code>. In Groovy, it is best to replace <code>new HashSet()</code> with <code>[] as Set</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitLinkedListInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Linked List Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitLinkedListInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>LinkedList</code>. In Groovy, it is best to replace <code>new LinkedList()</code> with <code>[] as Queue</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitStackInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Stack Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitStackInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>Stack</code>. In Groovy, it is best to replace <code>new Stack()</code> with <code>[] as Stack</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitTreeSetInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Tree Set Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitTreeSetInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>TreeSet</code>. In Groovy, it is best to replace <code>new TreeSet()</code> with <code>[] as SortedSet</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.11 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.GStringAsMapKeyRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[G String As Map Key]]></name>
+    <internalKey><![CDATA[GStringAsMapKey]]></internalKey>
+    <description><![CDATA[<p> A GString should not be used as a map key since its <hashcode> is not guaranteed to be stable. Consider calling <code>key.toString()</code>. </p>
+<p>Here is an example of code that produces a violation: </p>
+<pre>
+    Map map = ["${someRef}" : 'invalid' ]       // violation
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.13 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.GroovyLangImmutableRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Groovy Lang Immutable]]></name>
+    <internalKey><![CDATA[GroovyLangImmutable]]></internalKey>
+    <description><![CDATA[<p>The <code>groovy.lang.Immutable</code> annotation has been deprecated and replaced by <code>groovy.transform.Immutable</code>. Do not use the <code>Immutable</code> in <code>groovy.lang</code>. </p>
+<p>Example of violations: </p>
+<pre>
+    @Immutable
+    class Person { }
+
+    @groovy.lang.Immutable
+    class Person { }
+
+    import groovy.lang.Immutable as Imtl
+    @Imtl
+    class Person { }
+
+    // the following code is OK
+    @groovy.transform.Immutable
+    class Person { }
+
+    import groovy.transform.Immutable
+    @Immutable
+    class Person { }
+
+    import groovy.transform.*
+    @Immutable
+    class Person { }
+
+    import groovy.transform.Immutable as Imtl
+    @Imtl
+    class Person { }
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitLinkedHashMapInstantiationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Linked Hash Map Instantiation]]></name>
+    <internalKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></internalKey>
+    <description><![CDATA[<p>This rule checks for the explicit instantiation of a <code>LinkedHashMap</code> using the no-arg constructor. In Groovy, it is best to replace <code>new LinkedHashMap()</code> with <code>[:]</code>, which creates the same object. </p>
+ ]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ClosureAsLastMethodParameterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Closure As Last Method Parameter]]></name>
+    <internalKey><![CDATA[ClosureAsLastMethodParameter]]></internalKey>
+    <description><![CDATA[<p>If a method is called and the last parameter is an inline closure then it can be declared outside of the method call parentheses. </p>
+<p>Example of violations: </p>
+<pre>
+    // creates violation: poor Groovy style
+    [1,2,3].each({ println it })
+
+    // no violation
+    [1,2,3].each { println it }
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.AssignCollectionUniqueRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Assign Collection Unique]]></name>
+    <internalKey><![CDATA[AssignCollectionUnique]]></internalKey>
+    <description><![CDATA[<p>The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a unique() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
+<p>Example of violations: </p>
+<pre>
+  def a = myList.unique()
+  def b = myList.unique() { it }
+  def c = myList.unique().findAll { x < 1 }
+
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.AssignCollectionSortRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Assign Collection Sort]]></name>
+    <internalKey><![CDATA[AssignCollectionSort]]></internalKey>
+    <description><![CDATA[<p>The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a sort() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
+<p>Example of violations: </p>
+<pre>
+  def a = myList.sort()
+  def b = myList.sort() { it }
+  def c = myList.sort().findAll { x < 1 }
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ConfusingMultipleReturnsRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Confusing Multiple Returns]]></name>
+    <internalKey><![CDATA[ConfusingMultipleReturns]]></internalKey>
+    <description><![CDATA[<p>Multiple return values can be used to set several variables at once. To use multiple return values, the left hand side of the assignment must be enclosed in parenthesis. If not, then you are not using multiple return values, you're only assigning the last element. </p>
+<p>Example of violations: </p>
+<pre>
+def a, b = [1, 2] // bad, b is null
+def c, d, e = [1, 2, 3] // bad, c and d are null
+class MyClass {
+    def a, b, c = [1, 2, 3]  // bad, a and b are null
+}
+
+def x = 1              // ok
+def (f, g) = [1, 2]    // ok
+(a, b, c) = [1, 2, 3]  // ok
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.GetterMethodCouldBePropertyRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Getter Method Could Be Property]]></name>
+    <internalKey><![CDATA[GetterMethodCouldBeProperty]]></internalKey>
+    <description><![CDATA[<p>If a class defines a <code>public</code> method that follows the Java getter notation and that returns a constant, then it is cleaner to provide a Groovy property for the value rather than a Groovy method. </p>
+<p>Example of violations: </p>
+<pre>
+    interface Parent {
+        String getSomething()
+        String getSomethingElse()
+    }
+
+    class Child extends Parent {
+        static VALUE = 'value'
+
+        @Override
+        String getSomething() {
+            'something'         // this could be simplified
+        }
+
+        @Override
+        String getSomethingElse() {
+            VALUE       // this could be simplified
+        }
+
+        int getOtherValue() {
+            123
+        }
+
+        static String getName() {
+            'MyName'
+        }
+    }
+
+    class Child2 extends Parent {
+        static VALUE = 'value'
+        final String something = 'something'    // this is cleaner
+        final String somethingElse = VALUE      // this is cleaner
+        final int otherValue = 123              // this is cleaner
+        static final String name = 'MyName'     // this is cleaner
+    }
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.UseCollectManyRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Use Collect Many]]></name>
+    <internalKey><![CDATA[UseCollectMany]]></internalKey>
+    <description><![CDATA[<p>In many case <code>collectMany()</code> yields the same result as <code>collect{}.flatten()</code>. It is easier to understand and more clearly conveys the intent. </p>
+<p>Example of violations: </p>
+<pre>
+def l = [1, 2, 3, 4]
+
+l.collect{ [it, it*2] }.flatten() // suboptimal
+
+l.collectMany{ [it, it*2] }       // same functionality, better readability
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.CollectAllIsDeprecatedRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Collect All Is Deprecated]]></name>
+    <internalKey><![CDATA[CollectAllIsDeprecated]]></internalKey>
+    <description><![CDATA[<p>The <code>collectAll</code> method is deprecated since Groovy 1.8.1. Use <code>collectNested</code> instead. </p>
+<p>Example of violations: </p>
+<pre>
+def list = [1, 2, [3, 4, [5, 6]], 7]
+
+list.collectAll { it * 2 }      // deprecated
+
+list.collectNested { it * 2 }   // replacement
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.16 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.UseCollectNestedRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Use Collect Nested]]></name>
+    <internalKey><![CDATA[UseCollectNested]]></internalKey>
+    <description><![CDATA[<p>Instead of nested <code>collect{}</code> calls use <code>collectNested{}</code>. </p>
+<p>Example of violations: </p>
+<pre>
+def list = [1, 2, [3, 4, 5, 6], [7]]
+
+println list.collect { elem ->
+    if (elem instanceof List)
+        elem.collect {it *2} // violation
+    else elem * 2
+}
+
+println list.collect([8]) {
+    if (it instanceof List)
+        it.collect {it *2} // violation
+    else it * 2
+}
+
+println list.collectNested { it * 2 } // same functionality, better readability
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.GStringExpressionWithinStringRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[G String Expression Within String]]></name>
+    <internalKey><![CDATA[GStringExpressionWithinString]]></internalKey>
+    <description><![CDATA[<p>Check for regular (single quote) strings containing a GString-type expression (${..}). </p>
+<p>Example of violations: </p>
+<pre>
+    def str1 = 'total: ${count}'                // violation
+    def str2 = 'average: ${total / count}'      // violation
+
+    def str3 = "abc ${count}"                   // ok; GString
+    def str4 = '$123'                           // ok
+    def str5 = 'abc {123}'                      // ok
+</pre>
+]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
   <!-- imports rules -->
 
   <rule>
@@ -3377,6 +4579,64 @@ for (int i = 0; i < 100; ++i) {
 
     public class MyClass{}
 </pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- jdbc rules -->
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.jdbc.DirectConnectionManagementRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Direct Connection Management]]></name>
+    <internalKey><![CDATA[DirectConnectionManagement]]></internalKey>
+    <description><![CDATA[<p>The J2EE standard requires that applications use the container's resource management facilities to obtain connections to resources. Every major web application container provides pooled database connection management as part of its resource management framework. Duplicating this functionality in an application is difficult and error prone, which is part of the reason it is forbidden under the J2EE standard. </p>
+<p>For more information see: <a>https://www.fortify.com/vulncat/en/vulncat/java/j2ee_badpractices_getconnection.html</a> </p>
+<p>Example of violations: </p>
+<pre>
+    DriverManager.getConnection()
+    java.sql.DriverManager.getConnection()
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.jdbc.JdbcConnectionReferenceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Jdbc Connection Reference]]></name>
+    <internalKey><![CDATA[JdbcConnectionReference]]></internalKey>
+    <description><![CDATA[<p>Checks for direct use of <code>java.sql.Connection</code>, which is discouraged and almost never necessary in application code. </p>
+<p>For a more <Groovy> alternative, see <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
+<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.jdbc.JdbcResultSetReferenceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Jdbc Result Set Reference]]></name>
+    <internalKey><![CDATA[JdbcResultSetReference]]></internalKey>
+    <description><![CDATA[<p>Checks for direct use of <code>java.sql.ResultSet</code>, which is not necessary if using the Groovy <code>Sql</code> facility or an ORM framework such as <Hibernate>. </p>
+<p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
+<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.jdbc.JdbcStatementReferenceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Jdbc Statement Reference]]></name>
+    <internalKey><![CDATA[JdbcStatementReference]]></internalKey>
+    <description><![CDATA[<p>Checks for direct use of <code>java.sql.Statement</code>, <code>java.sql.PreparedStatement</code>, or <code>java.sql.CallableStatement</code>, which is not necessary if using the Groovy <code>Sql</code> facility or an ORM framework such as <Hibernate>. </p>
+<p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
+<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
 ]]></description>
     <tag>bug</tag>
   </rule>
@@ -4297,6 +5557,276 @@ for (int i = 0; i < 100; ++i) {
 <p>Example of violations: </p>
 <pre>
     interface MyInterface extends other.MyInterface { }     // violation
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- security rules -->
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.NonFinalSubclassOfSensitiveInterfaceRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Non Final Subclass Of Sensitive Interface]]></name>
+    <internalKey><![CDATA[NonFinalSubclassOfSensitiveInterface]]></internalKey>
+    <description><![CDATA[<p>The permissions classes such as <code>java.security.Permission</code> and <code>java.security.BasicPermission</code> are designed to be extended. Classes that derive from these permissions classes, however, must prohibit extension. This prohibition ensures that malicious subclasses cannot change the properties of the derived class. Classes that implement sensitive interfaces such as <code>java.security.PrivilegedAction</code> and <code>java.security.PrivilegedActionException</code> must also be declared <code>final</code> for analogous reasons. </p>
+<p>For more information see: <a>https://www.securecoding.cert.org/confluence/display/java/SEC07-J.+Classes+that+derive+from+a+sensitive+class+or+implement+a+sensitive+interface+must+be+declared+final</a> </p>
+<p>Example of violations: </p>
+<pre>
+    class MyPermission extends java.security.Permission {
+        MyPermission(String name) { super(name) }
+        boolean implies(Permission permission) { true }
+        boolean equals(Object obj) { true }
+        int hashCode() { 0 }
+        String getActions() { "action" }
+    }
+
+    class MyBasicPermission extends BasicPermission {
+        MyBasicPermission(String name) { super(name) }
+    }
+
+    class MyPrivilegedAction implements PrivilegedAction {
+        Object run() { 0 }
+    }
+
+    class MyPrivilegedActionException extends PrivilegedActionException {
+        MyPrivilegedActionException(Exception exception) { super(exception) }
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.InsecureRandomRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Insecure Random]]></name>
+    <internalKey><![CDATA[InsecureRandom]]></internalKey>
+    <description><![CDATA[<p>Reports usages of <code>java.util.Random</code>, which can produce very predictable results. If two instances of Random are created with the same seed and sequence of method calls, they will generate the exact same results. Use <code>java.security.SecureRandom</code> instead, which provides a cryptographically strong random number generator. SecureRandom uses PRNG, which means they are using a deterministic algorithm to produce a pseudo-random number from a true random seed. SecureRandom produces non-deterministic output. </p>
+<p>By default, this rule ignores test classes are ignored. </p>
+<p>For more information see: <a>http://www.klocwork.com/products/documentation/current/Checkers:SV.RANDOM</a> </p>
+<p>Example of violations: </p>
+<pre>
+     def r1 = new Random()
+     def r2 = new java.util.Random()
+     Math.random()
+     java.lang.Math.random()
+
+     // this is OK
+     new java.security.SecureRandom()
+     new SecureRandom()
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.FileCreateTempFileRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[File Create Temp File]]></name>
+    <internalKey><![CDATA[FileCreateTempFile]]></internalKey>
+    <description><![CDATA[<p>The File.createTempFile() method is insecure, and has been deprecated by the ESAPI secure coding library. It has been replaced by the ESAPI Randomizer.getRandomFilename(String) method. </p>
+<p>For more information see the <a href="http://code.google.com/p/owasp-esapi-java/">ESAPI website</a> and the <a href="http://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/Randomizer.html">Randomizer Javadoc</a>. </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.SystemExitRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[System Exit]]></name>
+    <internalKey><![CDATA[SystemExit]]></internalKey>
+    <description><![CDATA[<p>Web applications should never call System.exit(). A call to System.exit() is probably part of leftover debug code or code imported from a non-J2EE application. </p>
+<p>[[1]] Standards Mapping - OWASP Top 10 2004 - (OWASP 2004) A9 Application Denial of Service </p>
+<p>[[2]] Standards Mapping - Security Technical Implementation Guide Version 3 - (STIG 3) APP6080 CAT II </p>
+<p>[[3]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 382 </p>
+<p>[[4]] Standards Mapping - Payment Card Industry Data Security Standard Version 1.1 - (PCI 1.1) Requirement 6.5.9 </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.ObjectFinalizeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Object Finalize]]></name>
+    <internalKey><![CDATA[ObjectFinalize]]></internalKey>
+    <description><![CDATA[<p>The finalize() method should only be called by the JVM after the object has been garbage collected. </p>
+<p>While the Java Language Specification allows an object's finalize() method to be called from outside the finalizer, doing so is usually a bad idea. For example, calling finalize() explicitly means that finalize() will be called more than once: the first time will be the explicit call and the last time will be the call that is made after the object is garbage collected. </p>
+<p>References: Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 586 </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.JavaIoPackageAccessRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Java Io Package Access]]></name>
+    <internalKey><![CDATA[JavaIoPackageAccess]]></internalKey>
+    <description><![CDATA[<p>This rule reports violations of the Enterprise JavaBeans specification by using the java.io package to access files or the file system. </p>
+<p>The Enterprise JavaBeans specification requires that every bean provider follow a set of programming guidelines designed to ensure that the bean will be portable and behave consistently in any EJB container [1]. </p>
+<p>In this case, the program violates the following EJB guideline: "An enterprise bean must not use the java.io package to attempt to access files and directories in the file system." </p>
+<p>A requirement that the specification justifies in the following way: "The file system APIs are not well-suited for business components to access data. Business components should use a resource manager API, such as JDBC, to store data." </p>
+<p>REFERENCES </p>
+<p>[[1]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 576 </p>
+<p>[[2]] The Enterprise JavaBeans 2.1 Specification Sun Microsystems </p>
+ By default, this rule is not applied to tests and test cases. </p>
+<p>Example of violations: </p>
+<pre>
+    FileSystem.getFileSystem()          // any method on FileSystem
+    FileSystem.fileSystem.delete(aFile) // property access of FileSystem
+
+    // shouldn't create files
+    new File(name)
+    new File(name, parent)
+
+    // don't create file readers
+    new FileReader(name)
+
+    // don't create file output streams
+    new FileOutputStream(name)
+    new FileOutputStream(name, true)
+
+    // don't create random access file
+    new RandomAccessFile(name, parent)
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.UnsafeArrayDeclarationRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Unsafe Array Declaration]]></name>
+    <internalKey><![CDATA[UnsafeArrayDeclaration]]></internalKey>
+    <description><![CDATA[<p>Triggers a violation when an array is declared public, final, and static. </p>
+<p>In most cases an array declared public, final and static is a bug. Because arrays are mutable objects, the final constraint requires that the array object itself be assigned only once, but makes no guarantees about the values of the array elements. Since the array is public, a malicious program can change the values stored in the array. In most situations the array should be made private. </p>
+<p>Example of violations: </p>
+<pre>
+    class MyClass {
+        public static final String[] myArray = init()
+        public static final def myArray = [] as String[]
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.PublicFinalizeMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Public Finalize Method]]></name>
+    <internalKey><![CDATA[PublicFinalizeMethod]]></internalKey>
+    <description><![CDATA[<p>Creates a violation when the program violates secure coding principles by declaring a <code>finalize()</code> method public. </p>
+<p>A program should never call finalize explicitly, except to call super.finalize() inside an implementation of <code>finalize()</code>. In mobile code situations, the otherwise error prone practice of manual garbage collection can become a security threat if an attacker can maliciously invoke one of your finalize() methods because it is declared with public access. If you are using <code>finalize()</code> as it was designed, there is no reason to declare <code>finalize()</code> with anything other than protected access. </p>
+<p>References: </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.security.NonFinalPublicFieldRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Non Final Public Field]]></name>
+    <internalKey><![CDATA[NonFinalPublicField]]></internalKey>
+    <description><![CDATA[<p>Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final. </p>
+<p>All public member variables in an Applet and in classes used by an Applet should be declared final to prevent an attacker from manipulating or gaining unauthorized access to the internal state of the Applet. </p>
+<p>References: </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule>
+    <key>org.codenarc.rule.security.UnsafeImplementationAsMapRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Unsafe Implementation As Map]]></name>
+    <internalKey><![CDATA[UnsafeImplementationAsMap]]></internalKey>
+    <description><![CDATA[<p>Reports incomplete interface implementations created by map-to-interface coercions. </p>
+<p>By default, this rule does not apply to test files. </p>
+<p>NOTE: This is a <a href="http://codenarc.sourceforge.net/codenarc-enhanced-classpath-rules.html">CodeNarc Enhanced Classpath Rule</a>. It requires <code>CodeNarc</code> to have the application classes being analyzed, as well as any referenced classes, on the classpath. </p>
+<p>Example of violations: </p>
+<pre>
+    [mouseClicked: { ... }] as MouseListener
+    //not all MouseListener methods are implemented which can lead to UnsupportedOperationException-s
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- serialization rules -->
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.serialization.SerialVersionUIDRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Serial Version UID]]></name>
+    <internalKey><![CDATA[SerialVersionUID]]></internalKey>
+    <description><![CDATA[<p> A <code>serialVersionUID</code> is normally intended to be used with Serialization. It needs to be of type <code>long</code>, <code>static</code>, and <code>final</code>. Also, it should be declared <code>private</code>. Providing no modifier creates a <Property> and Groovy generates a <getter>, which is probably not intended. </p>
+<p>From API javadoc for <code>java.io.Serializable</code>: <It is also strongly advised that explicit serialVersionUID declarations use the private modifier where possible, since such declarations apply only to the immediately declaring class--serialVersionUID fields are not useful as inherited members.> </p>
+ ]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.serialization.SerializableClassMustDefineSerialVersionUIDRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Serializable Class Must Define Serial Version UID]]></name>
+    <internalKey><![CDATA[SerializableClassMustDefineSerialVersionUID]]></internalKey>
+    <description><![CDATA[<p>Classes that implement <code>Serializable</code> should define a <code>serialVersionUID</code>. Deserialization uses this number to ensure that a loaded class corresponds exactly to a serialized object. If you don't define serialVersionUID, the system will make one by hashing most of your class's features. Then if you change anything, the UID will change and Java won't let you reload old data. </p>
+<p>An example of a missing serialVersionUID: </p>
+<pre>
+    class MyClass imlements Serializable {
+        // missing serialVersionUID
+    }
+</pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.14 -->
+  <rule>
+    <key>org.codenarc.rule.serialization.SerialPersistentFieldsRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Serial Persistent Fields]]></name>
+    <internalKey><![CDATA[SerialPersistentFields]]></internalKey>
+    <description><![CDATA[<p>To use a <code>Serializable</code> object's <code>serialPersistentFields</code> correctly, it must be declared <code>private</code>, <code>static</code>, and <code>final</code>. </p>
+<p>The Java Object Serialization Specification allows developers to manually define <code>Serializable</code> fields for a class by specifying them in the <code>serialPersistentFields</code> array. This feature will only work if <code>serialPersistentFields</code> is declared as <code>private</code>, <code>static</code>, and <code>final</code>. Also, specific to Groovy, the field must be of type <code>ObjectStreamField[]</code>, and cannot be <code>Object</code>. </p>
+<p>References: </p>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 0.19 -->
+  <rule>
+    <key>org.codenarc.rule.serialization.EnumCustomSerializationIgnoredRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Enum Custom Serialization Ignored]]></name>
+    <internalKey><![CDATA[EnumCustomSerializationIgnored]]></internalKey>
+    <description><![CDATA[<p>Checks for enums that define <code>writeObject()</code> or <code>writeReplace()</code> methods, or declare <code>serialPersistentFields</code> or <code>serialVersionUID</code> fields, all of which are ignored for enums. </p>
+<p>From the javadoc for <code>ObjectOutputStream</code>: </p>
+<p><The process by which enum constants are serialized cannot be customized; any class-specific writeObject and writeReplace methods defined by enum types are ignored during serialization. Similarly, any serialPersistentFields or serialVersionUID field declarations are also ignored--all enum types have a fixed serialVersionUID of 0L.> </p>
+<p>Example of violations: </p>
+<pre>
+    enum MyEnum {
+        ONE, TWO, THREE
+        private static final long serialVersionUID = 1234567L               // violation
+        private static final ObjectStreamField[] serialPersistentFields =   // violation
+            { new ObjectStreamField("name", String.class) }
+        String name;
+
+        Object writeReplace() throws ObjectStreamException { .. }      // violation
+        private void writeObject(ObjectOutputStream stream) { .. }     // violation
+    }
 </pre>
 ]]></description>
     <tag>bug</tag>
@@ -5767,1536 +7297,6 @@ for (int i = 0; i < 100; ++i) {
     <description><![CDATA[<p>This rule finds instances of method parameters not being used. It does not analyze private methods (that is done by the UnusedPrivateMethodParameter rule) or methods marked @Override. </p>
 ]]></description>
     <tag>bug</tag>
-  </rule>
-
-  <!-- jdbc rules -->
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.jdbc.DirectConnectionManagementRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Direct Connection Management]]></name>
-    <internalKey><![CDATA[DirectConnectionManagement]]></internalKey>
-    <description><![CDATA[<p>The J2EE standard requires that applications use the container's resource management facilities to obtain connections to resources. Every major web application container provides pooled database connection management as part of its resource management framework. Duplicating this functionality in an application is difficult and error prone, which is part of the reason it is forbidden under the J2EE standard. </p>
-<p>For more information see: <a>https://www.fortify.com/vulncat/en/vulncat/java/j2ee_badpractices_getconnection.html</a> </p>
-<p>Example of violations: </p>
-<pre>
-    DriverManager.getConnection()
-    java.sql.DriverManager.getConnection()
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.jdbc.JdbcConnectionReferenceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Jdbc Connection Reference]]></name>
-    <internalKey><![CDATA[JdbcConnectionReference]]></internalKey>
-    <description><![CDATA[<p>Checks for direct use of <code>java.sql.Connection</code>, which is discouraged and almost never necessary in application code. </p>
-<p>For a more <Groovy> alternative, see <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
-<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.jdbc.JdbcResultSetReferenceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Jdbc Result Set Reference]]></name>
-    <internalKey><![CDATA[JdbcResultSetReference]]></internalKey>
-    <description><![CDATA[<p>Checks for direct use of <code>java.sql.ResultSet</code>, which is not necessary if using the Groovy <code>Sql</code> facility or an ORM framework such as <Hibernate>. </p>
-<p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
-<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.jdbc.JdbcStatementReferenceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Jdbc Statement Reference]]></name>
-    <internalKey><![CDATA[JdbcStatementReference]]></internalKey>
-    <description><![CDATA[<p>Checks for direct use of <code>java.sql.Statement</code>, <code>java.sql.PreparedStatement</code>, or <code>java.sql.CallableStatement</code>, which is not necessary if using the Groovy <code>Sql</code> facility or an ORM framework such as <Hibernate>. </p>
-<p>See <a>http://groovy.codehaus.org/Database+features</a> for information on the <code>Groovy Sql</code> abstraction layer for JDBC/SQL. </p>
-<p>Note: If a violation is triggered from an <code>import</code> statement, then you may get multiple violations per import if there are multiple classes in the source file. In that case, the imports are processed once per class. </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- security rules -->
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.NonFinalSubclassOfSensitiveInterfaceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Non Final Subclass Of Sensitive Interface]]></name>
-    <internalKey><![CDATA[NonFinalSubclassOfSensitiveInterface]]></internalKey>
-    <description><![CDATA[<p>The permissions classes such as <code>java.security.Permission</code> and <code>java.security.BasicPermission</code> are designed to be extended. Classes that derive from these permissions classes, however, must prohibit extension. This prohibition ensures that malicious subclasses cannot change the properties of the derived class. Classes that implement sensitive interfaces such as <code>java.security.PrivilegedAction</code> and <code>java.security.PrivilegedActionException</code> must also be declared <code>final</code> for analogous reasons. </p>
-<p>For more information see: <a>https://www.securecoding.cert.org/confluence/display/java/SEC07-J.+Classes+that+derive+from+a+sensitive+class+or+implement+a+sensitive+interface+must+be+declared+final</a> </p>
-<p>Example of violations: </p>
-<pre>
-    class MyPermission extends java.security.Permission {
-        MyPermission(String name) { super(name) }
-        boolean implies(Permission permission) { true }
-        boolean equals(Object obj) { true }
-        int hashCode() { 0 }
-        String getActions() { "action" }
-    }
-
-    class MyBasicPermission extends BasicPermission {
-        MyBasicPermission(String name) { super(name) }
-    }
-
-    class MyPrivilegedAction implements PrivilegedAction {
-        Object run() { 0 }
-    }
-
-    class MyPrivilegedActionException extends PrivilegedActionException {
-        MyPrivilegedActionException(Exception exception) { super(exception) }
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.InsecureRandomRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Insecure Random]]></name>
-    <internalKey><![CDATA[InsecureRandom]]></internalKey>
-    <description><![CDATA[<p>Reports usages of <code>java.util.Random</code>, which can produce very predictable results. If two instances of Random are created with the same seed and sequence of method calls, they will generate the exact same results. Use <code>java.security.SecureRandom</code> instead, which provides a cryptographically strong random number generator. SecureRandom uses PRNG, which means they are using a deterministic algorithm to produce a pseudo-random number from a true random seed. SecureRandom produces non-deterministic output. </p>
-<p>By default, this rule ignores test classes are ignored. </p>
-<p>For more information see: <a>http://www.klocwork.com/products/documentation/current/Checkers:SV.RANDOM</a> </p>
-<p>Example of violations: </p>
-<pre>
-     def r1 = new Random()
-     def r2 = new java.util.Random()
-     Math.random()
-     java.lang.Math.random()
-
-     // this is OK
-     new java.security.SecureRandom()
-     new SecureRandom()
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.FileCreateTempFileRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[File Create Temp File]]></name>
-    <internalKey><![CDATA[FileCreateTempFile]]></internalKey>
-    <description><![CDATA[<p>The File.createTempFile() method is insecure, and has been deprecated by the ESAPI secure coding library. It has been replaced by the ESAPI Randomizer.getRandomFilename(String) method. </p>
-<p>For more information see the <a href="http://code.google.com/p/owasp-esapi-java/">ESAPI website</a> and the <a href="http://owasp-esapi-java.googlecode.com/svn/trunk_doc/latest/org/owasp/esapi/Randomizer.html">Randomizer Javadoc</a>. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.SystemExitRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[System Exit]]></name>
-    <internalKey><![CDATA[SystemExit]]></internalKey>
-    <description><![CDATA[<p>Web applications should never call System.exit(). A call to System.exit() is probably part of leftover debug code or code imported from a non-J2EE application. </p>
-<p>[[1]] Standards Mapping - OWASP Top 10 2004 - (OWASP 2004) A9 Application Denial of Service </p>
-<p>[[2]] Standards Mapping - Security Technical Implementation Guide Version 3 - (STIG 3) APP6080 CAT II </p>
-<p>[[3]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 382 </p>
-<p>[[4]] Standards Mapping - Payment Card Industry Data Security Standard Version 1.1 - (PCI 1.1) Requirement 6.5.9 </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.ObjectFinalizeRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Object Finalize]]></name>
-    <internalKey><![CDATA[ObjectFinalize]]></internalKey>
-    <description><![CDATA[<p>The finalize() method should only be called by the JVM after the object has been garbage collected. </p>
-<p>While the Java Language Specification allows an object's finalize() method to be called from outside the finalizer, doing so is usually a bad idea. For example, calling finalize() explicitly means that finalize() will be called more than once: the first time will be the explicit call and the last time will be the call that is made after the object is garbage collected. </p>
-<p>References: Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 586 </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.JavaIoPackageAccessRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Java Io Package Access]]></name>
-    <internalKey><![CDATA[JavaIoPackageAccess]]></internalKey>
-    <description><![CDATA[<p>This rule reports violations of the Enterprise JavaBeans specification by using the java.io package to access files or the file system. </p>
-<p>The Enterprise JavaBeans specification requires that every bean provider follow a set of programming guidelines designed to ensure that the bean will be portable and behave consistently in any EJB container [1]. </p>
-<p>In this case, the program violates the following EJB guideline: "An enterprise bean must not use the java.io package to attempt to access files and directories in the file system." </p>
-<p>A requirement that the specification justifies in the following way: "The file system APIs are not well-suited for business components to access data. Business components should use a resource manager API, such as JDBC, to store data." </p>
-<p>REFERENCES </p>
-<p>[[1]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 576 </p>
-<p>[[2]] The Enterprise JavaBeans 2.1 Specification Sun Microsystems </p>
- By default, this rule is not applied to tests and test cases. </p>
-<p>Example of violations: </p>
-<pre>
-    FileSystem.getFileSystem()          // any method on FileSystem
-    FileSystem.fileSystem.delete(aFile) // property access of FileSystem
-
-    // shouldn't create files
-    new File(name)
-    new File(name, parent)
-
-    // don't create file readers
-    new FileReader(name)
-
-    // don't create file output streams
-    new FileOutputStream(name)
-    new FileOutputStream(name, true)
-
-    // don't create random access file
-    new RandomAccessFile(name, parent)
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.UnsafeArrayDeclarationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Unsafe Array Declaration]]></name>
-    <internalKey><![CDATA[UnsafeArrayDeclaration]]></internalKey>
-    <description><![CDATA[<p>Triggers a violation when an array is declared public, final, and static. </p>
-<p>In most cases an array declared public, final and static is a bug. Because arrays are mutable objects, the final constraint requires that the array object itself be assigned only once, but makes no guarantees about the values of the array elements. Since the array is public, a malicious program can change the values stored in the array. In most situations the array should be made private. </p>
-<p>Example of violations: </p>
-<pre>
-    class MyClass {
-        public static final String[] myArray = init()
-        public static final def myArray = [] as String[]
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.PublicFinalizeMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Public Finalize Method]]></name>
-    <internalKey><![CDATA[PublicFinalizeMethod]]></internalKey>
-    <description><![CDATA[<p>Creates a violation when the program violates secure coding principles by declaring a <code>finalize()</code> method public. </p>
-<p>A program should never call finalize explicitly, except to call super.finalize() inside an implementation of <code>finalize()</code>. In mobile code situations, the otherwise error prone practice of manual garbage collection can become a security threat if an attacker can maliciously invoke one of your finalize() methods because it is declared with public access. If you are using <code>finalize()</code> as it was designed, there is no reason to declare <code>finalize()</code> with anything other than protected access. </p>
-<p>References: </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.security.NonFinalPublicFieldRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Non Final Public Field]]></name>
-    <internalKey><![CDATA[NonFinalPublicField]]></internalKey>
-    <description><![CDATA[<p>Finds code that violates secure coding principles for mobile code by declaring a member variable public but not final. </p>
-<p>All public member variables in an Applet and in classes used by an Applet should be declared final to prevent an attacker from manipulating or gaining unauthorized access to the internal state of the Applet. </p>
-<p>References: </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule>
-    <key>org.codenarc.rule.security.UnsafeImplementationAsMapRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Unsafe Implementation As Map]]></name>
-    <internalKey><![CDATA[UnsafeImplementationAsMap]]></internalKey>
-    <description><![CDATA[<p>Reports incomplete interface implementations created by map-to-interface coercions. </p>
-<p>By default, this rule does not apply to test files. </p>
-<p>NOTE: This is a <a href="http://codenarc.sourceforge.net/codenarc-enhanced-classpath-rules.html">CodeNarc Enhanced Classpath Rule</a>. It requires <code>CodeNarc</code> to have the application classes being analyzed, as well as any referenced classes, on the classpath. </p>
-<p>Example of violations: </p>
-<pre>
-    [mouseClicked: { ... }] as MouseListener
-    //not all MouseListener methods are implemented which can lead to UnsupportedOperationException-s
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- formatting rules -->
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BracesForClassRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Braces For Class]]></name>
-    <internalKey><![CDATA[BracesForClass]]></internalKey>
-    <description><![CDATA[<p>Checks the location of the opening brace (\{) for classes. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
-<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>. </p>
- ]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>sameLine</key>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.LineLengthRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Line Length]]></name>
-    <internalKey><![CDATA[LineLength]]></internalKey>
-    <description><![CDATA[<p>Checks the maximum length for each line of source code. It checks for number of characters, so lines that include tabs may appear longer than the allowed number when viewing the file. The maximum line length can be configured by setting the length property, which defaults to 120. </p>
-<p>NOTE: This rule does not support the @SuppressAnnotations annotation or the classname-based rule properties (applyToClassNames, doNotApplyToClassNames) to enable/disable the rule. If you want to specify or restrict where this rule is applied, you must use the file-based rule properties: applyToFileNames, doNotApplyToFileNames, applyToFilesMatching and doNotApplyToFilesMatching. </p>
- ]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>ignoreImportStatements</key>
-      <description><![CDATA[If true, then do not apply this rule to import statements. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>ignoreLineRegex</key>
-      <description><![CDATA[If specified, then ignore lines matching this regular expression. ]]></description>
-    </param>
-    <param>
-      <key>ignorePackageStatements</key>
-      <description><![CDATA[If true, then do not apply this rule to package statements. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>length</key>
-      <description><![CDATA[The maximum line length allowed. ]]></description>
-      <defaultValue>120</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BracesForForLoopRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Braces For For Loop]]></name>
-    <internalKey><![CDATA[BracesForForLoop]]></internalKey>
-    <description><![CDATA[<p>Checks the location of the opening brace (\{) for for loops. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
- ]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>sameLine</key>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BracesForIfElseRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Braces For If Else]]></name>
-    <internalKey><![CDATA[BracesForIfElse]]></internalKey>
-    <description><![CDATA[<p>Checks the location of the opening brace (\{) for if statements. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>elseOnSameLineAsClosingBrace</key>
-      <description><![CDATA[If true, then the else statement should be on the same line as closing brace (\}) ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>elseOnSameLineAsOpeningBrace</key>
-      <description><![CDATA[If true, then the else statement should be on the same line as opening brace (\{) ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>sameLine</key>
-      <description><![CDATA[If true, then the opening brace (\{) for if statement should be on the same line. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>validateElse</key>
-      <description><![CDATA[To enable else checking, set the property to true ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BracesForMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Braces For Method]]></name>
-    <internalKey><![CDATA[BracesForMethod]]></internalKey>
-    <description><![CDATA[<p>Checks the location of the opening brace (\{) for constructors and methods. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this. </p>
- ]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>sameLine</key>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BracesForTryCatchFinallyRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Braces For Try Catch Finally]]></name>
-    <internalKey><![CDATA[BracesForTryCatchFinally]]></internalKey>
-    <description><![CDATA[<p>Checks the location of the opening brace (\{) for try statements. By default, requires them on the line, but the <code>sameLine</code> property can be set to false to override this. </p>
- ]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>sameLine</key>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.ClassJavadocRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Class Javadoc]]></name>
-    <internalKey><![CDATA[ClassJavadoc]]></internalKey>
-    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true. </p>
- ]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterCommaRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Comma]]></name>
-    <internalKey><![CDATA[SpaceAfterComma]]></internalKey>
-    <description><![CDATA[<p>Checks that there is at least one space or whitespace following each comma. That includes checks for method and closure declaration parameter lists, method call parameter lists, Map literals and List literals. </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterSemicolonRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Semicolon]]></name>
-    <internalKey><![CDATA[SpaceAfterSemicolon]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace following a semicolon that separates: </p>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAroundOperatorRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space Around Operator]]></name>
-    <internalKey><![CDATA[SpaceAroundOperator]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator, including: +, -, *, /, \>\>, \<\<, &&, ||, &, |, ?:, =, "as". </p>
-<p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.). Do not check array ('[') operator. </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceBeforeOpeningBraceRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space Before Opening Brace]]></name>
-    <internalKey><![CDATA[SpaceBeforeOpeningBrace]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterOpeningBraceRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Opening Brace]]></name>
-    <internalKey><![CDATA[SpaceAfterOpeningBrace]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
- Examples of violations: </p>
-<pre>
-    class MyClass{int count }                   // violation
-
-    interface MyInterface {static final OK = 1 }// violation
-
-    enum MyEnum {OK, BAD }                      // violation
-
-    def myMethod() {int count }                 // violation
-
-    if (ready) {println 9 }                     // violation
-
-    if (ready) {
-    } else {println 99}                         // violation
-
-    for (int i=0; i<10; i++) {println i }       // violation
-
-    for (String name in names) {println name }  // violation
-
-    for (String name: names) {println name }    // violation
-
-    while (ready) {println time }               // violation
-
-    try {doStuff()                              // violation
-    } catch(Exception e) {x=77 }                // violation
-    } finally {println 'error' }                // violation
-
-    list.each {name -> }                        // violation
-
-    shouldFail(Exception) {doStuff() }          // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterClosingBraceRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Closing Brace]]></name>
-    <internalKey><![CDATA[SpaceAfterClosingBrace]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each closing brace ("\{") for method/class/interface declarations, closure expressions and block statements. </p>
-<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation. </p>
- Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceBeforeClosingBraceRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space Before Closing Brace]]></name>
-    <internalKey><![CDATA[SpaceBeforeClosingBrace]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each closing brace ("\}") for method/class/interface declarations, closure expressions and block statements. </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}]. ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code ]]></description>
-      <defaultValue>false</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterIfRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After If]]></name>
-    <internalKey><![CDATA[SpaceAfterIf]]></internalKey>
-    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>if</code> keyword and before the opening parenthesis. </p>
-<p>Examples of violations: </p>
-<pre>
-    if(true) { }                            // violation
-    if  (true) { }                          // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterWhileRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After While]]></name>
-    <internalKey><![CDATA[SpaceAfterWhile]]></internalKey>
-    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>while</code> keyword and before the opening parenthesis. </p>
-<p>Examples of violations: </p>
-<pre>
-    while(true) { }             // violation
-    while  (true) { }           // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterForRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After For]]></name>
-    <internalKey><![CDATA[SpaceAfterFor]]></internalKey>
-    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>for</code> keyword and before the opening parenthesis. </p>
-<p>Examples of violations: </p>
-<pre>
-    for(name in names) { }                  // violation
-    for  (int i=0; i < 10; i++) { }         // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterSwitchRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Switch]]></name>
-    <internalKey><![CDATA[SpaceAfterSwitch]]></internalKey>
-    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>switch</code> keyword and before the opening parenthesis. </p>
-<p>Examples of violations: </p>
-<pre>
-    switch(x) {                                 // violation
-        case 1: println 'one'
-    }
-    switch  (x) {                               // violation
-        case 1: println 'one'
-    }
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAfterCatchRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space After Catch]]></name>
-    <internalKey><![CDATA[SpaceAfterCatch]]></internalKey>
-    <description><![CDATA[<p>Check that there is exactly one space (blank) after the <code>catch</code> keyword and before the opening parenthesis. </p>
-<p>Examples of violations: </p>
-<pre>
-    try { } catch(Exception e) { }          // violation
-    try { } catch  (Exception e) { }        // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAroundClosureArrowRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space Around Closure Arrow]]></name>
-    <internalKey><![CDATA[SpaceAroundClosureArrow]]></internalKey>
-    <description><![CDATA[<p>Checks that there is at least one space (blank) or whitespace around each closure arrow (->) symbol. </p>
-<p>Known limitations: </p>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.20 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Space Around Map Entry Colon]]></name>
-    <internalKey><![CDATA[SpaceAroundMapEntryColon]]></internalKey>
-    <description><![CDATA[<p>Check for proper formatting of whitespace around colons for literal Map entries. By default, no whitespace is allowed either before or after the Map entry colon, but you can change that through the configuration properties below. </p>
-<p>Example of violations: </p>
-<pre>
-    Map m1 = [myKey : 12345]            // violation (both before and after the colon)
-    println [a :[1:11, 2:22],           // violation on a (before colon)
-                b:[(Integer): 33]]      // violation on Integer (after colon)
-</pre>
-]]></description>
-    <tag>convention</tag>
-    <param>
-      <key>characterAfterColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character after the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>\\S</defaultValue>
-    </param>
-    <param>
-      <key>characterBeforeColonRegex</key>
-      <description><![CDATA[The regular expression that must match the character before the colon (:) for a literal <Map> entry. For example, /\\S/ matches any non-whitespace character and /\\s/ matches any whitespace character (thus requiring a space or whitespace). ]]></description>
-      <defaultValue>\\S</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.20 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Closure Statement On Opening Line Of Multiple Line Closure]]></name>
-    <internalKey><![CDATA[ClosureStatementOnOpeningLineOfMultipleLineClosure]]></internalKey>
-    <description><![CDATA[<p>Checks for closure logic on first line (after <code>-\</code</code>) for a multi-line closure. That breaks the symmetry of indentation (if the subsequent statements are indented normally), and that first statement can be easily missed when reading the code. </p>
-<p>Example of violations: </p>
-<pre>
-    def closure = { name -> println name
-        addToCounts()
-        println “done” }
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.ConsecutiveBlankLinesRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Consecutive Blank Lines]]></name>
-    <internalKey><![CDATA[ConsecutiveBlankLines]]></internalKey>
-    <description><![CDATA[<p>Makes sure there are no consecutive lines that are either blank or whitespace only. This reduces the need to scroll further than necessary when reading code, and increases the likelihood that a logical block of code will fit on one screen for easier comprehension. </p>
-<p>Example of violation: </p>
-<pre>
-    def name
-
-
-    def value
-
-
-
-    def id
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.BlankLineBeforePackageRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Blank Line Before Package]]></name>
-    <internalKey><![CDATA[BlankLineBeforePackage]]></internalKey>
-    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file. </p>
- ]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.FileEndsWithoutNewlineRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[File Ends Without Newline]]></name>
-    <internalKey><![CDATA[FileEndsWithoutNewline]]></internalKey>
-    <description><![CDATA[<p>Makes sure each source file ends with a newline character. </p>
- ]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.MissingBlankLineAfterImportsRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Missing Blank Line After Imports]]></name>
-    <internalKey><![CDATA[MissingBlankLineAfterImports]]></internalKey>
-    <description><![CDATA[<p>Makes sure there is a blank line after the imports of a source code file. </p>
-<p>Example of violation: </p>
-<pre>
-    import org.apache.commons.lang.StringUtils
-    class MyClass { }                       // violation
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.MissingBlankLineAfterPackageRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Missing Blank Line After Package]]></name>
-    <internalKey><![CDATA[MissingBlankLineAfterPackage]]></internalKey>
-    <description><![CDATA[<p>Makes sure there is a blank line after the package statement of a source code file. </p>
-<p>Example of violation: </p>
-<pre>
-  package org.codenarc
-  import java.util.Date                     // violation
-
-  class MyClass {
-      void go() { /* ... */ }
-  }
-</pre>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- since 0.21 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.TrailingWhitespaceRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Trailing Whitespace]]></name>
-    <internalKey><![CDATA[TrailingWhitespace]]></internalKey>
-    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters. </p>
-]]></description>
-    <tag>convention</tag>
-  </rule>
-
-  <!-- convention rules -->
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.convention.InvertedIfElseRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Inverted If Else]]></name>
-    <internalKey><![CDATA[InvertedIfElse]]></internalKey>
-    <description><![CDATA[<p>An inverted <if-else> statement is one in which there is a single <code>if</code> statement with a single <code>else</code> branch and the boolean test of the <code>if</code> is negated. For instance <code>if (!x) false else true</code>. It is usually clearer to write this as <code>if (x) true else false</code>. </p>
- ]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.12 -->
-  <rule>
-    <key>org.codenarc.rule.convention.ConfusingTernaryRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Confusing Ternary]]></name>
-    <internalKey><![CDATA[ConfusingTernary]]></internalKey>
-    <description><![CDATA[<p>In a ternary expression avoid negation in the test. For example, rephrase: <code>(x != y) ? diff : same</code> as: <code>(x == y) ? same : diff</code>. Consistent use of this rule makes the code easier to read. Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?". </p>
-<p>Example: </p>
-<pre>
-    (x != y) ? diff : same      // triggers violation
-    (!x) ? diff : same          // triggers violation
-
-    (x == y) ? same : diff      // OK
-    (x) ? same : diff           // OK
-
-    // this is OK, because of GroovyTruth there is no inverse of != null
-    (x != null) ? diff : same
-
-    // this is OK, because of GroovyTruth there is no inverse of != true
-    (x != true) ? diff : same
-
-    // this is OK, because of GroovyTruth there is no inverse of != false
-    (x != false) ? diff : same
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.convention.CouldBeElvisRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Could Be Elvis]]></name>
-    <internalKey><![CDATA[CouldBeElvis]]></internalKey>
-    <description><![CDATA[<p>Catch an if block that could be written as an elvis expression. </p>
-<p>Example of violations: </p>
-<pre>
-    if (!x) {                   // violation
-        x = 'some value'
-    }
-
-    if (!x)                     // violation
-        x = "some value"
-
-    if (!params.max) {          // violation
-      params.max = 10
-    }
-
-    x ?: 'some value'           // OK
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Long Literal With Lower Case L]]></name>
-    <internalKey><![CDATA[LongLiteralWithLowerCaseL]]></internalKey>
-    <description><![CDATA[<p>In Java and Groovy, you can specify long literals with the L or l character, for instance 55L or 24l. It is best practice to always use an uppercase L and never a lowercase l. This is because 11l rendered in some fonts may look like 111 instead of 11L. </p>
-<p>Example of violations: </p>
-<pre>
-    def x = 1l
-    def y = 55l
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.17 -->
-  <rule>
-    <key>org.codenarc.rule.convention.ParameterReassignmentRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Parameter Reassignment]]></name>
-    <internalKey><![CDATA[ParameterReassignment]]></internalKey>
-    <description><![CDATA[<p>Checks for a method or closure parameter being reassigned to a new value within the body of the method/closure, which is a confusing and questionable practice. Use a temporary variable instead. </p>
-<p>Example of violations: </p>
-<pre>
-    void myMethod(int a, String b) {
-        println a
-        b = 'new value'     // violation
-    }
-
-    def myClosure1 = { int a, b ->
-        a = 123             // violation
-    }
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.17 -->
-  <rule>
-    <key>org.codenarc.rule.convention.TernaryCouldBeElvisRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Ternary Could Be Elvis]]></name>
-    <internalKey><![CDATA[TernaryCouldBeElvis]]></internalKey>
-    <description><![CDATA[<p>Checks for ternary expressions where the <boolean> and <true> expressions are the same. These can be simplified to an <Elvis> expression. </p>
-<p>Example of violations: </p>
-<pre>
-    x ? x : false               // violation; can simplify to x ?: false
-
-    foo() ? foo() : bar()       // violation; can simplify to foo() ?: bar()
-    foo(1) ? foo(1) : 123       // violation; can simplify to foo(1) ?: 123
-
-    (x == y) ? same : diff      // OK
-    x ? y : z                   // OK
-    x ? x + 1 : x + 2           // OK
-    x ? 1 : 0                   // OK
-    x ? !x : x                  // OK
-    !x ? x : null               // OK
-
-    foo() ? bar() : 123         // OK
-    foo() ? foo(99) : 123       // OK
-    foo(x) ? foo() : 123        // OK
-    foo(1) ? foo(2) : 123       // OK
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.17 -->
-  <rule>
-    <key>org.codenarc.rule.convention.VectorIsObsoleteRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Vector Is Obsolete]]></name>
-    <internalKey><![CDATA[VectorIsObsolete]]></internalKey>
-    <description><![CDATA[<p>Checks for references to the (<effectively>) obsolete <code>java.util.Vector</code> class. Use the <code>Java Collections Framework</code> classes instead, including <code>ArrayList</code> or <code>Collections.synchronizedList()</code>. See the JDK javadoc. </p>
-<p>Example of violations: </p>
-<pre>
-    def myList = new Vector()           // violation
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.17 -->
-  <rule>
-    <key>org.codenarc.rule.convention.HashtableIsObsoleteRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Hashtable Is Obsolete]]></name>
-    <internalKey><![CDATA[HashtableIsObsolete]]></internalKey>
-    <description><![CDATA[<p>Checks for references to the (<effectively>) obsolete <code>java.util.Hashtable</code> class. Use the <code>Java Collections Framework</code> classes instead, including <code>HashMap</code> or <code>ConcurrentHashMap</code>. See the JDK javadoc. </p>
-<p>Example of violations: </p>
-<pre>
-    def myMap = new Hashtable()           // violation
-</pre>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.18 -->
-  <rule>
-    <key>org.codenarc.rule.convention.IfStatementCouldBeTernaryRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[If Statement Could Be Ternary]]></name>
-    <internalKey><![CDATA[IfStatementCouldBeTernary]]></internalKey>
-    <description><![CDATA[<p>Checks for: </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- since 0.22 -->
-  <rule>
-    <key>org.codenarc.rule.convention.NoDefRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[No Def]]></name>
-    <internalKey><![CDATA[NoDef]]></internalKey>
-    <description><![CDATA[<p> Do not allow using the <code>def</code> keyword in code. Use a specific type instead. </p>
-<p><code>NOTE:</code> This rule applies to the text contents of a <file> rather than a specific <class>, so it does not support the <applyToClassNames> and <doNotApplyToClassNames> configuration properties. </p>
-]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>excludeRegex</key>
-      <description><![CDATA[Regular expression describing names of attributes, parameters or methods that could be precede by the def keyword. ]]></description>
-    </param>
-  </rule>
-
-  <!-- since 0.25 -->
-  <rule>
-    <key>org.codenarc.rule.convention.TrailingCommaRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Trailing Comma]]></name>
-    <internalKey><![CDATA[TrailingComma]]></internalKey>
-    <description><![CDATA[<p>Check whether list and map literals contain optional trailing comma. Rationale: Putting this comma in make is easier to change the order of the elements or add new elements on the end. </p>
-<p>This is valid code: </p>
-<pre>
-  int[] array1 = [] // one line declaration
-  int[] array2 = [ // empty list
-                 ]
-  int[] array3 = [1,2,3] // one line declaration
-  int[] array4 = [1,
-                  2,
-                  3, // contains trailing comma
-                 ]
-</pre>
-<pre>
-  int[] array2 = [1,
-                  2 // there is no trailing comma
-                 ]
-</pre>
-]]></description>
-    <tag>bug</tag>
-    <param>
-      <key>checkList</key>
-      <description><![CDATA[To disable checking List literals, set this property to false ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-    <param>
-      <key>checkMap</key>
-      <description><![CDATA[To disable checking Map literals, set this property to false ]]></description>
-      <defaultValue>true</defaultValue>
-    </param>
-  </rule>
-
-  <!-- since 0.25 -->
-  <rule>
-    <key>org.codenarc.rule.convention.NoTabCharacterRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[No Tab Character]]></name>
-    <internalKey><![CDATA[NoTabCharacter]]></internalKey>
-    <description><![CDATA[<p>Checks that all source files do not contain the tab character. </p>
-]]></description>
-    <tag>bug</tag>
-  </rule>
-
-  <!-- groovyism rules -->
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitArrayListInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Array List Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitArrayListInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>ArrayList</code>. In Groovy, it is best to write <code>new ArrayList() as []</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To And Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToAndMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>and(Object)</code> method is called directly in code instead of using the <code>&</code> operator. A groovier way to express this: <code>a.and(b)</code> is this: <code>a & b</code>. This rule can be configured to ignore <code>this.and(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>and(x)</code> will not trigger a violation. The default is <true> because <code>and</code> appears commonly in Grails criteria. </p>
-<p>This rule also ignores all calls to <code>super.and(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Compare To Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToCompareToMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>compareTo(Object)</code> method is called directly in code instead of using the \<\=\>, \>, \>\=, \<, and \<\= operators. A groovier way to express this: <code>a.compareTo(b)</code> is this: <code>a \<\=\> b</code>, or using the other operators. Here are some other ways to write groovier code: </p>
-<pre>
-    a.compareTo(b) == 0               // can be replaced by: a == b
-    a.compareTo(b)                    // can be replaced by: a <=> b
-    a.compareTo(b) > 0                // can be replaced by: a > b
-    a.compareTo(b) >= 0               // can be replaced by: a >= b
-    a.compareTo(b) < 0                // can be replaced by: a < b
-    a.compareTo(b) <= 0               // can be replaced by: a <= b
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToDivMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Div Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToDivMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>div(Object)</code> method is called directly in code instead of using the <code>/</code> operator. A groovier way to express this: <code>a.div(b)</code> is this: <code>a / b</code>. This rule can be configured to ignore <code>div.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>div(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.div(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToEqualsMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Equals Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToEqualsMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>equals(Object)</code> method is called directly in code instead of using the <code>==</code> or <code>!=</code> operator. A groovier way to express this: <code>a.equals(b)</code> is this: <code>a == b</code> and a groovier way to express : <code>!a.equals(b)</code> is: <code>a != b</code>. This rule can be configured to ignore <code>this.equals(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>equals(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.equals(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToGetAtMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Get At Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToGetAtMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>getAt(Object)</code> method is called directly in code instead of using the <code>[]</code> index operator. A groovier way to express this: <code>a.getAt(b)</code> is this: <code>a[b]</code>. This rule can be configured to ignore <code>this.getAt(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>getAt(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.getAt(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToLeftShiftMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Left Shift Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToLeftShiftMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>leftShift(Object)</code> method is called directly in code instead of using the \<\< operator. A groovier way to express this: <code>a.leftShift(b)</code> is this: <code>a \<\< b</code>. This rule can be configured to ignore <code>this.leftShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>leftShift(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.leftShift(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToMinusMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Minus Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToMinusMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>minus(Object)</code> method is called directly in code instead of using the <code>-</code> operator. A groovier way to express this: <code>a.minus(b)</code> is this: <code>a - b</code>. This rule can be configured to ignore <code>minus.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>minus(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.minus(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToMultiplyMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Multiply Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToMultiplyMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>multiply(Object)</code> method is called directly in code instead of using the <code>*</code> operator. A groovier  way to express this: <code>a.multiply(b)</code> is this: <code>a * b</code>. This rule can be configured to ignore <code>this.multiply(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>multiply(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.multiply(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToModMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Mod Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToModMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>mod(Object)</code> method is called directly in code instead of using the <code>%</code> operator. A groovier way to express this: <code>a.mod(b)</code> is this: <code>a % b</code>. This rule can be configured to ignore <code>this.mod(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>mod(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.mod(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Or Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToOrMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>or(Object)</code> method is called directly in code instead of using the <code>|</code> operator. A groovier way to express this: <code>a.or(b)</code> is this: <code>a | b</code>. This rule can be configured to ignore <code>this.or(Object)</code> using the <ignoreThisReference> property. It defaults to <true>, so even <code>or(x)</code> will not trigger a violation. This is the default because it is commonly used in Grails criteria. </p>
-<p>This rule also ignores all calls to <code>super.or(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToPlusMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Plus Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToPlusMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>plus(Object)</code> method is called directly in code instead of using the <code>+</code> operator. A groovier way to express this: <code>a.plus(b)</code> is this: <code>a + b</code>. This rule can be configured to ignore <code>this.plus(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>plus(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.plus(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToPowerMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Power Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToPowerMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>power(Object)</code> method is called directly in code instead of using the <code>**</code> operator. A groovier way to express this: <code>a.power(b)</code> is this: <code>a ** b</code>. This rule can be configured to ignore <code>this.power(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>power(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.power(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToRightShiftMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Right Shift Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToRightShiftMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>rightShift(Object)</code> method is called directly in code instead of using the \>\> operator. A groovier way to express this: <code>a.rightShift(b)</code> is this: <code>a \>\> b</code>. This rule can be configured to ignore <code>this.rightShift(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>rightShift(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.rightShift(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitCallToXorMethodRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Call To Xor Method]]></name>
-    <internalKey><![CDATA[ExplicitCallToXorMethod]]></internalKey>
-    <description><![CDATA[<p>This rule detects when the <code>xor(Object)</code> method is called directly in code instead of using the <code>^</code> operator. A groovier way to express this: <code>a.xor(b)</code> is this: <code>a ^ b</code>. This rule can be configured to ignore <code>this.xor(Object)</code> using the <ignoreThisReference> property. It defaults to <false>, so even <code>xor(x)</code> will trigger a violation. </p>
-<p>This rule also ignores all calls to <code>super.xor(Object)</code>. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitHashMapInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Hash Map Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitHashMapInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashMap</code>. In Groovy, it is best to replace <code>new HashMap()</code> with <code>[:]</code>, which creates (mostly) the same object. <code>[:]</code> is technically a LinkedHashMap but it is very rare that someone absolutely needs an instance of <code>HashMap</code> and not a subclass. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitHashSetInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Hash Set Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitHashSetInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>HashSet</code>. In Groovy, it is best to replace <code>new HashSet()</code> with <code>[] as Set</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitLinkedListInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Linked List Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitLinkedListInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>LinkedList</code>. In Groovy, it is best to replace <code>new LinkedList()</code> with <code>[] as Queue</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitStackInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Stack Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitStackInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>Stack</code>. In Groovy, it is best to replace <code>new Stack()</code> with <code>[] as Stack</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitTreeSetInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Tree Set Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitTreeSetInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for explicit calls to the no-argument constructor of <code>TreeSet</code>. In Groovy, it is best to replace <code>new TreeSet()</code> with <code>[] as SortedSet</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.11 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.GStringAsMapKeyRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[G String As Map Key]]></name>
-    <internalKey><![CDATA[GStringAsMapKey]]></internalKey>
-    <description><![CDATA[<p> A GString should not be used as a map key since its <hashcode> is not guaranteed to be stable. Consider calling <code>key.toString()</code>. </p>
-<p>Here is an example of code that produces a violation: </p>
-<pre>
-    Map map = ["${someRef}" : 'invalid' ]       // violation
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.13 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.GroovyLangImmutableRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Groovy Lang Immutable]]></name>
-    <internalKey><![CDATA[GroovyLangImmutable]]></internalKey>
-    <description><![CDATA[<p>The <code>groovy.lang.Immutable</code> annotation has been deprecated and replaced by <code>groovy.transform.Immutable</code>. Do not use the <code>Immutable</code> in <code>groovy.lang</code>. </p>
-<p>Example of violations: </p>
-<pre>
-    @Immutable
-    class Person { }
-
-    @groovy.lang.Immutable
-    class Person { }
-
-    import groovy.lang.Immutable as Imtl
-    @Imtl
-    class Person { }
-
-    // the following code is OK
-    @groovy.transform.Immutable
-    class Person { }
-
-    import groovy.transform.Immutable
-    @Immutable
-    class Person { }
-
-    import groovy.transform.*
-    @Immutable
-    class Person { }
-
-    import groovy.transform.Immutable as Imtl
-    @Imtl
-    class Person { }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ExplicitLinkedHashMapInstantiationRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Explicit Linked Hash Map Instantiation]]></name>
-    <internalKey><![CDATA[ExplicitLinkedHashMapInstantiation]]></internalKey>
-    <description><![CDATA[<p>This rule checks for the explicit instantiation of a <code>LinkedHashMap</code> using the no-arg constructor. In Groovy, it is best to replace <code>new LinkedHashMap()</code> with <code>[:]</code>, which creates the same object. </p>
- ]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.14 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ClosureAsLastMethodParameterRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Closure As Last Method Parameter]]></name>
-    <internalKey><![CDATA[ClosureAsLastMethodParameter]]></internalKey>
-    <description><![CDATA[<p>If a method is called and the last parameter is an inline closure then it can be declared outside of the method call parentheses. </p>
-<p>Example of violations: </p>
-<pre>
-    // creates violation: poor Groovy style
-    [1,2,3].each({ println it })
-
-    // no violation
-    [1,2,3].each { println it }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.AssignCollectionUniqueRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Assign Collection Unique]]></name>
-    <internalKey><![CDATA[AssignCollectionUnique]]></internalKey>
-    <description><![CDATA[<p>The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a unique() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
-<p>Example of violations: </p>
-<pre>
-  def a = myList.unique()
-  def b = myList.unique() { it }
-  def c = myList.unique().findAll { x < 1 }
-
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.AssignCollectionSortRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Assign Collection Sort]]></name>
-    <internalKey><![CDATA[AssignCollectionSort]]></internalKey>
-    <description><![CDATA[<p>The Collections.sort() method mutates the list and returns the list as a value. If you are assigning the result of sort() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a sort() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls. </p>
-<p>Example of violations: </p>
-<pre>
-  def a = myList.sort()
-  def b = myList.sort() { it }
-  def c = myList.sort().findAll { x < 1 }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.ConfusingMultipleReturnsRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Confusing Multiple Returns]]></name>
-    <internalKey><![CDATA[ConfusingMultipleReturns]]></internalKey>
-    <description><![CDATA[<p>Multiple return values can be used to set several variables at once. To use multiple return values, the left hand side of the assignment must be enclosed in parenthesis. If not, then you are not using multiple return values, you're only assigning the last element. </p>
-<p>Example of violations: </p>
-<pre>
-def a, b = [1, 2] // bad, b is null
-def c, d, e = [1, 2, 3] // bad, c and d are null
-class MyClass {
-    def a, b, c = [1, 2, 3]  // bad, a and b are null
-}
-
-def x = 1              // ok
-def (f, g) = [1, 2]    // ok
-(a, b, c) = [1, 2, 3]  // ok
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.GetterMethodCouldBePropertyRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Getter Method Could Be Property]]></name>
-    <internalKey><![CDATA[GetterMethodCouldBeProperty]]></internalKey>
-    <description><![CDATA[<p>If a class defines a <code>public</code> method that follows the Java getter notation and that returns a constant, then it is cleaner to provide a Groovy property for the value rather than a Groovy method. </p>
-<p>Example of violations: </p>
-<pre>
-    interface Parent {
-        String getSomething()
-        String getSomethingElse()
-    }
-
-    class Child extends Parent {
-        static VALUE = 'value'
-
-        @Override
-        String getSomething() {
-            'something'         // this could be simplified
-        }
-
-        @Override
-        String getSomethingElse() {
-            VALUE       // this could be simplified
-        }
-
-        int getOtherValue() {
-            123
-        }
-
-        static String getName() {
-            'MyName'
-        }
-    }
-
-    class Child2 extends Parent {
-        static VALUE = 'value'
-        final String something = 'something'    // this is cleaner
-        final String somethingElse = VALUE      // this is cleaner
-        final int otherValue = 123              // this is cleaner
-        static final String name = 'MyName'     // this is cleaner
-    }
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.UseCollectManyRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Use Collect Many]]></name>
-    <internalKey><![CDATA[UseCollectMany]]></internalKey>
-    <description><![CDATA[<p>In many case <code>collectMany()</code> yields the same result as <code>collect{}.flatten()</code>. It is easier to understand and more clearly conveys the intent. </p>
-<p>Example of violations: </p>
-<pre>
-def l = [1, 2, 3, 4]
-
-l.collect{ [it, it*2] }.flatten() // suboptimal
-
-l.collectMany{ [it, it*2] }       // same functionality, better readability
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.CollectAllIsDeprecatedRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Collect All Is Deprecated]]></name>
-    <internalKey><![CDATA[CollectAllIsDeprecated]]></internalKey>
-    <description><![CDATA[<p>The <code>collectAll</code> method is deprecated since Groovy 1.8.1. Use <code>collectNested</code> instead. </p>
-<p>Example of violations: </p>
-<pre>
-def list = [1, 2, [3, 4, [5, 6]], 7]
-
-list.collectAll { it * 2 }      // deprecated
-
-list.collectNested { it * 2 }   // replacement
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.16 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.UseCollectNestedRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Use Collect Nested]]></name>
-    <internalKey><![CDATA[UseCollectNested]]></internalKey>
-    <description><![CDATA[<p>Instead of nested <code>collect{}</code> calls use <code>collectNested{}</code>. </p>
-<p>Example of violations: </p>
-<pre>
-def list = [1, 2, [3, 4, 5, 6], [7]]
-
-println list.collect { elem ->
-    if (elem instanceof List)
-        elem.collect {it *2} // violation
-    else elem * 2
-}
-
-println list.collect([8]) {
-    if (it instanceof List)
-        it.collect {it *2} // violation
-    else it * 2
-}
-
-println list.collectNested { it * 2 } // same functionality, better readability
-</pre>
-]]></description>
-    <tag>groovyism</tag>
-  </rule>
-
-  <!-- since 0.19 -->
-  <rule>
-    <key>org.codenarc.rule.groovyism.GStringExpressionWithinStringRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[G String Expression Within String]]></name>
-    <internalKey><![CDATA[GStringExpressionWithinString]]></internalKey>
-    <description><![CDATA[<p>Check for regular (single quote) strings containing a GString-type expression (${..}). </p>
-<p>Example of violations: </p>
-<pre>
-    def str1 = 'total: ${count}'                // violation
-    def str2 = 'average: ${total / count}'      // violation
-
-    def str3 = "abc ${count}"                   // ok; GString
-    def str4 = '$123'                           // ok
-    def str5 = 'abc {123}'                      // ok
-</pre>
-]]></description>
-    <tag>groovyism</tag>
   </rule>
 
 </rules>
