@@ -143,6 +143,14 @@
     </dependencies>
   </dependencyManagement>
 
+  <repositories>
+    <repository>
+      <id>sonarsource-bintray</id>
+      <name>SonarSource Bintray Release repository</name>
+      <url>https://dl.bintray.com/sonarsource/SonarQube</url>
+    </repository>
+  </repositories>
+
   <build>
     <pluginManagement>
       <plugins>
