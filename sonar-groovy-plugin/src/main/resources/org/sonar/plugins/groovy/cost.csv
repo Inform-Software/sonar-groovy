@@ -83,8 +83,13 @@ org.codenarc.rule.convention.InvertedIfElseRule;linear;10min
 org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule;linear;5min
 org.codenarc.rule.convention.MethodReturnTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.NoDefRule;linear;5min
+org.codenarc.rule.convention.NoJavaUtilDateRule;linear;5min
 org.codenarc.rule.convention.NoTabCharacterRule;linear;2min
 org.codenarc.rule.convention.ParameterReassignmentRule;linear;20min
+org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule;linear;5min
+org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule>;linear;5min
+org.codenarc.rule.convention.StaticFieldsBeforeInstanceFieldsRule;linear;5min
+org.codenarc.rule.convention.StaticMethodsBeforeInstanceMethodsRule;linear;5min
 org.codenarc.rule.convention.TernaryCouldBeElvisRule;linear;10min
 org.codenarc.rule.convention.TrailingCommaRule;linear;5min
 org.codenarc.rule.convention.VariableTypeRequiredRule;linear;5min
@@ -179,6 +184,7 @@ org.codenarc.rule.generic.StatelessClassRule.fixed;linear;20min
 org.codenarc.rule.grails.GrailsDomainHasEqualsRule;linear;20min
 org.codenarc.rule.grails.GrailsDomainHasToStringRule;linear;20min
 org.codenarc.rule.grails.GrailsDomainReservedSqlKeywordNameRule;linear;20min
+org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule;linear;5min
 org.codenarc.rule.grails.GrailsDomainWithServiceReferenceRule;linear;20min
 org.codenarc.rule.grails.GrailsDuplicateConstraintRule;linear;20min
 org.codenarc.rule.grails.GrailsDuplicateMappingRule;linear;20min

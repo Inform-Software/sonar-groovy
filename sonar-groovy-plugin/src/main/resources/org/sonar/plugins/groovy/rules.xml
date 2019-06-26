@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 1.1 -->
+<!-- Generated using CodeNarc 1.2 -->
 <rules>
   <!-- basic rules -->
 
@@ -2209,6 +2209,10 @@
     }
 </pre>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreFieldNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
   </rule>
 
   <!-- since 1.1 -->
@@ -2264,6 +2268,104 @@
             def defaultName             // violation
         }
     }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>ignoreVariableNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.StaticFieldsBeforeInstanceFieldsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Static Fields Before Instance Fields]]></name>
+    <internalKey><![CDATA[StaticFieldsBeforeInstanceFields]]></internalKey>
+    <description><![CDATA[<p>Enforce that all static fields are above all instance fields within a class</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        public static final int COUNT = 99
+
+        public String f1
+
+        public static final String F1 = "xxx"       // violation
+        private static String F4                    // violation
+        static F5 = new Date()                      // violation
+
+        protected String f2
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.StaticMethodsBeforeInstanceMethodsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Static Methods Before Instance Methods]]></name>
+    <internalKey><![CDATA[StaticMethodsBeforeInstanceMethods]]></internalKey>
+    <description><![CDATA[<p>Enforce that all static methods within each visibility level (public, protected, private) are above all instance methods within that same visibility level. In other words, public static methods must be above public instance methods, protected static methods must be above protected instance methods and private static methods must be above private instance methods.</p>
+<p>Example of violations:</p>
+<pre>
+        class MyClass {
+            // Public
+            public static int staticMethod1() { }
+            public String method1() { }
+            int method2() { }
+            static final String staticMethod2(int id) { }       // violation
+
+            // Protected
+            protected String method3() { }
+            protected static staticMethod3() { }                // violation
+
+            // Private
+            private int method4() { }
+            private int method5() { }
+            private static staticMethod4() { }                  // violation
+            private String method5() { }
+        }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Public Methods Before Non Public Methods]]></name>
+    <internalKey><![CDATA[PublicMethodsBeforeNonPublicMethods]]></internalKey>
+    <description><![CDATA[<p>Enforce that all public methods are above protected and private methods.</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        public static int staticMethod1() { }
+
+        protected String method1() { }
+
+        static final String staticMethod2() { }     // violation
+        public String method2() { }                 // violation
+
+        private int method3(int id) { }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.NoJavaUtilDateRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[No Java Util Date]]></name>
+    <internalKey><![CDATA[NoJavaUtilDate]]></internalKey>
+    <description><![CDATA[<p>Do not use the <code>java.util.Date</code> class. Prefer the classes in the java.time.* packages. This rule checks for construction of new java.util.Date objects.</p>
+<p>Example of violations:</p>
+<pre>
+    def timestamp = new Date()              // violation
+    Date myDate = new java.util.Date()      // violation
+    Date startTime = new Date(123456789L)   // violation
 </pre>]]></description>
     <tag>bug</tag>
   </rule>
@@ -2689,7 +2791,7 @@
 <p>Here are a couple references that discuss the problems with using <code>instanceof</code> and the preference for using <i>polymorphism</i> instead:</p>
 <p>* <a href="http://www.javapractices.com/topic/TopicAction.do?Id=31">Beware of instanceof operator</a></p>
 <p>* <a href="http://stackoverflow.com/questions/4192837/how-does-one-use-polymorphism-instead-of-instanceof-and-why">How does one use polymorphism instead of instanceof? (And why?)</a></p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Example of violations:</p>
 <pre>
     class MyClass {
@@ -2779,7 +2881,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateNumberLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate number literals within the current class.</p>
 <p>Code containing duplicate <i>Number</i> literals can usually be improved by declaring the <i>Number</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>* This rule ignores Long/long values within enums, because the generated code may include generated long id values and produce false positive rule violations.</p>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateNumberLiteral')</code> annotation.</p>]]></description>
@@ -2799,7 +2901,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateStringLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate String literals within the current class.</p>
 <p>Code containing duplicate <i>String</i> literals can usually be improved by declaring the <i>String</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateStringLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
@@ -2818,7 +2920,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateMapLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate <i>Map</i> literals within the current class. This rule only checks for <i>Map</i>s where the keys and values are all constants or literals.</p>
 <p>Code containing duplicate <i>Map</i> literals can usually be improved by declaring the <i>Map</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
 <pre>
       def var1 = [a:1, b:null, c:Boolean.FALSE, d:'x', e:true]
@@ -2859,7 +2961,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>This rule checks for duplicate <i>List</i> literals within the current class. This rule only checks for <i>List</i>s where values are all constants or literals.</p>
 <p>List literals within annotations are ignored.</p>
 <p>Code containing duplicate <i>List</i> literals can usually be improved by declaring the <i>List</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
 <pre>
       def var1 = [1, null, Boolean.FALSE, 'x', true]
@@ -3334,7 +3436,6 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator, including: +, -, *, /, &gt;&gt;, &lt;&lt;, &amp;&amp;, ||, &amp;, |, ?:, =, "as".</p>
 <p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.). Do not check array ('[') operator.</p>
 <p>Known limitations:</p>
-<p>* Does not catch violations of missing space around equals operator (=) within a declaration expression, e.g.  <code>def x=23</code></p>
 <p>* Does not catch violations of certain ternary expressions and standalone elvis operator (?:) expressions</p>
 <p>Examples of violations:</p>
 <pre>
@@ -3351,6 +3452,11 @@ for (int i = 0; i &lt; 100; ++i) {
     }
 </pre>]]></description>
     <tag>convention</tag>
+    <param>
+      <key>ignoreParameterDefaultValueAssignments</key>
+      <description><![CDATA[If true, then do not check for whitespace around the '=' operator within method/constructor default parameter assignments.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.18 -->
@@ -3360,6 +3466,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Space Before Opening Brace]]></name>
     <internalKey><![CDATA[SpaceBeforeOpeningBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
+<p>A closure expression a preceded by an opening parenthesis, an opening square brace ([), or a dollar sign ($) within a GString does not cause a violation.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
 <p>Examples of violations:</p>
@@ -3402,7 +3509,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
   </rule>
@@ -3448,12 +3555,12 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
     <param>
       <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code]]></description>
+      <description><![CDATA[If true, then allow for \{\} in code]]></description>
       <defaultValue>false</defaultValue>
     </param>
   </rule>
@@ -3465,7 +3572,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Space After Closing Brace]]></name>
     <internalKey><![CDATA[SpaceAfterClosingBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each closing brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
-<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation.</p>
+<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, a closing square brace (]), the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
 <p>Examples of violations and exceptions:</p>
@@ -3477,13 +3584,14 @@ for (int i = 0; i &lt; 100; ++i) {
     assert list.every { it.isReady() }, "Error"         // no violation for comma
     def m = [a:123, b:{ println 7 },c:99]               // no violation for comma
     processItems(list.select { it.isReady() })          // no violation for closing parenthesis
+    processItems([{ named("a") }, { named("b")}])       // no violation for closing square bracket
     def names = records.findAll { it.age &gt; 1 }*.name    // no violation for spread operator
     list?.collect { it?.type }?.join(',')               // no violation for null-safe operator
 </pre>]]></description>
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[DEPRECATED. Ignored.]]></description>
       <defaultValue>true</defaultValue>
     </param>
   </rule>
@@ -3531,12 +3639,12 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
     <param>
       <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code]]></description>
+      <description><![CDATA[If true, then allow for \{\} in code]]></description>
       <defaultValue>false</defaultValue>
     </param>
   </rule>
@@ -4250,7 +4358,7 @@ class MyClass {                                 // CORRECT
 <p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/services' folder. You can override this with a different regular expression value if appropriate.</p>
 <p>This rule also sets the default value of <code>applyToClassNames</code> to only match class names ending in 'Service'. You can override this with a different class name pattern (String with wildcards) if appropriate.</p>
 <p>[[1]]  The <code>ignoreFieldTypes</code> property matches the field type name as indicated in the field declaration, only including a full package specification IF it is included in the source code. For example, the field declaration <code>BigDecimal value</code> matches an <code>ignoreFieldTypes</code> value of <code>BigDecimal</code>, but not <code>java.lang.BigDecimal</code>.</p>
-<p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.]]></description>
+<p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.</p>]]></description>
     <tag>grails</tag>
     <param>
       <key>addToIgnoreFieldName</key>
@@ -4388,6 +4496,48 @@ class MyClass {                                 // CORRECT
    def person = Person.get(1)
    person.properties = params
    person.save()
+</pre>]]></description>
+    <tag>grails</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Grails Domain String Property Max Size]]></name>
+    <internalKey><![CDATA[GrailsDomainStringPropertyMaxSize]]></internalKey>
+    <description><![CDATA[<p>String properties in Grails domain classes have to define maximum size otherwise the property is mapped to VARCHAR(255) causing runtime exceptions to occur. To fix this issue either declare <code>size</code</code> or <code>maxSize</code> constraint for the property inside <code>constraints</code> DSL closure of your Grails domain class or declare the <code>type</code> of the property inside <code>mapping</code> DSL closure. If you use the second option inside <b>mapping</b> DSL closure then please pay attention that the value of  <code>type</code> is not checked so using for example <code>VARCHAR(50)</code> would still cause runtime exceptions.</p>
+<p>Example of violations:</p>
+<pre>
+    // both firstName and lastName will probably have database limit of 255 characters
+    // which is not validated by Grails validation causing runtime JDBC exception
+    class Person {
+
+        String firstName
+        String lastName
+
+        static constraints = {
+            firstName nullable:true
+            lastName nullable:true
+        }
+    }
+</pre>
+<p>Example of valid configuration:</p>
+<pre>
+    class Person {
+
+        String firstName
+        String lastName
+
+        static constraints = {
+            firstName nullable:true, maxSize: 255
+            lastName nullable:true
+        }
+
+        static mapping = {
+            lastName type: 'text'
+        }
+    }
 </pre>]]></description>
     <tag>grails</tag>
   </rule>
@@ -5081,7 +5231,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* <code>assertNull([123])</code>.</p>
 <p>* <code>assertNull([:])</code>.</p>
 <p>* <code>assertNull([a:123])</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5102,7 +5252,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* <code>assertFalse([])</code></p>
 <p>* <code>assertFalse([:)</code></p>
 <p>* <code>assertNull(null)</code></p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5122,7 +5272,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* Methods annotated with <code>@Override</code></p>
 <p>Public, non-test methods on a test class violate conventional usage of test classes, and they typically break encapsulation unnecessarily.</p>
 <p>Public, non-test methods may also hide unintentional <i>'Lost Tests'</i>. For instance, the test method declaration may (unintentionally) include methods parameters, and thus be ignored by JUnit. Or the method may (unintentionally) not follow the "test.." naming convention and not have the @Test annotation, and thus be ignored by JUnit.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
     <param>
       <key>ignoreMethodsWithAnnotations</key>
@@ -5138,7 +5288,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[JUnitSetUpCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>setUp</code> method is defined, that it includes a call to <code>super.setUp()</code>.</p>
 <p>This rule ignored methods annotated with <code>@Before</code> or <code>@BeforeClass</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5149,7 +5299,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[JUnitTearDownCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>tearDown</code> method is defined, that it includes a call to <code>super.tearDown()</code>.</p>
 <p>This rule ignored methods annotated with <code>@After</code> or <code>@AfterClass</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5159,7 +5309,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Set Up]]></name>
     <internalKey><![CDATA[JUnitUnnecessarySetUp]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>setUp()</code> methods that contain only a call to <code>super.setUp()</code>. The method is then unnecessary.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Here is an example of a violation:</p>
 <pre>
     class MyTest extends TestCase {
@@ -5177,7 +5327,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Tear Down]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryTearDown]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>tearDown()</code> methods that contain only a call to <code>super.tearDown()</code>. The method is then unnecessary.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Here is an example of a violation:</p>
 <pre>
     class MyTest extends TestCase {
@@ -5206,7 +5356,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Equals Instead Of Assert True]]></name>
     <internalKey><![CDATA[UseAssertEqualsInsteadOfAssertTrue]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit assertions in object equality. These assertions should be made by more specific methods, like <code>assertEquals</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5217,7 +5367,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert False Instead Of Negation]]></name>
     <internalKey><![CDATA[UseAssertFalseInsteadOfNegation]]></internalKey>
     <description><![CDATA[<p>In unit tests, if a condition is expected to be false then there is no sense using <code>assertTrue</code> with the negation operator. For instance, <code>assertTrue(!condition)</code> can always be simplified to <code>assertFalse(condition)</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5228,7 +5378,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert True Instead Of Assert Equals]]></name>
     <internalKey><![CDATA[UseAssertTrueInsteadOfAssertEquals]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertEquals</code> where the first parameter is a boolean. These assertions should be made by more specific methods, like <code>assertTrue</code> or <code>assertFalse</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>All of the following examples can be simplified to assertTrue or remove the true literal:</p>
 <pre>
     assertEquals(true, foo())
@@ -5260,7 +5410,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Null Instead Of Assert Equals]]></name>
     <internalKey><![CDATA[UseAssertNullInsteadOfAssertEquals]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertEquals</code> where the first or second parameter is <code>null</code>. These assertion should be made against the <code>assertNull</code> method instead.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5271,7 +5421,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Same Instead Of Assert True]]></name>
     <internalKey><![CDATA[UseAssertSameInsteadOfAssertTrue]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertTrue</code> or <code>assertFalse</code> where the first or second parameter is an <code>Object#is()</code> call testing for reference equality. These assertion should be made against the <code>assertSame</code> or <code>assertNotSame</code> method instead.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5292,7 +5442,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert True Instead Of Negation]]></name>
     <internalKey><![CDATA[UseAssertTrueInsteadOfNegation]]></internalKey>
     <description><![CDATA[<p>In unit tests, if a condition is expected to be true then there is no sense using <code>assertFalse</code> with the negation operator. For instance, <code>assertFalse(!condition)</code> can always be simplified to <code>assertTrue(condition)</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5379,7 +5529,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unnecessary Fail]]></name>
     <internalKey><![CDATA[UnnecessaryFail]]></internalKey>
     <description><![CDATA[<p>In a unit test, catching an exception and immediately calling Assert.fail() is pointless and hides the stack trace. It is better to rethrow the exception or not catch the exception at all.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     public void testSomething() {
@@ -5444,7 +5594,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[JUnitLostTest]]></internalKey>
     <description><![CDATA[<p>This rule checks for classes that import JUnit 4 classes and contain a <code>public</code>, instance, <code>void</code>, no-arg method named <i>test</i>* that is not annotated with the JUnit 4 <code>@Test</code> annotation.</p>
 <p>Note: This rule should be disabled for Grails 2.x projects, since the Grails test framework can use AST Transformations to automatically annotate test methods.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -5463,7 +5613,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Throws Exception]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryThrowsException]]></internalKey>
     <description><![CDATA[<p>Check for <code>throws</code> clauses on JUnit test methods. That is not necessary in Groovy.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     @Test
@@ -5492,7 +5642,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[JUnitPublicField]]></internalKey>
     <description><![CDATA[<p>Checks for public fields on a JUnit test class.  There is usually no reason to have a public field (even a constant) on a test class.</p>
 <p>Fields within interfaces and fields annotated with @Rule are ignored.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -5532,7 +5682,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Public Property]]></name>
     <internalKey><![CDATA[JUnitPublicProperty]]></internalKey>
     <description><![CDATA[<p>Checks for public properties defined on JUnit test classes. There is typically no need to expose a public property (with public <i>getter</i> and <i>setter</i> methods) on a test class.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -7668,7 +7818,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Setter]]></name>
     <internalKey><![CDATA[UnnecessarySetter]]></internalKey>
-    <description><![CDATA[<p>Checks for explicit calls to setter methods which can, for the most part, be replaced by assignment to property. A setter is defined as a method call that matches set[A-Z] but not set[A-Z][A-Z] such as setURL(). Setters take one method argument.</p>
+    <description><![CDATA[<p>Checks for explicit calls to setter methods which can, for the most part, be replaced by assignment to property. A setter is defined as a method call that matches set[A-Z] but not set[A-Z][A-Z] such as setURL(). Setters take one method argument. Setter calls within an expression are ignored.</p>
 <p>These bits of code produce violations:</p>
 <pre>
   x.setProperty(1)
@@ -7677,10 +7827,12 @@ println list.collectNested { it * 2 } // same functionality, better readability
 </pre>
 <p>These bits of code do not:</p>
 <pre>
-  x.set(1)
-  x.setup(2)
-  x.setURL('')
-  x.setSomething('arg1', 'arg2')
+  x.set(1)                              // Nothing after "set"
+  x.setup(2)                            // The letter after "set" must be capitalized
+  x.setURL('')                          // But setters with multiple capital letters after "set" are ignored
+  x.setSomething('arg1', 'arg2')        // Setter must have exactly one argument
+  if (!file.setExecutable(true)) { }    // Set method called within expression
+  def count = x.setCount(92)            // Set method called within expression
 </pre>]]></description>
     <tag>clumsy</tag>
   </rule>
@@ -7720,7 +7872,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unused Object]]></name>
     <internalKey><![CDATA[UnusedObject]]></internalKey>
     <description><![CDATA[<p>Checks for object allocations that are not assigned or used, unless it is the last statement within a block (because it may be the intentional return value). Examples include:</p>
-<p>By default, this rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. Invoking constructors without using the result is a common pattern in tests.</p>
+<p>By default, this rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy, ''Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. Invoking constructors without using the result is a common pattern in tests.</p>
 <pre>
     int myMethod() {
         new BigDecimal("23.45")     // unused

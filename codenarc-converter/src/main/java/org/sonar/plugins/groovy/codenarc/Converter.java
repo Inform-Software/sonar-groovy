@@ -568,6 +568,17 @@ public class Converter {
         org.codenarc.rule.formatting.BlockStartsWithBlankLineRule.class,
         org.codenarc.rule.formatting.IndentationRule.class);
 
+    insertRules(
+        rules,
+        "1.2",
+        props,
+        parametersByRule,
+        org.codenarc.rule.convention.StaticFieldsBeforeInstanceFieldsRule.class,
+        org.codenarc.rule.convention.StaticMethodsBeforeInstanceMethodsRule.class,
+        org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule.class,
+        org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule.class,
+        org.codenarc.rule.convention.NoJavaUtilDateRule.class);
+
     return rules;
   }
 
