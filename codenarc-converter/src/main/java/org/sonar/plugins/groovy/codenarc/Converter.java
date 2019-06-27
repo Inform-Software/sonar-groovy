@@ -600,6 +600,16 @@ public class Converter {
         org.codenarc.rule.comments.JavadocEmptySinceTagRule.class,
         org.codenarc.rule.comments.JavadocEmptyVersionTagRule.class);
 
+    insertRules(
+        rules,
+        "1.4",
+        props,
+        parametersByRule,
+        org.codenarc.rule.convention.CompileStaticRule.class,
+        org.codenarc.rule.comments.JavadocMissingParamDescriptionRule.class,
+        org.codenarc.rule.comments.JavadocMissingThrowsDescriptionRule.class,
+        org.codenarc.rule.comments.JavadocMissingExceptionDescriptionRule.class);
+
     return rules;
   }
 

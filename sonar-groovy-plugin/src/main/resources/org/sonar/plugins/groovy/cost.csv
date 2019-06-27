@@ -58,6 +58,9 @@ org.codenarc.rule.comments.JavadocEmptySeeTagRule;linear;5min
 org.codenarc.rule.comments.JavadocEmptySinceTagRule;linear;5min
 org.codenarc.rule.comments.JavadocEmptyThrowsTagRule;linear;5min
 org.codenarc.rule.comments.JavadocEmptyVersionTagRule;linear;5min
+org.codenarc.rule.comments.JavadocMissingExceptionDescriptionRule;linear;5min
+org.codenarc.rule.comments.JavadocMissingParamDescriptionRule;linear;5min
+org.codenarc.rule.comments.JavadocMissingThrowsDescriptionRule;linear;5min
 org.codenarc.rule.concurrency.BusyWaitRule;linear;1h
 org.codenarc.rule.concurrency.DoubleCheckedLockingRule;linear;1d
 org.codenarc.rule.concurrency.InconsistentPropertyLockingRule;linear;20min
@@ -84,6 +87,7 @@ org.codenarc.rule.concurrency.UseOfNotifyMethodRule;linear;20min
 org.codenarc.rule.concurrency.VolatileArrayFieldRule;linear;1h
 org.codenarc.rule.concurrency.VolatileLongOrDoubleFieldRule;linear;1h
 org.codenarc.rule.concurrency.WaitOutsideOfWhileLoopRule;linear;1h
+org.codenarc.rule.convention.CompileStaticRule;linear;5min
 org.codenarc.rule.convention.ConfusingTernaryRule;linear;10min
 org.codenarc.rule.convention.CouldBeElvisRule;linear;10min
 org.codenarc.rule.convention.CouldBeSwitchStatementRule;linear;5min
