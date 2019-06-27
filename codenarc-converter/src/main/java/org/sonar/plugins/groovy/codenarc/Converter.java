@@ -398,7 +398,8 @@ public class Converter {
         org.codenarc.rule.formatting.BracesForIfElseRule.class,
         org.codenarc.rule.formatting.BracesForMethodRule.class,
         org.codenarc.rule.formatting.BracesForTryCatchFinallyRule.class,
-        org.codenarc.rule.formatting.ClassJavadocRule.class,
+        // moved from formatting into comments in 1.3
+        org.codenarc.rule.comments.ClassJavadocRule.class,
         org.codenarc.rule.groovyism.AssignCollectionUniqueRule.class);
 
     insertRules(
@@ -578,6 +579,26 @@ public class Converter {
         org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule.class,
         org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule.class,
         org.codenarc.rule.convention.NoJavaUtilDateRule.class);
+
+    insertRules(
+        rules,
+        "1.3",
+        props,
+        parametersByRule,
+        org.codenarc.rule.formatting.ClassEndsWithBlankLineRule.class,
+        org.codenarc.rule.formatting.ClassStartsWithBlankLineRule.class,
+        org.codenarc.rule.groovyism.ExplicitCallToPutAtMethodRule.class,
+        org.codenarc.rule.comments.JavadocEmptyFirstLineRule.class,
+        org.codenarc.rule.comments.JavadocEmptyLastLineRule.class,
+        org.codenarc.rule.comments.JavadocConsecutiveEmptyLinesRule.class,
+        org.codenarc.rule.comments.JavadocEmptySeeTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyParamTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyReturnTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyThrowsTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyExceptionTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyAuthorTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptySinceTagRule.class,
+        org.codenarc.rule.comments.JavadocEmptyVersionTagRule.class);
 
     return rules;
   }

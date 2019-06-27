@@ -46,6 +46,18 @@ org.codenarc.rule.braces.ElseBlockBracesRule;linear;5min
 org.codenarc.rule.braces.ForStatementBracesRule;linear;5min
 org.codenarc.rule.braces.IfStatementBracesRule;linear;5min
 org.codenarc.rule.braces.WhileStatementBracesRule;linear;5min
+org.codenarc.rule.comments.ClassJavadocRule;linear;5min
+org.codenarc.rule.comments.JavadocConsecutiveEmptyLinesRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyAuthorTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyExceptionTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyFirstLineRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyLastLineRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyParamTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyReturnTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptySeeTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptySinceTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyThrowsTagRule;linear;5min
+org.codenarc.rule.comments.JavadocEmptyVersionTagRule;linear;5min
 org.codenarc.rule.concurrency.BusyWaitRule;linear;1h
 org.codenarc.rule.concurrency.DoubleCheckedLockingRule;linear;1d
 org.codenarc.rule.concurrency.InconsistentPropertyLockingRule;linear;20min
@@ -150,7 +162,9 @@ org.codenarc.rule.formatting.BracesForForLoopRule;linear;5min
 org.codenarc.rule.formatting.BracesForIfElseRule;linear;5min
 org.codenarc.rule.formatting.BracesForMethodRule;linear;5min
 org.codenarc.rule.formatting.BracesForTryCatchFinallyRule;linear;5min
+org.codenarc.rule.formatting.ClassEndsWithBlankLineRule;linear;5min
 org.codenarc.rule.formatting.ClassJavadocRule;linear;10min
+org.codenarc.rule.formatting.ClassStartsWithBlankLineRule;linear;5min
 org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule;linear;10min
 org.codenarc.rule.formatting.ConsecutiveBlankLinesRule;linear;5min
 org.codenarc.rule.formatting.FileEndsWithoutNewlineRule;linear;5min
@@ -210,6 +224,7 @@ org.codenarc.rule.groovyism.ExplicitCallToMultiplyMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitCallToPlusMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitCallToPowerMethodRule;linear;5min
+org.codenarc.rule.groovyism.ExplicitCallToPutAtMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitCallToRightShiftMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitCallToXorMethodRule;linear;5min
 org.codenarc.rule.groovyism.ExplicitHashMapInstantiationRule;linear;5min
