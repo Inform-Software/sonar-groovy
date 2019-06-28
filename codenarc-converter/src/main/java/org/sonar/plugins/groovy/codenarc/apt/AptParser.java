@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,18 +61,15 @@ public class AptParser {
     boolean inRule = false;
     boolean inParameters = false;
     boolean inExample = false;
-    boolean inDescription = false;
     String currentRule = null;
     AptResult currentResult = null;
     RuleParameter currentParameter = null;
     int[] splits = new int[3];
-    for (int index = 0; index < lines.size(); index++) {
-      String fullLine = lines.get(index);
+    for (String fullLine : lines) {
       String line = fullLine.trim();
       if (fullLine.startsWith(NEW_RULE_PREFIX) && !line.startsWith(LIST_PREFIX) && inRule) {
         results.put(currentRule, currentResult);
         inRule = false;
-        inDescription = false;
         currentRule = null;
         currentResult = null;
       }
@@ -86,36 +84,15 @@ public class AptParser {
         }
       } else if (inRule && !inExample && isExampleSeparator(line)) {
         inExample = true;
-        inDescription = false;
-        currentResult.description += "<pre>\n";
-      } else if (inRule
-          && !inExample
-          && !inDescription
-          && !inParameters
-          && isValidDescriptionLine(line)) {
-        inDescription = true;
-        if (StringUtils.isNotBlank(line)) {
-          addParagraphLine(currentResult, line);
-        }
-      } else if (inRule
-          && !inExample
-          && inDescription
-          && !inParameters
-          && !currentResult.description.endsWith("</pre>\n")
-          && isValidDescriptionLine(line)) {
-        if (isEndOfParagraph(currentResult, line)) {
-          currentResult.description = currentResult.description.trim() + "</p>\n";
-        } else {
-          addParagraphLine(currentResult, line);
-        }
+        currentResult.appendDescription("<pre>\n");
+      } else if (inRule && !inExample && !inParameters && isValidDescriptionLine(line)) {
+        currentResult.addParagraphLine(cleanDescription(line));
       } else if (inRule && inExample && isExampleSeparator(line)) {
         inExample = false;
-        inDescription = true;
-        currentResult.description += "</pre>\n";
+        currentResult.appendDescription("</pre>\n");
       } else if (inRule && inExample) {
-        currentResult.description += cleanExample(fullLine) + "\n";
+        currentResult.appendDescription(cleanExample(fullLine) + "\n");
       } else if (inRule && !inParameters && line.matches(PARAMETER_START_SEPARATOR)) {
-        inDescription = false;
         inParameters = true;
         currentParameter = RuleParameter.createEmpty();
         splits[0] = line.indexOf('*') + 1;
@@ -153,7 +130,6 @@ public class AptParser {
         }
         currentParameter = RuleParameter.createEmpty();
         inParameters = false;
-        inDescription = true;
       }
     }
 
@@ -165,25 +141,8 @@ public class AptParser {
     return results;
   }
 
-
   private static boolean isExampleSeparator(String line) {
     return line.matches(EXAMPLE_SEPARATOR_1) || line.matches(EXAMPLE_SEPARATOR_2);
-  }
-
-  private static void addParagraphLine(AptResult currentResult, String line) {
-    String cleanLine = cleanDescription(line);
-    currentResult.description +=
-        (StringUtils.isNotBlank(cleanLine) && currentResult.description.endsWith("\n")
-                    || StringUtils.isBlank(currentResult.description)
-                ? "<p>"
-                : " ")
-            + cleanLine;
-  }
-
-  private static boolean isEndOfParagraph(AptResult currentResult, String line) {
-    return StringUtils.isBlank(line)
-        && StringUtils.isNotBlank(currentResult.description)
-        && !currentResult.description.endsWith("</p>\n");
   }
 
   private static boolean isValidDescriptionLine(String line) {
@@ -288,12 +247,13 @@ public class AptParser {
 
   private static void mergeParameters(
       Map<String, AptResult> results, Map<String, AptResult> parametersByFile) {
-    for (String rule : parametersByFile.keySet()) {
+    for (Entry<String, AptResult> parametersByFileEntry : parametersByFile.entrySet()) {
+      String rule = parametersByFileEntry.getKey();
       AptResult currentRuleResult = results.get(rule);
       if (currentRuleResult == null) {
         currentRuleResult = new AptResult(rule);
       }
-      AptResult resultForRuleInFile = parametersByFile.get(rule);
+      AptResult resultForRuleInFile = parametersByFileEntry.getValue();
       if (resultForRuleInFile.parameters != null) {
         for (RuleParameter parameter : resultForRuleInFile.getParameters()) {
           if (!currentRuleResult.parameters.contains(parameter)) {
@@ -301,18 +261,17 @@ public class AptParser {
           }
         }
       }
-      boolean alreadyHasExample = StringUtils.isNotBlank(currentRuleResult.description);
-      boolean provideNewExample = StringUtils.isNotBlank(resultForRuleInFile.description);
+      boolean alreadyHasExample = StringUtils.isNotBlank(currentRuleResult.getDescription());
+      boolean provideNewExample = StringUtils.isNotBlank(resultForRuleInFile.getDescription());
       if (!alreadyHasExample && provideNewExample) {
-        currentRuleResult.description = resultForRuleInFile.description;
+        currentRuleResult.replaceDescription(resultForRuleInFile);
       } else if (alreadyHasExample && provideNewExample) {
         log.info("CONFLICT RULE: {}", rule);
-        log.info(currentRuleResult.description);
+        log.info(currentRuleResult.getDescription());
         log.info("WITH");
-        log.info(resultForRuleInFile.description);
+        log.info(resultForRuleInFile.getDescription());
       }
       results.put(rule, currentRuleResult);
     }
   }
-
 }

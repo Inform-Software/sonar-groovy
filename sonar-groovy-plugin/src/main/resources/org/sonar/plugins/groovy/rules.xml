@@ -60,6 +60,7 @@
     [a:123, b:456] ? x : y
     [a, b, c] ? x : y
 </pre>
+<p>The rule also checks for the same types of constant values for the boolean expressions within the "short" ternary expressions, also known as the "Elvis" operator, e.g.:</p>
 <pre>
     true ?: y
     null ?: y
@@ -261,6 +262,7 @@
         }
     }
 </pre>
+<p>And so does this:</p>
 <pre>
     class MyClass {
         int hashCode() {
@@ -661,7 +663,7 @@
 <p>For more information see these links:</p>
 <p>* <a>http://blog.bjhargrave.com/2007/09/classforname-caches-defined-class-in.html</a></p>
 <p>* <a>http://www.osgi.org/blog/2011/05/what-you-should-know-about-class.html</a></p>
-  Example of violations:</p>
+<p>Example of violations:</p>
 <pre>
     Class.forName('SomeClassName')
     Class.forName(aClassName, true, aClassLoader)
@@ -1478,6 +1480,7 @@
         }
     }
 </pre>
+<p>And here is an in-depth example of how it works within inner classes and such:</p>
 <pre>
     class MyClass {
 
@@ -1690,6 +1693,7 @@
        }
     }
 </pre>
+<p>Example of violations:</p>
 <pre>
     class MyClass {
 
@@ -1796,6 +1800,7 @@
         }
     }
 </pre>
+<p>Example of correct usage:</p>
 <pre>
     class MyClass {
         private data
@@ -1809,7 +1814,10 @@
             }
         }
     }
-</pre>]]></description>
+</pre>
+<p>* [1] <b>Effective Java, Programming Language Guide</b>, by Joshua Bloch. Addison Wesley (2001). Chapter 50 (1st edition) is entitled "Never invoke wait outside a loop."</p>
+<p>* [2] <b>Effective Java</b>, 2nd edition, by Joshua Bloch, Addison Wesley (2008). Item #69: <i>Prefer concurrency utilities to wait and notify</i>.</p>
+<p>* [3] Software Engineering Institute - Secure Coding <a href="https://www.securecoding.cert.org/confluence/display/java/THI03-J.+Always+invoke+wait()+and+await()+methods+inside+a+loop">discussion of this issue</a></p>]]></description>
     <tag>multi-threading</tag>
   </rule>
 
@@ -2006,7 +2014,8 @@
     foo() ? foo(99) : 123       // OK
     foo(x) ? foo() : 123        // OK
     foo(1) ? foo(2) : 123       // OK
-</pre>]]></description>
+</pre>
+<p>NOTE: If the <i>boolean</i> and <i>true</i> expressions are the same method call, and that method call has <i>side-effects</i>, then converting it to a <i>Elvis</i> expression may produce <i>different</i> behavior. The method will only be called <i>once</i>, rather than <i>twice</i>. But relying on those <i>side-effects</i> as part of a ternary expression behavior is confusing, error-prone and just a bad idea. In any case, that code should be refactored to move the reliance on the side-effects out of the ternary expression.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2072,7 +2081,7 @@
     <severity>MAJOR</severity>
     <name><![CDATA[No Def]]></name>
     <internalKey><![CDATA[NoDef]]></internalKey>
-    <description><![CDATA[<p> Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>
+    <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>
 <p><b>NOTE:</b> This rule applies to the text contents of a <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
     <tag>bug</tag>
     <param>
@@ -2099,6 +2108,7 @@
                   3, // contains trailing comma
                  ]
 </pre>
+<p>Example of violations:</p>
 <pre>
   int[] array2 = [1,
                   2 // there is no trailing comma
@@ -2283,6 +2293,7 @@
         // the abstract modifier and adding protected constructors
     }
 </pre>
+<p>The following examples all pass:</p>
 <pre>
     abstract class MyClass extends AbstractParent {
         // OK because parent is named Abstract.*
@@ -2631,10 +2642,10 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Duplicate Number Literal]]></name>
     <internalKey><![CDATA[DuplicateNumberLiteral]]></internalKey>
-    <description><![CDATA[<p> This rule checks for duplicate number literals within the current class.</p>
+    <description><![CDATA[<p>This rule checks for duplicate number literals within the current class.</p>
 <p>Code containing duplicate <i>Number</i> literals can usually be improved by declaring the <i>Number</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
-  * This rule does not search across several files at once, only in the current file, and only within the current class.</p>
+<p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateNumberLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
     <param>
@@ -2650,10 +2661,10 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Duplicate String Literal]]></name>
     <internalKey><![CDATA[DuplicateStringLiteral]]></internalKey>
-    <description><![CDATA[<p> This rule checks for duplicate String literals within the current class.</p>
+    <description><![CDATA[<p>This rule checks for duplicate String literals within the current class.</p>
 <p>Code containing duplicate <i>String</i> literals can usually be improved by declaring the <i>String</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
-  * This rule does not search across several files at once, only in the current file, and only within the current class.</p>
+<p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateStringLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
     <param>
@@ -2669,7 +2680,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Duplicate Map Literal]]></name>
     <internalKey><![CDATA[DuplicateMapLiteral]]></internalKey>
-    <description><![CDATA[<p> This rule checks for duplicate <i>Map</i> literals within the current class. This rule only checks for <i>Map</i>s where the keys and values are all constants or literals.</p>
+    <description><![CDATA[<p>This rule checks for duplicate <i>Map</i> literals within the current class. This rule only checks for <i>Map</i>s where the keys and values are all constants or literals.</p>
 <p>Code containing duplicate <i>Map</i> literals can usually be improved by declaring the <i>Map</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
@@ -2686,6 +2697,7 @@ for (int i = 0; i &lt; 100; ++i) {
       def var1 = [null:1, 'b':2, (Boolean.FALSE):3, (4):4, (true):5]
       def var2 = [null:1, 'b':2, (Boolean.FALSE):3, (4):4, (true):5]    // violation
 </pre>
+<p>Examples of non-violations:</p>
 <pre>
     def name
     def var1 = [(name):1, b:1, c:1]
@@ -2696,7 +2708,9 @@ for (int i = 0; i &lt; 100; ++i) {
 
     def var1 = [a:7+5]
     def var2 = [a:7+5]      // not a violation; contains a non-constant/literal expression
-</pre>]]></description>
+</pre>
+<p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
+<p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateMapLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2706,7 +2720,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Duplicate List Literal]]></name>
     <internalKey><![CDATA[DuplicateListLiteral]]></internalKey>
-    <description><![CDATA[<p> This rule checks for duplicate <i>List</i> literals within the current class. This rule only checks for <i>List</i>s where values are all constants or literals.</p>
+    <description><![CDATA[<p>This rule checks for duplicate <i>List</i> literals within the current class. This rule only checks for <i>List</i>s where values are all constants or literals.</p>
 <p>Code containing duplicate <i>List</i> literals can usually be improved by declaring the <i>List</i> as a constant field.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
@@ -2720,6 +2734,7 @@ for (int i = 0; i &lt; 100; ++i) {
       def var1 = [123, [3, 4, [x:99], 5]]
       def var2 = [99, [3, 4, [x:99], 5]]        // violation [3, 4, [x:99], 5]
 </pre>
+<p>Examples of non-violations:</p>
 <pre>
     def name
     def var1 = [name, 'b', 'c']
@@ -2727,7 +2742,9 @@ for (int i = 0; i &lt; 100; ++i) {
 
     def var1 = [1, 7+5]
     def var2 = [1, 7+5]      // not a violation; contains a non-constant/literal expression
-</pre>]]></description>
+</pre>
+<p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
+<p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateListLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2886,6 +2903,7 @@ for (int i = 0; i &lt; 100; ++i) {
     throw RuntimeFailure()      // ends in Failure, first letter Capitalized
     throw RuntimeFault(foo)     // ends in Fault, first letter Capitalized
 </pre>
+<p>The following code will not cause any exceptions:</p>
 <pre>
     throw new RuntimeException()
     throw runtimeFailure()      // first letter lowercase, assumed to be method call
@@ -2934,7 +2952,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Exception Not Thrown]]></name>
     <internalKey><![CDATA[ExceptionNotThrown]]></internalKey>
-    <description><![CDATA[<p> Checks for an exception constructor call without a <code>throw</code> as the last statement within a catch block. This rule treats any constructor call for a class named <i>xxx</i><b>Exception</b> as an exception constructor call.</p>
+    <description><![CDATA[<p>Checks for an exception constructor call without a <code>throw</code> as the last statement within a catch block. This rule treats any constructor call for a class named <i>xxx</i><b>Exception</b> as an exception constructor call.</p>
 <p>Example of violations:</p>
 <pre>
     void execute() {
@@ -3109,7 +3127,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Checks that there is at least one space or whitespace following each comma. That includes checks for method and closure declaration parameter lists, method call parameter lists, Map literals and List literals.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
-  Examples of violations:</p>
+<p>Examples of violations:</p>
 <pre>
     def value = calculate(1,399, 'abc')         // violation on parameter 399
 
@@ -3158,7 +3176,7 @@ for (int i = 0; i &lt; 100; ++i) {
 <p>Known limitations:</p>
 <p>* Does not catch violations of missing space around equals operator (=) within a declaration expression, e.g.  <code>def x=23</code></p>
 <p>* Does not catch violations of certain ternary expressions and standalone elvis operator (?:) expressions</p>
-  Examples of violations:</p>
+<p>Examples of violations:</p>
 <pre>
     def myMethod() {
         3+ 5-x*23/ 100              // violation
@@ -3184,7 +3202,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
-  Examples of violations:</p>
+<p>Examples of violations:</p>
 <pre>
     class MyClass{ }                            // violation
     class MyOtherClass extends AbstractClass{ } // violation
@@ -3236,7 +3254,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Space After Opening Brace]]></name>
     <internalKey><![CDATA[SpaceAfterOpeningBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
-  Examples of violations:</p>
+<p>Examples of violations:</p>
 <pre>
     class MyClass{int count }                   // violation
 
@@ -3288,9 +3306,9 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[SpaceAfterClosingBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each closing brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
 <p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation.</p>
-  Known limitations:</p>
+<p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
-  Examples of violations and exceptions:</p>
+<p>Examples of violations and exceptions:</p>
 <pre>
     if (ready) { return 9 }else { }             // violation
     try { doStuff() }finally { }                // violation
@@ -3319,7 +3337,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each closing brace ("\}") for method/class/interface declarations, closure expressions and block statements.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
-  Examples of violations:</p>
+<p>Examples of violations:</p>
 <pre>
     class MyClass { int count}                  // violation
 
@@ -3451,7 +3469,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Checks that there is at least one space (blank) or whitespace around each closure arrow (-&gt;) symbol.</p>
 <p>Known limitations:</p>
 <p>* Does not catch violations if the closure arrow (-&gt;) is on a separate line from the start of the closure.</p>
-  Example of violations:</p>
+<p>Example of violations:</p>
 <pre>
     def closure1 = {-&gt;}                             // violation
     def closure2 = { -&gt;}                            // violation
@@ -3647,7 +3665,7 @@ for (int i = 0; i &lt; 100; ++i) {
 <p>This rule also ignores all fields annotated with the <code>@Inject</code> annotation.</p>
 <p>You can configure this rule to ignore certain fields either by name or by type. This can be useful to ignore fields that hold references to (static) dependencies (such as DAOs or Service objects) or static configuration.</p>
 <p>Note that you can use the standard rule properties, such as <code>applyToClassNames</code>, <code>doNotApplyToFileNames</code> and <code>applyToFilesMatching</code> to only apply this rule to a subset of all classes/files. These rule properties are described in <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
-  [[1]]  The <code>ignoreFieldTypes</code> property matches the field type name as indicated in the field declaration, only including a full package specification IF it is included in the source code. For example, the field declaration <code>BigDecimal value</code> matches an <code>ignoreFieldTypes</code> value of <code>BigDecimal</code>, but not <code>java.lang.BigDecimal</code>.</p>
+<p>[[1]]  The <code>ignoreFieldTypes</code> property matches the field type name as indicated in the field declaration, only including a full package specification IF it is included in the source code. For example, the field declaration <code>BigDecimal value</code> matches an <code>ignoreFieldTypes</code> value of <code>BigDecimal</code>, but not <code>java.lang.BigDecimal</code>.</p>
 <p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.</p>
 <p>[[3]] At least one of the (standard) <code>applyToClassNames</code>, <code>applyToFileNames</code> or <code>applyToFilesMatching</code> properties must be set (i.e., not null or empty) or else this rule does nothing. In other words, you must configure this rule to apply to a specific set of classes or files.</p>
 <p>[[4]] This rule will not catch violations of true <i>statelessness</i>/<i>reentrancy</i> if you define a <code>final</code> field whose value is itself mutable, e.g. a <code>final HashMap</code>.</p>]]></description>
@@ -3672,7 +3690,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Package Reference]]></name>
     <internalKey><![CDATA[IllegalPackageReference]]></internalKey>
-    <description><![CDATA[<p> Checks for reference to any of the packages configured in <code>packageNames</code>.</p>
+    <description><![CDATA[<p>Checks for reference to any of the packages configured in <code>packageNames</code>.</p>
 <p>Note that you can use the standard rule properties, such as <code>applyToClassNames</code>, <code>doNotApplyToFileNames</code> and <code>applyToFilesMatching</code> to only apply this rule to a subset of all classes/files. These rule properties are described in <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
 <p>This rule can be useful for governance and enforcement of <i>architectural layering</i>. For instance, making sure that view or model classes, for instance, do not contain references to JDBC-specific packages (e.g. java.sql and javax.sql).</p>
 <p>Here is an example configuration of this rule used to ensure that JDBC packages/classes are only referenced within DAO classes:</p>
@@ -3690,7 +3708,8 @@ for (int i = 0; i &lt; 100; ++i) {
             description = 'Reference to JDBC packages should be restricted to DAO classes.'
         }
     }
-</pre>]]></description>
+</pre>
+<p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>packageNames</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>packageNames</key>
@@ -3704,7 +3723,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Illegal Class Reference]]></name>
     <internalKey><![CDATA[IllegalClassReference]]></internalKey>
-    <description><![CDATA[<p> Checks for reference to any of the classes configured in <code>classNames</code>.</p>
+    <description><![CDATA[<p>Checks for reference to any of the classes configured in <code>classNames</code>.</p>
 <p>Note that you can use the standard rule properties, such as <code>applyToClassNames</code>, <code>doNotApplyToFileNames</code> and <code>applyToFilesMatching</code> to only apply this rule to a subset of all classes/files. These rule properties are described in <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
 <p>This rule can be useful for governance and enforcement of <i>architectural layering</i>. For instance, making sure that view or model classes, for instance, do not contain references to DAO classes (e.g., *Dao).</p>
 <p>Here is an example configuration of this rule used to ensure that DAO classes are not referenced from within model classes:</p>
@@ -3722,7 +3741,8 @@ for (int i = 0; i &lt; 100; ++i) {
             description = 'Do not reference DAOs from model classes.'
         }
     }
-</pre>]]></description>
+</pre>
+<p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>classNames</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>classNames</key>
@@ -3759,6 +3779,7 @@ for (int i = 0; i &lt; 100; ++i) {
         protected static method3() { }
     }
 </pre>
+<p>Example of violations for properties:</p>
 <pre>
     // IllegalClassMember.illegalPropertyModifiers = 'final'
 
@@ -3767,7 +3788,10 @@ for (int i = 0; i &lt; 100; ++i) {
         final property2         // violation
         static property3
     }
-</pre>]]></description>
+</pre>
+<p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>classNames</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
+<p>[[1]] At least one the <code>illegalFieldModifiers</code>, <code>allowedFieldModifiers</code>, <code>illegalPropertyModifiers</code>, <code>allowedPropertyModifiers</code>, <code>illegalMethodModifiers</code> or <code>allowedMethodModifiers</code> properties must be set (i.e., not null or empty) or else this rule does nothing. In other words, you must configure this rule with at least one kind of illegal or allowed class member.</p>
+<p>[[2]] At least one of the (standard) <code>applyToClassNames</code>, <code>applyToFileNames</code> or <code>applyToFilesMatching</code> properties must be set (i.e., not null or empty) or else this rule does nothing. In other words, you must configure this rule to apply to a specific set of classes or files.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>allowedFieldModifiers</key>
@@ -3841,7 +3865,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Grails Public Controller Method]]></name>
     <internalKey><![CDATA[GrailsPublicControllerMethod]]></internalKey>
-    <description><![CDATA[<p> Rule that checks for public methods on Grails controller classes. Static methods are ignored.</p>
+    <description><![CDATA[<p>Rule that checks for public methods on Grails controller classes. Static methods are ignored.</p>
 <p>Grails controller actions and interceptors are defined as properties on the controller class. Public methods on a controller class are unnecessary. They break encapsulation and can be confusing.</p>
 <p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/controllers' folder. You can override this with a different regular expression value if appropriate.</p>
 <p>This rule also sets the default value of <code>applyToClassNames</code> to only match class names ending in 'Controller'. You can override this with a different class name pattern (String with wildcards) if appropriate.</p>]]></description>
@@ -3857,7 +3881,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Grails Session Reference]]></name>
     <internalKey><![CDATA[GrailsSessionReference]]></internalKey>
-    <description><![CDATA[<p> Rule that checks for references to the <code>session</code> object from within Grails controller and taglib classes.</p>
+    <description><![CDATA[<p>Rule that checks for references to the <code>session</code> object from within Grails controller and taglib classes.</p>
 <p>This rule is intended as a "governance" rule to enable monitoring and controlling access to the <code>session</code> from within application source code. Storing objects in the <code>session</code> may inhibit scalability and/or performance and should be carefully considered.</p>
 <p>Note that this rule does not check for direct access to the <code>session</code> from within GSP (Groovy Server Pages) files.</p>
 <p>Enabling this rule may make most sense in a team environment where team members exhibit a broad range of skill and experience levels. Appropriate <code>session</code> access can be configured as exceptions to this rule by configuring either the <code>doNotApplyToFilenames</code> or <code>doNotApplyToFilesMatching</code> property of the rule. And, as always, it is easy to just <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Turning_Off_A_Rule">turn off the rule</a> if it does not make sense it your environment.</p>
@@ -3891,9 +3915,9 @@ for (int i = 0; i &lt; 100; ++i) {
 <p>* All fields annotated with the <code>@Inject</code> annotation.</p>
 <p>* All fields with names matching the <i>ignoreFieldNames</i> property.</p>
 <p>* All fields with types matching the <i>ignoreFieldTypes</i> property.</p>
-  The <code>ignoreFieldNames</code> property of this rule is preconfigured to ignore the standard Grails service configuration field names ('scope', 'transactional') and the standard injected bean names ('dataSource', 'sessionFactory'), as well as all other field names ending with 'Service'.</p>
+<p>The <code>ignoreFieldNames</code> property of this rule is preconfigured to ignore the standard Grails service configuration field names ('scope', 'transactional') and the standard injected bean names ('dataSource', 'sessionFactory'), as well as all other field names ending with 'Service'.</p>
 <p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/services' folder. You can override this with a different regular expression value if appropriate.</p>
-<p>This rule also sets the default value of <code>applyToClassNames</code> to only match class names ending in 'Service'. You can override this with a different class name pattern (String with wildcards) if appropriate.</p></p>
+<p>This rule also sets the default value of <code>applyToClassNames</code> to only match class names ending in 'Service'. You can override this with a different class name pattern (String with wildcards) if appropriate.</p>
 <p>[[1]]  The <code>ignoreFieldTypes</code> property matches the field type name as indicated in the field declaration, only including a full package specification IF it is included in the source code. For example, the field declaration <code>BigDecimal value</code> matches an <code>ignoreFieldTypes</code> value of <code>BigDecimal</code>, but not <code>java.lang.BigDecimal</code>.</p>
 <p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.]]></description>
     <tag>grails</tag>
@@ -3942,7 +3966,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Grails Duplicate Mapping]]></name>
     <internalKey><![CDATA[GrailsDuplicateMapping]]></internalKey>
-    <description><![CDATA[<p> Check for duplicate name in a Grails domain class mapping. Duplicate names/entries are legal, but can be confusing and error-prone.</p>
+    <description><![CDATA[<p>Check for duplicate name in a Grails domain class mapping. Duplicate names/entries are legal, but can be confusing and error-prone.</p>
 <p>NOTE: This rule does not check that the values of the entries are duplicated, only that there are two entries with the same name.</p>
 <p>Example of violations:</p>
 <pre>
@@ -3968,7 +3992,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Grails Duplicate Constraint]]></name>
     <internalKey><![CDATA[GrailsDuplicateConstraint]]></internalKey>
-    <description><![CDATA[<p> Check for duplicate name in a Grails domain class constraints. Duplicate names/entries are legal, but can be confusing and error-prone.</p>
+    <description><![CDATA[<p>Check for duplicate name in a Grails domain class constraints. Duplicate names/entries are legal, but can be confusing and error-prone.</p>
 <p>NOTE: This rule does not check that the values of the entries are duplicated, only that there are two entries with the same name.</p>
 <p>Example of violations:</p>
 <pre>
@@ -4074,7 +4098,9 @@ for (int i = 0; i &lt; 100; ++i) {
     a.compareTo(b) &gt;= 0               // can be replaced by: a &gt;= b
     a.compareTo(b) &lt; 0                // can be replaced by: a &lt; b
     a.compareTo(b) &lt;= 0               // can be replaced by: a &lt;= b
-</pre>]]></description>
+</pre>
+<p>This rule can be  configured to ignore <code>this.compareTo(Object)</code> using the <i>ignoreThisReference</i> property. It defaults to <code>false</code>, so even <code>compareTo(x)</code> will trigger a violation.</p>
+<p>This rule also ignores all calls to <code>super.compareTo(Object)</code>.</p>]]></description>
     <tag>groovyism</tag>
   </rule>
 
@@ -4266,7 +4292,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[G String As Map Key]]></name>
     <internalKey><![CDATA[GStringAsMapKey]]></internalKey>
-    <description><![CDATA[<p> A GString should not be used as a map key since its <i>hashcode</i> is not guaranteed to be stable. Consider calling <code>key.toString()</code>.</p>
+    <description><![CDATA[<p>A GString should not be used as a map key since its <i>hashcode</i> is not guaranteed to be stable. Consider calling <code>key.toString()</code>.</p>
 <p>Here is an example of code that produces a violation:</p>
 <pre>
     Map map = ["${someRef}" : 'invalid' ]       // violation
@@ -4840,7 +4866,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[UseAssertTrueInsteadOfAssertEquals]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertEquals</code> where the first parameter is a boolean. These assertions should be made by more specific methods, like <code>assertTrue</code> or <code>assertFalse</code>.</p>
 <p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
-  All of the following examples can be simplified to assertTrue or remove the true literal:</p>
+<p>All of the following examples can be simplified to assertTrue or remove the true literal:</p>
 <pre>
     assertEquals(true, foo())
     assertEquals("message", true, foo())
@@ -4918,6 +4944,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <pre>
     String assertMethodPatterns = 'assert.*,should.*,fail.*,verify.*,expect.*'
 </pre>
+<p>If you'd like to add any method starting with 'ensure' to the ignores then you would set the value to this:</p>
 <pre>
     'assert.*,should.*,fail.*,verify.*,ensure.*'
 </pre>]]></description>
@@ -5015,7 +5042,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Spock Ignore Rest Used]]></name>
     <internalKey><![CDATA[SpockIgnoreRestUsed]]></internalKey>
-    <description><![CDATA[<p> If Spock's <code>@IgnoreRest</code> annotation appears on any method, all non-annotated test methods are not executed. This behaviour is almost always unintended. It's fine to use @IgnoreRest locally during development, but when committing code, it should be removed.</p>
+    <description><![CDATA[<p>If Spock's <code>@IgnoreRest</code> annotation appears on any method, all non-annotated test methods are not executed. This behaviour is almost always unintended. It's fine to use @IgnoreRest locally during development, but when committing code, it should be removed.</p>
 <p>The <i>specificationClassNames</i> and <i>specificationSuperclassNames</i> properties determine which classes are considered Spock <i>Specification</i> classes.</p>
 <p>Example of violations:</p>
 <pre>
@@ -5072,7 +5099,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[JUnit Unnecessary Throws Exception]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryThrowsException]]></internalKey>
-    <description><![CDATA[<p> Check for <code>throws</code> clauses on JUnit test methods. That is not necessary in Groovy.</p>
+    <description><![CDATA[<p>Check for <code>throws</code> clauses on JUnit test methods. That is not necessary in Groovy.</p>
 <p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
@@ -5214,7 +5241,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* For <b>SLF4J</b> and <b>Logback</b>: Does not catch Log instantiations if you specify the full package name for the <code>LoggerFactory</code> class: e.g. <code>org.slf4j.LoggerFactory.getLogger(..)</code></p>
 <p>* For <b>Commons Logging</b>: Does not catch Log instantiations if you specify the full package name for the <code>LogFactory</code> class: e.g.  <code>org.apache.commons.logging.LogFactory.getLog(..)</code></p>
 <p>* For <b>Java Logging API</b>: Does not catch Logger instantiations if you specify the full package name for the <code>Logger</code> class: e.g.  <code>java.util.logging.Logger.getLogger(..)</code></p>
-  Here are examples of <b>Log4J</b> or <b>Java Logging API</b> code that cause violations:</p>
+<p>Here are examples of <b>Log4J</b> or <b>Java Logging API</b> code that cause violations:</p>
 <pre>
     class MyClass {
         private static final LOG = Logger.getLogger(SomeOtherClass)  // violation
@@ -5222,6 +5249,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         def log2 = Logger.getLogger(SomeOtherClass.class.name)       // violation
     }
 </pre>
+<p>Here are examples of <b>Commons Logging</b> code that cause violations:</p>
 <pre>
     class MyClass {
         private static final LOG = LogFactory.getLog(SomeOtherClass)    // violation
@@ -5229,6 +5257,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         def log2 = LogFactory.getLog(SomeOtherClass.class.getName())    // violation
     }
 </pre>
+<p>Here are examples of code that does NOT cause violations:</p>
 <pre>
     // Log4J or Java Logging API
 
@@ -5499,7 +5528,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Object Override Misspelled Method Name]]></name>
     <internalKey><![CDATA[ObjectOverrideMisspelledMethodName]]></internalKey>
-    <description><![CDATA[<p> Verifies that the names of the most commonly overridden methods of <code>Object</code>: <code>equals</code>, <code>hashCode</code> and <code>toString</code>, are correct.</p>
+    <description><![CDATA[<p>Verifies that the names of the most commonly overridden methods of <code>Object</code>: <code>equals</code>, <code>hashCode</code> and <code>toString</code>, are correct.</p>
 <p>Here are some examples of code that produces violations:</p>
 <pre>
     boolean equal(Object o) {}                  // violation
@@ -5592,7 +5621,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Package Name Matches File Path]]></name>
     <internalKey><![CDATA[PackageNameMatchesFilePath]]></internalKey>
-    <description><![CDATA[<p> A package source file's path should match the package declaration.</p>]]></description>
+    <description><![CDATA[<p>A package source file's path should match the package declaration.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>groupId</key>
@@ -5737,7 +5766,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>REFERENCES</p>
 <p>[[1]] Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 576</p>
 <p>[[2]] The Enterprise JavaBeans 2.1 Specification Sun Microsystems</p>
-  By default, this rule is not applied to tests and test cases.</p>
+<p>By default, this rule is not applied to tests and test cases.</p>
 <p>Example of violations:</p>
 <pre>
     FileSystem.getFileSystem()          // any method on FileSystem
@@ -5831,7 +5860,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Serial Version UID]]></name>
     <internalKey><![CDATA[SerialVersionUID]]></internalKey>
-    <description><![CDATA[<p> A <b>serialVersionUID</b> is normally intended to be used with Serialization. It needs to be of type <code>long</code>, <code>static</code>, and <code>final</code>. Also, it should be declared <code>private</code>. Providing no modifier creates a <i>Property</i> and Groovy generates a <i>getter</i>, which is probably not intended.</p>
+    <description><![CDATA[<p>A <b>serialVersionUID</b> is normally intended to be used with Serialization. It needs to be of type <code>long</code>, <code>static</code>, and <code>final</code>. Also, it should be declared <code>private</code>. Providing no modifier creates a <i>Property</i> and Groovy generates a <i>getter</i>, which is probably not intended.</p>
 <p>From API javadoc for <code>java.io.Serializable</code>: <i>It is also strongly advised that explicit serialVersionUID declarations use the private modifier where possible, since such declarations apply only to the immediately declaring class--serialVersionUID fields are not useful as inherited members.</i></p>]]></description>
     <tag>bug</tag>
   </rule>
@@ -5863,7 +5892,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>References:</p>
 <p>* Standards Mapping - Common Weakness Enumeration - (CWE) CWE ID 485</p>
 <p>* Sun Microsystems, Inc. Java Sun Tutorial</p>
-  Example of violations:</p>
+<p>Example of violations:</p>
 <pre>
     class MyClass implements Serializable {
         public ObjectStreamField[] serialPersistentFields = [ new ObjectStreamField("myField", List.class) ] as ObjectStreamField[]
@@ -5927,7 +5956,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>The <b>maxMethodComplexity</b> property holds the threshold value for the cyclomatic complexity value for each method. If this value is non-zero, a method with a cyclomatic complexity value greater than this value is considered a violation.</p>
 <p>The <b>maxClassAverageMethodComplexity</b> property holds the threshold value for the average cyclomatic complexity value for each class. If this value is non-zero, a class with an average cyclomatic complexity value greater than this value is considered a violation.</p>
 <p>This rule treats "closure fields" as methods. If a class field is initialized to a Closure (ClosureExpression), then that Closure is analyzed and checked just like a method.</p>
-  The <i>cyclomatic complexity</i> value is calculated as follows:</p>
+<p>The <i>cyclomatic complexity</i> value is calculated as follows:</p>
 <p><i>Start with a initial (default) value of one (1). Add one (1) for each occurrence of each of the following:</i></p>
 <p>* <code>if</code> statement</p>
 <p>* <code>while</code> statement</p>
@@ -5937,7 +5966,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* <code>&amp;&amp;</code> and <code>||</code> boolean operations</p>
 <p>* <code>?:</code> ternary operator and <code>?:</code> <i>Elvis</i> operator.</p>
 <p>* <code>?.</code> null-check operator</p>
-  * See the <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclomatic Complexity Wikipedia entry</a></p>
+<p>* See the <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclomatic Complexity Wikipedia entry</a></p>
 <p>* See the <a href="http://www.literateprogramming.com/mccabe.pdf">original paper describing Cyclomatic Complexity</a></p>
 <p>* See the <a href="http://gmetrics.sourceforge.net/gmetrics-CyclomaticComplexityMetric.html">GMetrics Cyclomatic Complexity metric</a>. This includes a discussion of guidelines for interpreting <i>cyclomatic complexity</i> values.</p>
 <p>* This rule requires Groovy 1.6 (or later).</p>
@@ -6084,7 +6113,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>The <b>maxClassAverageMethodAbcScore</b> property holds the threshold value for the average ABC score for each class. If this value is non-zero, a class with an average ABC score value greater than this value is considered a violation. The value does not have to be an integer.</p>
 <p>The <b>maxClassAbcScore</b> property holds the threshold value for the total ABC score value for each class. If this value is non-zero, a class with a total ABC score greater than this value is considered a violation. The value does not have to be an integer.</p>
 <p>This rule treats "closure fields" as methods. If a class field is initialized to a Closure (ClosureExpression), then that Closure is analyzed and checked just like a method.</p>
-  The <i>ABC</i> score is calculated as follows: The <i>ABC</i> metric measures size by counting the number of Assignments (A), Branches (B) and Conditions (C) and assigns a single numerical score calculated as:</p>
+<p>The <i>ABC</i> score is calculated as follows: The <i>ABC</i> metric measures size by counting the number of Assignments (A), Branches (B) and Conditions (C) and assigns a single numerical score calculated as:</p>
 <p><code> |ABC| = sqrt((A*A)+(B*B)+(C*C)) </code></p>
 <p>The <i>ABC Metric</i> calculation rules for Groovy:</p>
 <p>* Add one to the <i>assignment</i> count for each occurrence of an assignment operator, excluding constant declarations: = *= /= %= += &lt;&lt;= &gt;&gt;= &amp;= |= ^= &gt;&gt;&gt;=</p>
@@ -6094,7 +6123,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* Add one to the <i>condition</i> count for each use of a conditional operator: == != &lt;= &gt;= &lt; &gt; &lt;=&gt; =~ ==~</p>
 <p>* Add one to the <i>condition</i> count for each use of the following keywords: else case default try catch ?</p>
 <p>* Add one to the <i>condition</i> count for each unary conditional expression.</p>
-  * See the <a href="http://www.softwarerenovation.com/ABCMetric.pdf">ABC Metric specification</a></p>
+<p>* See the <a href="http://www.softwarerenovation.com/ABCMetric.pdf">ABC Metric specification</a></p>
 <p>* See the <a href="http://jakescruggs.blogspot.com/2008/08/whats-good-flog-score.html">Blog post</a> describing guidelines for interpreting an ABC score</p>
 <p>* This <a href="https://servicios.excentia.es/confluence/display/QAX/SONAR+ABC+Metric+Plugin">(Spanish) blog post</a> about the eXcentia Sonar ABC Metric Plugin (for Java) includes a table of risk classifications for ABC scores for both methods and classes.</p>
 <p>* See the <a href="http://gmetrics.sourceforge.net/gmetrics-AbcMetric.html">GMetrics ABC metric</a>. This includes a discussion of guidelines for interpreting <i>ABC</i> scores.</p>
@@ -6213,6 +6242,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         return Boolean.FALSE
     }
 </pre>
+<p>(2) When the <code>if</code> statement is the last statement in a block and the <i>if</i> and <i>else</i> blocks are only <code>true</code> and <code>false</code> expressions. This is an <i>implicit</i> return of <code>true</code>/<code>false</code>. For example, the <code>if</code> statement in the following code can be replaced by <code>someExpression</code> or <code>someExpression as boolean</code>:</p>
 <pre>
     def myMethod() {
         doSomething()
@@ -6221,6 +6251,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         else false
     }
 </pre>
+<p>(3) When the second-to-last statement in a block is an <code>if</code> statement with no <code>else</code>, where the block contains a single <code>return</code> statement, and the last statement in the block is a <code>return</code> statement, and one <code>return</code> statement returns a <code>true</code> expression and the other returns a <code>false</code> expression. This check is disabled by setting <code>checkLastStatementImplicitElse</code> to <code>false</code>. For example, the <code>if</code> statement in the following code can be replaced by <code>return expression1</code>:</p>
 <pre>
     def myMethod() {
         doSomething()
@@ -6230,6 +6261,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         return false
     }
 </pre>
+<p>(4) When either the <i>if</i> block or <i>else</i> block of an <code>if</code> statement that is not the last statement in a block contain only a single constant or literal expression. For example, the <code>if</code> statement in the following code has no effect and can be removed:</p>
 <pre>
     def myMethod() {
         if (someExpression) { 123 }
@@ -6253,6 +6285,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     x &lt; 99 ? Boolean.TRUE : Boolean.FALSE   // can be replaced by: x &lt; 99
     !x ? true : false                       // can be replaced by: !x
 </pre>
+<p>The rule also checks for ternary expressions where the <i>true</i> and <i>false</i> expressions are the same constant or variable. Examples include:</p>
 <pre>
     x ? '123' : '123'              // can be replaced by: '123'
     x ? null : null                // can be replaced by: null
@@ -6320,6 +6353,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     def f = x[(x.size() -1]
     def d = x[(x.length -1]
 </pre>
+<p>All of this code is fine though:</p>
 <pre>
     def x = [0, 1, 2]
     def a = x.last()
@@ -6355,6 +6389,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     assert [1, 2, 3].collect { x -&gt; x.multiply(2) }
     ["1", "2", "3"].collect { it.bytes }
 </pre>
+<p>The following code does not produce violations:</p>
 <pre>
     [1, 2, 3].collect { it * it }   // OK, closure parameter is referenced twice
 
@@ -6452,6 +6487,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     x.getFirstName()
     x.getA()
 </pre>
+<p>These bits of code do not:</p>
 <pre>
     x.property
     x.first
@@ -6570,6 +6606,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     p2.setCity('Basel')
     p2.setZipCode('4051')
 </pre>
+<p>However, these two bits of code do not because they use either a <code>with</code> or <code>identity</code> block.</p>
 <pre>
     def p1 = new Person().with {
         firstName = 'Hamlet'
@@ -6618,6 +6655,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     if (super != null) { }
     if (null != super) { }
 </pre>
+<p>Examples of acceptable code:</p>
 <pre>
     // null check it OK
     if (obj != null) { }
@@ -6731,6 +6769,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     writer.append('foo').append(5)          // string and number can be joined
     writer.append('Hello').append("$World") // GString can be joined
 </pre>
+<p>Example of passing code:</p>
 <pre>
     // usage not chained invocation
     writer.append('Hello')
@@ -6918,7 +6957,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[UnnecessaryTransientModifier]]></internalKey>
     <description><![CDATA[<p>The field is marked as transient, but the class isn't Serializable, so marking it as transient has no effect. This may be leftover marking from a previous version of the code in which the class was transient, or it may indicate a misunderstanding of how serialization works.</p>
 <p>Some Java frameworks change the semantics of the transient keyword. For instance, when using Terracotta the transient keyword may have slightly different semantics. You may need to turn this rule off depending on which Java frameworks are in use.</p>
-  Examples:</p>
+<p>Examples:</p>
 <pre>
     class MyClass {
         // class not serializable, violation occurs
@@ -7041,7 +7080,11 @@ println list.collectNested { it * 2 } // same functionality, better readability
             def dataSource = [:] as javax.sql.DataSource        // violation
         }
     }
-</pre>]]></description>
+</pre>
+<p>Known limitations:</p>
+<p>* Does not catch class declarations that explicitly extend <code>java.lang.Object</code>. For instance, <code>class MyClass extends java.lang.Object { }</code>. Just don't do that, okay?</p>
+<p>* Does not catch class declarations that explicitly extend <code>groovy.lang.Script</code>. For instance, <code>class MyScript extends groovy.lang.Script{ }</code>. Don't do that, either!</p>
+<p>* Does not catch unnecessary package references if they are the types of anonymous inner class definitions, for older versions of Groovy (<i> 1.7.10?). For instance, <code>def runnable = new java.lang.Runnable() { ... }</code>.</p>]]></description>
     <tag>clumsy</tag>
   </rule>
 
@@ -7190,7 +7233,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <description><![CDATA[<p>Checks for unnecessary calls to <code>toString()</code>. This includes:</p>
 <p>* Calls to <code>toString()</code> on a String literal or expression</p>
 <p>* Calls to <code>toString()</code> for the value assigned to a <code>String</code> field or variable (if <i>checkAssignments</i> is <code>true</code>).</p>
-  Example of violations:</p>
+<p>Example of violations:</p>
 <pre>
     def name = "Joe".toString()                             // violation - string literal
     def groupId = ((String)row.get('GroupID')).toString()   // violation - string expression
@@ -7219,7 +7262,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Safe Navigation Operator]]></name>
     <internalKey><![CDATA[UnnecessarySafeNavigationOperator]]></internalKey>
-    <description><![CDATA[<p> Check for the <i>safe navigation</i> operator (<code>?.</code>) applied to constants and literals, or <code>this</code> or <code>super</code>, or constructor calls, all of which can never be null.</p>
+    <description><![CDATA[<p>Check for the <i>safe navigation</i> operator (<code>?.</code>) applied to constants and literals, or <code>this</code> or <code>super</code>, or constructor calls, all of which can never be null.</p>
 <p>Example of violations:</p>
 <pre>
     def myMethod() {
@@ -7376,6 +7419,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
         }
     }
 </pre>
+<p>Example of code that does not cause violations:</p>
 <pre>
     class MyClass {
         @Override
