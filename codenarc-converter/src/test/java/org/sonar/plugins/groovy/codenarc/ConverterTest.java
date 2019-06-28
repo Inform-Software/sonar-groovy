@@ -147,8 +147,9 @@ public class ConverterTest {
      * - MisorderedStaticImportsRule : description of 'comesBefore' parameter missing in apt files
      * - FileCreateTempFileRule: link to website
      * - BracesForIfElseRule: default value of parameters should be true, not 'the same as sameLine'
+     * - JUnitTestMethodWithoutAssertRule, UnnecessaryObjectReferencesRule: Non-matching open & close tags
      */
-    Assert.assertEquals(3, nbrDiff);
+    Assert.assertEquals(5, nbrDiff);
   }
 
   private static String getRuleKey(Node rule) {

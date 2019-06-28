@@ -65,7 +65,7 @@ public class AptResult {
   }
 
   public String getDescription() {
-    return description;
+    return description.trim();
   }
 
   public boolean hasParameters() {

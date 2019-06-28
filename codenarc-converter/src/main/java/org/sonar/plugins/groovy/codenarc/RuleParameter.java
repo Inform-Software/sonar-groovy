@@ -72,7 +72,9 @@ public abstract class RuleParameter implements Comparable<RuleParameter> {
   }
 
   public RuleParameter withExpandedDescription(String descAdd) {
-    return create(key(), description() + descAdd, defaultValue());
+    String newDesc = description();
+    newDesc += (newDesc.isEmpty() ? "" : " ") + descAdd;
+    return create(key(), newDesc, defaultValue());
   }
 
   private static String selectValue(String currentValue, String newValue) {

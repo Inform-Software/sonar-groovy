@@ -68,7 +68,7 @@ public class AptParser {
     for (int index = 0; index < lines.size(); index++) {
       String fullLine = lines.get(index);
       String line = fullLine.trim();
-      if (line.startsWith(NEW_RULE_PREFIX) && !line.startsWith(LIST_PREFIX) && inRule) {
+      if (fullLine.startsWith(NEW_RULE_PREFIX) && !line.startsWith(LIST_PREFIX) && inRule) {
         results.put(currentRule, currentResult);
         inRule = false;
         inDescription = false;
@@ -95,7 +95,7 @@ public class AptParser {
           && isValidDescriptionLine(line)) {
         inDescription = true;
         if (StringUtils.isNotBlank(line)) {
-          currentResult.description += "<p>" + line;
+          addParagraphLine(currentResult, line);
         }
       } else if (inRule
           && !inExample
@@ -104,16 +104,16 @@ public class AptParser {
           && !currentResult.description.endsWith("</pre>\n")
           && isValidDescriptionLine(line)) {
         if (isEndOfParagraph(currentResult, line)) {
-          currentResult.description += "</p>\n";
+          currentResult.description = currentResult.description.trim() + "</p>\n";
         } else {
-          currentResult.description += getParagraphLine(currentResult, line);
+          addParagraphLine(currentResult, line);
         }
       } else if (inRule && inExample && isExampleSeparator(line)) {
         inExample = false;
         inDescription = true;
         currentResult.description += "</pre>\n";
       } else if (inRule && inExample) {
-        currentResult.description += fullLine + "\n";
+        currentResult.description += cleanExample(fullLine) + "\n";
       } else if (inRule && !inParameters && line.matches(PARAMETER_START_SEPARATOR)) {
         inDescription = false;
         inParameters = true;
@@ -139,7 +139,7 @@ public class AptParser {
           }
           if (StringUtils.isNotBlank(description)) {
             currentParameter =
-                currentParameter.withExpandedDescription(cleanDescription(description, true) + " ");
+                currentParameter.withExpandedDescription(cleanParameter(description));
           }
         }
       } else if (inRule && inParameters && isParameterSeparator(line)) {
@@ -165,17 +165,19 @@ public class AptParser {
     return results;
   }
 
+
   private static boolean isExampleSeparator(String line) {
     return line.matches(EXAMPLE_SEPARATOR_1) || line.matches(EXAMPLE_SEPARATOR_2);
   }
 
-  private static String getParagraphLine(AptResult currentResult, String line) {
-    return (StringUtils.isNotBlank(line) && currentResult.description.endsWith("\n")
-                || StringUtils.isBlank(currentResult.description)
-            ? "<p>"
-            : "")
-        + cleanDescription(line, false)
-        + " ";
+  private static void addParagraphLine(AptResult currentResult, String line) {
+    String cleanLine = cleanDescription(line);
+    currentResult.description +=
+        (StringUtils.isNotBlank(cleanLine) && currentResult.description.endsWith("\n")
+                    || StringUtils.isBlank(currentResult.description)
+                ? "<p>"
+                : " ")
+            + cleanLine;
   }
 
   private static boolean isEndOfParagraph(AptResult currentResult, String line) {
@@ -202,20 +204,42 @@ public class AptParser {
     return line.matches(PARAMETER_SEPARATOR) || line.matches(PARAMETER_START_SEPARATOR);
   }
 
-  private static String cleanDescription(String description, boolean isForParameter) {
-    String result = description;
-    if (!isForParameter) {
-      result = result.replaceAll("<<<", "<code>");
-      result = result.replaceAll("<<", "<code>");
-      result = result.replaceAll(">>>", "</code>");
-      result = result.replaceAll(">>", "</code>");
-    } else {
-      result = result.replaceAll("<<<", "");
-      result = result.replaceAll("<<", "");
-      result = result.replaceAll(">>>", "");
-      result = result.replaceAll(">>", "");
-    }
-    return result;
+  private static String cleanDescription(String description) {
+    String result = " " + description + " ";
+    // This is a bit stupid
+    result = result.replaceAll("&", "&amp;");
+    result = result.replaceAll(" <=> ", " &lt;=&gt; ");
+    result = result.replaceAll(" <<<= ", " &lt;&lt;&lt;= ");
+    result = result.replaceAll(" >>>= ", " &gt;&gt;&gt;= ");
+    result = result.replaceAll(" <<= ", " &lt;&lt;= ");
+    result = result.replaceAll(" >>= ", " &gt;&gt;= ");
+    result = result.replaceAll(" <= ", " &lt;= ");
+    result = result.replaceAll(" >= ", " &gt;= ");
+    result = result.replaceAll(" < ", " &lt; ");
+    result = result.replaceAll(" > ", " &gt; ");
+    result = result.replaceAll("->", "-&gt;");
+    result = result.replaceAll("\\\\=", "=");
+    result = result.replaceAll("\\\\<", "&lt;");
+    result = result.replaceAll("\\\\>", "&gt;");
+
+    result = result.replaceAll("<", "\uE000");
+    result = result.replaceAll(">", "\uE001");
+
+    result = result.replaceAll("\uE000\uE000\uE000", "<code>");
+    result = result.replaceAll("\uE000\uE000", "<b>");
+    result = result.replaceAll("\uE000", "<i>");
+    result = result.replaceAll("\uE001\uE001\uE001", "</code>");
+    result = result.replaceAll("\uE001\uE001", "</b>");
+    result = result.replaceAll("\uE001", "</i>");
+    return result.trim();
+  }
+
+  private static String cleanParameter(String param) {
+    return param.replaceAll("<", "").replaceAll(">", "");
+  }
+
+  private String cleanExample(String line) {
+    return line.replaceAll("&", "&amp;").replaceAll("\\\\?<", "&lt;").replaceAll("\\\\?>", "&gt;");
   }
 
   private static String cleanDefaultValue(String defaultValue) {
@@ -290,4 +314,5 @@ public class AptParser {
       results.put(rule, currentRuleResult);
     }
   }
+
 }

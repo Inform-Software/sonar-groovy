@@ -90,3 +90,11 @@ cd ..
 git add CodeNarc
 ```
 
+You should then run the `codenarc-converter` (Running `mvn verify` should be
+enough if the project is set up correctly) and merge descriptions from
+`codenarc-converter/target/results/rules.xml` into
+`sonar-groovy-plugin/src/main/resources/org/sonar/plugins/groovy/rules.xml`.
+The converter does a pretty crude job converting CodeNarc's [APT] documentation
+into SonarQube rule descriptions.
+
+[APT]: https://maven.apache.org/doxia/references/apt-format.html
