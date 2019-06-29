@@ -83,7 +83,7 @@
     <dependencies>
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy</artifactId>
+        <artifactId>groovy-all</artifactId>
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
@@ -100,20 +100,16 @@
       <dependency>
         <groupId>org.gmetrics</groupId>
         <artifactId>GMetrics</artifactId>
-        <version>0.7</version>
+        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>org.codenarc</groupId>
         <artifactId>CodeNarc</artifactId>
-        <version>0.25.2</version>
+        <version>1.4</version>
         <exclusions>
           <exclusion>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-ant</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -126,6 +122,11 @@
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.26</version>
       </dependency>
 
       <dependency>

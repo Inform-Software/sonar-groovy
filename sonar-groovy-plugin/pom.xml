@@ -69,13 +69,6 @@
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
     </dependency>
-    <!-- log4j is needed by CodeNarc... -->
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>org.jacoco</groupId>
@@ -104,6 +97,11 @@
       <version>2.23.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -121,7 +119,7 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>15000000</maxsize>
+                  <maxsize>16000000</maxsize>
                   <minsize>8500000</minsize>
                   <files>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>

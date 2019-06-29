@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 0.25.2 -->
+<!-- Generated using CodeNarc 1.4 -->
 <rules>
   <!-- basic rules -->
 
@@ -100,7 +100,7 @@
     <tag>unused</tag>
     <param>
       <key>ignoreRegex</key>
-      <description><![CDATA[Regular expression - exception parameter names matching this regular expression are ignored and no volations are produced.]]></description>
+      <description><![CDATA[Regular expression - exception parameter names matching this regular expression are ignored and no violations are produced.]]></description>
       <defaultValue>ignore|ignored</defaultValue>
     </param>
   </rule>
@@ -349,7 +349,7 @@
         case 2: break;
         case 2: break;          // violation
     }
-    
+
     switch( "test" ) {
         case "$a": break;
         case "$a": break;       // ok; only flags constant values (not GStrings)
@@ -927,6 +927,444 @@
     <internalKey><![CDATA[WhileStatementBraces]]></internalKey>
     <description><![CDATA[<p>Checks that while statements use braces, even for a single statement.</p>]]></description>
     <tag>bug</tag>
+  </rule>
+
+  <!-- comments rules -->
+
+  <!-- since 0.15 -->
+  <rule>
+    <key>org.codenarc.rule.comments.ClassJavadocRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Class Javadoc]]></name>
+    <internalKey><![CDATA[ClassJavadoc]]></internalKey>
+    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyFirstLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty First Line]]></name>
+    <internalKey><![CDATA[JavadocEmptyFirstLine]]></internalKey>
+    <description><![CDATA[<p>Check for javadoc comments with an empty top line.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     *                                                      // violation
+     * Sample class
+     *
+     * @author Some Developer
+     */
+    class MyClass {
+
+        /**
+         *                                                  // violation
+         * Return the calculated count of some stuff,
+         * starting with the specified startIndex.
+         *
+         * @param startIndex - the starting index
+         * @return the full count
+         * @throws RuntimeException when the Singularity occurs
+         */
+        int countThings(int startIndex) {
+        }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyLastLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Last Line]]></name>
+    <internalKey><![CDATA[JavadocEmptyLastLine]]></internalKey>
+    <description><![CDATA[<p>Check for javadoc comments with an empty line at the bottom.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Sample class
+     *
+     * @author Some Developer
+     *                                                      // violation
+     */
+    class MyClass {
+
+        /**
+         * Return the calculated count of some stuff,
+         * starting with the specified startIndex.
+         *
+         * @param startIndex - the starting index
+         * @return the full count
+         * @throws RuntimeException when life finds a way
+         *                                                  // violation
+         */
+        int countThings(int startIndex) {
+        }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocConsecutiveEmptyLinesRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Consecutive Empty Lines]]></name>
+    <internalKey><![CDATA[JavadocConsecutiveEmptyLines]]></internalKey>
+    <description><![CDATA[<p>Checks for javadoc comments with more than one consecutive empty line.</p>
+<p>Known limitation: Only the first occurrence of consecutive empty lines within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Description
+     *
+     *                                                                          // violation
+     * @param startIndex - the starting index
+     * @return the full count
+     * @throws RuntimeException if you are not pure of spirit
+     *
+     * NOTE: Only the first occurrence of consecutive empty lines
+     *       within a javadoc comment is found, so the following
+     *       lines are not flagged as violations!!!
+     *
+     *
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptySeeTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty See Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptySeeTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty <i>@see</i> tags within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @see within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Sample class
+     *
+     * @see                                                         // violation
+     */
+    class MyClass {
+
+        /**
+         * Return the calculated count of some stuff,
+         * starting with the specified startIndex.
+         *
+         * @param startIndex - the starting index
+         * @return the full count
+         * @throws RuntimeException when you least expect it
+         *     @see                                                 // violation
+         *
+         * NOTE: Only the first occurrence of an empty @see tag
+         *       within a javadoc comment is found, so the
+         *       following line is not flagged as a violation!!!
+         * @see
+         */
+        int countThings(int startIndex) { }
+
+        /**
+         *@see                                                      // violation
+         */
+        String name = 'joe'
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyParamTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Param Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyParamTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty <i>@param</i> tags within javadoc</p>
+<p>Known limitation: Only the first occurrence of an empty @param within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param                                               // violation
+     * @return the full count
+     * @throws RuntimeException upon self-reflection
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyReturnTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Return Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyReturnTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @return tags within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @return within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return                                  // violation
+     * @throws RuntimeException if you don't say "please"
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyThrowsTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Throws Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyThrowsTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @throws tag within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @throws within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return the count
+     * @throws                                          // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyExceptionTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Exception Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyExceptionTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @exception tag within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @exception within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return the count
+     * @exception                                           // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyAuthorTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Author Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyAuthorTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @author tags within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @author within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return the count
+     * @author                                             // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptySinceTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Since Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptySinceTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @since tags within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @since within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return the count
+     * @since                                          // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocEmptyVersionTagRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Empty Version Tag]]></name>
+    <internalKey><![CDATA[JavadocEmptyVersionTag]]></internalKey>
+    <description><![CDATA[<p>Checks for empty @version tags within javadoc.</p>
+<p>Known limitation: Only the first occurrence of an empty @version within a javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex - the starting index
+     * @return the count
+     * @version                                          // violation
+     */
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag content (name, description, etc.) to start on the following line. If false, that content must start on the same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.4 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocMissingParamDescriptionRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Missing Param Description]]></name>
+    <internalKey><![CDATA[JavadocMissingParamDescription]]></internalKey>
+    <description><![CDATA[<p>Checks for missing description within Javadoc @param tags.</p>
+<p>Known limitation: Only the first occurrence of a missing description for a @param javadoc comment is found</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex                           // violation
+     * @return the full count
+     * @throws RuntimeException if it senses fear
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag description to start on the following line. If false, that content must start same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.4 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocMissingThrowsDescriptionRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Missing Throws Description]]></name>
+    <internalKey><![CDATA[JavadocMissingThrowsDescription]]></internalKey>
+    <description><![CDATA[<p>Checks for missing description within Javadoc @throws tags.</p>
+<p>Known limitation: Only the first occurrence of a missing description for a @throws javadoc comment is found</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex the starting index; must be &gt;= 0
+     * @return the full count
+     * @throws RuntimeException                   // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag description to start on the following line. If false, that content must start same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.4 -->
+  <rule>
+    <key>org.codenarc.rule.comments.JavadocMissingExceptionDescriptionRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Javadoc Missing Exception Description]]></name>
+    <internalKey><![CDATA[JavadocMissingExceptionDescription]]></internalKey>
+    <description><![CDATA[<p>Checks for missing description within @exception javadoc tags.</p>
+<p>Known limitation: Only the first occurrence of a missing description for an @exception javadoc comment is found.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>
+<p>Example of violations:</p>
+<pre>
+    /**
+     * Return the calculated count of some stuff.
+     *
+     * @param startIndex the starting index; must be &gt;= 0
+     * @return the full count
+     * @exception RuntimeException                   // violation
+     */
+    int countThings(int startIndex) { }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>allowMultiline</key>
+      <description><![CDATA[Set to true to allow the tag description to start on the following line. If false, that content must start same line as the tag.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- concurrency rules -->
@@ -1880,10 +2318,10 @@
 <pre>
     class EventListener {
         EventListener(EventPublisher publisher) {
-            publisher.register(this)            
+            publisher.register(this)
             new WorkThread(publisher, this).start()
             new AnotherWorkThread(listener: this)
-        }    
+        }
     }
 </pre>]]></description>
     <tag>multi-threading</tag>
@@ -2081,8 +2519,7 @@
     <severity>MAJOR</severity>
     <name><![CDATA[No Def]]></name>
     <internalKey><![CDATA[NoDef]]></internalKey>
-    <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of a <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+    <description><![CDATA[<p>Do not allow using the <code>def</code> keyword in code. Use a specific type instead.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
@@ -2125,6 +2562,16 @@
       <description><![CDATA[To disable checking Map literals, set this property to false]]></description>
       <defaultValue>true</defaultValue>
     </param>
+    <param>
+      <key>ignoreSingleElementList</key>
+      <description><![CDATA[If true, skip checking Lists that have only a single element.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreSingleElementMap</key>
+      <description><![CDATA[If true, skip checking Maps that have only a single element.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.25 -->
@@ -2133,7 +2580,254 @@
     <severity>MAJOR</severity>
     <name><![CDATA[No Tab Character]]></name>
     <internalKey><![CDATA[NoTabCharacter]]></internalKey>
-    <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>]]></description>
+    <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.0 -->
+  <rule>
+    <key>org.codenarc.rule.convention.CouldBeSwitchStatementRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Could Be Switch Statement]]></name>
+    <internalKey><![CDATA[CouldBeSwitchStatement]]></internalKey>
+    <description><![CDATA[<p>Checks for three of more if statements that could be converted to a switch. Only applies to equality and instanceof.</p>
+<p>Example of violations:</p>
+<pre>
+    if (x == 1) {                       // violation
+       y = x
+    } else if (x == 2) {
+       y = x * 2
+    } else if (x == 3) {
+       y = x * 3
+    } else {
+       y = 0
+    }
+
+    if (y instanceof Integer) {         // violation
+       x = y + 1
+    }
+    if (y instanceof String) {
+       x = y + '1'
+    } else if (y instanceof Boolean) {
+       x = !y
+    } else {
+       x = null
+    }
+
+    if (x == 1) {                       // OK
+        y = x
+    }
+    if (x == 2) {
+        y = x * 2
+    } else {
+        y = 0
+    }
+
+    if (!x &amp;&amp; y) {                      // OK
+        doSomething()
+    } else if (!x &amp;&amp; z) {
+        doSomethingElse()
+    } else if (!x &amp;&amp; i) {
+        doAnotherThing()
+    }
+
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.convention.FieldTypeRequiredRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Field Type Required]]></name>
+    <internalKey><![CDATA[FieldTypeRequired]]></internalKey>
+    <description><![CDATA[<p>Checks that field types are explicitly specified (and not using <code>def</code>).</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        public static final NAME = "joe"        // violation
+        private static count = 0                // violation
+
+        private def name = NAME                 // violation
+        protected final date = new Date()       // violation
+
+        def defaultName                         // violation
+        def maxSoFar = -1L                      // violation
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>ignoreFieldNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.convention.InvertedConditionRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Inverted Condition]]></name>
+    <internalKey><![CDATA[InvertedCondition]]></internalKey>
+    <description><![CDATA[<p>An inverted condition is one where a constant expression is used on the left hand side of the equals comparision. Such conditions can be confusing especially when used in assertions where the expected value is by convention placed on the right hand side of the comparision.</p>
+<p>Example of violations:</p>
+<pre>
+    boolean isTenCharactersLong(String value) {
+        10 == value.size()  // violation
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.convention.MethodReturnTypeRequiredRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Method Return Type Required]]></name>
+    <internalKey><![CDATA[MethodReturnTypeRequired]]></internalKey>
+    <description><![CDATA[<p>Checks that method return types are not dynamic, that is they are explicitly stated and different than def.</p>
+<p>Example of violations:</p>
+<pre>
+    def methodWithDynamicReturnType() {    // violation
+    }
+
+    private methodWithoutReturnType() {    // violation
+    }
+
+    Object objectReturningMethod() {       // OK
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.convention.VariableTypeRequiredRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Variable Type Required]]></name>
+    <internalKey><![CDATA[VariableTypeRequired]]></internalKey>
+    <description><![CDATA[<p>Checks that variable types are explicitly specified in declarations (and not using <code>def</code>).</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        void doStuff() {
+            final NAME = "joe"          // violation
+            def count = 0, max = 99     // violation
+            def defaultName             // violation
+        }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+    <param>
+      <key>ignoreVariableNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) variable names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.StaticFieldsBeforeInstanceFieldsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Static Fields Before Instance Fields]]></name>
+    <internalKey><![CDATA[StaticFieldsBeforeInstanceFields]]></internalKey>
+    <description><![CDATA[<p>Enforce that all static fields are above all instance fields within a class</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        public static final int COUNT = 99
+
+        public String f1
+
+        public static final String F1 = "xxx"       // violation
+        private static String F4                    // violation
+        static F5 = new Date()                      // violation
+
+        protected String f2
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.StaticMethodsBeforeInstanceMethodsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Static Methods Before Instance Methods]]></name>
+    <internalKey><![CDATA[StaticMethodsBeforeInstanceMethods]]></internalKey>
+    <description><![CDATA[<p>Enforce that all static methods within each visibility level (public, protected, private) are above all instance methods within that same visibility level. In other words, public static methods must be above public instance methods, protected static methods must be above protected instance methods and private static methods must be above private instance methods.</p>
+<p>Example of violations:</p>
+<pre>
+        class MyClass {
+            // Public
+            public static int staticMethod1() { }
+            public String method1() { }
+            int method2() { }
+            static final String staticMethod2(int id) { }       // violation
+
+            // Protected
+            protected String method3() { }
+            protected static staticMethod3() { }                // violation
+
+            // Private
+            private int method4() { }
+            private int method5() { }
+            private static staticMethod4() { }                  // violation
+            private String method5() { }
+        }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.PublicMethodsBeforeNonPublicMethodsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Public Methods Before Non Public Methods]]></name>
+    <internalKey><![CDATA[PublicMethodsBeforeNonPublicMethods]]></internalKey>
+    <description><![CDATA[<p>Enforce that all public methods are above protected and private methods.</p>
+<p>Example of violations:</p>
+<pre>
+    class MyClass {
+        public static int staticMethod1() { }
+
+        protected String method1() { }
+
+        static final String staticMethod2() { }     // violation
+        public String method2() { }                 // violation
+
+        private int method3(int id) { }
+    }
+</pre>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.convention.NoJavaUtilDateRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[No Java Util Date]]></name>
+    <internalKey><![CDATA[NoJavaUtilDate]]></internalKey>
+    <description><![CDATA[<p>Do not use the <code>java.util.Date</code> class. Prefer the classes in the java.time.* packages. This rule checks for construction of new java.util.Date objects.</p>
+<p>If the class imports another <code>Date</code> class, then references to <code>new Date()</code> will not cause a violation.</p>
+<p>Example of violations:</p>
+<pre>
+    def timestamp = new Date()              // violation
+    Date myDate = new java.util.Date()      // violation
+    Date startTime = new Date(123456789L)   // violation
+</pre>
+<p>Known limitations:</p>
+<p>* Will cause an incorrect violation if the source code is referring to a different <code>Date</code> class from the current package. In that case, it may be better to just disable this rule (either per class or globally).</p>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- since 1.4 -->
+  <rule>
+    <key>org.codenarc.rule.convention.CompileStaticRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Compile Static]]></name>
+    <internalKey><![CDATA[CompileStatic]]></internalKey>
+    <description><![CDATA[<p>Enforces classes are annotated either with one of the @CompileStatic, @GrailsCompileStatic or @CompileDynamic annotations.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2248,12 +2942,15 @@
     <name><![CDATA[Compare To Without Comparable]]></name>
     <internalKey><![CDATA[CompareToWithoutComparable]]></internalKey>
     <description><![CDATA[<p>If you implement a compareTo method then you should also implement the <code>Comparable</code> interface. If you don't then you could possibly get an exception if the Groovy == operator is invoked on your object. This is an issue fixed in Groovy 1.8 but present in previous versions.</p>
+<p>This rule has a single <code>enhancedMode</code> property which defaults to <code>false</code>. When set to <code>true</code>, this rule will run in <a href="http://codenarc.sourceforge.net/codenarc-enhanced-classpath-rules.html">enhanced mode</a> and will not produce a violation when a class implements <code>compareTo</code> and extends a class that itself implements <code>Comparable</code>.</p>
 <p>Here is an example of code that produces a violation:</p>
 <pre>
     class BadClass {
         int compareTo(Object o) { ... }
     }
-</pre>]]></description>
+</pre>
+<p>Known limitations:</p>
+<p>* When not running in enhanced mode, this rule is not able to determine if the class extends a superclass that itself implements <code>Comparable</code>, or if it implements an interface that extends <code>Comparable</code>. In those cases, this rule produces a false violation.</p>]]></description>
     <tag>design</tag>
   </rule>
 
@@ -2311,7 +3008,8 @@
     <severity>MINOR</severity>
     <name><![CDATA[Close Without Closeable]]></name>
     <internalKey><![CDATA[CloseWithoutCloseable]]></internalKey>
-    <description><![CDATA[<p>If a class defines a "void close()" then that class should implement java.io.Closeable.</p>]]></description>
+    <description><![CDATA[<p>If a class defines a <code>void close()</code> method then that class should implement <code>java.io.Closeable</code>.</p>
+<p>This rule has a single <code>enhancedMode</code> property which defaults to <code>false</code>. When set to <code>true</code>, this rule will run in <a href="http://codenarc.sourceforge.net/codenarc-enhanced-classpath-rules.html">enhanced mode</a> and will not produce a violation when a class implements <code>close</code> and extends a class that itself implements <code>Closeable</code>.</p>]]></description>
     <tag>design</tag>
   </rule>
 
@@ -2554,7 +3252,7 @@
 <p>Here are a couple references that discuss the problems with using <code>instanceof</code> and the preference for using <i>polymorphism</i> instead:</p>
 <p>* <a href="http://www.javapractices.com/topic/TopicAction.do?Id=31">Beware of instanceof operator</a></p>
 <p>* <a href="http://stackoverflow.com/questions/4192837/how-does-one-use-polymorphism-instead-of-instanceof-and-why">How does one use polymorphism instead of instanceof? (And why?)</a></p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Example of violations:</p>
 <pre>
     class MyClass {
@@ -2644,7 +3342,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateNumberLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate number literals within the current class.</p>
 <p>Code containing duplicate <i>Number</i> literals can usually be improved by declaring the <i>Number</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>* This rule ignores Long/long values within enums, because the generated code may include generated long id values and produce false positive rule violations.</p>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateNumberLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
@@ -2663,7 +3362,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateStringLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate String literals within the current class.</p>
 <p>Code containing duplicate <i>String</i> literals can usually be improved by declaring the <i>String</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateStringLiteral')</code> annotation.</p>]]></description>
     <tag>bug</tag>
@@ -2682,7 +3381,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[DuplicateMapLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate <i>Map</i> literals within the current class. This rule only checks for <i>Map</i>s where the keys and values are all constants or literals.</p>
 <p>Code containing duplicate <i>Map</i> literals can usually be improved by declaring the <i>Map</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
 <pre>
       def var1 = [a:1, b:null, c:Boolean.FALSE, d:'x', e:true]
@@ -2721,8 +3420,9 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Duplicate List Literal]]></name>
     <internalKey><![CDATA[DuplicateListLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate <i>List</i> literals within the current class. This rule only checks for <i>List</i>s where values are all constants or literals.</p>
+<p>List literals within annotations are ignored.</p>
 <p>Code containing duplicate <i>List</i> literals can usually be improved by declaring the <i>List</i> as a constant field.</p>
-<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
+<p>By default, the rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'.</p>
 <p>Examples of violations:</p>
 <pre>
       def var1 = [1, null, Boolean.FALSE, 'x', true]
@@ -2745,6 +3445,27 @@ for (int i = 0; i &lt; 100; ++i) {
 </pre>
 <p>* This rule does not search across several files at once, only in the current file, and only within the current class.</p>
 <p>* You can suppress the error by annotating a class or method with the <code>@SuppressWarnings('DuplicateListLiteral')</code> annotation.</p>]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <!-- enhanced rules -->
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.enhanced.MissingOverrideAnnotationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Missing Override Annotation]]></name>
+    <internalKey><![CDATA[MissingOverrideAnnotation]]></internalKey>
+    <description><![CDATA[<p>Checks for methods that override a method in a superclass or implement a method in an interface but are not annotated with <code>@Override</code>.</p>
+<p>Consistent use of <code>@Override</code> annotation helps in spotting situations when the intent was to override a method but because of a mistake in method signature that is not the case. Additionally, applying <code>@Override</code> annotation to all overridden methods helps in spotting unnecessary methods which no longer override any methods after removing them from superclasses or implemented interfaces because such annotated methods will cause compilation errors.</p>
+<p>Example of violations:</p>
+<pre>
+    class ClassOverridingToString {
+        String toString() {
+          "ClassOverridingToString"
+        }
+    }
+</pre>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -2998,7 +3719,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Braces For Class]]></name>
     <internalKey><![CDATA[BracesForClass]]></internalKey>
     <description><![CDATA[<p>Checks the location of the opening brace (\{) for classes. By default, requires them on the same line, but the <code>sameLine</code> property can be set to false to override this.</p>
-<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>.</p>]]></description>
+<p>NOTE: This rule ignores annotation types, e.g. <code>@interface MyAnnotation {}</code>.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
     <param>
       <key>sameLine</key>
@@ -3108,16 +3830,6 @@ for (int i = 0; i &lt; 100; ++i) {
     </param>
   </rule>
 
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.formatting.ClassJavadocRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Class Javadoc]]></name>
-    <internalKey><![CDATA[ClassJavadoc]]></internalKey>
-    <description><![CDATA[<p>Makes sure each class and interface definition is preceded by javadoc. Enum definitions are not checked, due to strange behavior in the Groovy AST. By default, only the main class in a file is checked for Javadoc. The main class is defined as the class that has the same name as the source file, for instance MyClass is the main class in MyClass.groovy but the class MyOtherClass defined in the same source file is not the main class. To check all the classes in the file set the rule property <code>applyToNonMainClasses</code> to true.</p>]]></description>
-    <tag>convention</tag>
-  </rule>
-
   <!-- since 0.18 -->
   <rule>
     <key>org.codenarc.rule.formatting.SpaceAfterCommaRule</key>
@@ -3174,8 +3886,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator, including: +, -, *, /, &gt;&gt;, &lt;&lt;, &amp;&amp;, ||, &amp;, |, ?:, =, "as".</p>
 <p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.). Do not check array ('[') operator.</p>
 <p>Known limitations:</p>
-<p>* Does not catch violations of missing space around equals operator (=) within a declaration expression, e.g.  <code>def x=23</code></p>
-<p>* Does not catch violations of certain ternary expressions and standalone elvis operator (?:) expressions</p>
+<p>* Does not catch violations of certain ternary expressions and standalone elvis operator (?:) expressions. * Does not catch violations of missing space around the equals operator (=) for fields initialization if the field is annotated.</p>
 <p>Examples of violations:</p>
 <pre>
     def myMethod() {
@@ -3191,6 +3902,11 @@ for (int i = 0; i &lt; 100; ++i) {
     }
 </pre>]]></description>
     <tag>convention</tag>
+    <param>
+      <key>ignoreParameterDefaultValueAssignments</key>
+      <description><![CDATA[If true, then do not check for whitespace around the '=' operator within method/constructor default parameter assignments.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.18 -->
@@ -3200,6 +3916,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Space Before Opening Brace]]></name>
     <internalKey><![CDATA[SpaceBeforeOpeningBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace before each opening brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
+<p>A closure expression a preceded by an opening parenthesis, an opening square brace ([), or a dollar sign ($) within a GString does not cause a violation.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
 <p>Examples of violations:</p>
@@ -3242,7 +3959,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace before opening braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
   </rule>
@@ -3288,12 +4005,12 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace after opening braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
     <param>
       <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code]]></description>
+      <description><![CDATA[If true, then allow for \{\} in code]]></description>
       <defaultValue>false</defaultValue>
     </param>
   </rule>
@@ -3305,7 +4022,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <name><![CDATA[Space After Closing Brace]]></name>
     <internalKey><![CDATA[SpaceAfterClosingBrace]]></internalKey>
     <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace after each closing brace ("\{") for method/class/interface declarations, closure expressions and block statements.</p>
-<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation.</p>
+<p>A closure expression followed by a dot operator (.), a comma, a closing parenthesis, a closing square brace (]), the spread-dot operator (*.), a semicolon or the null-safe operator (?.) does not cause a violation.</p>
 <p>Known limitations:</p>
 <p>* May not catch actual violations if the source line contains unicode character literals, e.g. <code>'\\u00A0'</code></p>
 <p>Examples of violations and exceptions:</p>
@@ -3317,13 +4034,14 @@ for (int i = 0; i &lt; 100; ++i) {
     assert list.every { it.isReady() }, "Error"         // no violation for comma
     def m = [a:123, b:{ println 7 },c:99]               // no violation for comma
     processItems(list.select { it.isReady() })          // no violation for closing parenthesis
+    processItems([{ named("a") }, { named("b")}])       // no violation for closing square bracket
     def names = records.findAll { it.age &gt; 1 }*.name    // no violation for spread operator
     list?.collect { it?.type }?.join(',')               // no violation for null-safe operator
 </pre>]]></description>
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace after closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[DEPRECATED. Ignored.]]></description>
       <defaultValue>true</defaultValue>
     </param>
   </rule>
@@ -3371,12 +4089,12 @@ for (int i = 0; i &lt; 100; ++i) {
     <tag>convention</tag>
     <param>
       <key>checkClosureMapEntryValue</key>
-      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:{doStuff()}].]]></description>
+      <description><![CDATA[If false, then do not check for whitespace before closing braces for closure expressions that are literal Map values, e.g. [abc:\{doStuff()\}].]]></description>
       <defaultValue>true</defaultValue>
     </param>
     <param>
       <key>ignoreEmptyBlock</key>
-      <description><![CDATA[If true, then allow for [{}] in code]]></description>
+      <description><![CDATA[If true, then allow for \{\} in code]]></description>
       <defaultValue>false</defaultValue>
     </param>
   </rule>
@@ -3539,7 +4257,8 @@ for (int i = 0; i &lt; 100; ++i) {
 
 
     def id
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3549,7 +4268,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Blank Line Before Package]]></name>
     <internalKey><![CDATA[BlankLineBeforePackage]]></internalKey>
-    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file.</p>]]></description>
+    <description><![CDATA[<p>Makes sure there are no blank lines before the package declaration of a source code file.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3559,7 +4279,8 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[File Ends Without Newline]]></name>
     <internalKey><![CDATA[FileEndsWithoutNewline]]></internalKey>
-    <description><![CDATA[<p>Makes sure each source file ends with a newline character.</p>]]></description>
+    <description><![CDATA[<p>Makes sure each source file ends with a newline character.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3574,7 +4295,8 @@ for (int i = 0; i &lt; 100; ++i) {
 <pre>
     import org.apache.commons.lang.StringUtils
     class MyClass { }                       // violation
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3593,7 +4315,8 @@ for (int i = 0; i &lt; 100; ++i) {
   class MyClass {
       void go() { /* ... */ }
   }
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
   </rule>
 
@@ -3603,8 +4326,326 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MAJOR</severity>
     <name><![CDATA[Trailing Whitespace]]></name>
     <internalKey><![CDATA[TrailingWhitespace]]></internalKey>
-    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters.</p>]]></description>
+    <description><![CDATA[<p>Checks that no lines of source code end with whitespace characters.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>convention</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BlockEndsWithBlankLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Block Ends With Blank Line]]></name>
+    <internalKey><![CDATA[BlockEndsWithBlankLine]]></internalKey>
+    <description><![CDATA[<p>Checks that code blocks such as method bodies, closures and control structure bodies do not end with an empty line.</p>
+<p>Example of violations:</p>
+<pre>
+    boolean not(boolean value) {
+        !value
+                                // violation
+    }
+
+    3.times {
+        println 'hello!'
+                                // violation
+    }
+
+    for (value in []) {
+        println value
+                                // violation
+    }
+
+    for (i = 0; i &lt; 3; i++) {
+        println i
+                                // violation
+    }
+
+    int j = 0
+    while (j &lt; 3) {
+      println j++
+                                // violation
+    }
+
+    if (ready) {
+        println 'ready'
+                                // violation
+    } else {
+        println 'not ready'
+                                // violation
+    }
+
+    try {
+        throw new Exception()
+                                // violation
+    } catch (Exception e) {
+        println 'exception'
+                                // violation
+    } finally {
+        println 'finally'
+                                // violation
+    }
+
+    switch (true) {
+        default:
+            println 'switch'
+                                // violation
+    }
+
+    // Known Limitation: If a Closure is within another expression and the closing brace is not followed by anything else on the same line
+
+    def list = [
+        123,
+        { id -&gt;
+                                // Known limitation: should be a violation, but is not
+        }
+    ]
+</pre>]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.BlockStartsWithBlankLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Block Starts With Blank Line]]></name>
+    <internalKey><![CDATA[BlockStartsWithBlankLine]]></internalKey>
+    <description><![CDATA[<p>Checks that code blocks such as method bodies, closures and control structure bodies do not start with an empty line.</p>
+<p>Example of violations:</p>
+<pre>
+    boolean not(boolean value) {
+                                // violation
+        !value
+    }
+
+    3.times {
+                                // violation
+        println 'hello!'
+    }
+
+    for (value in []) {
+                                // violation
+        println value
+    }
+
+    for (i = 0; i &lt; 3; i++) {
+                                // violation
+        println i
+    }
+
+    int j = 0
+    while (j &lt; 3) {
+                                // violation
+      println j++
+    }
+
+    if (ready) {
+                                // violation
+        println 'ready'
+    } else {
+                                // violation
+        println 'not ready'
+    }
+
+    try {
+                                // violation
+        throw new Exception()
+    } catch (Exception e) {
+                                // violation
+        println 'exception'
+    } finally {
+                                // violation
+        println 'finally'
+    }
+
+    switch (true) {
+                                // violation
+        default:
+            println 'switch'
+    }
+
+</pre>]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 1.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.IndentationRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Indentation]]></name>
+    <internalKey><![CDATA[Indentation]]></internalKey>
+    <description><![CDATA[<p>Check the indentation (spaces only; not tabs) for class, field and method declarations, and statements.</p>
+<p>This rule is limited, and somewhat opinionated. The default is 4 spaces per indentation level.</p>
+<p>Known Limitations include:</p>
+<p>* Checks spaces only (not tabs)</p>
+<p>* Does not check comments</p>
+<p>* Does not check line-continuations (i.e., checks only the first line of a statement)</p>
+<p>* Does not check multiple statements/members on the same line (only checks the first one)</p>
+<p>* Does not check Map entry expressions</p>
+<p>* Does not check List expressions</p>
+<p>* Does not check calls to <code>this()</code> and <code>super()</code> within a constructor</p>
+<p>* When classes, methods or fields have annotations, the indentation of the annotation is checked, not the actual member. And only the first annotation is checked, if there is more than one.</p>
+<p>Example of violations:</p>
+<pre>
+// Indent Levels:
+0...1...2...3...4...5
+
+class MyClass {                                 // CORRECT
+    protected int count                         // CORRECT
+  private static final NAME = "Joe"             // violation
+           def max, min                         // violation on "max" only
+
+ private String doStuff() {                     // violation
+        def internalCounts = [1, 4, 2]          // CORRECT
+            id.trim()                           // violation
+    }
+
+    private void executeOtherOne() {            // CORRECT
+        try {
+          executeWithArgs(args)                 // violation
+        } catch(Throwable t) {
+                       t.printStackTrace()      // violation
+        }
+        finally {
+                closeResources()                // violation
+        }
+    }
+}
+</pre>]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>spacesPerIndentLevel</key>
+      <description><![CDATA[The number of spaces that make up a single level of indentation.]]></description>
+      <defaultValue>4</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.ClassEndsWithBlankLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Class Ends With Blank Line]]></name>
+    <internalKey><![CDATA[ClassEndsWithBlankLine]]></internalKey>
+    <description><![CDATA[<p>Check whether the class ends with a blank line. By default, it enforces that there must be a blank line before the closing class brace, except:</p>
+<p>* If the class is synthetic (generated)</p>
+<p>* If the class is empty and is written in a single line</p>
+<p>* If the class is a Script class</p>
+<p>A blank line is defined as any line that does not contain any visible characters.</p>
+<p>This rule can be configured with the following properties:</p>
+<p>Example of violations:</p>
+<p>If <i>ignoreSingleLineClasses</i> is <code>true</code> and <i>blankLineRequired</i> is <code>true</code></p>
+<pre>
+            class Foo {
+                int a
+
+                void hi() {
+                }
+            }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>false</code> and <i>blankLineRequired</i> is <code>true</code></p>
+<pre>
+            class Foo extends Bar&lt;String&gt; { }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>true</code> and <i>blankLineRequired</i> is <code>false</code></p>
+<pre>
+            class Foo {
+                int a
+
+                void hi() {
+                }
+
+            }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>false</code> and <i>blankLineRequired</i> is <code>false</code></p>
+<pre>
+            class Foo {
+                int a
+
+                void hi() {
+                }
+
+            }
+</pre>]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>blankLineRequired</key>
+      <description><![CDATA[a boolean property to define if there may be a blank line before the closing class brace. If it is false, the last line before the brace must not be blank. Otherwise, it must be blank.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreInnerClasses</key>
+      <description><![CDATA[A boolean property to ignore inner classes. If it is *false* then inner classes can cause violations.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+    <param>
+      <key>ignoreSingleLineClasses</key>
+      <description><![CDATA[a boolean property to forbid single line classes.If it is false,then single line classes are considered a violation.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.ClassStartsWithBlankLineRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Class Starts With Blank Line]]></name>
+    <internalKey><![CDATA[ClassStartsWithBlankLine]]></internalKey>
+    <description><![CDATA[<p>Check whether the class starts with a blank line. By default, it enforces that there must be a blank line after the opening class brace, except:</p>
+<p>* If the class is synthetic (generated)</p>
+<p>* If the class is empty and is written in a single line</p>
+<p>* If the class is a Script class</p>
+<p>A blank line is defined as any line that does not contain any visible characters.</p>
+<p>This rule can be configured with the following properties:</p>
+<p>Example of violations:</p>
+<p>If <i>ignoreSingleLineClasses</i> is <code>true</code> and <i>blankLineRequired</i> is <code>true</code></p>
+<pre>
+            class Foo {
+                int a
+
+                void hi() {
+                }
+            }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>false</code> and <i>blankLineRequired</i> is <code>true</code></p>
+<pre>
+            class Foo extends Bar&lt;String&gt; { }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>true</code> and <i>blankLineRequired</i> is <code>false</code></p>
+<pre>
+            class Foo {
+
+                int a
+
+                void hi() {
+                }
+
+            }
+</pre>
+<p>If <i>ignoreSingleLineClasses</i> is <code>false</code> and <i>blankLineRequired</i> is <code>false</code></p>
+<pre>
+            class Foo {
+                int a
+
+                void hi() {
+                }
+
+            }
+</pre>]]></description>
+    <tag>convention</tag>
+    <param>
+      <key>blankLineRequired</key>
+      <description><![CDATA[A boolean property to define if there may be a blank line after the opening class brace. If it is false, the first content after the brace must not be a blank line. Otherwise, it must be a blank line.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreInnerClasses</key>
+      <description><![CDATA[A boolean property to ignore inner classes. If it is *false* then inner classes can cause violations.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+    <param>
+      <key>ignoreSingleLineClasses</key>
+      <description><![CDATA[A boolean property to ignore single line classes. If it is false,then single line classes are considered a violation.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
   </rule>
 
   <!-- generic rules -->
@@ -3616,7 +4657,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[IllegalRegex]]></internalKey>
     <description><![CDATA[<p>Checks for a specified illegal regular expression within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>regex</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>regex</key>
@@ -3631,7 +4672,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[RequiredRegex]]></internalKey>
     <description><![CDATA[<p>Checks for a specified regular expression that must exist within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>regex</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>regex</key>
@@ -3646,7 +4687,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[RequiredString]]></internalKey>
     <description><![CDATA[<p>Checks for a specified text string that must exist within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>string</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>string</key>
@@ -3835,7 +4876,7 @@ for (int i = 0; i &lt; 100; ++i) {
     <internalKey><![CDATA[IllegalString]]></internalKey>
     <description><![CDATA[<p>Checks for a specified illegal string within the source code.</p>
 <p>A RuleSet can contain any number of instances of this rule, but each should be configured with a unique rule <i>name</i> and <i>string</i>, and (optionally) customized <i>violationMessage</i> and <i>priority</i>.</p>
-<p><b>NOTE:</b> This rule applies to the text contents of an entire <i>file</i> rather than a specific <i>class</i>, so it does not support the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> configuration properties.</p>]]></description>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>string</key>
@@ -3877,25 +4918,12 @@ for (int i = 0; i &lt; 100; ++i) {
   </rule>
 
   <rule>
-    <key>org.codenarc.rule.grails.GrailsSessionReferenceRule</key>
-    <severity>MINOR</severity>
-    <name><![CDATA[Grails Session Reference]]></name>
-    <internalKey><![CDATA[GrailsSessionReference]]></internalKey>
-    <description><![CDATA[<p>Rule that checks for references to the <code>session</code> object from within Grails controller and taglib classes.</p>
-<p>This rule is intended as a "governance" rule to enable monitoring and controlling access to the <code>session</code> from within application source code. Storing objects in the <code>session</code> may inhibit scalability and/or performance and should be carefully considered.</p>
-<p>Note that this rule does not check for direct access to the <code>session</code> from within GSP (Groovy Server Pages) files.</p>
-<p>Enabling this rule may make most sense in a team environment where team members exhibit a broad range of skill and experience levels. Appropriate <code>session</code> access can be configured as exceptions to this rule by configuring either the <code>doNotApplyToFilenames</code> or <code>doNotApplyToFilesMatching</code> property of the rule. And, as always, it is easy to just <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Turning_Off_A_Rule">turn off the rule</a> if it does not make sense it your environment.</p>
-<p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/controllers' or 'grails-app/taglib' folders. You can override this with a different regular expression value if appropriate.</p>]]></description>
-    <tag>grails</tag>
-  </rule>
-
-  <rule>
     <key>org.codenarc.rule.grails.GrailsServletContextReferenceRule</key>
     <severity>MINOR</severity>
     <name><![CDATA[Grails Servlet Context Reference]]></name>
     <internalKey><![CDATA[GrailsServletContextReference]]></internalKey>
     <description><![CDATA[<p>Rule that checks for references to the <code>servletContext</code> object from within Grails controller and taglib classes.</p>
-<p>This rule is intended as a "governance" rule to enable monitoring and controlling access to the <code>servletContext</code> from within application source code. Storing objects in the <code>servletContext</code> may inhibit scalability and/or performance and should be carefully considered. Furthermore, access to the <code>servletContext</code> is not synchronized, so reading/writing objects from the <code>servletConext</code> must be manually synchronized, as described in <a href="http://www.amazon.com/Definitive-Grails-Second-Experts-Development/dp/1590599950"> The Definitive Guide to Grails (2nd edition)</a>.</p>
+<p>This rule is intended as a "governance" rule to enable monitoring and controlling access to the <code>servletContext</code> from within application source code. Storing objects in the <code>servletContext</code> may inhibit scalability and/or performance and should be carefully considered. Furthermore, access to the <code>servletContext</code> is not synchronized, so reading/writing objects from the <code>servletContext</code> must be manually synchronized, as described in <a href="http://www.amazon.com/Definitive-Grails-Second-Experts-Development/dp/1590599950"> The Definitive Guide to Grails (2nd edition)</a>.</p>
 <p>Note that this rule does not check for direct access to the <code>servletContext</code> from within GSP (Groovy Server Pages) files.</p>
 <p>Enabling this rule may make most sense in a team environment where team members exhibit a broad range of skill and experience levels. Appropriate <code>servletContext</code> access can be configured as exceptions to this rule by configuring either the <code>doNotApplyToFilenames</code> or <code>doNotApplyToFilesMatching</code> property of the rule. And, as always, it is easy to just <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Turning_Off_A_Rule">turn off the rule</a> if it does not make sense it your environment.</p>
 <p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/controllers' or 'grails-app/taglib' folders. You can override this with a different regular expression value if appropriate.</p>]]></description>
@@ -3919,7 +4947,7 @@ for (int i = 0; i &lt; 100; ++i) {
 <p>This rule sets the default value of <code>applyToFilesMatching</code> to only match files under the 'grails-app/services' folder. You can override this with a different regular expression value if appropriate.</p>
 <p>This rule also sets the default value of <code>applyToClassNames</code> to only match class names ending in 'Service'. You can override this with a different class name pattern (String with wildcards) if appropriate.</p>
 <p>[[1]]  The <code>ignoreFieldTypes</code> property matches the field type name as indicated in the field declaration, only including a full package specification IF it is included in the source code. For example, the field declaration <code>BigDecimal value</code> matches an <code>ignoreFieldTypes</code> value of <code>BigDecimal</code>, but not <code>java.lang.BigDecimal</code>.</p>
-<p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.]]></description>
+<p>[[2]]  There is one exception for the <code>ignoreFieldTypes</code> property: if the field is declared with a modifier/type of <code>def</code>, then the type resolves to <code>java.lang.Object</code>.</p>]]></description>
     <tag>grails</tag>
     <param>
       <key>addToIgnoreFieldName</key>
@@ -4057,6 +5085,48 @@ for (int i = 0; i &lt; 100; ++i) {
    def person = Person.get(1)
    person.properties = params
    person.save()
+</pre>]]></description>
+    <tag>grails</tag>
+  </rule>
+
+  <!-- since 1.2 -->
+  <rule>
+    <key>org.codenarc.rule.grails.GrailsDomainStringPropertyMaxSizeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Grails Domain String Property Max Size]]></name>
+    <internalKey><![CDATA[GrailsDomainStringPropertyMaxSize]]></internalKey>
+    <description><![CDATA[<p>String properties in Grails domain classes have to define maximum size otherwise the property is mapped to VARCHAR(255) causing runtime exceptions to occur. To fix this issue either declare <code>size</code</code> or <code>maxSize</code> constraint for the property inside <code>constraints</code> DSL closure of your Grails domain class or declare the <code>type</code> of the property inside <code>mapping</code> DSL closure. If you use the second option inside <b>mapping</b> DSL closure then please pay attention that the value of  <code>type</code> is not checked so using for example <code>VARCHAR(50)</code> would still cause runtime exceptions.</p>
+<p>Example of violations:</p>
+<pre>
+    // both firstName and lastName will probably have database limit of 255 characters
+    // which is not validated by Grails validation causing runtime JDBC exception
+    class Person {
+
+        String firstName
+        String lastName
+
+        static constraints = {
+            firstName nullable:true
+            lastName nullable:true
+        }
+    }
+</pre>
+<p>Example of valid configuration:</p>
+<pre>
+    class Person {
+
+        String firstName
+        String lastName
+
+        static constraints = {
+            firstName nullable:true, maxSize: 255
+            lastName nullable:true
+        }
+
+        static mapping = {
+            lastName type: 'text'
+        }
+    }
 </pre>]]></description>
     <tag>grails</tag>
   </rule>
@@ -4309,31 +5379,38 @@ for (int i = 0; i &lt; 100; ++i) {
     <description><![CDATA[<p>The <code>groovy.lang.Immutable</code> annotation has been deprecated and replaced by <code>groovy.transform.Immutable</code>. Do not use the <code>Immutable</code> in <code>groovy.lang</code>.</p>
 <p>Example of violations:</p>
 <pre>
-    @Immutable
+    @Immutable                          // Violation (no import means groovy.lang.Immutable)
     class Person { }
 
-    @groovy.lang.Immutable
+    @groovy.lang.Immutable              // Violation
     class Person { }
 
     import groovy.lang.Immutable as Imtl
-    @Imtl
+    @Imtl                               // Violation
     class Person { }
 
-    // the following code is OK
-    @groovy.transform.Immutable
+</pre>
+<p>Example of valid use of @Immutable:</p>
+<pre>
+
+    @groovy.transform.Immutable                 // OK
     class Person { }
 
-    import groovy.transform.Immutable
+    import groovy.transform.Immutable           // OK
     @Immutable
     class Person { }
 
     import groovy.transform.*
-    @Immutable
+    @Immutable                                  // OK
     class Person { }
 
     import groovy.transform.Immutable as Imtl
-    @Imtl
+    @Imtl                                       // OK
     class Person { }
+
+    @javax.annotation.concurrent.Immutable      // OK
+    class MyClass { }
+
 </pre>]]></description>
     <tag>groovyism</tag>
   </rule>
@@ -4372,13 +5449,24 @@ for (int i = 0; i &lt; 100; ++i) {
     <severity>MINOR</severity>
     <name><![CDATA[Assign Collection Unique]]></name>
     <internalKey><![CDATA[AssignCollectionUnique]]></internalKey>
-    <description><![CDATA[<p>The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs. This violation is triggered when a unique() method call appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls.</p>
+    <description><![CDATA[<p>The Collections.unique() method mutates the list and returns the list as a value. If you are assigning the result of unique() to a variable, then you probably don't realize that you're also modifying the original list as well. This is frequently the cause of subtle bugs.</p>
+<p>This violation is triggered when a <code>unique()</code> method call that mutates the target collection appears as the right hand side of an assignment, or when it appears as the first method call in a series of chained method calls.</p>
 <p>Example of violations:</p>
 <pre>
-  def a = myList.unique()
-  def b = myList.unique() { it }
-  def c = myList.unique().findAll { x &lt; 1 }
+  def a = myList.unique()                   // No-argument
 
+  def x = myList.unique() { it }            // Single-argument: Closure
+  def y = myList.unique { it % 2 }
+
+  def c = myList.unique().findAll { x &lt; 1 } // Chained method call
+
+  def comparator = { o1, o2 -&gt; o1 &lt;=&gt; o2 }
+  def x = myList.unique(comparator)         // Single-argument: Comparator
+
+  def x = myList.unique(true)               // Single-argument: boolean true
+
+  def x = myList.unique(true, comparator)   // Two arguments: boolean true and Comparator
+  def y = myList.unique(true) { it }        // Two arguments: boolean true and Closure
 </pre>]]></description>
     <tag>groovyism</tag>
   </rule>
@@ -4466,6 +5554,11 @@ def (f, g) = [1, 2]    // ok
     }
 </pre>]]></description>
     <tag>groovyism</tag>
+    <param>
+      <key>ignoreMethodsWithOverrideAnnotation</key>
+      <description><![CDATA[If true, then do not check methods annotated with @Override.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.16 -->
@@ -4551,6 +5644,22 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <tag>groovyism</tag>
   </rule>
 
+  <!-- since 1.3 -->
+  <rule>
+    <key>org.codenarc.rule.groovyism.ExplicitCallToPutAtMethodRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Explicit Call To Put At Method]]></name>
+    <internalKey><![CDATA[ExplicitCallToPutAtMethod]]></internalKey>
+    <description><![CDATA[<p>Detects when the `map.putAt(k, v)` method is called directly rather than using `map[k] = v`.</p>
+<p>This rule can be configured to ignore <code>this.putAt(k, v)</code> using the <i>ignoreThisReference</i> property. It defaults to <i>false</i>, so even <code>putAt(k, v)</code> will trigger a violation.</p>
+<p>This rule also ignores all calls to <code>super.putAt(k, v)</code>.</p>
+<p>Example of violations:</p>
+<pre>
+        map.putAt(k, v)         // violation
+</pre>]]></description>
+    <tag>groovyism</tag>
+  </rule>
+
   <!-- imports rules -->
 
   <rule>
@@ -4558,7 +5667,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Duplicate Import]]></name>
     <internalKey><![CDATA[DuplicateImport]]></internalKey>
-    <description><![CDATA[<p>Checks for a duplicate <i>import</i> statements.</p>]]></description>
+    <description><![CDATA[<p>Checks for a duplicate <i>import</i> statements.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4567,7 +5677,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Import From Same Package]]></name>
     <internalKey><![CDATA[ImportFromSamePackage]]></internalKey>
-    <description><![CDATA[<p>Checks for an <i>import</i> of a class that is within the same package as the importing class.</p>]]></description>
+    <description><![CDATA[<p>Checks for an <i>import</i> of a class that is within the same package as the importing class.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4576,7 +5687,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Groovy Import]]></name>
     <internalKey><![CDATA[UnnecessaryGroovyImport]]></internalKey>
-    <description><![CDATA[<p>Checks for an <i>import</i> from any package that is already automatically imported for Groovy files. A Groovy file does not need to include an import for classes from <i>java.lang</i>, <i>java.util</i>, <i>java.io</i>, <i>java.net</i>, <i>groovy.lang</i> and <i>groovy.util</i>, as well as the classes <i>java.math.BigDecimal</i> and <i>java.math.BigInteger</i>.</p>]]></description>
+    <description><![CDATA[<p>Checks for an <i>import</i> from any package that is already automatically imported for Groovy files. A Groovy file does not need to include an import for classes from <i>java.lang</i>, <i>java.util</i>, <i>java.io</i>, <i>java.net</i>, <i>groovy.lang</i> and <i>groovy.util</i>, as well as the classes <i>java.math.BigDecimal</i> and <i>java.math.BigInteger</i>.</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4588,7 +5700,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <description><![CDATA[<p>Checks for <i>import</i> statements for classes that are never referenced within the source file. Also checks static imports.</p>
 <p>Known limitations:</p>
 <p>* Does not check for unused imports containing wildcards (e.g. <code>import org.codenarc.*</code>)</p>
-<p>* Misses unused imports if the class/alias name is contained within strings, comments or other (longer) names (i.e., if that string shows up almost anywhere within the source code).</p>]]></description>
+<p>* Misses unused imports if the class/alias name is contained within strings, comments or other (longer) names (i.e., if that string shows up almost anywhere within the source code).</p>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4605,7 +5718,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     import sun.misc.foo as Foo
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -4623,7 +5737,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     import static foo.bar
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>comesBefore</key>
@@ -4638,15 +5753,26 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[No Wildcard Imports]]></name>
     <internalKey><![CDATA[NoWildcardImports]]></internalKey>
-    <description><![CDATA[<p>Wildcard imports, static or otherwise, should not be used.</p>
+    <description><![CDATA[<p>Checks for wildcard (star) imports. If the <i>ignoreStaticImports</i> property is <i>true</i>, then do not check static imports. Similarly, do not check the standard imports if ignoreImports is <i>true</i>.</p>
 <p>Example of violations:</p>
 <pre>
-    import my.something.*
-    import static foo.bar.*
+    import static foo.bar.*         // violation (unless ignoreStaticImports is true)
+    import my.something.*           // violation (unless ignoreImports is true)
 
     public class MyClass{}
-</pre>]]></description>
+</pre>
+<p>NOTE: This is a file-based rule, rather than a typical AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreImports</key>
+      <description><![CDATA[If true, then do not check imports.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
+    <param>
+      <key>ignoreStaticImports</key>
+      <description><![CDATA[If true, then do not check static imports.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- jdbc rules -->
@@ -4726,7 +5852,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* <code>assertNull([123])</code>.</p>
 <p>* <code>assertNull([:])</code>.</p>
 <p>* <code>assertNull([a:123])</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4747,7 +5873,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* <code>assertFalse([])</code></p>
 <p>* <code>assertFalse([:)</code></p>
 <p>* <code>assertNull(null)</code></p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4761,13 +5887,19 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* Zero-argument methods with names starting with "test"</p>
 <p>* The <code>setUp()</code> and <code>tearDown()</code> methods</p>
 <p>* Methods annotated with <code>@Test</code></p>
-<p>* Methods annotated with <code>@Before</code> and <code>@After</code></p>
-<p>* Methods annotated with <code>@BeforeClass</code> and <code>@AfterClass</code></p>
+<p>* Methods annotated with <code>@Before</code>, <code>@BeforeAll</code>, <code>@BeforeClass</code> and <code>@BeforeEach</code></p>
+<p>* Methods annotated with <code>@After</code>, <code>@AfterAll</code>, <code>@AfterClass</code> and <code>@AfterEach</code></p>
+<p>* Methods annotated with <code>@Disabled</code> and <code>@Ignore</code></p>
 <p>* Methods annotated with <code>@Override</code></p>
 <p>Public, non-test methods on a test class violate conventional usage of test classes, and they typically break encapsulation unnecessarily.</p>
 <p>Public, non-test methods may also hide unintentional <i>'Lost Tests'</i>. For instance, the test method declaration may (unintentionally) include methods parameters, and thus be ignored by JUnit. Or the method may (unintentionally) not follow the "test.." naming convention and not have the @Test annotation, and thus be ignored by JUnit.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
+    <param>
+      <key>ignoreMethodsWithAnnotations</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names. Methods annotated with the annotations are ignored by this rule.]]></description>
+      <defaultValue>After,AfterAll,AfterClass,</defaultValue>
+    </param>
   </rule>
 
   <rule>
@@ -4776,7 +5908,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Set Up Calls Super]]></name>
     <internalKey><![CDATA[JUnitSetUpCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>setUp</code> method is defined, that it includes a call to <code>super.setUp()</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule ignored methods annotated with <code>@Before</code> or <code>@BeforeClass</code>.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4786,7 +5919,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Tear Down Calls Super]]></name>
     <internalKey><![CDATA[JUnitTearDownCallsSuper]]></internalKey>
     <description><![CDATA[<p>Rule that checks that if the JUnit <code>tearDown</code> method is defined, that it includes a call to <code>super.tearDown()</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule ignored methods annotated with <code>@After</code> or <code>@AfterClass</code>.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4796,7 +5930,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Set Up]]></name>
     <internalKey><![CDATA[JUnitUnnecessarySetUp]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>setUp()</code> methods that contain only a call to <code>super.setUp()</code>. The method is then unnecessary.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Here is an example of a violation:</p>
 <pre>
     class MyTest extends TestCase {
@@ -4814,7 +5948,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Tear Down]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryTearDown]]></internalKey>
     <description><![CDATA[<p>Rule that checks checks for JUnit <code>tearDown()</code> methods that contain only a call to <code>super.tearDown()</code>. The method is then unnecessary.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Here is an example of a violation:</p>
 <pre>
     class MyTest extends TestCase {
@@ -4843,7 +5977,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Equals Instead Of Assert True]]></name>
     <internalKey><![CDATA[UseAssertEqualsInsteadOfAssertTrue]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit assertions in object equality. These assertions should be made by more specific methods, like <code>assertEquals</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4854,7 +5988,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert False Instead Of Negation]]></name>
     <internalKey><![CDATA[UseAssertFalseInsteadOfNegation]]></internalKey>
     <description><![CDATA[<p>In unit tests, if a condition is expected to be false then there is no sense using <code>assertTrue</code> with the negation operator. For instance, <code>assertTrue(!condition)</code> can always be simplified to <code>assertFalse(condition)</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4865,7 +5999,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert True Instead Of Assert Equals]]></name>
     <internalKey><![CDATA[UseAssertTrueInsteadOfAssertEquals]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertEquals</code> where the first parameter is a boolean. These assertions should be made by more specific methods, like <code>assertTrue</code> or <code>assertFalse</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>All of the following examples can be simplified to assertTrue or remove the true literal:</p>
 <pre>
     assertEquals(true, foo())
@@ -4897,7 +6031,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Null Instead Of Assert Equals]]></name>
     <internalKey><![CDATA[UseAssertNullInsteadOfAssertEquals]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertEquals</code> where the first or second parameter is <code>null</code>. These assertion should be made against the <code>assertNull</code> method instead.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4908,7 +6042,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert Same Instead Of Assert True]]></name>
     <internalKey><![CDATA[UseAssertSameInsteadOfAssertTrue]]></internalKey>
     <description><![CDATA[<p>This rule detects JUnit calling <code>assertTrue</code> or <code>assertFalse</code> where the first or second parameter is an <code>Object#is()</code> call testing for reference equality. These assertion should be made against the <code>assertSame</code> or <code>assertNotSame</code> method instead.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -4929,7 +6063,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Use Assert True Instead Of Negation]]></name>
     <internalKey><![CDATA[UseAssertTrueInsteadOfNegation]]></internalKey>
     <description><![CDATA[<p>In unit tests, if a condition is expected to be true then there is no sense using <code>assertFalse</code> with the negation operator. For instance, <code>assertFalse(!condition)</code> can always be simplified to <code>assertTrue(condition)</code>.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>]]></description>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>]]></description>
     <tag>junit</tag>
   </rule>
 
@@ -5016,7 +6150,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unnecessary Fail]]></name>
     <internalKey><![CDATA[UnnecessaryFail]]></internalKey>
     <description><![CDATA[<p>In a unit test, catching an exception and immediately calling Assert.fail() is pointless and hides the stack trace. It is better to rethrow the exception or not catch the exception at all.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     public void testSomething() {
@@ -5079,9 +6213,9 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[JUnit Lost Test]]></name>
     <internalKey><![CDATA[JUnitLostTest]]></internalKey>
-    <description><![CDATA[<p>This rule checks for classes that import JUnit 4 classes and contain a <code>public</code>, instance, <code>void</code>, no-arg method named <i>test</i>* that is not annotated with the JUnit 4 <code>@Test</code> annotation.</p>
+    <description><![CDATA[<p>This rule checks for classes that import JUnit 4 classes and contain a <code>public</code>, instance, <code>void</code>, no-arg method named <i>test</i>* that is not abstract and not annotated with the JUnit 4 <code>@Test</code> annotation.</p>
 <p>Note: This rule should be disabled for Grails 2.x projects, since the Grails test framework can use AST Transformations to automatically annotate test methods.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -5100,7 +6234,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Unnecessary Throws Exception]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryThrowsException]]></internalKey>
     <description><![CDATA[<p>Check for <code>throws</code> clauses on JUnit test methods. That is not necessary in Groovy.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     @Test
@@ -5129,7 +6263,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <internalKey><![CDATA[JUnitPublicField]]></internalKey>
     <description><![CDATA[<p>Checks for public fields on a JUnit test class.  There is usually no reason to have a public field (even a constant) on a test class.</p>
 <p>Fields within interfaces and fields annotated with @Rule are ignored.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -5169,7 +6303,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[JUnit Public Property]]></name>
     <internalKey><![CDATA[JUnitPublicProperty]]></internalKey>
     <description><![CDATA[<p>Checks for public properties defined on JUnit test classes. There is typically no need to expose a public property (with public <i>getter</i> and <i>setter</i> methods) on a test class.</p>
-<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Test', 'Tests' or 'TestCase'.</p>
+<p>This rule sets the default value of the <i>applyToClassNames</i> property to only match class names ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
 <p>Example of violations:</p>
 <pre>
     import org.junit.Test
@@ -5244,9 +6378,9 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>Here are examples of <b>Log4J</b> or <b>Java Logging API</b> code that cause violations:</p>
 <pre>
     class MyClass {
-        private static final LOG = Logger.getLogger(SomeOtherClass)  // violation
-        def log1 = Logger.getLogger(SomeOtherClass.class)            // violation
-        def log2 = Logger.getLogger(SomeOtherClass.class.name)       // violation
+        private static final LOG = LoggerFactory.getLogger(SomeOtherClass)  // violation
+        def log1 = LoggerFactory.getLogger(SomeOtherClass.class)            // violation
+        def log2 = LoggerFactory.getLogger(SomeOtherClass.class.name)       // violation
     }
 </pre>
 <p>Here are examples of <b>Commons Logging</b> code that cause violations:</p>
@@ -5262,12 +6396,12 @@ println list.collectNested { it * 2 } // same functionality, better readability
     // Log4J or Java Logging API
 
     class MyClass {
-        private static final LOG = Logger.getLogger(MyClass)                    // ok
-        def log2 = Logger.getLogger(MyClass.class)                              // ok
-        private static log3 = Logger.getLogger(MyClass.getClass().getName())    // ok
-        private static log4 = Logger.getLogger(MyClass.getClass().name)         // ok
-        private static log5 = Logger.getLogger(MyClass.class.getName())         // ok
-        private static log6 = Logger.getLogger(MyClass.class.name)              // ok
+        private static final LOG = LoggerFactory.getLogger(MyClass)                    // ok
+        def log2 = LoggerFactory.getLogger(MyClass.class)                              // ok
+        private static log3 = LoggerFactory.getLogger(MyClass.getClass().getName())    // ok
+        private static log4 = LoggerFactory.getLogger(MyClass.getClass().name)         // ok
+        private static log5 = LoggerFactory.getLogger(MyClass.class.getName())         // ok
+        private static log6 = LoggerFactory.getLogger(MyClass.class.name)              // ok
     }
 
     // Commons Logging
@@ -5341,7 +6475,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the class name. It is required and cannot be null or empty.]]></description>
-      <defaultValue>([A-Z]\w*\$?)*</defaultValue>
+      <defaultValue>([A-Z]\\w*\\$?)*</defaultValue>
     </param>
   </rule>
 
@@ -5406,7 +6540,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the method name. It is required and cannot be null or empty.]]></description>
-      <defaultValue>[a-z]\w*</defaultValue>
+      <defaultValue>[a-z]\\w*</defaultValue>
     </param>
   </rule>
 
@@ -5425,7 +6559,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty.]]></description>
-      <defaultValue>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</defaultValue>
+      <defaultValue>[a-z]+[a-z0-9]*(\\.[a-z0-9]+)*</defaultValue>
     </param>
   </rule>
 
@@ -5611,7 +6745,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Class Name Same As Filename]]></name>
     <internalKey><![CDATA[ClassNameSameAsFilename]]></internalKey>
-    <description><![CDATA[<p>Reports files containing only one top level class / enum / interface which is named differently than the file.</p>]]></description>
+    <description><![CDATA[<p>Reports files containing only one top level class / enum / interface which is named differently than the file.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
   </rule>
 
@@ -5621,7 +6756,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Package Name Matches File Path]]></name>
     <internalKey><![CDATA[PackageNameMatchesFilePath]]></internalKey>
-    <description><![CDATA[<p>A package source file's path should match the package declaration.</p>]]></description>
+    <description><![CDATA[<p>A package source file's path should match the package declaration.</p>
+<p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <i>applyToClassNames</i> and <i>doNotApplyToClassNames</i> rule configuration properties are not available. See <a href="http://codenarc.sourceforge.net/codenarc-configuring-rules.html#Standard_Properties_for_Configuring_Rules"> Standard Properties for Configuring Rules</a>.</p>]]></description>
     <tag>bug</tag>
     <param>
       <key>groupId</key>
@@ -5874,7 +7010,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <description><![CDATA[<p>Classes that implement <code>Serializable</code> should define a <code>serialVersionUID</code>. Deserialization uses this number to ensure that a loaded class corresponds exactly to a serialized object. If you don't define serialVersionUID, the system will make one by hashing most of your class's features. Then if you change anything, the UID will change and Java won't let you reload old data.</p>
 <p>An example of a missing serialVersionUID:</p>
 <pre>
-    class MyClass imlements Serializable {
+    class MyClass implements Serializable {
         // missing serialVersionUID
     }
 </pre>]]></description>
@@ -6163,12 +7299,21 @@ println list.collectNested { it * 2 } // same functionality, better readability
     void someMethod(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) { // violation
     }
 
+    @Override
+    void someMethod(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) { // no violation if ignoreOverriddenMethods == true
+    }
+
     class SampleClass {
         SampleClass(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) { // violation
         }
     }
 </pre>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreOverriddenMethods</key>
+      <description><![CDATA[Ignore number of parameters for methods with @Override annotation]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
     <param>
       <key>maxParameters</key>
       <description><![CDATA[The maximum number of parameters in method/constructor]]></description>
@@ -6451,6 +7596,11 @@ println list.collectNested { it * 2 } // same functionality, better readability
     }
 </pre>]]></description>
     <tag>clumsy</tag>
+    <param>
+      <key>ignoreAnnotations</key>
+      <description><![CDATA[If true, then do not report violations if a constructor has one or more annotations.]]></description>
+      <defaultValue>false</defaultValue>
+    </param>
   </rule>
 
   <!-- since 0.12 -->
@@ -6479,13 +7629,16 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Getter]]></name>
     <internalKey><![CDATA[UnnecessaryGetter]]></internalKey>
-    <description><![CDATA[<p>Checks for explicit calls to getter/accessor methods which can, for the most part, be replaced by property access. A getter is defined as a method call that matches <code>get[A-Z]</code> but not <code>getClass()</code> or <code>get[A-Z][A-Z]</code> such as <code>getURL()</code>. Getters do not take method arguments.</p>
+    <description><![CDATA[<p>Checks for explicit calls to getter/accessor methods which can, for the most part, be replaced by property access. A getter is defined as a no-argument method call that matches <code>get[A-Z]</code> but not <code>getClass()</code> or <code>get[A-Z][A-Z]</code> such as <code>getURL()</code>.</p>
 <p>These bits of code produce violations:</p>
 <pre>
     x.getProperty()
     x.getFirst()
     x.getFirstName()
     x.getA()
+
+    x.isFirst()         // Violation if checkIsMethods is true
+    x.isA()             // Violation if checkIsMethods is true
 </pre>
 <p>These bits of code do not:</p>
 <pre>
@@ -6498,6 +7651,15 @@ println list.collectNested { it * 2 } // same functionality, better readability
     x.getProperty('key')
 </pre>]]></description>
     <tag>clumsy</tag>
+    <param>
+      <key>checkIsMethods</key>
+      <description><![CDATA[If true, then also check isXxx() getters methods.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
   </rule>
 
   <!-- since 0.12 -->
@@ -6888,6 +8050,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unnecessary Public Modifier]]></name>
     <internalKey><![CDATA[UnnecessaryPublicModifier]]></internalKey>
     <description><![CDATA[<p>The 'public' modifier is not required on methods, constructors or classes.</p>
+<p>Because of Groovy parsing limitations, this rule ignores methods (and constructors) that include Generic types in the method declaration.</p>
 <p>Example of violations:</p>
 <pre>
     // violation on class
@@ -7282,6 +8445,31 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <tag>clumsy</tag>
   </rule>
 
+  <!-- since 1.0 -->
+  <rule>
+    <key>org.codenarc.rule.unnecessary.UnnecessarySetterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Unnecessary Setter]]></name>
+    <internalKey><![CDATA[UnnecessarySetter]]></internalKey>
+    <description><![CDATA[<p>Checks for explicit calls to setter methods which can, for the most part, be replaced by assignment to property. A setter is defined as a method call that matches set[A-Z] but not set[A-Z][A-Z] such as setURL(). Setters take one method argument. Setter calls within an expression are ignored.</p>
+<p>These bits of code produce violations:</p>
+<pre>
+  x.setProperty(1)
+  x.setProperty(this.getA())
+  x.setProperty([])
+</pre>
+<p>These bits of code do not:</p>
+<pre>
+  x.set(1)                              // Nothing after "set"
+  x.setup(2)                            // The letter after "set" must be capitalized
+  x.setURL('')                          // But setters with multiple capital letters after "set" are ignored
+  x.setSomething('arg1', 'arg2')        // Setter must have exactly one argument
+  if (!file.setExecutable(true)) { }    // Set method called within expression
+  def count = x.setCount(92)            // Set method called within expression
+</pre>]]></description>
+    <tag>clumsy</tag>
+  </rule>
+
   <!-- unused rules -->
 
   <rule>
@@ -7317,7 +8505,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <name><![CDATA[Unused Object]]></name>
     <internalKey><![CDATA[UnusedObject]]></internalKey>
     <description><![CDATA[<p>Checks for object allocations that are not assigned or used, unless it is the last statement within a block (because it may be the intentional return value). Examples include:</p>
-<p>By default, this rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. Invoking constructors without using the result is a common pattern in tests.</p>
+<p>By default, this rule does not analyze test files. This rule sets the default value of the <i>doNotApplyToFilesMatching</i> property to ignore file names ending in 'Spec.groovy, ''Test.groovy', 'Tests.groovy' or 'TestCase.groovy'. Invoking constructors without using the result is a common pattern in tests.</p>
 <pre>
     int myMethod() {
         new BigDecimal("23.45")     // unused
@@ -7344,7 +8532,8 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Unused Private Field]]></name>
     <internalKey><![CDATA[UnusedPrivateField]]></internalKey>
-    <description><![CDATA[<p>Checks for private fields that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes). By default, fields named <code>serialVersionUID</code> are ignored. The rule has a property named ignoreFieldNames, which can be set to ignore other field names as well. For instance, to ignore fields named 'fieldx', set the property to the 'fieldx, serialVersionUID'</p>
+    <description><![CDATA[<p>Checks for private fields that are not referenced within the same class. Note that the <code>private</code> modifier is not currently "respected" by Groovy code (i.e., Groovy can access <code>private</code> members within other classes).</p>
+<p>By default, fields named <code>serialVersionUID</code>, and fields annotated with <code>groovy.lang.Delegate</code> are ignored. The rule has a property named <i>ignoreFieldNames</i>, which can be set to ignore other field names as well. For instance, to also ignore fields named 'fieldx', set the property to the 'fieldx, serialVersionUID'</p>
 <p>Known limitations:</p>
 <p>* Does not recognize field access when field name is a GString (e.g. <code>this."${fieldName}"</code>)</p>
 <p>* Does not recognize access of private field of another instance (i.e. other than <code>this</code>)</p>]]></description>
@@ -7369,6 +8558,10 @@ println list.collectNested { it * 2 } // same functionality, better readability
 <p>* Does not differentiate between multiple private methods with the same name but different parameters (i.e., overloaded)</p>
 <p>* Does not check for unused constructors</p>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreMethodsWithAnnotationNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names that mark private methods that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
   </rule>
 
   <rule>
@@ -7376,7 +8569,7 @@ println list.collectNested { it * 2 } // same functionality, better readability
     <severity>MINOR</severity>
     <name><![CDATA[Unused Variable]]></name>
     <internalKey><![CDATA[UnusedVariable]]></internalKey>
-    <description><![CDATA[<p>Checks for variables that are never referenced.</p>
+    <description><![CDATA[<p>Checks for variables that are never referenced. An assignment to the variable is not considered a reference.</p>
 <p>The rule has a property named ignoreVariableNames, which can be set to ignore some variable names. For instance, to ignore fields named 'unused', set the property to 'unused'.</p>
 <p>Known limitations:</p>
 <p>* Incorrectly considers a variable referenced if another variable with the same name is referenced elsewhere (in another scope/block).</p>]]></description>
@@ -7444,6 +8637,16 @@ println list.collectNested { it * 2 } // same functionality, better readability
     }
 </pre>]]></description>
     <tag>bug</tag>
+    <param>
+      <key>ignoreClassRegex</key>
+      <description><![CDATA[Regex that specifies the names of the classes to skip checking.]]></description>
+      <defaultValue>.*Category</defaultValue>
+    </param>
+    <param>
+      <key>ignoreRegex</key>
+      <description><![CDATA[Regex that specifies the parameter names to ignore.]]></description>
+      <defaultValue>ignore|ignored</defaultValue>
+    </param>
   </rule>
 
 </rules>

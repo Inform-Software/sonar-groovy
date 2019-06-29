@@ -19,14 +19,14 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
 import org.sonar.plugins.groovy.foundation.Groovy;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeNarcRulesDefinitionTest {
 
@@ -35,13 +35,14 @@ public class CodeNarcRulesDefinitionTest {
     CodeNarcRulesDefinition definition = new CodeNarcRulesDefinition();
     RulesDefinition.Context context = new RulesDefinition.Context();
     definition.define(context);
-    RulesDefinition.Repository repository = context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
+    RulesDefinition.Repository repository =
+        context.repository(CodeNarcRulesDefinition.REPOSITORY_KEY);
 
     assertThat(repository.name()).isEqualTo(CodeNarcRulesDefinition.REPOSITORY_NAME);
     assertThat(repository.language()).isEqualTo(Groovy.KEY);
 
     List<Rule> rules = repository.rules();
-    assertThat(rules).hasSize(347);
+    assertThat(rules).hasSize(379);
 
     List<String> missingDebt = new LinkedList<>();
     for (Rule rule : rules) {
@@ -53,7 +54,8 @@ public class CodeNarcRulesDefinitionTest {
         missingDebt.add(rule.key());
       }
     }
-    // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have debt by purpose
+    // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have debt by
+    // purpose
     assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule.fixed");
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
