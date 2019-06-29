@@ -51,14 +51,14 @@ Please see the Git history for older changes
 ## [0.6] - 2012-08-06
 
 [Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.5...HEAD
-[1.5]: https://github.com/Inform-Software/sonar-groovy/compare/1.4-RC1..1.5
-[1.4-RC1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3.1..1.4-RC1
-[1.3.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3..1.3.1
-[1.3]: https://github.com/Inform-Software/sonar-groovy/compare/1.2..1.3
-[1.2]: https://github.com/Inform-Software/sonar-groovy/compare/1.1.1..1.2
-[1.1.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.1..1.1.1
-[1.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.0.1..1.1
-[1.0.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.0..1.0.1
-[1.0]: https://github.com/Inform-Software/sonar-groovy/compare/0.6..1.0
+[1.5]: https://github.com/Inform-Software/sonar-groovy/compare/1.4-RC1...1.5
+[1.4-RC1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3.1...1.4-RC1
+[1.3.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3...1.3.1
+[1.3]: https://github.com/Inform-Software/sonar-groovy/compare/1.2...1.3
+[1.2]: https://github.com/Inform-Software/sonar-groovy/compare/1.1.1...1.2
+[1.1.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.1...1.1.1
+[1.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.0.1...1.1
+[1.0.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.0...1.0.1
+[1.0]: https://github.com/Inform-Software/sonar-groovy/compare/0.6...1.0
 [0.6]: https://github.com/Inform-Software/sonar-groovy/releases/tag/0.6
 
