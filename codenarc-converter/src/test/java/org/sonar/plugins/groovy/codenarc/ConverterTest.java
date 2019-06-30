@@ -22,7 +22,6 @@ package org.sonar.plugins.groovy.codenarc;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.Lists;
-import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.io.IOException;
@@ -78,7 +77,7 @@ public class ConverterTest {
         "------------------------------------------------------------------------------------------");
     log.info("DIFFERENCE in {}", ruleName);
     Patch p = DiffUtils.diff(s1, s2);
-    for (Delta delta : p.getDeltas()) {
+    for (Object delta : p.getDeltas()) {
       log.info("{}", delta);
     }
   }

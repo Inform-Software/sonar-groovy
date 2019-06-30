@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>49</version>
+    <version>52</version>
   </parent>
 
   <groupId>org.sonarsource.groovy</groupId>
@@ -55,7 +55,8 @@
 
   <scm>
     <connection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</connection>
-    <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git
+    </developerConnection>
     <url>https://github.com/Inform-Software/sonar-groovy</url>
     <tag>HEAD</tag>
   </scm>
@@ -71,11 +72,11 @@
   <properties>
     <sonar.version>6.7</sonar.version>
     <jacoco.previous.version>0.7.4.201502262128</jacoco.previous.version>
-    <jacoco.version>0.8.2</jacoco.version>
-    <groovy.version>2.4.16</groovy.version>
+    <groovy.version>2.4.17</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
-    <!-- used for deployment to SonarSource Artifactory -->
-    <gitRepositoryName>sonar-groovy</gitRepositoryName>
+    <!-- Don't deploy on release -->
+    <maven.deploy.skip>true</maven.deploy.skip>
+    <maven.min.version>3.3.9</maven.min.version>
     <license.owner>SonarSource SA &amp; Community</license.owner>
   </properties>
 
@@ -138,7 +139,7 @@
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
-        <version>3.11.1</version>
+        <version>3.12.2</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -162,21 +163,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco.version}</version>
-        <executions>
-          <execution>
-            <id>prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-              <goal>prepare-agent-integration</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>
