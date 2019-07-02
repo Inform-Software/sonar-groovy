@@ -8,6 +8,7 @@ env:
 - SONAR_VERSION=7.6
 - SONAR_VERSION=7.7
 - SONAR_VERSION=7.8
+- SONAR_VERSION=7.9
 
 # Install step is redundant
 install: true
