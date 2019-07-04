@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.6] - 2019-07-04
+
 ### Added
 - This changelog
 
@@ -50,7 +52,8 @@ Please see the Git history for older changes
 
 ## [0.6] - 2012-08-06
 
-[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.5...HEAD
+[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.6...HEAD
+[1.6]: https://github.com/Inform-Software/sonar-groovy/compare/1.5...1.6
 [1.5]: https://github.com/Inform-Software/sonar-groovy/compare/1.4-RC1...1.5
 [1.4-RC1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3.1...1.4-RC1
 [1.3.1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3...1.3.1
