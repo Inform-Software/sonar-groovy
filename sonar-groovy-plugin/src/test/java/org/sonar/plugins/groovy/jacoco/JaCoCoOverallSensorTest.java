@@ -20,7 +20,7 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.Before;
@@ -43,22 +43,18 @@ public class JaCoCoOverallSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private JaCoCoConfiguration configuration;
   private JaCoCoSensor sensor;
-  private Path outputDir;
-  private InputFile inputFile;
   private MapSettings settings = new MapSettings();
-  private SensorContextTester context;
 
   @Before
-  public void before() throws Exception {
-    outputDir = tmpDir.newFolder().toPath();
+  public void before() throws IOException {
+    Path outputDir = tmpDir.newFolder().toPath();
 
     Files.copy(
-        TestUtils.getResource(getClass(), "../JaCoCoOverallSensorTests/jacoco-ut.exec"),
+        TestUtils.getResource(getClass(), "../JaCoCoSensor_0_7_5/jacoco-ut.exec"),
         outputDir.resolve("jacoco-ut.exec"));
     Files.copy(
-        TestUtils.getResource(getClass(), "../JaCoCoOverallSensorTests/jacoco-it.exec"),
+        TestUtils.getResource(getClass(), "../JaCoCoSensor_0_7_5/jacoco-ut.exec"),
         outputDir.resolve("jacoco-it.exec"));
     Files.copy(
         TestUtils.getResource(getClass(), "../Hello.class.toCopy"),
@@ -69,10 +65,10 @@ public class JaCoCoOverallSensorTest {
 
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
-    context = SensorContextTester.create(outputDir);
+    SensorContextTester context = SensorContextTester.create(outputDir);
     context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
 
-    inputFile =
+    InputFile inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
             .setLanguage(Groovy.KEY)
             .setType(Type.MAIN)
@@ -80,7 +76,7 @@ public class JaCoCoOverallSensorTest {
             .build();
     context.fileSystem().add(inputFile);
 
-    configuration = new JaCoCoConfiguration(settings, context.fileSystem());
+    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings, context.fileSystem());
     sensor =
         new JaCoCoSensor(
             configuration,
@@ -109,83 +105,6 @@ public class JaCoCoOverallSensorTest {
     settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "notexist.exec");
     settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "notexist.exec");
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
-  }
-
-  @Test
-  public void test_read_execution_data_with_IT_and_UT() {
-    configReports(true, true);
-
-    sensor.execute(context);
-
-    int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
-    int[] zeroHitlines = {30, 38};
-    int[] conditionLines = {14, 29, 30};
-    int[] coveredConditions = {2, 1, 0};
-
-    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
-  }
-
-  private void verifyOverallMetrics(
-      SensorContextTester context,
-      int[] zeroHitlines,
-      int[] oneHitlines,
-      int[] conditionLines,
-      int[] coveredConditions) {
-    for (int zeroHitline : zeroHitlines) {
-      assertThat(context.lineHits(inputFile.key(), zeroHitline)).isEqualTo(0);
-    }
-    for (int oneHitline : oneHitlines) {
-      assertThat(context.lineHits(inputFile.key(), oneHitline)).isEqualTo(1);
-    }
-
-    for (int i = 0; i < conditionLines.length; i++) {
-      int line = conditionLines[i];
-      assertThat(context.conditions(inputFile.key(), line)).isEqualTo(2);
-      assertThat(context.coveredConditions(inputFile.key(), line)).isEqualTo(coveredConditions[i]);
-    }
-  }
-
-  @Test
-  public void test_read_execution_data_with_IT_and_UT_and_binaryDirs_being_absolute() {
-    configReports(true, true);
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, outputDir.toAbsolutePath().toString());
-
-    sensor.execute(context);
-
-    int[] oneHitlines = {9, 10, 14, 15, 17, 21, 25, 29, 32, 33, 42, 47};
-    int[] zeroHitlines = {30, 38};
-    int[] conditionLines = {14, 29, 30};
-    int[] coveredConditions = {2, 1, 0};
-
-    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
-  }
-
-  @Test
-  public void test_read_execution_data_with_only_UT() {
-    configReports(true, false);
-
-    sensor.execute(context);
-
-    int[] oneHitlines = {9, 10, 14, 15, 17, 21, /* 25 not covered in UT */ 29, 32, 33, 42, 47};
-    int[] zeroHitlines = {25, 30, 38};
-    int[] conditionLines = {14, 29, 30};
-    int[] coveredConditions = {2, 1, 0};
-
-    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
-  }
-
-  @Test
-  public void test_read_execution_data_with_only_IT() {
-    configReports(false, true);
-
-    sensor.execute(context);
-
-    int[] oneHitlines = {9, 10, 25};
-    int[] zeroHitlines = {14, 15, 17, 21, 29, 30, 32, 33, 38, 42, 47};
-    int[] conditionLines = {14, 29, 30};
-    int[] coveredConditions = {0, 0, 0};
-
-    verifyOverallMetrics(context, zeroHitlines, oneHitlines, conditionLines, coveredConditions);
   }
 
   private void configReports(boolean utReport, boolean itReport) {

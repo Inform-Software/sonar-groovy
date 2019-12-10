@@ -20,11 +20,9 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +32,6 @@ import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
-import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
@@ -47,18 +44,15 @@ public class JaCoCoItSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private Path outputDir;
-  private InputFile inputFile;
   private MapSettings settings =
       new MapSettings(new PropertyDefinitions(JaCoCoConfiguration.getPropertyDefinitions()));
-  private JaCoCoConfiguration configuration;
   private JaCoCoSensor sensor;
 
   @Before
-  public void setUp() throws Exception {
-    outputDir = tmpDir.newFolder().toPath();
+  public void setUp() throws IOException {
+    Path outputDir = tmpDir.newFolder().toPath();
     Files.copy(
-        TestUtils.getResource(getClass(), "../JaCoCoItSensorTests/jacoco-it.exec"),
+        TestUtils.getResource(getClass(), "../JaCoCoSensor_0_7_5/jacoco-ut.exec"),
         outputDir.resolve("jacoco-it.exec"));
     Files.copy(
         TestUtils.getResource(getClass(), "../Hello.class.toCopy"),
@@ -71,14 +65,14 @@ public class JaCoCoItSensorTest {
     settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "jacoco-it.exec");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(outputDir);
-    inputFile =
+    InputFile inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
             .setLanguage(Groovy.KEY)
             .setType(Type.MAIN)
             .setLines(50)
             .build();
     fileSystem.add(inputFile);
-    configuration = new JaCoCoConfiguration(settings, fileSystem);
+    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings, fileSystem);
 
     sensor =
         new JaCoCoSensor(
@@ -86,7 +80,7 @@ public class JaCoCoItSensorTest {
   }
 
   @Test
-  public void test_description() {
+  public void testDescription() {
     DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
     sensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
@@ -103,25 +97,4 @@ public class JaCoCoItSensorTest {
     assertThat(sensor.shouldExecuteOnProject()).isFalse();
   }
 
-  @Test
-  public void test_read_execution_data() throws IOException {
-    SensorContextTester context = SensorContextTester.create(Paths.get("."));
-    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
-    sensor.execute(context);
-
-    int[] oneHitlines = {9, 10, 25};
-    int[] zeroHitlines = {14, 15, 17, 21, 29, 30, 32, 33, 38, 42, 47};
-    int[] conditionLines = {14, 29, 30};
-
-    for (int zeroHitline : zeroHitlines) {
-      assertThat(context.lineHits(":example/Hello.groovy", zeroHitline)).isEqualTo(0);
-    }
-    for (int oneHitline : oneHitlines) {
-      assertThat(context.lineHits(":example/Hello.groovy", oneHitline)).isEqualTo(1);
-    }
-    for (int conditionLine : conditionLines) {
-      assertThat(context.conditions(":example/Hello.groovy", conditionLine)).isEqualTo(2);
-      assertThat(context.coveredConditions(":example/Hello.groovy", conditionLine)).isEqualTo(0);
-    }
-  }
 }

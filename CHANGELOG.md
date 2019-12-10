@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   SonarQube 7.8)
 - Minor dependency updates
 
+### Removed
+- Compatibility with JaCoCo older the 0.7.5 (released in mid-2015)
+
 ## [1.6] - 2019-07-04
 
 ### Added

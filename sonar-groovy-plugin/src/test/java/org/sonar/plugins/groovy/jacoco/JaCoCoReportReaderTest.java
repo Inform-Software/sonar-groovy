@@ -56,15 +56,8 @@ public class JaCoCoReportReaderTest {
   }
 
   @Test
-  public void not_existing_class_files_should_not_be_analyzed_for_current() {
+  public void notExistingClassFilesShouldNotBeAnalyzed() {
     File report = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCo_incompatible_merge/jacoco-0.7.5.exec");
-    Collection<File> classFile = Arrays.asList(dummy);
-    new JaCoCoReportReader(report).analyzeFiles(null, classFile);
-  }
-
-  @Test
-  public void not_existing_class_files_should_not_be_analyzed_for_previous() {
-    File report = TestUtils.getResource("/org/sonar/plugins/groovy/jacoco/JaCoCo_incompatible_merge/jacoco-0.7.4.exec");
     Collection<File> classFile = Arrays.asList(dummy);
     new JaCoCoReportReader(report).analyzeFiles(null, classFile);
   }

@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
@@ -46,10 +47,11 @@ public class JaCoCoSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
+
   private MapSettings settings =
       new MapSettings(new PropertyDefinitions(JaCoCoConfiguration.getPropertyDefinitions()));
-  private InputFile inputFile;
-  private JaCoCoConfiguration configuration;
   private JaCoCoSensor sensor;
 
   private void initWithJaCoCoVersion(String jacocoVersion) throws IOException {
@@ -69,14 +71,14 @@ public class JaCoCoSensorTest {
     settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "jacoco-ut.exec");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(outputDir);
-    inputFile =
+    InputFile inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
             .setLanguage(Groovy.KEY)
             .setType(Type.MAIN)
             .setLines(50)
             .build();
     fileSystem.add(inputFile);
-    configuration = new JaCoCoConfiguration(settings, fileSystem);
+    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings, fileSystem);
 
     sensor =
         new JaCoCoSensor(
@@ -110,9 +112,10 @@ public class JaCoCoSensorTest {
 
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
-    sensor.execute(context);
 
-    verifyMeasures(context);
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage(JaCoCoReportReader.INCOMPATIBLE_JACOCO_ERROR);
+    sensor.execute(context);
   }
 
   @Test
