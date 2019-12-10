@@ -13,7 +13,7 @@
   <name>Sonar CodeNarc Converter</name>
 
   <properties>
-    <auto.version>1.6.5</auto.version>
+    <auto.version>1.7</auto.version>
   </properties>
 
   <dependencies>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>28.0-jre</version>
+      <version>28.1-jre</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
