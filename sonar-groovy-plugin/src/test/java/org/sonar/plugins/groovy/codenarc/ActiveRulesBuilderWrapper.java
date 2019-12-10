@@ -19,11 +19,6 @@
  */
 package org.sonar.plugins.groovy.codenarc;
 
-import static org.assertj.core.api.Assertions.fail;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.rule.internal.NewActiveRule;
@@ -32,106 +27,37 @@ import org.sonar.api.rule.RuleKey;
 public class ActiveRulesBuilderWrapper {
 
   private ActiveRulesBuilder builder = new ActiveRulesBuilder();
-  private Object lastRule;
+  private NewActiveRule.Builder lastRule;
 
   boolean newType = false;
-  Class<?> builderClass = null;
-  private Constructor<?> ruleConstructor;
-  private Method nameSetter;
-  private Method internalKeySetter;
-  private Method paramSetter;
-  private Method activateMethod;
-  private Method createMethod;
-  private Method buildMethod;
-  private Method addRuleMethod;
-
-  public ActiveRulesBuilderWrapper() {
-    try {
-      builderClass = Class.forName("org.sonar.api.batch.rule.internal.NewActiveRule$Builder");
-      newType = true;
-    } catch (ClassNotFoundException e) {
-      try {
-        builderClass = Class.forName("org.sonar.api.batch.rule.internal.NewActiveRule");
-      } catch (ClassNotFoundException e1) {
-        fail("Could not initialize NewActiveRule", e1);
-      }
-    }
-    try {
-      nameSetter = builderClass.getMethod("setName", String.class);
-      internalKeySetter = builderClass.getMethod("setInternalKey", String.class);
-      paramSetter = builderClass.getMethod("setParam", String.class, String.class);
-      if (newType) {
-        ruleConstructor = builderClass.getConstructor();
-        createMethod = builderClass.getMethod("setRuleKey", RuleKey.class);
-        buildMethod = builderClass.getMethod("build");
-        addRuleMethod = builder.getClass().getMethod("addRule", NewActiveRule.class);
-      } else {
-        createMethod = builder.getClass().getMethod("create", RuleKey.class);
-        activateMethod = builderClass.getMethod("activate");
-      }
-    } catch (NoSuchMethodException | SecurityException e) {
-      fail("Could not look up a method", e);
-    }
-  }
 
   public ActiveRulesBuilderWrapper addRule(String key) {
     addLastRule();
     RuleKey ruleKey = RuleKey.of(CodeNarcRulesDefinition.REPOSITORY_KEY, key);
-    try {
-      if (newType) {
-        lastRule = ruleConstructor.newInstance();
-        createMethod.invoke(lastRule, ruleKey);
-      } else {
-        lastRule = createMethod.invoke(builder, ruleKey);
-      }
-    } catch (IllegalAccessException
-        | IllegalArgumentException
-        | InvocationTargetException
-        | InstantiationException e) {
-      fail("Could not create new rule builder.", e);
-    }
+    lastRule = new NewActiveRule.Builder();
+    lastRule.setRuleKey(ruleKey);
     setInternalKey(key);
     return this;
   }
 
   public ActiveRulesBuilderWrapper setName(String name) {
-    try {
-      nameSetter.invoke(lastRule, name);
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      fail("Could not execute 'setName'", e);
-    }
+    lastRule.setName(name);
     return this;
   }
 
   public ActiveRulesBuilderWrapper setInternalKey(String key) {
-    try {
-      internalKeySetter.invoke(lastRule, key);
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      fail("Could not execute 'setInternalKey'", e);
-    }
+    lastRule.setInternalKey(key);
     return this;
   }
 
   public ActiveRulesBuilderWrapper addParam(String key, String value) {
-    try {
-      paramSetter.invoke(lastRule, key, value);
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      fail("Could not execute 'setParam'", e);
-    }
+    lastRule.setParam(key, value);
     return this;
   }
 
   private void addLastRule() {
     if (lastRule != null) {
-      try {
-        if (newType) {
-          addRuleMethod.invoke(builder, buildMethod.invoke(lastRule));
-        } else {
-          activateMethod.invoke(lastRule);
-        }
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        fail("Could not add rule to active rules.", e);
-      }
+      builder.addRule(lastRule.build());
       lastRule = null;
     }
   }

@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- Remove backwards compatibility hacks (drop support for everything older then
+  SonarQube 7.8)
+
 ## [1.6] - 2019-07-04
 
 ### Added

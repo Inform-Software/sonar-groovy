@@ -21,38 +21,23 @@ package org.sonar.plugins.groovy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 import org.junit.Test;
 import org.sonar.api.Plugin;
+import org.sonar.api.SonarEdition;
 import org.sonar.api.SonarQubeSide;
 import org.sonar.api.SonarRuntime;
 import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.utils.Version;
 
 public class GroovyPluginTest {
-  public static final Version VERSION_6_7 = Version.create(6, 7);
+  public static final Version VERSION_7_9 = Version.create(7, 9);
 
   @Test
   public void testExtensions() {
     GroovyPlugin plugin = new GroovyPlugin();
 
-    Binding b = new Binding();
-    Class<?> edition = null;
-    String call = "rt.forSonarQube(ver, scanner)";
-    try {
-      edition = Class.forName("org.sonar.api.SonarEdition");
-      call = "rt.forSonarQube(ver, scanner, ed.COMMUNITY)";
-    } catch (ClassNotFoundException e) {
-      // SKIP on old SonarQube
-    }
-    b.setVariable("ver", VERSION_6_7);
-    b.setVariable("scanner", SonarQubeSide.SCANNER);
-    b.setVariable("ed", edition);
-    b.setVariable("rt", SonarRuntimeImpl.class);
-    GroovyShell sh = new GroovyShell(b);
-
-    SonarRuntime runtime = (SonarRuntime) sh.evaluate(call);
+    SonarRuntime runtime =
+        SonarRuntimeImpl.forSonarQube(VERSION_7_9, SonarQubeSide.SCANNER, SonarEdition.COMMUNITY);
     Plugin.Context context = new Plugin.Context(runtime);
     plugin.define(context);
     assertThat(context.getExtensions()).hasSize(14);
