@@ -6,7 +6,7 @@ jdk:
 env:
 - SONAR_VERSION=
 - SONAR_VERSION=7.9
-#- SONAR_VERSION=8.0 - not compatible yet
+- SONAR_VERSION=8.0
 
 # Install step is redundant
 install: true
