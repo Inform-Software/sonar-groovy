@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Remove backwards compatibility hacks (drop support for everything older then
   SonarQube 7.8)
 - Minor dependency updates
+- Deprecates support for JaCoCo binary format (use the SonarQube JaCoCo plugin
+  instead)
 
 ### Removed
 - Compatibility with JaCoCo older the 0.7.5 (released in mid-2015)

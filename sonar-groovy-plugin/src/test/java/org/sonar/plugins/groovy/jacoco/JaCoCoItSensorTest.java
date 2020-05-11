@@ -20,6 +20,8 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +35,7 @@ import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.config.internal.MapSettings;
+import org.sonar.api.notifications.AnalysisWarnings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
@@ -74,7 +77,11 @@ public class JaCoCoItSensorTest {
 
     sensor =
         new JaCoCoSensor(
-            configuration, new GroovyFileSystem(fileSystem), new PathResolver(), settings);
+            configuration,
+            new GroovyFileSystem(fileSystem),
+            new PathResolver(),
+            settings,
+            mock(AnalysisWarnings.class));
   }
 
   @Test
@@ -83,16 +90,4 @@ public class JaCoCoItSensorTest {
     sensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
-
-  @Test
-  public void should_Execute_On_Project_only_if_exec_exists() {
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
-
-    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, ".");
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
-
-    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "it.not.found.exec");
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
-  }
-
 }

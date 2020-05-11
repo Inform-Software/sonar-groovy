@@ -20,6 +20,13 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyString;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,12 +34,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
+import org.sonar.api.notifications.AnalysisWarnings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
@@ -42,9 +54,15 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 public class JaCoCoOverallSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+  @Rule
+  public final MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
 
   private JaCoCoSensor sensor;
+  private InputFile inputFile;
   private MapSettings settings = new MapSettings();
+  private SensorContextTester context;
+  @Mock
+  private AnalysisWarnings analysisWarnings;
 
   @Before
   public void before() throws IOException {
@@ -65,10 +83,11 @@ public class JaCoCoOverallSensorTest {
 
     settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
 
-    SensorContextTester context = SensorContextTester.create(outputDir);
+    context = SensorContextTester.create(outputDir);
     context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
+    context.setSettings(settings);
 
-    InputFile inputFile =
+    inputFile =
         TestInputFileBuilder.create("", "example/Hello.groovy")
             .setLanguage(Groovy.KEY)
             .setType(Type.MAIN)
@@ -82,29 +101,52 @@ public class JaCoCoOverallSensorTest {
             configuration,
             new GroovyFileSystem(context.fileSystem()),
             new PathResolver(),
-            settings);
+            settings,
+            analysisWarnings);
   }
 
   @Test
-  public void test_description() {
+  public void testDescription() {
     DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
     sensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
+
   @Test
-  public void should_Execute_On_Project_only_if_at_least_one_exec_exists() {
-    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "jacoco-it.exec");
-    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "notexist.exec");
+  public void shouldExecuteOnProjectWithItExisting() {
     configReports(false, true);
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
+    sensor.execute(context);
+    assertThat(context.coveredConditions(inputFile.key(), 14), is(equalTo(2)));
+    verify(analysisWarnings).addUnique(anyString());
+  }
 
+
+  @Test
+  public void shouldExecuteOnProjectWithUtExisting() {
     configReports(true, false);
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
+    sensor.execute(context);
+    assertThat(context.coveredConditions(inputFile.key(), 14), is(equalTo(2)));
+    verify(analysisWarnings).addUnique(anyString());
+  }
 
-    settings.setProperty(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY, "notexist.exec");
-    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "notexist.exec");
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
+  @Test
+  public void shouldNotExecuteOnProjectWithoutExecutionData() {
+    configReports(false, false);
+    sensor.execute(context);
+    assertNull(context.coveredConditions(inputFile.key(), 14));
+    verify(analysisWarnings, never()).addUnique(anyString());
+  }
+
+
+  @Test
+  public void shouldNotExecuteIfJaCoCoXmlConfigured() {
+    settings.setProperty(JaCoCoSensor.JACOCO_XML_PROPERTY, "report.xml");
+
+    configReports(true, true);
+    sensor.execute(context);
+    assertNull(context.coveredConditions(inputFile.key(), 14));
+    verify(analysisWarnings, never()).addUnique(anyString());
   }
 
   private void configReports(boolean utReport, boolean itReport) {

@@ -20,11 +20,11 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,6 +36,7 @@ import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
+import org.sonar.api.notifications.AnalysisWarnings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
@@ -46,8 +47,7 @@ public class JaCoCoSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+  @Rule public ExpectedException exception = ExpectedException.none();
 
   private MapSettings settings = TestUtils.jacocoDefaultSettings();
   private JaCoCoSensor sensor;
@@ -80,11 +80,15 @@ public class JaCoCoSensorTest {
 
     sensor =
         new JaCoCoSensor(
-            configuration, new GroovyFileSystem(fileSystem), new PathResolver(), settings);
+            configuration,
+            new GroovyFileSystem(fileSystem),
+            new PathResolver(),
+            settings,
+            mock(AnalysisWarnings.class));
   }
 
   @Test
-  public void test_description() throws IOException {
+  public void testDescription() throws IOException {
     initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
     DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
     sensor.describe(defaultSensorDescriptor);
@@ -92,24 +96,13 @@ public class JaCoCoSensorTest {
   }
 
   @Test
-  public void should_Execute_On_Project_only_if_exec_exists() throws IOException {
-    initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
-
-    assertThat(sensor.shouldExecuteOnProject()).isTrue();
-
-    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, ".");
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
-
-    settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "ut.not.found.exec");
-    assertThat(sensor.shouldExecuteOnProject()).isFalse();
-  }
-
-  @Test
-  public void test_read_execution_data_with_jacoco_0_7_4() throws IOException {
+  public void testReadExecutionDataWithJacoco074() throws IOException {
     initWithJaCoCoVersion("JaCoCoSensor_0_7_4");
 
-    SensorContextTester context = SensorContextTester.create(Paths.get("."));
-    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
+    Path workDir = tmpDir.newFolder().toPath();
+    SensorContextTester context = SensorContextTester.create(workDir);
+    context.setSettings(settings);
+    context.fileSystem().setWorkDir(workDir);
 
     exception.expect(IllegalArgumentException.class);
     exception.expectMessage(JaCoCoReportReader.INCOMPATIBLE_JACOCO_ERROR);
@@ -117,11 +110,14 @@ public class JaCoCoSensorTest {
   }
 
   @Test
-  public void test_read_execution_data_with_jacoco_0_7_5() throws IOException {
+  public void testReadExecutionDataWithJacoco075() throws IOException {
     initWithJaCoCoVersion("JaCoCoSensor_0_7_5");
 
-    SensorContextTester context = SensorContextTester.create(Paths.get("."));
-    context.fileSystem().setWorkDir(tmpDir.newFolder().toPath());
+    Path workDir = tmpDir.newFolder().toPath();
+    SensorContextTester context = SensorContextTester.create(workDir);
+    context.setSettings(settings);
+    context.fileSystem().setWorkDir(workDir);
+
     sensor.execute(context);
 
     verifyMeasures(context);
