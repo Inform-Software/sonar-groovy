@@ -35,7 +35,6 @@ import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
-import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.groovy.GroovyPlugin;
@@ -50,8 +49,7 @@ public class JaCoCoSensorTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
-  private MapSettings settings =
-      new MapSettings(new PropertyDefinitions(JaCoCoConfiguration.getPropertyDefinitions()));
+  private MapSettings settings = TestUtils.jacocoDefaultSettings();
   private JaCoCoSensor sensor;
 
   private void initWithJaCoCoVersion(String jacocoVersion) throws IOException {

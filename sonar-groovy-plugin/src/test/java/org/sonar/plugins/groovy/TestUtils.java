@@ -20,10 +20,16 @@
 package org.sonar.plugins.groovy;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sonar.api.config.PropertyDefinitions;
+import org.sonar.api.config.internal.MapSettings;
+import org.sonar.api.utils.System2;
+import org.sonar.plugins.groovy.jacoco.JaCoCoConfiguration;
 
 public final class TestUtils {
 
@@ -62,5 +68,19 @@ public final class TestUtils {
     }
     resourcePath += path;
     return getResource(resourcePath).toPath();
+  }
+
+  public static MapSettings jacocoDefaultSettings() {
+    PropertyDefinitions prop = null;
+    try {
+      // Legacy declaration, doesn't compile on modern SonarQube
+      Constructor<PropertyDefinitions> c =
+          PropertyDefinitions.class.getConstructor(Collection.class);
+      prop = c.newInstance(JaCoCoConfiguration.getPropertyDefinitions());
+    } catch (ReflectiveOperationException | IllegalArgumentException e) {
+      prop =
+          new PropertyDefinitions(System2.INSTANCE, JaCoCoConfiguration.getPropertyDefinitions());
+    }
+    return new MapSettings(prop);
   }
 }

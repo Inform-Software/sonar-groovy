@@ -26,27 +26,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
-import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
+import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 public class JaCoCoConfigurationTest {
 
-  private MapSettings settings;
+  private MapSettings settings = TestUtils.jacocoDefaultSettings();
   private JaCoCoConfiguration jacocoSettings;
   private DefaultFileSystem fileSystem;
 
   @Before
   public void setUp() {
-    settings =
-        new MapSettings(
-            new PropertyDefinitions().addComponents(JaCoCoConfiguration.getPropertyDefinitions()));
     fileSystem = new DefaultFileSystem(Paths.get("."));
     jacocoSettings = new JaCoCoConfiguration(settings, fileSystem);
   }
 
   @Test
-  public void shouldExecuteOnProject() throws Exception {
+  public void shouldExecuteOnProject() {
     // no files
     assertThat(jacocoSettings.shouldExecuteOnProject(true)).isFalse();
     assertThat(jacocoSettings.shouldExecuteOnProject(false)).isFalse();
