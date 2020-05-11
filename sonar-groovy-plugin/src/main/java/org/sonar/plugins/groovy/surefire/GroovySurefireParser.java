@@ -35,7 +35,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.utils.MessageException;
-import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -139,15 +138,6 @@ public class GroovySurefireParser {
     saveMeasure(context, inputFile, CoreMetrics.TEST_FAILURES, report.getFailures());
     saveMeasure(
         context, inputFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
-    int passedTests = testsCount - report.getErrors() - report.getFailures();
-    if (testsCount > 0) {
-      double percentage = (passedTests * 100D) / testsCount;
-      saveMeasure(
-          context,
-          inputFile,
-          CoreMetrics.TEST_SUCCESS_DENSITY,
-          ParsingUtils.scaleValue(percentage));
-    }
   }
 
   protected InputFile getUnitTestInputFile(String classKey) {

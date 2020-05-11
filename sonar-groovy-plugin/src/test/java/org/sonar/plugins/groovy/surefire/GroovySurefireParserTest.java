@@ -27,7 +27,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,15 +44,12 @@ import org.sonar.plugins.groovy.foundation.Groovy;
 
 public class GroovySurefireParserTest {
 
-  private FileSystem fs;
   private GroovySurefireParser parser;
   private Groovy groovy;
-  private SensorContext context;
 
   @Before
   public void before() {
-    context = mock(SensorContext.class);
-    fs = new DefaultFileSystem(Paths.get("."));
+    FileSystem fs = new DefaultFileSystem(Paths.get("."));
 
     MapSettings settings = new MapSettings();
     settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy,grvy");
@@ -69,58 +65,63 @@ public class GroovySurefireParserTest {
   }
 
   @Test
-  public void should_store_zero_tests_when_directory_is_null_or_non_existing_or_a_file()
-      throws Exception {
+  public void shouldStoreZeroTestsWhenDirectoryIsNull() {
+    SensorContext context = mock(SensorContext.class);
     parser.collect(context, null);
     verify(context, never()).newMeasure();
+  }
 
-    context = mock(SensorContext.class);
+  @Test
+  public void shouldStoreZeroTestsWhenDirectoryIsNonExisting() {
+    SensorContext context = mock(SensorContext.class);
     parser.collect(context, getDir("nonExistingReportsDirectory"));
     verify(context, never()).newMeasure();
+  }
 
-    context = mock(SensorContext.class);
+  @Test
+  public void shouldStoreZeroTestsWhenDirectoryIsAFile() {
+    SensorContext context = mock(SensorContext.class);
     parser.collect(context, getDir("file.txt"));
     verify(context, never()).newMeasure();
   }
 
   @Test
-  public void shouldAggregateReports() throws URISyntaxException {
+  public void shouldAggregateReports() {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
 
     parser.collect(context, getDir("multipleReports"));
 
-    // Only 6 tests measures should be stored, no more: the TESTS-AllTests.xml must not be read as
-    // there's 1 file result per unit test
-    // (SONAR-2841).
-    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.MetricsCollectorRegistryTest")).hasSize(6);
-    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.CloverCollectorTest")).hasSize(6);
-    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.CheckstyleCollectorTest")).hasSize(6);
-    assertThat(context.measures(":ch.hortis.sonar.mvn.SonarMojoTest")).hasSize(6);
-    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.JDependsCollectorTest")).hasSize(6);
-    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.JavaNCSSCollectorTest")).hasSize(6);
+    // Only 5 tests measures should be stored, no more: the TESTS-AllTests.xml must not be read as
+    // there's 1 file result per unit test (SONAR-2841).
+    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.MetricsCollectorRegistryTest")).hasSize(5);
+    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.CloverCollectorTest")).hasSize(5);
+    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.CheckstyleCollectorTest")).hasSize(5);
+    assertThat(context.measures(":ch.hortis.sonar.mvn.SonarMojoTest")).hasSize(5);
+    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.JDependsCollectorTest")).hasSize(5);
+    assertThat(context.measures(":ch.hortis.sonar.mvn.mc.JavaNCSSCollectorTest")).hasSize(5);
   }
 
   // SONAR-2841: if there's only a test suite report, then it should be read.
   @Test
-  public void shouldUseTestSuiteReportIfAlone() throws URISyntaxException {
+  public void shouldUseTestSuiteReportIfAlone() {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
 
     parser.collect(context, getDir("onlyTestSuiteReport"));
 
-    assertThat(context.measures(":org.sonar.SecondTest")).hasSize(6);
-    assertThat(context.measures(":org.sonar.JavaNCSSCollectorTest")).hasSize(6);
+    assertThat(context.measures(":org.sonar.SecondTest")).hasSize(5);
+    assertThat(context.measures(":org.sonar.JavaNCSSCollectorTest")).hasSize(5);
   }
 
   /** See http://jira.codehaus.org/browse/SONAR-2371 */
   @Test
-  public void shouldInsertZeroWhenNoReports() throws URISyntaxException {
+  public void shouldInsertZeroWhenNoReports() {
     SensorContext context = mock(SensorContext.class);
     parser.collect(context, getDir("noReports"));
     verify(context, never()).newMeasure();
   }
 
   @Test
-  public void shouldNotInsertZeroOnFiles() throws URISyntaxException {
+  public void shouldNotInsertZeroOnFiles() {
     SensorContext context = mock(SensorContext.class);
     parser.collect(context, getDir("noTests"));
 
@@ -128,7 +129,7 @@ public class GroovySurefireParserTest {
   }
 
   @Test
-  public void shouldMergeInnerClasses() throws URISyntaxException {
+  public void shouldMergeInnerClasses() {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("innerClasses"));
 
@@ -153,7 +154,7 @@ public class GroovySurefireParserTest {
   }
 
   @Test
-  public void shouldMergeNestedInnerClasses() throws URISyntaxException {
+  public void shouldMergeNestedInnerClasses() {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("nestedInnerClasses"));
 
@@ -165,7 +166,7 @@ public class GroovySurefireParserTest {
   }
 
   @Test
-  public void should_not_count_negative_tests() throws URISyntaxException {
+  public void shouldNotCountNegativeTests() {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     parser.collect(context, getDir("negativeTestTime"));
     // Test times : -1.120, 0.644, 0.015 -> computed time : 0.659, ignore negative time.
@@ -178,13 +179,13 @@ public class GroovySurefireParserTest {
         .isEqualTo(659);
   }
 
-  private java.io.File getDir(String dirname) throws URISyntaxException {
+  private java.io.File getDir(String dirname) {
     return new java.io.File(
         "src/test/resources/org/sonar/plugins/groovy/surefire/SurefireParserTest/" + dirname);
   }
 
   @Test
-  public void should_generate_correct_predicate() throws URISyntaxException {
+  public void shouldGenerateCorrectPredicate() {
     DefaultFileSystem fs = new DefaultFileSystem(Paths.get("."));
     InputFile inputFile =
         TestInputFileBuilder.create("", "src/test/org/sonar/JavaNCSSCollectorTest.groovy")

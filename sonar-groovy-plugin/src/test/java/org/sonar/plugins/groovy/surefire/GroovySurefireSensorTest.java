@@ -72,10 +72,7 @@ public class GroovySurefireSensorTest {
   }
 
   @Test
-  public void test_description() {
-    surefireSensor =
-        new GroovySurefireSensor(
-            new GroovySurefireParser(groovy, fs), new MapSettings(), fs, pathResolver);
+  public void testDescription() {
     DefaultSensorDescriptor defaultSensorDescriptor = new DefaultSensorDescriptor();
     surefireSensor.describe(defaultSensorDescriptor);
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
@@ -86,9 +83,9 @@ public class GroovySurefireSensorTest {
     MapSettings settings = new MapSettings();
     settings.setProperty(SurefireUtils.SUREFIRE_REPORTS_PATH_PROPERTY, "unknown");
 
-    GroovySurefireSensor surefireSensor =
+    GroovySurefireSensor localSensor =
         new GroovySurefireSensor(mock(GroovySurefireParser.class), settings, fs, pathResolver);
-    surefireSensor.execute(mock(SensorContext.class));
+    localSensor.execute(mock(SensorContext.class));
   }
 
   @Test
@@ -107,10 +104,10 @@ public class GroovySurefireSensorTest {
                     "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldHandleTestSuiteDetails/")
                 .toURI()));
 
-    // 3 classes, 6 measures by class
-    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest")).hasSize(6);
-    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest2")).hasSize(6);
-    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest3")).hasSize(6);
+    // 3 classes, 5 measures by class
+    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest")).hasSize(5);
+    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest2")).hasSize(5);
+    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest3")).hasSize(5);
 
     assertThat(context.measure(":org.sonar.core.ExtensionsFinderTest", CoreMetrics.TESTS).value())
         .isEqualTo(4);
@@ -212,7 +209,7 @@ public class GroovySurefireSensorTest {
         .isEqualTo(1);
     assertThat(context.measure(":org.sonar.core.ExtensionsFinderTest", CoreMetrics.TESTS).value())
         .isEqualTo(7);
-    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest")).hasSize(6);
+    assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest")).hasSize(5);
   }
 
   @Test
@@ -247,8 +244,6 @@ public class GroovySurefireSensorTest {
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(2);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(1);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isEqualTo(1);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_SUCCESS_DENSITY).value())
-        .isEqualTo(0);
   }
 
   @Test
@@ -268,8 +263,6 @@ public class GroovySurefireSensorTest {
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(1);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isEqualTo(0);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.SKIPPED_TESTS).value()).isEqualTo(1);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_SUCCESS_DENSITY).value())
-        .isEqualTo(50);
   }
 
   @Test
@@ -289,7 +282,6 @@ public class GroovySurefireSensorTest {
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(0);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isEqualTo(0);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.SKIPPED_TESTS).value()).isEqualTo(2);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_SUCCESS_DENSITY)).isNull();
   }
 
   @Test
