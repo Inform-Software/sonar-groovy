@@ -81,7 +81,7 @@ public class JaCoCoAnalyzer {
     String path = getFileRelativePath(coverage);
     InputFile sourceInputFileFromRelativePath =
         groovyFileSystem.sourceInputFileFromRelativePath(path);
-    if (sourceInputFileFromRelativePath == null) {
+    if (sourceInputFileFromRelativePath == null && path.endsWith(".groovy")) {
       JaCoCoExtensions.logger().warn("File not found: " + path);
     }
     return sourceInputFileFromRelativePath;
