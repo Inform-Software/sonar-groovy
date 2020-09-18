@@ -33,19 +33,18 @@
       <id>TobiX</id>
       <name>Tobias Gruetzmacher</name>
     </developer>
-    <developer>
-      <id>pmayweg</id>
-      <name>Patrick Mayweg</name>
-    </developer>
-    <developer>
-      <id>m-g-sonar</id>
-      <name>Michael Gumowski</name>
-    </developer>
-    <developer>
-      <id>benzonico</id>
-      <name>Nicolas Peru</name>
-    </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Patrick Mayweg</name>
+    </contributor>
+    <contributor>
+      <name>Michael Gumowski</name>
+    </contributor>
+    <contributor>
+      <name>Nicolas Peru</name>
+    </contributor>
+  </contributors>
 
   <modules>
     <module>sonar-groovy-plugin</module>
