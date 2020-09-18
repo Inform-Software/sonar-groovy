@@ -15,8 +15,8 @@ then
 elif [ -n "$SONAR_SCANNER_HOME" ]
 then
   # Only run SonarQube analysis on one Travis-CI matrix configuration
-  # (namely: empty $SONAR_VERSION and Java 8
-  java -Xmx32m -version 2>&1 | grep -q 1.8.0 && add="sonar:sonar $add"
+  # (namely: empty $SONAR_VERSION and Java 11
+  java -Xmx32m -version 2>&1 | grep -q "11\.0" && add="sonar:sonar $add"
 fi
 
 mvn -B -V -e -Dstyle.color=always verify $add
