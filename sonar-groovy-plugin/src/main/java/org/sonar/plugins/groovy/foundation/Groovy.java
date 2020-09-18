@@ -1,6 +1,6 @@
 /*
  * Sonar Groovy Plugin
- * Copyright (C) 2010-2019 SonarSource SA & Community
+ * Copyright (C) 2010-2020 SonarSource SA & Community
  * mailto:info AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
