@@ -75,7 +75,7 @@
   </distributionManagement>
 
   <properties>
-    <sonar.version>7.8</sonar.version>
+    <sonar.version>8.5.1.38104</sonar.version>
     <groovy.version>2.4.17</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
     <maven.min.version>3.3.9</maven.min.version>
