@@ -44,7 +44,7 @@ to be recognized by setting the `sonar.groovy.file.suffixes` property. Note
 that by default, only files having `.groovy` as extension will be analyzed.
 
 *Unit Tests Execution Reports*: Import unit tests execution reports (JUnit XML
-format) by setting the sonar.junit.reportsPath property. Default location is
+format) by setting the `sonar.junit.reportPaths` property. Default location is
 _target/surefire-reports_.
 
 *JaCoCo and Binaries*: The groovy plugin requires access to source binaries

@@ -22,8 +22,10 @@ package org.sonar.plugins.groovy.surefire;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.batch.ScannerSide;
@@ -55,17 +57,22 @@ public class GroovySurefireParser {
     this.fs = fs;
   }
 
-  public void collect(SensorContext context, File reportsDir) {
-    File[] xmlFiles = getReports(reportsDir);
-    if (xmlFiles.length > 0) {
+  public void collect(SensorContext context, List<File> reportsDirs) {
+    List<File> xmlFiles = getReports(reportsDirs);
+    if (!xmlFiles.isEmpty()) {
       parseFiles(context, xmlFiles);
     }
   }
 
+  private static List<File> getReports(List<File> dirs) {
+    return dirs.stream()
+        .map(dir -> getReports(dir))
+        .flatMap(Arrays::stream)
+        .collect(Collectors.toList());
+  }
+
   private static File[] getReports(File dir) {
-    if (dir == null) {
-      return new File[0];
-    } else if (!dir.isDirectory()) {
+    if (!dir.isDirectory()) {
       LOGGER.warn("Reports path not found: " + dir.getAbsolutePath());
       return new File[0];
     }
@@ -74,6 +81,9 @@ public class GroovySurefireParser {
       // maybe there's only a test suite result file
       unitTestResultFiles = findXMLFilesStartingWith(dir, "TESTS-");
     }
+    if (unitTestResultFiles.length == 0) {
+      LOGGER.warn("Reports path contains no files matching TEST-.*.xml : " + dir.getAbsolutePath());
+    }
     return unitTestResultFiles;
   }
 
@@ -81,14 +91,14 @@ public class GroovySurefireParser {
     return dir.listFiles((folder, name) -> name.startsWith(fileNameStart) && name.endsWith(".xml"));
   }
 
-  private void parseFiles(SensorContext context, File[] reports) {
+  private void parseFiles(SensorContext context, List<File> reports) {
     UnitTestIndex index = new UnitTestIndex();
     parseFiles(reports, index);
     sanitize(index);
     save(index, context);
   }
 
-  private static void parseFiles(File[] reports, UnitTestIndex index) {
+  private static void parseFiles(List<File> reports, UnitTestIndex index) {
     StaxParser parser = new StaxParser(new SurefireStaxHandler(index));
     for (File report : reports) {
       try {

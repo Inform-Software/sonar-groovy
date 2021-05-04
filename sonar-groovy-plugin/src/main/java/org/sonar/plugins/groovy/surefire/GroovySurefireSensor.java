@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.groovy.surefire;
 
+import java.io.File;
+import java.util.List;
 import org.sonar.api.batch.DependedUpon;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
@@ -31,8 +33,6 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.surefire.api.SurefireUtils;
 
-import java.io.File;
-
 @DependedUpon("surefire-java")
 public class GroovySurefireSensor implements Sensor {
 
@@ -43,7 +43,11 @@ public class GroovySurefireSensor implements Sensor {
   private final FileSystem fs;
   private final PathResolver pathResolver;
 
-  public GroovySurefireSensor(GroovySurefireParser groovySurefireParser, Settings settings, FileSystem fs, PathResolver pathResolver) {
+  public GroovySurefireSensor(
+      GroovySurefireParser groovySurefireParser,
+      Settings settings,
+      FileSystem fs,
+      PathResolver pathResolver) {
     this.groovySurefireParser = groovySurefireParser;
     this.settings = settings;
     this.fs = fs;
@@ -57,18 +61,17 @@ public class GroovySurefireSensor implements Sensor {
 
   @Override
   public void execute(SensorContext context) {
-    File dir = SurefireUtils.getReportsDirectory(settings, fs, pathResolver);
-    collect(context, dir);
+    List<File> dirs = SurefireUtils.getReportDirectories(settings, fs, pathResolver);
+    collect(context, dirs);
   }
 
-  protected void collect(SensorContext context, File reportsDir) {
-    LOGGER.info("parsing {}", reportsDir);
-    groovySurefireParser.collect(context, reportsDir);
+  protected void collect(SensorContext context, List<File> reportsDirs) {
+    LOGGER.info("parsing {}", reportsDirs);
+    groovySurefireParser.collect(context, reportsDirs);
   }
 
   @Override
   public String toString() {
     return getClass().getSimpleName();
   }
-
 }

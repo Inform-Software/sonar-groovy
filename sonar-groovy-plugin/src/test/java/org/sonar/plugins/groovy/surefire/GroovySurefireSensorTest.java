@@ -28,6 +28,7 @@ import static org.mockito.Mockito.spy;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.InputFile;
@@ -81,7 +82,7 @@ public class GroovySurefireSensorTest {
   @Test
   public void shouldNotFailIfReportsNotFound() {
     MapSettings settings = new MapSettings();
-    settings.setProperty(SurefireUtils.SUREFIRE_REPORTS_PATH_PROPERTY, "unknown");
+    settings.setProperty(SurefireUtils.SUREFIRE_REPORT_PATHS_PROPERTY, "unknown");
 
     GroovySurefireSensor localSensor =
         new GroovySurefireSensor(mock(GroovySurefireParser.class), settings, fs, pathResolver);
@@ -98,11 +99,12 @@ public class GroovySurefireSensorTest {
         .add(inputFile("org.sonar.core.ExtensionsFinderTest3"));
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldHandleTestSuiteDetails/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldHandleTestSuiteDetails/")
+                    .toURI())));
 
     // 3 classes, 5 measures by class
     assertThat(context.measures(":org.sonar.core.ExtensionsFinderTest")).hasSize(5);
@@ -195,11 +197,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldSaveErrorsAndFailuresInXML/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldSaveErrorsAndFailuresInXML/")
+                    .toURI())));
 
     // 1 classes, 6 measures by class
     assertThat(
@@ -219,11 +222,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldManageClassesWithDefaultPackage/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/shouldManageClassesWithDefaultPackage/")
+                    .toURI())));
 
     assertThat(context.measure(":NoPackagesTest", CoreMetrics.TESTS).value()).isEqualTo(2);
   }
@@ -235,11 +239,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/successRatioIsZeroWhenAllTestsFail/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/successRatioIsZeroWhenAllTestsFail/")
+                    .toURI())));
 
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(2);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(1);
@@ -253,11 +258,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/measuresShouldNotIncludeSkippedTests/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/measuresShouldNotIncludeSkippedTests/")
+                    .toURI())));
 
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(2);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(1);
@@ -272,11 +278,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/noSuccessRatioIfNoTests/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/noSuccessRatioIfNoTests/")
+                    .toURI())));
 
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(0);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(0);
@@ -291,11 +298,12 @@ public class GroovySurefireSensorTest {
 
     surefireSensor.collect(
         context,
-        new File(
-            getClass()
-                .getResource(
-                    "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/ignoreSuiteAsInnerClass/")
-                .toURI()));
+        Collections.singletonList(
+            new File(
+                getClass()
+                    .getResource(
+                        "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/ignoreSuiteAsInnerClass/")
+                    .toURI())));
 
     // ignore TestHandler$Input.xml
     assertThat(

@@ -27,7 +27,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import java.io.File;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
@@ -65,9 +68,9 @@ public class GroovySurefireParserTest {
   }
 
   @Test
-  public void shouldStoreZeroTestsWhenDirectoryIsNull() {
+  public void shouldStoreZeroTestsWhenDirectoriesIsEmpty() {
     SensorContext context = mock(SensorContext.class);
-    parser.collect(context, null);
+    parser.collect(context, Collections.emptyList());
     verify(context, never()).newMeasure();
   }
 
@@ -179,9 +182,10 @@ public class GroovySurefireParserTest {
         .isEqualTo(659);
   }
 
-  private java.io.File getDir(String dirname) {
-    return new java.io.File(
-        "src/test/resources/org/sonar/plugins/groovy/surefire/SurefireParserTest/" + dirname);
+  private List<File> getDir(String dirname) {
+    return Collections.singletonList(
+        new File(
+            "src/test/resources/org/sonar/plugins/groovy/surefire/SurefireParserTest/" + dirname));
   }
 
   @Test

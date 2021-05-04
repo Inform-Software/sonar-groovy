@@ -19,43 +19,66 @@
  */
 package org.sonar.plugins.groovy.surefire.api;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-import javax.annotation.CheckForNull;
-
-import java.io.File;
-
 public final class SurefireUtils {
 
   private static final Logger LOGGER = Loggers.get(SurefireUtils.class);
-  public static final String SUREFIRE_REPORTS_PATH_PROPERTY = "sonar.junit.reportsPath";
+  /** @since 1.7 */
+  public static final String SUREFIRE_REPORT_PATHS_PROPERTY = "sonar.junit.reportPaths";
 
-  private SurefireUtils() {
+  private SurefireUtils() {}
+
+  /**
+   * Find the directories containing the surefire reports.
+   *
+   * @param settings Analysis settings.
+   * @param fs FileSystem containing indexed files.
+   * @param pathResolver Path solver.
+   * @return The directories containing the surefire reports or default one
+   *     (target/surefire-reports) if not found (not configured or not found).
+   */
+  public static List<File> getReportDirectories(
+      Settings settings, FileSystem fs, PathResolver pathResolver) {
+    List<File> dirs = getReportDirectoriesFromProperty(settings, fs, pathResolver);
+    if (dirs.size() > 0) {
+      return dirs;
+    }
+    return Collections.singletonList(new File(fs.baseDir(), "target/surefire-reports"));
   }
 
-  public static File getReportsDirectory(Settings settings, FileSystem fs, PathResolver pathResolver) {
-    File dir = getReportsDirectoryFromProperty(settings, fs, pathResolver);
-    if (dir == null) {
-      dir = new File(fs.baseDir(), "target/surefire-reports");
+  private static List<File> getReportDirectoriesFromProperty(
+      Settings settings, FileSystem fs, PathResolver pathResolver) {
+    if (settings.hasKey(SUREFIRE_REPORT_PATHS_PROPERTY)) {
+      return Arrays.stream(settings.getStringArray(SUREFIRE_REPORT_PATHS_PROPERTY))
+          .map(String::trim)
+          .map(path -> resolvePath(pathResolver, fs.baseDir(), path))
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
     }
-    return dir;
+    return Collections.emptyList();
   }
 
   @CheckForNull
-  private static File getReportsDirectoryFromProperty(Settings settings, FileSystem fs, PathResolver pathResolver) {
-    String path = settings.getString(SUREFIRE_REPORTS_PATH_PROPERTY);
-    if (path != null) {
-      try {
-        return pathResolver.relativeFile(fs.baseDir(), path);
-      } catch (Exception e) {
-        LOGGER.info("Surefire report path: " + fs.baseDir() + "/" + path + " not found.", e);
-      }
+  private static File resolvePath(PathResolver pathResolver, File baseDir, String path) {
+    try {
+      return pathResolver.relativeFile(baseDir, path);
+    } catch (InvalidPathException e) {
+      // This probably won't happen in production SQ, catch anyways.
+      LOGGER.info("Surefire report path: {}/{} not found.", baseDir, path);
     }
     return null;
   }
-
 }
