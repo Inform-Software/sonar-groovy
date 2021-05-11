@@ -13,7 +13,7 @@
   <name>Sonar CodeNarc Converter</name>
 
   <properties>
-    <auto.version>1.7</auto.version>
+    <auto.version>1.8.1</auto.version>
   </properties>
 
   <dependencies>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>28.1-jre</version>
+      <version>30.1.1-jre</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -89,7 +89,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>run-codenarc-converter</id>
