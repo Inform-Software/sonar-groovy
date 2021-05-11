@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java: [8, 11]
+        sonar:
+          - ""
+          - "7.9"
+          - "8.0"
+          - "8.3.0.34182"
+        include:
+          - java: 8
+            sonar: ""
+            archive: "yes"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'adopt'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build
+        run: .github/ci-build.sh
+        env:
+          SONAR_VERSION: ${{ matrix.sonar }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload Plugin JAR
+        uses: actions/upload-artifact@v2
+        with:
+          name: Plugin
+          path: sonar-groovy-plugin/target/*.jar
+        if: matrix.archive == 'yes'

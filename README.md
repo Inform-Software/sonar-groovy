@@ -1,11 +1,12 @@
 # SonarQube plugin for Groovy
 
-[![Build status (Travis CI)](https://travis-ci.com/Inform-Software/sonar-groovy.svg?branch=master)](https://travis-ci.com/Inform-Software/sonar-groovy)
-[![Build status (AppVeyor)](https://ci.appveyor.com/api/projects/status/si4v2gs7h4qiv27j/branch/master?svg=true)](https://ci.appveyor.com/project/TobiX/sonar-groovy/branch/master)
+[![Build Status](https://github.com/Inform-Software/sonar-groovy/actions/workflows/build.yml/badge.svg)](https://github.com/Inform-Software/sonar-groovy/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.sonarsource.groovy%3Agroovy&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.sonarsource.groovy%3Agroovy)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.sonarsource.groovy%3Agroovy&metric=coverage)](https://sonarcloud.io/dashboard?id=org.sonarsource.groovy%3Agroovy)
 
-Get test builds from [AppVeyor](https://ci.appveyor.com/project/TobiX/sonar-groovy/build/artifacts).
+Get test builds from [GitHub
+Actions](https://github.com/Inform-Software/sonar-groovy/actions) (click on a
+recent run and get the artifacts from the bottom of the page).
 
 ## Description
 
