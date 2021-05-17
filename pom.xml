@@ -76,7 +76,7 @@
 
   <properties>
     <sonar.version>7.8</sonar.version>
-    <groovy.version>2.4.17</groovy.version>
+    <groovy.version>2.4.21</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
     <license.owner>SonarQube Community</license.owner>
     <license.mailto>&#xa0;</license.mailto>
