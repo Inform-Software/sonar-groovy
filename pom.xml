@@ -63,14 +63,14 @@
     <url>https://github.com/Inform-Software/sonar-groovy/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>travis-ci</system>
-    <url>https://travis-ci.com/Inform-Software/sonar-groovy</url>
+    <system>github-actions</system>
+    <url>https://github.com/Inform-Software/sonar-groovy/actions</url>
   </ciManagement>
   <distributionManagement>
     <repository>
-      <id>bintray-tobix-sonar-groovy</id>
-      <name>TobiX-sonar-groovy</name>
-      <url>https://api.bintray.com/maven/tobix/sonar-groovy/sonar-groovy/;publish=1</url>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/Inform-Software/sonar-groovy</url>
     </repository>
   </distributionManagement>
 
