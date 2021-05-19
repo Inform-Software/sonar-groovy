@@ -10,7 +10,7 @@
 
   <groupId>org.sonarsource.groovy</groupId>
   <artifactId>groovy</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.7-rc1</version>
   <packaging>pom</packaging>
 
   <name>Sonar Groovy</name>
@@ -56,7 +56,7 @@
     <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git
     </developerConnection>
     <url>https://github.com/Inform-Software/sonar-groovy/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>1.7-rc1</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>
@@ -79,7 +79,7 @@
     <groovy.version>2.4.21</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
     <license.owner>SonarQube Community</license.owner>
-    <license.mailto>&#xa0;</license.mailto>
+    <license.mailto> </license.mailto>
 
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>tobix-github</sonar.organization>
