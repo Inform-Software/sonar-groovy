@@ -8,9 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Remove backwards compatibility hacks (drop support for everything older then
   SonarQube 7.8)
-- Minor dependency updates
+- Some dependency updates
 - Deprecates support for JaCoCo binary format (use the SonarQube JaCoCo plugin
   instead)
+- Switch CI from Travis to GitHub Actions
+- Run tests against SonarQube 7.8-8.9
+
+### Fixed
+- Align JUnit property with Java plugin (fixes #43)
 
 ### Removed
 - Compatibility with JaCoCo older the 0.7.5 (released in mid-2015)

@@ -25,7 +25,7 @@ Plugin    | 1.4/1.5 | 1.6     | 1.7
 ----------|---------|---------|-----
 CodeNarc  | 0.25.2  | 1.4     | 1.4
 GMetrics  | 0.7     | 1.0     | 1.0
-SonarQube | 5.6-6.7 | 6.7-7.9 | 7.8-8.3
+SonarQube | 5.6-6.7 | 6.7-7.9 | 7.8-8.9
 
 ## Steps to Analyze a Groovy Project
 1. Install SonarQube Server
