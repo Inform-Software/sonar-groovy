@@ -24,8 +24,8 @@ import java.util.List;
 import org.sonar.api.PropertyType;
 import org.sonar.api.batch.ScannerSide;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.config.PropertyDefinition;
-import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -36,13 +36,14 @@ public class JaCoCoConfiguration {
   public static final String REPORT_PATH_DEFAULT_VALUE = "target/jacoco.exec";
   public static final String IT_REPORT_PATH_PROPERTY = "sonar.groovy.jacoco.itReportPath";
   public static final String IT_REPORT_PATH_DEFAULT_VALUE = "target/jacoco-it.exec";
-  public static final String REPORT_MISSING_FORCE_ZERO = "sonar.groovy.jacoco.reportMissing.force.zero";
+  public static final String REPORT_MISSING_FORCE_ZERO =
+      "sonar.groovy.jacoco.reportMissing.force.zero";
   public static final boolean REPORT_MISSING_FORCE_ZERO_DEFAULT_VALUE = false;
 
-  private final Settings settings;
+  private final Configuration settings;
   private final FileSystem fileSystem;
 
-  public JaCoCoConfiguration(Settings settings, FileSystem fileSystem) {
+  public JaCoCoConfiguration(Configuration settings, FileSystem fileSystem) {
     this.settings = settings;
     this.fileSystem = fileSystem;
   }
@@ -56,37 +57,40 @@ public class JaCoCoConfiguration {
   }
 
   public String getReportPath() {
-    return settings.getString(REPORT_PATH_PROPERTY);
+    return settings.get(REPORT_PATH_PROPERTY).orElseThrow(IllegalStateException::new);
   }
 
   public String getItReportPath() {
-    return settings.getString(IT_REPORT_PATH_PROPERTY);
+    return settings.get(IT_REPORT_PATH_PROPERTY).orElseThrow(IllegalStateException::new);
   }
 
   private boolean isCoverageToZeroWhenNoReport() {
-    return settings.getBoolean(REPORT_MISSING_FORCE_ZERO);
+    return settings.getBoolean(REPORT_MISSING_FORCE_ZERO).orElse(false);
   }
 
   public static List<PropertyDefinition> getPropertyDefinitions() {
     return Arrays.asList(
-      PropertyDefinition.builder(JaCoCoConfiguration.REPORT_PATH_PROPERTY)
-        .defaultValue(JaCoCoConfiguration.REPORT_PATH_DEFAULT_VALUE)
-        .name("UT JaCoCo Report")
-        .description("Path to the JaCoCo report file containing coverage data by unit tests. The path may be absolute or relative to the project base directory.")
-        .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE)
-        .build(),
-      PropertyDefinition.builder(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY)
-        .defaultValue(JaCoCoConfiguration.IT_REPORT_PATH_DEFAULT_VALUE)
-        .name("IT JaCoCo Report")
-        .description("Path to the JaCoCo report file containing coverage data by integration tests. The path may be absolute or relative to the project base directory.")
-        .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE)
-        .build(),
-      PropertyDefinition.builder(JaCoCoConfiguration.REPORT_MISSING_FORCE_ZERO)
-        .defaultValue(Boolean.toString(JaCoCoConfiguration.REPORT_MISSING_FORCE_ZERO_DEFAULT_VALUE))
-        .name("Force zero coverage")
-        .description("Force coverage to 0% if no JaCoCo reports are found during analysis.")
-        .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE)
-        .type(PropertyType.BOOLEAN)
-        .build());
+        PropertyDefinition.builder(JaCoCoConfiguration.REPORT_PATH_PROPERTY)
+            .defaultValue(JaCoCoConfiguration.REPORT_PATH_DEFAULT_VALUE)
+            .name("UT JaCoCo Report")
+            .description(
+                "Path to the JaCoCo report file containing coverage data by unit tests. The path may be absolute or relative to the project base directory.")
+            .onQualifiers(Qualifiers.PROJECT)
+            .build(),
+        PropertyDefinition.builder(JaCoCoConfiguration.IT_REPORT_PATH_PROPERTY)
+            .defaultValue(JaCoCoConfiguration.IT_REPORT_PATH_DEFAULT_VALUE)
+            .name("IT JaCoCo Report")
+            .description(
+                "Path to the JaCoCo report file containing coverage data by integration tests. The path may be absolute or relative to the project base directory.")
+            .onQualifiers(Qualifiers.PROJECT)
+            .build(),
+        PropertyDefinition.builder(JaCoCoConfiguration.REPORT_MISSING_FORCE_ZERO)
+            .defaultValue(
+                Boolean.toString(JaCoCoConfiguration.REPORT_MISSING_FORCE_ZERO_DEFAULT_VALUE))
+            .name("Force zero coverage")
+            .description("Force coverage to 0% if no JaCoCo reports are found during analysis.")
+            .onQualifiers(Qualifiers.PROJECT)
+            .type(PropertyType.BOOLEAN)
+            .build());
   }
 }

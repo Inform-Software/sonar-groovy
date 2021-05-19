@@ -20,6 +20,7 @@
 package org.sonar.plugins.groovy.jacoco;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
@@ -46,8 +46,6 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 public class JaCoCoSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
-
-  @Rule public ExpectedException exception = ExpectedException.none();
 
   private MapSettings settings = TestUtils.jacocoDefaultSettings();
   private JaCoCoSensor sensor;
@@ -76,14 +74,14 @@ public class JaCoCoSensorTest {
             .setLines(50)
             .build();
     fileSystem.add(inputFile);
-    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings, fileSystem);
+    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings.asConfig(), fileSystem);
 
     sensor =
         new JaCoCoSensor(
             configuration,
             new GroovyFileSystem(fileSystem),
             new PathResolver(),
-            settings,
+            settings.asConfig(),
             mock(AnalysisWarnings.class));
   }
 
@@ -104,9 +102,13 @@ public class JaCoCoSensorTest {
     context.setSettings(settings);
     context.fileSystem().setWorkDir(workDir);
 
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage(JaCoCoReportReader.INCOMPATIBLE_JACOCO_ERROR);
-    sensor.execute(context);
+    Exception e =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+              sensor.execute(context);
+            });
+    assertThat(e.getMessage()).isEqualTo(JaCoCoReportReader.INCOMPATIBLE_JACOCO_ERROR);
   }
 
   @Test
@@ -130,7 +132,7 @@ public class JaCoCoSensorTest {
     int[] coveredConditions = {2, 1, 0};
 
     for (int zeroHitline : zeroHitlines) {
-      assertThat(context.lineHits(":example/Hello.groovy", zeroHitline)).isEqualTo(0);
+      assertThat(context.lineHits(":example/Hello.groovy", zeroHitline)).isZero();
     }
     for (int oneHitline : oneHitlines) {
       assertThat(context.lineHits(":example/Hello.groovy", oneHitline)).isEqualTo(1);

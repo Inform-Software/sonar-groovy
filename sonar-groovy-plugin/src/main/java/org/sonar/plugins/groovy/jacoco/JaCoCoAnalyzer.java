@@ -35,7 +35,7 @@ import org.jacoco.core.analysis.ISourceFileCoverage;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
@@ -49,7 +49,7 @@ public class JaCoCoAnalyzer {
 
   public JaCoCoAnalyzer(
       GroovyFileSystem groovyFileSystem,
-      Settings settings,
+      Configuration settings,
       Path report) {
     this.groovyFileSystem = groovyFileSystem;
     baseDir = groovyFileSystem.baseDir();
@@ -57,7 +57,7 @@ public class JaCoCoAnalyzer {
     this.report = report;
   }
 
-  private List<String> getBinaryDirectories(Settings settings) {
+  private List<String> getBinaryDirectories(Configuration settings) {
     if (settings.hasKey(GroovyPlugin.SONAR_GROOVY_BINARIES)) {
       return Arrays.asList(settings.getStringArray(GroovyPlugin.SONAR_GROOVY_BINARIES));
     }

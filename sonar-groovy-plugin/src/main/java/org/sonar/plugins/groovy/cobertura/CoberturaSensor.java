@@ -20,11 +20,12 @@
 package org.sonar.plugins.groovy.cobertura;
 
 import java.io.File;
+import java.util.Optional;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.GroovyPlugin;
@@ -35,11 +36,11 @@ public class CoberturaSensor implements Sensor {
 
   private static final Logger LOG = Loggers.get(CoberturaSensor.class);
 
-  private final Settings settings;
+  private final Configuration settings;
   private final FileSystem fileSystem;
   private final GroovyFileSystem groovyFileSystem;
 
-  public CoberturaSensor(Settings settings, FileSystem fileSystem) {
+  public CoberturaSensor(Configuration settings, FileSystem fileSystem) {
     this.settings = settings;
     this.fileSystem = fileSystem;
     this.groovyFileSystem = new GroovyFileSystem(fileSystem);
@@ -48,7 +49,6 @@ public class CoberturaSensor implements Sensor {
   @Override
   public void describe(SensorDescriptor descriptor) {
     descriptor.onlyOnLanguage(Groovy.KEY).name(this.toString());
-
   }
 
   @Override
@@ -64,12 +64,12 @@ public class CoberturaSensor implements Sensor {
   }
 
   public void analyse(SensorContext context) {
-    String reportPath = settings.getString(GroovyPlugin.COBERTURA_REPORT_PATH);
+    Optional<String> reportPath = settings.get(GroovyPlugin.COBERTURA_REPORT_PATH);
 
-    if (reportPath != null) {
-      File xmlFile = new File(reportPath);
+    if (reportPath.isPresent()) {
+      File xmlFile = new File(reportPath.get());
       if (!xmlFile.isAbsolute()) {
-        xmlFile = new File(fileSystem.baseDir(), reportPath);
+        xmlFile = new File(fileSystem.baseDir(), reportPath.get());
       }
       if (xmlFile.exists()) {
         LOG.info("Analyzing Cobertura report: " + reportPath);
@@ -78,7 +78,10 @@ public class CoberturaSensor implements Sensor {
         LOG.info("Cobertura xml report not found: " + reportPath);
       }
     } else {
-      LOG.info("No Cobertura report provided (see '" + GroovyPlugin.COBERTURA_REPORT_PATH + "' property)");
+      LOG.info(
+          "No Cobertura report provided (see '"
+              + GroovyPlugin.COBERTURA_REPORT_PATH
+              + "' property)");
     }
   }
 
@@ -86,5 +89,4 @@ public class CoberturaSensor implements Sensor {
   public String toString() {
     return "Groovy CoberturaSensor";
   }
-
 }

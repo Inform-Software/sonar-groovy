@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -51,7 +51,7 @@ public final class SurefireUtils {
    *     (target/surefire-reports) if not found (not configured or not found).
    */
   public static List<File> getReportDirectories(
-      Settings settings, FileSystem fs, PathResolver pathResolver) {
+      Configuration settings, FileSystem fs, PathResolver pathResolver) {
     List<File> dirs = getReportDirectoriesFromProperty(settings, fs, pathResolver);
     if (dirs.size() > 0) {
       return dirs;
@@ -60,7 +60,7 @@ public final class SurefireUtils {
   }
 
   private static List<File> getReportDirectoriesFromProperty(
-      Settings settings, FileSystem fs, PathResolver pathResolver) {
+      Configuration settings, FileSystem fs, PathResolver pathResolver) {
     if (settings.hasKey(SUREFIRE_REPORT_PATHS_PROPERTY)) {
       return Arrays.stream(settings.getStringArray(SUREFIRE_REPORT_PATHS_PROPERTY))
           .map(String::trim)

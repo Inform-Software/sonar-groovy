@@ -56,7 +56,7 @@ public class GroovySurefireParserTest {
 
     MapSettings settings = new MapSettings();
     settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy,grvy");
-    groovy = new Groovy(settings);
+    groovy = new Groovy(settings.asConfig());
 
     parser = spy(new GroovySurefireParser(groovy, fs));
 

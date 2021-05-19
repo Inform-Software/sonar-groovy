@@ -22,11 +22,12 @@ package org.sonar.plugins.groovy.jacoco;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.ArgumentMatchers.anyString;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,15 +55,13 @@ import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 public class JaCoCoOverallSensorTest {
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
-  @Rule
-  public final MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+  @Rule public final MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
 
   private JaCoCoSensor sensor;
   private InputFile inputFile;
   private MapSettings settings = new MapSettings();
   private SensorContextTester context;
-  @Mock
-  private AnalysisWarnings analysisWarnings;
+  @Mock private AnalysisWarnings analysisWarnings;
 
   @Before
   public void before() throws IOException {
@@ -95,13 +94,14 @@ public class JaCoCoOverallSensorTest {
             .build();
     context.fileSystem().add(inputFile);
 
-    JaCoCoConfiguration configuration = new JaCoCoConfiguration(settings, context.fileSystem());
+    JaCoCoConfiguration configuration =
+        new JaCoCoConfiguration(settings.asConfig(), context.fileSystem());
     sensor =
         new JaCoCoSensor(
             configuration,
             new GroovyFileSystem(context.fileSystem()),
             new PathResolver(),
-            settings,
+            settings.asConfig(),
             analysisWarnings);
   }
 
@@ -112,7 +112,6 @@ public class JaCoCoOverallSensorTest {
     assertThat(defaultSensorDescriptor.languages()).containsOnly(Groovy.KEY);
   }
 
-
   @Test
   public void shouldExecuteOnProjectWithItExisting() {
     configReports(false, true);
@@ -120,7 +119,6 @@ public class JaCoCoOverallSensorTest {
     assertThat(context.coveredConditions(inputFile.key(), 14), is(equalTo(2)));
     verify(analysisWarnings).addUnique(anyString());
   }
-
 
   @Test
   public void shouldExecuteOnProjectWithUtExisting() {
@@ -137,7 +135,6 @@ public class JaCoCoOverallSensorTest {
     assertNull(context.coveredConditions(inputFile.key(), 14));
     verify(analysisWarnings, never()).addUnique(anyString());
   }
-
 
   @Test
   public void shouldNotExecuteIfJaCoCoXmlConfigured() {

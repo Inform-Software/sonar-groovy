@@ -19,18 +19,18 @@
  */
 package org.sonar.plugins.groovy.foundation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.plugins.groovy.GroovyPlugin;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GroovyTest {
 
   @Test
   public void test() {
     MapSettings settings = new MapSettings();
-    Groovy language = new Groovy(settings);
+    Groovy language = new Groovy(settings.asConfig());
     assertThat(language.getKey()).isEqualTo("grvy");
     assertThat(language.getName()).isEqualTo("Groovy");
     assertThat(language.getFileSuffixes()).isEqualTo(new String[] {".groovy"});
@@ -41,5 +41,4 @@ public class GroovyTest {
     settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy, .grvy");
     assertThat(language.getFileSuffixes()).containsOnly(".groovy", ".grvy");
   }
-
 }

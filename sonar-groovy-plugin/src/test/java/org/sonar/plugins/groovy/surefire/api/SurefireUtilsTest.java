@@ -40,10 +40,17 @@ public class SurefireUtilsTest {
   public void should_get_reports_from_property() {
     MapSettings settings = new MapSettings();
     settings.setProperty(SurefireUtils.SUREFIRE_REPORT_PATHS_PROPERTY, "target/surefire");
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).size()).isEqualTo(1);
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(0).exists())
+    assertThat(SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver).size())
+        .isEqualTo(1);
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(0)
+                .exists())
         .isTrue();
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(0).isDirectory())
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(0)
+                .isDirectory())
         .isTrue();
   }
 
@@ -52,21 +59,34 @@ public class SurefireUtilsTest {
     MapSettings settings = new MapSettings();
     settings.setProperty(
         SurefireUtils.SUREFIRE_REPORT_PATHS_PROPERTY, "target/surefire, target/surefire2");
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).size()).isEqualTo(2);
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(0).exists())
+    assertThat(SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver).size())
+        .isEqualTo(2);
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(0)
+                .exists())
         .isTrue();
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(0).isDirectory())
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(0)
+                .isDirectory())
         .isTrue();
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(1).exists())
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(1)
+                .exists())
         .isTrue();
-    assertThat(SurefireUtils.getReportDirectories(settings, fs, pathResolver).get(1).isDirectory())
+    assertThat(
+            SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver)
+                .get(1)
+                .isDirectory())
         .isTrue();
   }
 
   @Test
   public void return_default_value_if_property_unset() throws Exception {
     List<File> directories =
-        SurefireUtils.getReportDirectories(new MapSettings(), fs, pathResolver);
+        SurefireUtils.getReportDirectories(new MapSettings().asConfig(), fs, pathResolver);
     assertThat(directories.size()).isEqualTo(1);
     assertThat(directories.get(0).getCanonicalPath())
         .endsWith("target" + File.separator + "surefire-reports");
@@ -78,7 +98,8 @@ public class SurefireUtilsTest {
   public void return_default_value_if_can_not_read_file() throws Exception {
     MapSettings settings = new MapSettings();
     settings.setProperty(SurefireUtils.SUREFIRE_REPORT_PATHS_PROPERTY, "../target/\u0000:surefire");
-    List<File> directories = SurefireUtils.getReportDirectories(settings, fs, pathResolver);
+    List<File> directories =
+        SurefireUtils.getReportDirectories(settings.asConfig(), fs, pathResolver);
     assertThat(directories.size()).isEqualTo(1);
     assertThat(directories.get(0).getCanonicalPath())
         .endsWith("target" + File.separator + "surefire-reports");

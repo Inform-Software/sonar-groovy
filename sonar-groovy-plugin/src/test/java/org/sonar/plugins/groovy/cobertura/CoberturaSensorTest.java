@@ -54,7 +54,7 @@ public class CoberturaSensorTest {
         GroovyPlugin.COBERTURA_REPORT_PATH,
         TestUtils.getResource(getClass(), "../coverage.xml").toString());
     fileSystem = new DefaultFileSystem(Paths.get("."));
-    sensor = new CoberturaSensor(settings, fileSystem);
+    sensor = new CoberturaSensor(settings.asConfig(), fileSystem);
   }
 
   @Test
@@ -79,7 +79,7 @@ public class CoberturaSensorTest {
             .setLines(Integer.MAX_VALUE)
             .build());
 
-    sensor = new CoberturaSensor(settings, fs);
+    sensor = new CoberturaSensor(settings.asConfig(), fs);
     sensor.execute(context);
 
     // random pick groovy file
@@ -103,7 +103,7 @@ public class CoberturaSensorTest {
     FileSystem mockfileSystem = mock(FileSystem.class);
     when(mockfileSystem.predicates()).thenReturn(fileSystem.predicates());
     when(mockfileSystem.inputFile(any(FilePredicate.class))).thenReturn(null);
-    sensor = new CoberturaSensor(settings, mockfileSystem);
+    sensor = new CoberturaSensor(settings.asConfig(), mockfileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
@@ -115,7 +115,7 @@ public class CoberturaSensorTest {
   public void should_not_parse_report_if_settings_does_not_contain_report_path() {
     DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
-    sensor = new CoberturaSensor(new MapSettings(), fileSystem);
+    sensor = new CoberturaSensor(new MapSettings().asConfig(), fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
@@ -132,7 +132,7 @@ public class CoberturaSensorTest {
     DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
 
-    sensor = new CoberturaSensor(settings, fileSystem);
+    sensor = new CoberturaSensor(settings.asConfig(), fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);
@@ -150,7 +150,7 @@ public class CoberturaSensorTest {
     DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
 
-    sensor = new CoberturaSensor(settings, fileSystem);
+    sensor = new CoberturaSensor(settings.asConfig(), fileSystem);
 
     SensorContext context = mock(SensorContext.class);
     sensor.execute(context);

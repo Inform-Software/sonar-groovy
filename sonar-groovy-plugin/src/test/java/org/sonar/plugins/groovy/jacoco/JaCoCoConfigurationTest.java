@@ -39,7 +39,7 @@ public class JaCoCoConfigurationTest {
   @Before
   public void setUp() {
     fileSystem = new DefaultFileSystem(Paths.get("."));
-    jacocoSettings = new JaCoCoConfiguration(settings, fileSystem);
+    jacocoSettings = new JaCoCoConfiguration(settings.asConfig(), fileSystem);
   }
 
   @Test

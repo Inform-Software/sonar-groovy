@@ -22,7 +22,7 @@ package org.sonar.plugins.groovy.foundation;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 import org.sonar.plugins.groovy.GroovyPlugin;
 
@@ -33,12 +33,12 @@ public class Groovy extends AbstractLanguage {
   /**
    * Settings of the plugin.
    */
-  private final Settings settings;
+  private final Configuration settings;
 
   /**
    * Default constructor
    */
-  public Groovy(Settings settings) {
+  public Groovy(Configuration settings) {
     super(KEY, "Groovy");
     this.settings = settings;
   }

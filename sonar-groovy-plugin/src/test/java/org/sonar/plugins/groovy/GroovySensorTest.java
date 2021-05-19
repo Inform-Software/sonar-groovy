@@ -48,13 +48,14 @@ public class GroovySensorTest {
   private MapSettings settings = new MapSettings();
   private FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
   private DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
-  private GroovySensor sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
+  private GroovySensor sensor =
+      new GroovySensor(settings.asConfig(), fileLinesContextFactory, fileSystem);
 
   @Test
   public void do_nothing_when_no_groovy_file() throws IOException {
     SensorContextTester context = SensorContextTester.create(Paths.get("."));
     context = Mockito.spy(context);
-    sensor = new GroovySensor(settings, fileLinesContextFactory, context.fileSystem());
+    sensor = new GroovySensor(settings.asConfig(), fileLinesContextFactory, context.fileSystem());
     sensor.execute(context);
 
     Mockito.verify(context, Mockito.never()).newHighlighting();
@@ -89,7 +90,7 @@ public class GroovySensorTest {
     when(fileLinesContextFactory.createFor(any(DefaultInputFile.class)))
         .thenReturn(fileLinesContext);
 
-    sensor = new GroovySensor(settings, fileLinesContextFactory, fileSystem);
+    sensor = new GroovySensor(settings.asConfig(), fileLinesContextFactory, fileSystem);
     sensor.execute(context);
 
     String key = groovyFile.key();
@@ -112,7 +113,7 @@ public class GroovySensorTest {
 
   @Test
   public void test_toString() {
-    assertThat(sensor.toString()).isEqualTo("GroovySensor");
+    assertThat(sensor).hasToString("GroovySensor");
   }
 
   @Test

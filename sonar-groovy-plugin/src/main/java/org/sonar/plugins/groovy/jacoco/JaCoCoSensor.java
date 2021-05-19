@@ -26,7 +26,7 @@ import java.util.Arrays;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.notifications.AnalysisWarnings;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.api.utils.log.Logger;
@@ -43,7 +43,7 @@ public class JaCoCoSensor implements Sensor {
   private final JaCoCoConfiguration configuration;
   private final GroovyFileSystem fileSystem;
   private final PathResolver pathResolver;
-  private final Settings settings;
+  private final Configuration settings;
   private final AnalysisWarnings analysisWarnings;
   static final String JACOCO_XML_PROPERTY = "sonar.coverage.jacoco.xmlReportPaths";
   private static final String[] JACOCO_XML_DEFAULT_PATHS = {
@@ -54,7 +54,7 @@ public class JaCoCoSensor implements Sensor {
       JaCoCoConfiguration configuration,
       GroovyFileSystem fileSystem,
       PathResolver pathResolver,
-      Settings settings,
+      Configuration settings,
       AnalysisWarnings analysisWarnings) {
     this.configuration = configuration;
     this.fileSystem = fileSystem;

@@ -47,7 +47,7 @@ import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
@@ -66,7 +66,7 @@ public class GroovySensor implements Sensor {
   private static final Set<String> EMPTY_COMMENT_LINES =
       Arrays.stream(new String[] {"/**", "/*", "*", "*/", "//"}).collect(Collectors.toSet());
 
-  private final Settings settings;
+  private final Configuration settings;
   private final FileLinesContextFactory fileLinesContextFactory;
   private final GroovyFileSystem groovyFileSystem;
 
@@ -76,7 +76,9 @@ public class GroovySensor implements Sensor {
   private FileLinesContext fileLinesContext;
 
   public GroovySensor(
-      Settings settings, FileLinesContextFactory fileLinesContextFactory, FileSystem fileSystem) {
+      Configuration settings,
+      FileLinesContextFactory fileLinesContextFactory,
+      FileSystem fileSystem) {
     this.settings = settings;
     this.fileLinesContextFactory = fileLinesContextFactory;
     this.groovyFileSystem = new GroovyFileSystem(fileSystem);
@@ -223,7 +225,8 @@ public class GroovySensor implements Sensor {
   }
 
   private boolean isNotHeaderComment(int tokenLine) {
-    return !(tokenLine == 1 && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS));
+    return !(tokenLine == 1
+        && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS).orElse(true));
   }
 
   private static boolean isNotWhitespace(int tokenType) {

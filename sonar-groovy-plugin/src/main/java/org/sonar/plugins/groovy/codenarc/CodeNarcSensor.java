@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import org.apache.commons.io.FileUtils;
@@ -71,15 +72,17 @@ public class CodeNarcSensor implements Sensor {
   @Override
   public void execute(SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (context.settings().hasKey(GroovyPlugin.CODENARC_REPORT_PATHS)) {
+    if (context.config().hasKey(GroovyPlugin.CODENARC_REPORT_PATHS)) {
       // Yes
       String[] codeNarcReportPaths =
-          context.settings().getStringArray(GroovyPlugin.CODENARC_REPORT_PATHS);
-      String codeNarcReportPath = context.settings().getString(GroovyPlugin.CODENARC_REPORT_PATH);
+          context.config().getStringArray(GroovyPlugin.CODENARC_REPORT_PATHS);
       if (codeNarcReportPaths.length == 0) {
-        codeNarcReportPaths = new String[] {codeNarcReportPath};
+        Optional<String> legacyOption = context.config().get(GroovyPlugin.CODENARC_REPORT_PATH);
+        if (legacyOption.isPresent()) {
+          codeNarcReportPaths = new String[] {legacyOption.get()};
+        }
       }
-      List<File> reports = new ArrayList<File>();
+      List<File> reports = new ArrayList<>();
       for (String path : codeNarcReportPaths) {
         File report = context.fileSystem().resolvePath(path);
         if (!report.isFile() || !report.exists()) {
