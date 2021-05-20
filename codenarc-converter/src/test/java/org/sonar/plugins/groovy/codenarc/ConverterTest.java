@@ -22,6 +22,7 @@ package org.sonar.plugins.groovy.codenarc;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.Lists;
+import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 import java.io.IOException;
@@ -63,9 +64,9 @@ public class ConverterTest {
   public void testXmlEquivalence() throws Exception {
     // Only run this test if CodeNarc was put in the correct location (this is guaranteed by a Git
     // submodule)
-    Path codeNarcDir = Paths.get(".");
-    assumeTrue(Files.isDirectory(codeNarcDir.resolve("src")));
-    assertSimilarXml(getGeneratedXmlRulesFile(codeNarcDir), Paths.get(PLUGIN_RULES_FILE_LOCATION));
+    Path codeNarcPath = Paths.get(".");
+    assumeTrue(Files.exists(Converter.getInputFile(codeNarcPath)));
+    assertSimilarXml(getGeneratedXmlRulesFile(codeNarcPath), Paths.get(PLUGIN_RULES_FILE_LOCATION));
   }
 
   static void showDelta(String ruleName, String s1, String s2) {
@@ -76,8 +77,8 @@ public class ConverterTest {
     log.info(
         "------------------------------------------------------------------------------------------");
     log.info("DIFFERENCE in {}", ruleName);
-    Patch p = DiffUtils.diff(s1, s2);
-    for (Object delta : p.getDeltas()) {
+    Patch<String> p = DiffUtils.diff(s1, s2);
+    for (Delta<String> delta : p.getDeltas()) {
       log.info("{}", delta);
     }
   }

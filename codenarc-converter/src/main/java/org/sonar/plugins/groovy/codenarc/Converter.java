@@ -67,11 +67,17 @@ public class Converter {
     log.info("{} rules processed", converter.count);
   }
 
-  public static Converter process(Path codeNarcDir, Path targetFile)
+  public static Path getInputFile(Path codeNarcPath) {
+    return codeNarcPath.resolve(RULES_APT_FILES_LOCATION);
+  }
+
+  public static Converter process(Path codeNarcPath, Path targetFile)
       throws IOException, ReflectiveOperationException {
-    Path aptDir = codeNarcDir.resolve(RULES_APT_FILES_LOCATION);
     Converter converter = new Converter();
-    new XMLPrinter().init(converter).process(Converter.loadRules(aptDir)).printAll(targetFile);
+    new XMLPrinter()
+        .init(converter)
+        .process(Converter.loadRules(getInputFile(codeNarcPath)))
+        .printAll(targetFile);
     return converter;
   }
 
