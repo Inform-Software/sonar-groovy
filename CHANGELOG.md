@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.7] - 2021-05-30
 
 ### Changed
 - Remove backwards compatibility hacks (drop support for everything older then
@@ -67,7 +67,8 @@ Please see the Git history for older changes
 
 ## [0.6] - 2012-08-06
 
-[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.6...HEAD
+[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.7...HEAD
+[1.7]: https://github.com/Inform-Software/sonar-groovy/compare/1.6...1.7
 [1.6]: https://github.com/Inform-Software/sonar-groovy/compare/1.5...1.6
 [1.5]: https://github.com/Inform-Software/sonar-groovy/compare/1.4-RC1...1.5
 [1.4-RC1]: https://github.com/Inform-Software/sonar-groovy/compare/1.3.1...1.4-RC1

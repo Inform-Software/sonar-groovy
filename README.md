@@ -21,11 +21,11 @@ plugin should be used. Additionally, this plugin still supports importing
 binary JaCoCo reports (deprecated, will be removed in the future) and
 [Cobertura](http://cobertura.sourceforge.net/).
 
-Plugin    | 1.4/1.5 | 1.6     | 1.7
-----------|---------|---------|-----
-CodeNarc  | 0.25.2  | 1.4     | 1.4
-GMetrics  | 0.7     | 1.0     | 1.0
-SonarQube | 5.6-6.7 | 6.7-7.9 | 7.8-8.9
+Plugin    | 1.4/1.5 | 1.6     | 1.7     | 1.8
+----------|---------|---------|---------|---------
+CodeNarc  | 0.25.2  | 1.4     | 1.4     | 1.5
+GMetrics  | 0.7     | 1.0     | 1.0     | 1.1
+SonarQube | 5.6-6.7 | 6.7-7.9 | 7.8-8.9 | 8.0-8.9
 
 ## Steps to Analyze a Groovy Project
 1. Install SonarQube Server
