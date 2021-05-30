@@ -5,11 +5,6 @@ add=
 if [ "$SONAR_VERSION" ]
 then
   add="$add -Dsonar.version=$SONAR_VERSION"
-
-  case $SONAR_VERSION in
-    8*) add="$add -PtestModernSonarQube" ;;
-  esac
-
 elif [ -n "$SONAR_TOKEN" ]
 then
   # Only run SonarQube analysis on one matrix configuration

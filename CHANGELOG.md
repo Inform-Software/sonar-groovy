@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Align JUnit property with Java plugin (fixes #43)
 
 ### Removed
-- Compatibility with JaCoCo older the 0.7.5 (released in mid-2015)
+- Compatibility with JaCoCo older then 0.7.5 (released in mid-2015)
 
 ## [1.6] - 2019-07-04
 
