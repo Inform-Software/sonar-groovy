@@ -19,6 +19,22 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark</artifactId>
+      <version>0.18.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark-ext-yaml-front-matter</artifactId>
+      <version>0.18.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark-ext-gfm-tables</artifactId>
+      <version>0.18.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
     </dependency>
@@ -72,7 +88,7 @@
       <id>run-converter</id>
       <activation>
         <file>
-          <exists>${basedir}/CodeNarc/src/site/apt</exists>
+          <exists>${basedir}/CodeNarc/docs</exists>
         </file>
       </activation>
       <build>
@@ -89,7 +105,7 @@
                   <goal>java</goal>
                 </goals>
                 <configuration>
-                  <mainClass>org.sonar.plugins.groovy.codenarc.Converter</mainClass>
+                  <mainClass>org.sonar.plugins.groovy.codenarc.RuleConverter</mainClass>
                   <arguments>
                     <argument>${project.basedir}</argument>
                   </arguments>

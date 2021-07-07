@@ -94,11 +94,16 @@ org.codenarc.rule.convention.CouldBeSwitchStatementRule;linear;5min
 org.codenarc.rule.convention.FieldTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.HashtableIsObsoleteRule;linear;10min
 org.codenarc.rule.convention.IfStatementCouldBeTernaryRule;linear;5min
+org.codenarc.rule.convention.ImplicitClosureParameterRule;linear;5min
+org.codenarc.rule.convention.ImplicitReturnStatementRule;linear;5min
 org.codenarc.rule.convention.InvertedConditionRule;linear;5min
 org.codenarc.rule.convention.InvertedIfElseRule;linear;10min
 org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule;linear;5min
+org.codenarc.rule.convention.MethodParameterTypeRequired;linear;5min
 org.codenarc.rule.convention.MethodReturnTypeRequiredRule;linear;5min
 org.codenarc.rule.convention.NoDefRule;linear;5min
+org.codenarc.rule.convention.NoDoubleRule;linear;5min
+org.codenarc.rule.convention.NoFloatRule;linear;5min
 org.codenarc.rule.convention.NoJavaUtilDateRule;linear;5min
 org.codenarc.rule.convention.NoTabCharacterRule;linear;2min
 org.codenarc.rule.convention.ParameterReassignmentRule;linear;20min
@@ -199,6 +204,7 @@ org.codenarc.rule.generic.IllegalStringRule.fixed;linear;10min
 org.codenarc.rule.generic.RequiredRegexRule.fixed;linear;20min
 org.codenarc.rule.generic.RequiredStringRule.fixed;linear;20min
 org.codenarc.rule.generic.StatelessClassRule.fixed;linear;20min
+org.codenarc.rule.grails.GrailsDomainGormMethodsRule;linear;5min
 org.codenarc.rule.grails.GrailsDomainHasEqualsRule;linear;20min
 org.codenarc.rule.grails.GrailsDomainHasToStringRule;linear;20min
 org.codenarc.rule.grails.GrailsDomainReservedSqlKeywordNameRule;linear;20min

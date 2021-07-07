@@ -31,39 +31,28 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.plugins.groovy.codenarc.Converter;
-import org.sonar.plugins.groovy.codenarc.Rule;
-import org.sonar.plugins.groovy.codenarc.RuleParameter;
-import org.sonar.plugins.groovy.codenarc.RuleSet;
+import org.sonar.plugins.groovy.codenarc.*;
+import org.sonar.plugins.groovy.codenarc.parser.RuleParserResult;
 
 public final class XMLPrinter {
 
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-  private Converter converter;
   private String resultAsXML;
 
-  public XMLPrinter init(Converter converter) {
-    this.converter = converter;
-    return this;
-  }
-
-  public XMLPrinter process(Multimap<RuleSet, Rule> rulesBySet) throws IOException {
+  public XMLPrinter process(RuleParserResult result) throws IOException {
     StringBuilder xmlStringBuilder = new StringBuilder();
 
-    String version =
-        IOUtils.toString(
-            Converter.class.getResourceAsStream("/codenarc-version.txt"), StandardCharsets.UTF_8);
-    xmlStringBuilder.append("<!-- Generated using CodeNarc " + version + " -->");
+
+    xmlStringBuilder.append("<!-- Generated using CodeNarc " + result.getCodeNarcVersion() + " -->");
     xmlStringBuilder.append(LINE_SEPARATOR);
 
     start(xmlStringBuilder);
 
     for (RuleSet ruleSet : RuleSet.values()) {
       startSet(xmlStringBuilder, ruleSet.getLabel());
-      ArrayList<Rule> rules = Lists.newArrayList(rulesBySet.get(ruleSet));
+      ArrayList<Rule> rules = Lists.newArrayList(result.getRulesBy(ruleSet));
       for (Rule rule : rules) {
-        converter.startPrintingRule(rule);
         printAsXML(rule, xmlStringBuilder);
       }
     }
