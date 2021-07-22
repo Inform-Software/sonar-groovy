@@ -59,6 +59,10 @@
       <groupId>org.codenarc</groupId>
       <artifactId>CodeNarc</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.gmetrics</groupId>
+      <artifactId>GMetrics</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.jacoco</groupId>
@@ -114,7 +118,7 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>16000000</maxsize>
+                  <maxsize>18500000</maxsize>
                   <minsize>8500000</minsize>
                   <files>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
