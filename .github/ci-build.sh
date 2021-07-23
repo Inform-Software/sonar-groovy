@@ -5,8 +5,7 @@ add=
 if [ "$SONAR_VERSION" ]
 then
   add="$add -Dsonar.version=$SONAR_VERSION"
-elif [ -n "$SONAR_TOKEN" ]
-then
+else
   # Only run SonarQube analysis on one matrix configuration
   # (namely: empty $SONAR_VERSION and Java 11
   java -Xmx32m -version 2>&1 | grep -q "11\.0" && add="sonar:sonar $add"
