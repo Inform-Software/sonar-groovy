@@ -67,7 +67,7 @@ public class MarkdownParser implements RuleParser {
 
     @Override
     public RuleParserResult parse(Path source) throws IOException, ReflectiveOperationException {
-        File docsFolder = source.resolve(RULES_MARKDOWN_FILES_LOCATION).toFile();
+        File docsFolder =  getSourceFolder(source).toFile();
         File[] docs = docsFolder.listFiles((dir, name) -> name.startsWith("codenarc-rules-"));
         if (docs == null) {
             throw new FileNotFoundException(String.format("%s does not contain any files matching pattern codenarc-rules-*", docsFolder.getAbsolutePath()));
@@ -104,4 +104,8 @@ public class MarkdownParser implements RuleParser {
         }
         return result;
     }
+
+  public Path getSourceFolder(Path source) {
+    return source.resolve(RULES_MARKDOWN_FILES_LOCATION);
+  }
 }

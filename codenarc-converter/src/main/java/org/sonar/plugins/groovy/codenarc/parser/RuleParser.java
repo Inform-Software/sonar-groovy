@@ -23,5 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public interface RuleParser {
-    RuleParserResult parse(Path source) throws IOException, ReflectiveOperationException;
+  RuleParserResult parse(Path source) throws IOException, ReflectiveOperationException;
+
+  Path getSourceFolder(Path source);
 }
