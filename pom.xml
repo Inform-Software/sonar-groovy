@@ -76,7 +76,7 @@
 
   <properties>
     <sonar.version>8.0</sonar.version>
-    <groovy.version>2.4.21</groovy.version>
+    <groovy.version>3.0.8</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
     <license.owner>SonarQube Community</license.owner>
     <license.mailto> </license.mailto>
@@ -89,7 +89,17 @@
     <dependencies>
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-all</artifactId>
+        <artifactId>groovy</artifactId>
+        <version>${groovy.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-json</artifactId>
+        <version>${groovy.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-templates</artifactId>
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
@@ -110,14 +120,20 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.gmetrics</groupId>
-        <artifactId>GMetrics</artifactId>
-        <version>1.0</version>
-      </dependency>
-      <dependency>
         <groupId>org.codenarc</groupId>
         <artifactId>CodeNarc</artifactId>
         <version>1.6.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-ant</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.gmetrics</groupId>
+        <artifactId>GMetrics</artifactId>
+        <version>1.1</version>
         <exclusions>
           <exclusion>
             <groupId>org.codehaus.groovy</groupId>
