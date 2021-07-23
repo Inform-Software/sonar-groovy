@@ -76,17 +76,16 @@ To display code coverage data:
 
 Contributions via GitHub [issues] and pull requests are very welcome. This
 project tries to adhere to the [Google Java Style], but we don't want a global
-reformat to keep the Git history readable. To help with this, you can use the
-[fmt-maven-plugin] to format your changes:
+reformat to keep the Git history readable. To help with this, we use the
+"[ratchet]" feature of [spotless]. If you get an error from spotless during
+build or CI, you can fix them with:
 
-    mvn fmt:format -DfilesNamePattern=TestUtils\.java
-
-You can use the `fileNamePattern` option to restrict the formatter to the files
-you changed.
+    mvn spotless:apply
 
 [issues]: https://github.com/Inform-Software/sonar-groovy/issues/new
 [Google Java Style]: https://google.github.io/styleguide/javaguide.html
-[fmt-maven-plugin]: https://github.com/coveo/fmt-maven-plugin
+[ratchet]: https://github.com/diffplug/spotless/tree/main/plugin-maven#ratchet
+[spotless]: https://github.com/diffplug/spotless#-spotless-keep-your-code-spotless
 
 ### Updating CodeNarc
 
