@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +36,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
@@ -51,7 +49,7 @@ public class CoberturaSensorTest {
   public void setUp() throws Exception {
     settings = new MapSettings();
     settings.setProperty(
-        GroovyPlugin.COBERTURA_REPORT_PATH,
+        CoberturaSensor.COBERTURA_REPORT_PATH,
         TestUtils.getResource(getClass(), "../coverage.xml").toString());
     fileSystem = new DefaultFileSystem(Paths.get("."));
     sensor = new CoberturaSensor(settings.asConfig(), fileSystem);
@@ -91,7 +89,7 @@ public class CoberturaSensorTest {
       assertThat(context.lineHits(filekey, line)).isEqualTo(1);
     }
     for (int line : lineNoHits) {
-      assertThat(context.lineHits(filekey, line)).isEqualTo(0);
+      assertThat(context.lineHits(filekey, line)).isZero();
     }
 
     // No value for java file
@@ -127,7 +125,8 @@ public class CoberturaSensorTest {
   public void should_not_parse_report_if_report_does_not_exist() {
     MapSettings settings = new MapSettings();
     settings.setProperty(
-        GroovyPlugin.COBERTURA_REPORT_PATH, "org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
+        CoberturaSensor.COBERTURA_REPORT_PATH,
+        "org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
     fileSystem.add(TestInputFileBuilder.create("", "fake.groovy").setLanguage(Groovy.KEY).build());
@@ -144,7 +143,7 @@ public class CoberturaSensorTest {
   public void should_use_relative_path_to_get_report() {
     MapSettings settings = new MapSettings();
     settings.setProperty(
-        GroovyPlugin.COBERTURA_REPORT_PATH,
+        CoberturaSensor.COBERTURA_REPORT_PATH,
         "//org/sonar/plugins/groovy/cobertura/fake-coverage.xml");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(Paths.get("."));
@@ -171,6 +170,6 @@ public class CoberturaSensorTest {
 
   @Test
   public void test_toString() {
-    assertThat(sensor.toString()).isEqualTo("Groovy CoberturaSensor");
+    assertThat(sensor).hasToString("Groovy CoberturaSensor");
   }
 }
