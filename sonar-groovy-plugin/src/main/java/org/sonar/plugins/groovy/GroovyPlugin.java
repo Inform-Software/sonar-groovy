@@ -23,24 +23,13 @@ import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.PropertyType;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
-import org.sonar.plugins.groovy.codenarc.CodeNarcRulesDefinition;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
-import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 @Properties({
-  @Property(
-      key = GroovyPlugin.CODENARC_REPORT_PATHS,
-      name = "CodeNarc Reports",
-      description =
-          "Path to the CodeNarc XML reports. Paths may be absolute or relative to the project base directory.",
-      project = true,
-      module = true,
-      global = true,
-      deprecatedKey = GroovyPlugin.CODENARC_REPORT_PATH),
   @Property(
       key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
       defaultValue = "true",
@@ -63,9 +52,6 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 })
 public class GroovyPlugin implements Plugin {
 
-  @Deprecated public static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
-  public static final String CODENARC_REPORT_PATHS = "sonar.groovy.codenarc.reportPaths";
-
   public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
 
   public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
@@ -74,10 +60,6 @@ public class GroovyPlugin implements Plugin {
   @Override
   public void define(Context context) {
     context.addExtensions(
-        // CodeNarc
-        CodeNarcRulesDefinition.class,
-        CodeNarcSensor.class,
-        SonarWayProfile.class,
         // Main sensor
         GroovySensor.class,
         // Surefire
@@ -85,6 +67,7 @@ public class GroovyPlugin implements Plugin {
         GroovySurefireSensor.class);
     context
         .addExtensions(Groovy.getExtensions())
+        .addExtensions(CodeNarcSensor.getExtensions())
         .addExtensions(CoberturaSensor.getExtensions())
         .addExtensions(JaCoCoExtensions.getExtensions());
   }

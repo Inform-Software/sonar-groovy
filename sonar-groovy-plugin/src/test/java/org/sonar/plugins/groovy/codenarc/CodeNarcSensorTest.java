@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +41,6 @@ import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
@@ -93,7 +91,7 @@ public class CodeNarcSensorTest {
 
     Path reportUpdated = getReportWithUpdatedSourceDir();
     settings.setProperty(
-        GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
+        CodeNarcSensor.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -118,7 +116,7 @@ public class CodeNarcSensorTest {
 
     Path reportUpdated = getReportWithUpdatedSourceDir();
     settings.setProperty(
-        GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
+        CodeNarcSensor.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/SampleDomain.groovy");
     addFileWithFakeContent("src/org/codenarc/sample/service/NewService.groovy");
@@ -143,7 +141,7 @@ public class CodeNarcSensorTest {
 
     Path reportUpdated = getReportWithUpdatedSourceDir();
     settings.setProperty(
-        GroovyPlugin.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
+        CodeNarcSensor.CODENARC_REPORT_PATHS, reportUpdated.toAbsolutePath().toString());
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 
@@ -179,7 +177,7 @@ public class CodeNarcSensorTest {
   @Test
   public void should_do_nothing_when_can_not_find_report_path() throws Exception {
 
-    settings.setProperty(GroovyPlugin.CODENARC_REPORT_PATHS, "../missing_file.xml");
+    settings.setProperty(CodeNarcSensor.CODENARC_REPORT_PATHS, "../missing_file.xml");
 
     addFileWithFakeContent("src/org/codenarc/sample/domain/Unknown.groovy");
 
