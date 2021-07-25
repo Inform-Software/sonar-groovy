@@ -19,28 +19,13 @@
 package org.sonar.plugins.groovy;
 
 import org.sonar.api.Plugin;
-import org.sonar.api.Properties;
-import org.sonar.api.Property;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
-@Properties({
-  @Property(
-      key = GroovyPlugin.SONAR_GROOVY_BINARIES,
-      name = "Binary directories",
-      description =
-          "Comma-separated list of optional directories that contain the compiled groovy sources.",
-      project = true,
-      module = true,
-      global = true)
-})
 public class GroovyPlugin implements Plugin {
-
-  public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
-  public static final String SONAR_GROOVY_BINARIES_FALLBACK = "sonar.binaries";
 
   @Override
   public void define(Context context) {

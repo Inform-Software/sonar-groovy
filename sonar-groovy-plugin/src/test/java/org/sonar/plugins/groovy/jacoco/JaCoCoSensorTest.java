@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,7 +37,6 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.notifications.AnalysisWarnings;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.TestUtils;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
@@ -63,7 +61,7 @@ public class JaCoCoSensorTest {
         TestUtils.getResource(getClass(), "../Hello$InnerClass.class.toCopy"),
         outputDir.resolve("Hello$InnerClass.class"));
 
-    settings.setProperty(GroovyPlugin.SONAR_GROOVY_BINARIES, ".");
+    settings.setProperty(JaCoCoConfiguration.SONAR_GROOVY_BINARIES, ".");
     settings.setProperty(JaCoCoConfiguration.REPORT_PATH_PROPERTY, "jacoco-ut.exec");
 
     DefaultFileSystem fileSystem = new DefaultFileSystem(outputDir);
