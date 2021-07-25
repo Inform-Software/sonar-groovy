@@ -25,7 +25,6 @@ import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
-import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 @Properties({
@@ -45,13 +44,11 @@ public class GroovyPlugin implements Plugin {
 
   @Override
   public void define(Context context) {
-    context.addExtensions(
-        // Surefire
-        GroovySurefireParser.class, GroovySurefireSensor.class);
     context
         .addExtensions(Groovy.getExtensions())
         .addExtensions(GroovySensor.getExtensions())
         .addExtensions(CodeNarcSensor.getExtensions())
+        .addExtensions(GroovySurefireSensor.getExtensions())
         .addExtensions(CoberturaSensor.getExtensions())
         .addExtensions(JaCoCoExtensions.getExtensions());
   }
