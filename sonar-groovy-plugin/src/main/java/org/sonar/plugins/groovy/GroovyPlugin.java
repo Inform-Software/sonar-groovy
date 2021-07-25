@@ -21,7 +21,6 @@ package org.sonar.plugins.groovy;
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
-import org.sonar.api.PropertyType;
 import org.sonar.plugins.groovy.cobertura.CoberturaSensor;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -30,17 +29,6 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 
 @Properties({
-  @Property(
-      key = GroovyPlugin.IGNORE_HEADER_COMMENTS,
-      defaultValue = "true",
-      name = "Ignore Header Comments",
-      description =
-          "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. "
-              + "Thus metrics such as \"Comment lines\" do not get incremented. "
-              + "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.",
-      project = true,
-      global = true,
-      type = PropertyType.BOOLEAN),
   @Property(
       key = GroovyPlugin.SONAR_GROOVY_BINARIES,
       name = "Binary directories",
@@ -52,21 +40,17 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
 })
 public class GroovyPlugin implements Plugin {
 
-  public static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
-
   public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
   public static final String SONAR_GROOVY_BINARIES_FALLBACK = "sonar.binaries";
 
   @Override
   public void define(Context context) {
     context.addExtensions(
-        // Main sensor
-        GroovySensor.class,
         // Surefire
-        GroovySurefireParser.class,
-        GroovySurefireSensor.class);
+        GroovySurefireParser.class, GroovySurefireSensor.class);
     context
         .addExtensions(Groovy.getExtensions())
+        .addExtensions(GroovySensor.getExtensions())
         .addExtensions(CodeNarcSensor.getExtensions())
         .addExtensions(CoberturaSensor.getExtensions())
         .addExtensions(JaCoCoExtensions.getExtensions());
