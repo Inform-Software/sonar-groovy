@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +41,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.foundation.Groovy;
 
 public class GroovySurefireParserTest {
@@ -55,7 +53,7 @@ public class GroovySurefireParserTest {
     FileSystem fs = new DefaultFileSystem(Paths.get("."));
 
     MapSettings settings = new MapSettings();
-    settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy,grvy");
+    settings.setProperty(Groovy.FILE_SUFFIXES_KEY, ".groovy,grvy");
     groovy = new Groovy(settings.asConfig());
 
     parser = spy(new GroovySurefireParser(groovy, fs));

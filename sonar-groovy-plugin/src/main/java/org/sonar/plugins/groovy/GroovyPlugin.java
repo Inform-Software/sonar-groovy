@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +27,6 @@ import org.sonar.plugins.groovy.codenarc.CodeNarcRulesDefinition;
 import org.sonar.plugins.groovy.codenarc.CodeNarcSensor;
 import org.sonar.plugins.groovy.codenarc.SonarWayProfile;
 import org.sonar.plugins.groovy.foundation.Groovy;
-import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 import org.sonar.plugins.groovy.jacoco.JaCoCoExtensions;
 import org.sonar.plugins.groovy.surefire.GroovySurefireParser;
 import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
@@ -63,15 +61,6 @@ import org.sonar.plugins.groovy.surefire.GroovySurefireSensor;
       global = true,
       type = PropertyType.BOOLEAN),
   @Property(
-      key = GroovyPlugin.FILE_SUFFIXES_KEY,
-      defaultValue = GroovyPlugin.DEFAULT_FILE_SUFFIXES,
-      name = "File suffixes",
-      description =
-          "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.",
-      project = true,
-      module = true,
-      global = true),
-  @Property(
       key = GroovyPlugin.SONAR_GROOVY_BINARIES,
       name = "Binary directories",
       description =
@@ -91,9 +80,6 @@ public class GroovyPlugin implements Plugin {
   public static final String SONAR_GROOVY_BINARIES = "sonar.groovy.binaries";
   public static final String SONAR_GROOVY_BINARIES_FALLBACK = "sonar.binaries";
 
-  public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
-  public static final String DEFAULT_FILE_SUFFIXES = ".groovy";
-
   @Override
   public void define(Context context) {
     context.addExtensions(
@@ -101,9 +87,6 @@ public class GroovyPlugin implements Plugin {
         CodeNarcRulesDefinition.class,
         CodeNarcSensor.class,
         SonarWayProfile.class,
-        // Foundation
-        Groovy.class,
-        GroovyFileSystem.class,
         // Main sensor
         GroovySensor.class,
         // Surefire
@@ -111,6 +94,6 @@ public class GroovyPlugin implements Plugin {
         GroovySurefireSensor.class,
         // Cobertura
         CoberturaSensor.class);
-    context.addExtensions(JaCoCoExtensions.getExtensions());
+    context.addExtensions(Groovy.getExtensions()).addExtensions(JaCoCoExtensions.getExtensions());
   }
 }

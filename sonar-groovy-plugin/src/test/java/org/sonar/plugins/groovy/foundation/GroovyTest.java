@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.sonar.api.config.internal.MapSettings;
-import org.sonar.plugins.groovy.GroovyPlugin;
 
 public class GroovyTest {
 
@@ -35,10 +33,10 @@ public class GroovyTest {
     assertThat(language.getName()).isEqualTo("Groovy");
     assertThat(language.getFileSuffixes()).isEqualTo(new String[] {".groovy"});
 
-    settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, "");
+    settings.setProperty(Groovy.FILE_SUFFIXES_KEY, "");
     assertThat(language.getFileSuffixes()).containsOnly(".groovy");
 
-    settings.setProperty(GroovyPlugin.FILE_SUFFIXES_KEY, ".groovy, .grvy");
+    settings.setProperty(Groovy.FILE_SUFFIXES_KEY, ".groovy, .grvy");
     assertThat(language.getFileSuffixes()).containsOnly(".groovy", ".grvy");
   }
 }

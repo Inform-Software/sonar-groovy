@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,39 +19,35 @@
 package org.sonar.plugins.groovy.foundation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Configuration;
+import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.AbstractLanguage;
-import org.sonar.plugins.groovy.GroovyPlugin;
+import org.sonar.api.resources.Qualifiers;
 
 public class Groovy extends AbstractLanguage {
 
   public static final String KEY = "grvy";
+  public static final String NAME = "Groovy";
+  public static final String FILE_SUFFIXES_KEY = "sonar.groovy.file.suffixes";
+  static final String DEFAULT_FILE_SUFFIXES = ".groovy";
 
-  /**
-   * Settings of the plugin.
-   */
+  /** Settings of the plugin. */
   private final Configuration settings;
 
-  /**
-   * Default constructor
-   */
+  /** Default constructor */
   public Groovy(Configuration settings) {
-    super(KEY, "Groovy");
+    super(KEY, NAME);
     this.settings = settings;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @see org.sonar.api.resources.AbstractLanguage#getFileSuffixes()
-   */
   @Override
   public String[] getFileSuffixes() {
-    String[] suffixes = filterEmptyStrings(settings.getStringArray(GroovyPlugin.FILE_SUFFIXES_KEY));
+    String[] suffixes = filterEmptyStrings(settings.getStringArray(FILE_SUFFIXES_KEY));
     if (suffixes.length == 0) {
-      suffixes = StringUtils.split(GroovyPlugin.DEFAULT_FILE_SUFFIXES, ",");
+      suffixes = StringUtils.split(DEFAULT_FILE_SUFFIXES, ",");
     }
     return addDot(suffixes);
   }
@@ -77,4 +72,19 @@ public class Groovy extends AbstractLanguage {
     return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
   }
 
+  public static List<Object> getExtensions() {
+    return Arrays.asList(
+        Groovy.class,
+        GroovyFileSystem.class,
+        PropertyDefinition.builder(FILE_SUFFIXES_KEY)
+            .name("File suffixes")
+            .description(
+                "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.")
+            .category(Groovy.NAME)
+            .subCategory("General")
+            .onQualifiers(Qualifiers.PROJECT)
+            .defaultValue(DEFAULT_FILE_SUFFIXES)
+            .multiValues(true)
+            .build());
+  }
 }
