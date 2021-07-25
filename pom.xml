@@ -250,4 +250,17 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <!-- google-java-format needs Java 11 -->
+      <id>skip-spotless-on-old-java</id>
+      <activation>
+        <jdk>[,11)</jdk>
+      </activation>
+      <properties>
+        <spotless.check.skip>true</spotless.check.skip>
+      </properties>
+    </profile>
+  </profiles>
 </project>
