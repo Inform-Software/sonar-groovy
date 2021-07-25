@@ -78,8 +78,6 @@
     <sonar.version>8.0</sonar.version>
     <groovy.version>2.4.21</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
-    <license.owner>SonarQube Community</license.owner>
-    <license.mailto> </license.mailto>
 
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>tobix-github</sonar.organization>
@@ -211,12 +209,26 @@
             </format>
           </formats>
           <java>
+            <licenseHeader>
+              <file>LICENSE-header-java.txt</file>
+            </licenseHeader>
             <googleJavaFormat>
               <version>${jdk.min.version}</version>
             </googleJavaFormat>
           </java>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-license-headers</id>
+            <phase>does-not-exist-to-unbind-plugin</phase>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
     <pluginManagement>
       <plugins>
