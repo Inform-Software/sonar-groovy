@@ -81,7 +81,7 @@ public class Groovy extends AbstractLanguage {
             .description(
                 "Comma-separated list of suffixes for files to analyze. To not filter, leave the list empty.")
             .category(Groovy.NAME)
-            .subCategory("General")
+            .subCategory("Base")
             .onQualifiers(Qualifiers.PROJECT)
             .defaultValue(DEFAULT_FILE_SUFFIXES)
             .multiValues(true)

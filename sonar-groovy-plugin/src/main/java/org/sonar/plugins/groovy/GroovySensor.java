@@ -261,7 +261,7 @@ public class GroovySensor implements Sensor {
                     + "Thus metrics such as \"Comment lines\" do not get incremented. "
                     + "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.")
             .category(Groovy.NAME)
-            .subCategory("General")
+            .subCategory("Base")
             .onQualifiers(Qualifiers.PROJECT)
             .defaultValue("true")
             .type(PropertyType.BOOLEAN)
