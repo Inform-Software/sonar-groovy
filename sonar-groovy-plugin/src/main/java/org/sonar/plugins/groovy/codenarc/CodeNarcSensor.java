@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +41,19 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.config.PropertyDefinition;
+import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.sonar.plugins.groovy.GroovyPlugin;
 import org.sonar.plugins.groovy.codenarc.CodeNarcXMLParser.CodeNarcViolation;
 import org.sonar.plugins.groovy.foundation.Groovy;
 import org.sonar.plugins.groovy.foundation.GroovyFileSystem;
 
 public class CodeNarcSensor implements Sensor {
+
+  @Deprecated static final String CODENARC_REPORT_PATH = "sonar.groovy.codenarc.reportPath";
+  static final String CODENARC_REPORT_PATHS = "sonar.groovy.codenarc.reportPaths";
 
   private static final Logger LOG = Loggers.get(CodeNarcSensor.class);
 
@@ -72,12 +76,11 @@ public class CodeNarcSensor implements Sensor {
   @Override
   public void execute(SensorContext context) {
     // Should we reuse existing report from CodeNarc ?
-    if (context.config().hasKey(GroovyPlugin.CODENARC_REPORT_PATHS)) {
+    if (context.config().hasKey(CODENARC_REPORT_PATHS)) {
       // Yes
-      String[] codeNarcReportPaths =
-          context.config().getStringArray(GroovyPlugin.CODENARC_REPORT_PATHS);
+      String[] codeNarcReportPaths = context.config().getStringArray(CODENARC_REPORT_PATHS);
       if (codeNarcReportPaths.length == 0) {
-        Optional<String> legacyOption = context.config().get(GroovyPlugin.CODENARC_REPORT_PATH);
+        Optional<String> legacyOption = context.config().get(CODENARC_REPORT_PATH);
         if (legacyOption.isPresent()) {
           codeNarcReportPaths = new String[] {legacyOption.get()};
         }
@@ -86,8 +89,7 @@ public class CodeNarcSensor implements Sensor {
       for (String path : codeNarcReportPaths) {
         File report = context.fileSystem().resolvePath(path);
         if (!report.isFile() || !report.exists()) {
-          LOG.warn(
-              "Groovy report " + GroovyPlugin.CODENARC_REPORT_PATHS + " not found at {}", report);
+          LOG.warn("Groovy report " + CODENARC_REPORT_PATHS + " not found at {}", report);
         } else {
           reports.add(report);
         }
@@ -218,5 +220,22 @@ public class CodeNarcSensor implements Sensor {
     } catch (IOException e) {
       throw new IllegalStateException("Cannot create directory: " + dir, e);
     }
+  }
+
+  public static List<Object> getExtensions() {
+    return Arrays.asList(
+        CodeNarcRulesDefinition.class,
+        CodeNarcSensor.class,
+        SonarWayProfile.class,
+        PropertyDefinition.builder(CODENARC_REPORT_PATHS)
+            .name("CodeNarc Reports")
+            .description(
+                "Path to the CodeNarc XML reports. Paths may be absolute or relative to the project base directory.")
+            .category(Groovy.NAME)
+            .subCategory("CodeNarc")
+            .onQualifiers(Qualifiers.PROJECT)
+            .multiValues(true)
+            .deprecatedKey(CODENARC_REPORT_PATH)
+            .build());
   }
 }

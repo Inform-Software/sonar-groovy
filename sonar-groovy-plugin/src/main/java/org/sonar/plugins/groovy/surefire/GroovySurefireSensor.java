@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +19,7 @@
 package org.sonar.plugins.groovy.surefire;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import org.sonar.api.batch.DependedUpon;
 import org.sonar.api.batch.fs.FileSystem;
@@ -73,5 +73,9 @@ public class GroovySurefireSensor implements Sensor {
   @Override
   public String toString() {
     return getClass().getSimpleName();
+  }
+
+  public static List<Object> getExtensions() {
+    return Arrays.asList(GroovySurefireParser.class, GroovySurefireSensor.class);
   }
 }

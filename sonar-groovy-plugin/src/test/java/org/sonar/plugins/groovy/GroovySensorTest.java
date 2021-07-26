@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,7 +71,7 @@ public class GroovySensorTest {
   }
 
   private void testMetrics(boolean headerComment, int expectedCommentMetric) throws IOException {
-    settings.setProperty(GroovyPlugin.IGNORE_HEADER_COMMENTS, headerComment);
+    settings.setProperty(GroovySensor.IGNORE_HEADER_COMMENTS, headerComment);
 
     Path sourceFile = TestUtils.getResource(getClass(), "../gmetrics/Greeting.groovy");
     SensorContextTester context = SensorContextTester.create(sourceFile.getParent());

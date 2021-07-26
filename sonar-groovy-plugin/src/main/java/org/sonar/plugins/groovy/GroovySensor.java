@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,6 +39,7 @@ import org.codehaus.groovy.antlr.parser.GroovyTokenTypes;
 import org.gmetrics.result.MetricResult;
 import org.gmetrics.result.NumberMetricResult;
 import org.gmetrics.resultsnode.ClassResultsNode;
+import org.sonar.api.PropertyType;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
@@ -48,9 +48,11 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
+import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
+import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.groovy.foundation.Groovy;
@@ -59,6 +61,9 @@ import org.sonar.plugins.groovy.foundation.GroovyHighlighterAndTokenizer;
 import org.sonar.plugins.groovy.gmetrics.GMetricsSourceAnalyzer;
 
 public class GroovySensor implements Sensor {
+
+  static final String IGNORE_HEADER_COMMENTS = "sonar.groovy.ignoreHeaderComments";
+
   private static final Logger LOG = Loggers.get(GroovySensor.class);
 
   private static final String CYCLOMATIC_COMPLEXITY_METRIC_NAME = "CyclomaticComplexity";
@@ -225,8 +230,7 @@ public class GroovySensor implements Sensor {
   }
 
   private boolean isNotHeaderComment(int tokenLine) {
-    return !(tokenLine == 1
-        && settings.getBoolean(GroovyPlugin.IGNORE_HEADER_COMMENTS).orElse(true));
+    return !(tokenLine == 1 && settings.getBoolean(IGNORE_HEADER_COMMENTS).orElse(true));
   }
 
   private static boolean isNotWhitespace(int tokenType) {
@@ -245,5 +249,22 @@ public class GroovySensor implements Sensor {
   @Override
   public String toString() {
     return getClass().getSimpleName();
+  }
+
+  public static List<Object> getExtensions() {
+    return Arrays.asList(
+        GroovySensor.class,
+        PropertyDefinition.builder(IGNORE_HEADER_COMMENTS)
+            .name("Ignore Header Comments")
+            .description(
+                "If set to \"true\", the file headers (that are usually the same on each file: licensing information for example) are not considered as comments. "
+                    + "Thus metrics such as \"Comment lines\" do not get incremented. "
+                    + "If set to \"false\", those file headers are considered as comments and metrics such as \"Comment lines\" get incremented.")
+            .category(Groovy.NAME)
+            .subCategory("General")
+            .onQualifiers(Qualifiers.PROJECT)
+            .defaultValue("true")
+            .type(PropertyType.BOOLEAN)
+            .build());
   }
 }

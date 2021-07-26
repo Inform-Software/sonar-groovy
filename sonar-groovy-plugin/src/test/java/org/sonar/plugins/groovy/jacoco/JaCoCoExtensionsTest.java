@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,6 +26,6 @@ public class JaCoCoExtensionsTest {
 
   @Test
   public void testExtensions() {
-    assertThat(JaCoCoExtensions.getExtensions().size()).isEqualTo(5);
+    assertThat(JaCoCoExtensions.getExtensions().size()).isEqualTo(6);
   }
 }

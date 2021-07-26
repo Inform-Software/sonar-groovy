@@ -1,7 +1,6 @@
 /*
  * Sonar Groovy Plugin
  * Copyright (C) 2010-2021 SonarQube Community
- *  
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,6 +39,6 @@ public class GroovyPluginTest {
         SonarRuntimeImpl.forSonarQube(VERSION_7_9, SonarQubeSide.SCANNER, SonarEdition.COMMUNITY);
     Plugin.Context context = new Plugin.Context(runtime);
     plugin.define(context);
-    assertThat(context.getExtensions()).hasSize(14);
+    assertThat(context.getExtensions()).hasSize(19);
   }
 }
