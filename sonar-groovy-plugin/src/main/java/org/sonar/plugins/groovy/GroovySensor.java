@@ -254,6 +254,7 @@ public class GroovySensor implements Sensor {
   public static List<Object> getExtensions() {
     return Arrays.asList(
         GroovySensor.class,
+        GroovySonarWayProfile.class,
         PropertyDefinition.builder(IGNORE_HEADER_COMMENTS)
             .name("Ignore Header Comments")
             .description(

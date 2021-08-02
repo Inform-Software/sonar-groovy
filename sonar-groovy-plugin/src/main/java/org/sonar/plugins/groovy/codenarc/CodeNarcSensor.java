@@ -226,7 +226,6 @@ public class CodeNarcSensor implements Sensor {
     return Arrays.asList(
         CodeNarcRulesDefinition.class,
         CodeNarcSensor.class,
-        SonarWayProfile.class,
         PropertyDefinition.builder(CODENARC_REPORT_PATHS)
             .name("CodeNarc Reports")
             .description(
