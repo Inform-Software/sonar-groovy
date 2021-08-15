@@ -10,7 +10,7 @@
 
   <groupId>org.sonarsource.groovy</groupId>
   <artifactId>groovy</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.8-rc2</version>
   <packaging>pom</packaging>
 
   <name>Sonar Groovy</name>
@@ -56,7 +56,7 @@
     <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git
     </developerConnection>
     <url>https://github.com/Inform-Software/sonar-groovy/tree/main</url>
-    <tag>HEAD</tag>
+    <tag>1.8-rc2</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>
