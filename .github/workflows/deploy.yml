@@ -22,6 +22,6 @@ jobs:
           distribution: 'adopt'
 
       - name: Publish package
-        run: mvn --batch-mode deploy
+        run: mvn --batch-mode --no-transfer-progress  deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
