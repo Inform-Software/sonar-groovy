@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.groovy</groupId>
     <artifactId>groovy</artifactId>
-    <version>1.8-rc2</version>
+    <version>1.8-SNAPSHOT</version>
   </parent>
 
   <artifactId>sonar-codenarc-converter</artifactId>
