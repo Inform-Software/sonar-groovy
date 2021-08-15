@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Changed
+- Updated CodeNarc to 1.6.1 (thanks to @goober, #58)
+- Use Spotless for code formatting
+
+### Fixed
+- Fixed compatibility with SonarQube 9.0 (fixes #65)
+-  Get rid of some deprecation warnings (fixes #57)
+
+
 ## [1.7] - 2021-05-30
 
 ### Changed
