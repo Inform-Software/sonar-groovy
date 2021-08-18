@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.8] - 2021-08-19
+
 ### Changed
 - Updated CodeNarc to 1.6.1 (thanks to @goober, #58)
 - Use Spotless for code formatting
@@ -78,7 +80,8 @@ Please see the Git history for older changes
 
 ## [0.6] - 2012-08-06
 
-[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.7...HEAD
+[Unreleased]: https://github.com/Inform-Software/sonar-groovy/compare/1.8...HEAD
+[1.8]: https://github.com/Inform-Software/sonar-groovy/compare/1.7...1.8
 [1.7]: https://github.com/Inform-Software/sonar-groovy/compare/1.6...1.7
 [1.6]: https://github.com/Inform-Software/sonar-groovy/compare/1.5...1.6
 [1.5]: https://github.com/Inform-Software/sonar-groovy/compare/1.4-RC1...1.5
