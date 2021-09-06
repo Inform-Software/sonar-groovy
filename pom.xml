@@ -76,7 +76,7 @@
 
   <properties>
     <sonar.version>8.0</sonar.version>
-    <groovy.version>2.4.21</groovy.version>
+    <groovy.version>3.0.9</groovy.version>
     <orchestrator.version>3.11</orchestrator.version>
 
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
