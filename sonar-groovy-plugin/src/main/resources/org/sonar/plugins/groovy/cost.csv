@@ -38,6 +38,7 @@ org.codenarc.rule.basic.HardCodedWindowsFileSeparatorRule;linear;10min
 org.codenarc.rule.basic.HardCodedWindowsRootDirectoryRule;linear;10min
 org.codenarc.rule.basic.IntegerGetIntegerRule;linear;20min
 org.codenarc.rule.basic.MultipleUnaryOperatorsRule;linear;5min
+org.codenarc.rule.basic.ParameterAssignmentInFilterClosureRule;linear;5min
 org.codenarc.rule.basic.RandomDoubleCoercedToZeroRule;linear;20min
 org.codenarc.rule.basic.RemoveAllOnSelfRule;linear;10min
 org.codenarc.rule.basic.ReturnFromFinallyBlockRule;linear;20min
@@ -131,6 +132,9 @@ org.codenarc.rule.design.ImplementationAsTypeRule;linear;10min
 org.codenarc.rule.design.InstanceofRule;linear;5min
 org.codenarc.rule.design.LocaleSetDefaultRule;linear;20min
 org.codenarc.rule.design.NestedForLoopRule;linear;10min
+org.codenarc.rule.design.OptionalCollectionReturnTypeRule;linear;5min
+org.codenarc.rule.design.OptionalFieldRule;linear;5min
+org.codenarc.rule.design.OptionalMethodParameterRule;linear;5min
 org.codenarc.rule.design.PrivateFieldCouldBeFinalRule.fixed;linear;10min
 org.codenarc.rule.design.PublicInstanceFieldRule;linear;10min
 org.codenarc.rule.design.ReturnsNullInsteadOfEmptyArrayRule;linear;20min
@@ -181,11 +185,15 @@ org.codenarc.rule.formatting.IndentationRule;linear;5min
 org.codenarc.rule.formatting.LineLengthRule;linear;10min
 org.codenarc.rule.formatting.MissingBlankLineAfterImportsRule;linear;5min
 org.codenarc.rule.formatting.MissingBlankLineAfterPackageRule;linear;5min
+org.codenarc.rule.formatting.MissingBlankLineBeforeAnnotatedFieldRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterCatchRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterClosingBraceRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterCommaRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterForRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterIfRule;linear;5min
+org.codenarc.rule.formatting.SpaceAfterMethodCallNameRule;linear;5min
+org.codenarc.rule.formatting.SpaceAfterMethodDeclarationNameRule;linear;5min
+org.codenarc.rule.formatting.SpaceAfterNotOperatorRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterOpeningBraceRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterSemicolonRule;linear;5min
 org.codenarc.rule.formatting.SpaceAfterSwitchRule;linear;5min
@@ -195,6 +203,7 @@ org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule;linear;5min
 org.codenarc.rule.formatting.SpaceAroundOperatorRule;linear;5min
 org.codenarc.rule.formatting.SpaceBeforeClosingBraceRule;linear;5min
 org.codenarc.rule.formatting.SpaceBeforeOpeningBraceRule;linear;5min
+org.codenarc.rule.formatting.SpaceInsideParenthesesRule;linear;5min
 org.codenarc.rule.formatting.TrailingWhitespaceRule;linear;5min
 org.codenarc.rule.generic.IllegalClassMemberRule.fixed;linear;10min
 org.codenarc.rule.generic.IllegalClassReferenceRule.fixed;linear;10min
