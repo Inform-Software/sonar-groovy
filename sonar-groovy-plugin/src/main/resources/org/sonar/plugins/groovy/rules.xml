@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 1.6.1 -->
+<!-- Generated using CodeNarc 2.2.0 -->
 <rules>
   <!-- basic rules -->
 
@@ -849,6 +849,30 @@ It is a poor piece of API to use; replace it with System.properties['prop'].</p>
     boolean c = !!!false    // 2 violations
     int j = -~7             // violation
     int k = +~8             // violation
+</code></pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.basic.ParameterAssignmentInFilterClosureRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Parameter Assignment In Filter Closure]]></name>
+    <internalKey><![CDATA[ParameterAssignmentInFilterClosure]]></internalKey>
+    <description><![CDATA[<p>&lt;Since CodeNarc 2.1.0&gt;</p>
+<p>An assignment operator was used on a parameter, or a property or subproperty of the parameter, in a filtering or searching closure. This is usually a typo, and the comparison operator (==) was intended.</p>
+<p>This rule will check the following filter methods: <code>find</code>, <code>findAll</code>, <code>findIndexOf</code>, <code>every</code>, <code>any</code>, <code>filter</code>, <code>grep</code>, <code>dropWhile</code> and <code>takeWhile</code>.</p>
+<p>Example of violations:</p>
+<pre><code>    List someList = [1,2,3]
+    someList.find {it == 2}
+    someList.find {it = 2}                  // violation, this actually finds 1 instead.
+    someList.find { int integer -&gt;
+        integer == 2
+    }
+    someList.find { int integer -&gt;
+        integer = 2                         // violation, this actually finds 1 instead.
+    }
+    someList.takeWhile { it.name = 42 }     // violation
 </code></pre>
 ]]></description>
     <tag>bug</tag>
@@ -2860,7 +2884,7 @@ a lowercase l. This is because 11l rendered in some fonts may look like 111 inst
     <tag>bug</tag>
     <param>
       <key>excludeRegex</key>
-      <description><![CDATA[Regular expression describing names of attributes, parameters or methods that could be precede by the "def" keyword.]]></description>
+      <description><![CDATA[Regular expression matching the names of fields, variables, parameters or methods that can be preceded by the "def" keyword.]]></description>
       <defaultValue>''</defaultValue>
     </param>
   </rule>
@@ -2968,7 +2992,10 @@ construction of new java.util.Date objects.</p>
     <description><![CDATA[<p>Checks that all source files do not contain the tab character.</p>
 <p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <em>applyToClassNames</em> and
 <em>doNotApplyToClassNames</em> rule configuration properties are not available. See
-<a href="./codenarc-configuring-rules.html#standard-properties-for-configuring-rules">Standard Properties for Configuring Rules</a></p>
+<a href="./codenarc-configuring-rules.html#standard-properties-for-configuring-rules">Standard Properties for Configuring Rules</a>.
+The <code>@SuppressWarnings</code> annotation-based disablement is also unavailable, but including a <code>// codenarc-disable NoTabCharacter</code> comment
+somewhere above the violation will disable this rule. See
+<a href="./codenarc-configuring-rules.html#disabling-rules-from-comments">Disabling Rules From Comments</a>.</p>
 ]]></description>
     <tag>bug</tag>
   </rule>
@@ -3522,7 +3549,7 @@ or 'TestCase.groovy'.</p>
     <param>
       <key>ignoreTypeNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) class names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
-      <defaultValue>*Exceptions</defaultValue>
+      <defaultValue>*Exception</defaultValue>
     </param>
   </rule>
 
@@ -3579,6 +3606,82 @@ for (int i = 0; i * 100; ++i) {
         }
     }
 }
+</code></pre>
+]]></description>
+    <tag>design</tag>
+  </rule>
+
+  <!-- since 2.0.0 -->
+  <rule>
+    <key>org.codenarc.rule.design.OptionalCollectionReturnTypeRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Optional Collection Return Type]]></name>
+    <internalKey><![CDATA[OptionalCollectionReturnType]]></internalKey>
+    <description><![CDATA[<p>Do not declare a method return type of <code>Optional&lt;List&gt;</code> (or <code>Collection</code>, <code>ArrayList</code>, <code>Set</code>, <code>Map</code>, <code>HashMap</code>, etc.). Return an empty collection instead.  See <a href="https://blogs.oracle.com/javamagazine/the-java-optional-class-11-more-recipes-for-preventing-null-pointer-exceptions">The Java Optional class: 11 more recipes for preventing null pointer exceptions</a>.</p>
+<p>This rule checks for <code>Optional&lt;collection-type&gt;</code> return types, where <em>collection-type</em> is one of these common collection interfaces or implementation classes:</p>
+<ul>
+<li><code>Collection</code></li>
+<li><code>List</code> (and <code>ArrayList</code>, <code>LinkedList</code>)</li>
+<li><code>Set</code> (and <code>HashSet</code>, <code>LinkedHashSet</code>, <code>EnumSet</code>)</li>
+<li><code>SortedSet</code> (and <code>TreeSet</code>)</li>
+<li><code>Map</code> (and <code>HashMap</code>, <code>LinkedHashMap</code>, <code>EnumMap</code>)</li>
+<li><code>SortedMap</code> (and <code>TreeMap</code>)</li>
+</ul>
+<p>Example of violations:</p>
+<pre><code>    class MyClass {
+        Optional&lt;Collection&lt;Object&gt;&gt; getCollection() { }        // violation
+
+        private Optional&lt;List&gt; getList() { }                    // violation
+        Optional&lt;ArrayList&lt;String&gt;&gt; getArrayList() { }          // violation
+        
+        protected Optional&lt;Set&lt;BigDecimal&gt;&gt; getSet() { }        // violation
+        Optional&lt;HashSet&lt;Boolean&gt;&gt; getHashSet() { }             // violation
+
+        Optional&lt;Map&lt;Integer, String&gt;&gt; getMap() { }             // violation
+        Optional&lt;TreeMap&lt;String, String&gt;&gt; getTreeMap() { }      // violation
+    }
+</code></pre>
+]]></description>
+    <tag>design</tag>
+  </rule>
+
+  <!-- since 2.0.0 -->
+  <rule>
+    <key>org.codenarc.rule.design.OptionalFieldRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Optional Field]]></name>
+    <internalKey><![CDATA[OptionalField]]></internalKey>
+    <description><![CDATA[<p>Do not use an <code>Optional</code> as a field type. See <a href="https://blogs.oracle.com/javamagazine/the-java-optional-class-11-more-recipes-for-preventing-null-pointer-exceptions">The Java Optional class: 11 more recipes for preventing null pointer exceptions</a>.</p>
+<p>Example of violations:</p>
+<pre><code>    class MyClass {
+        Optional&lt;Integer&gt; count;                            // violation
+        public String name;
+        public Optional&lt;String&gt; alias = Optional.of(&quot;x&quot;)    // violation
+        protected static Optional&lt;Object&gt; lock              // violation
+    }
+</code></pre>
+]]></description>
+    <tag>design</tag>
+  </rule>
+
+  <!-- since 2.0.0 -->
+  <rule>
+    <key>org.codenarc.rule.design.OptionalMethodParameterRule</key>
+    <severity>MINOR</severity>
+    <name><![CDATA[Optional Method Parameter]]></name>
+    <internalKey><![CDATA[OptionalMethodParameter]]></internalKey>
+    <description><![CDATA[<p>Do not use an <code>Optional</code> as a parameter type for a method or constructor. See <a href="https://blogs.oracle.com/javamagazine/the-java-optional-class-11-more-recipes-for-preventing-null-pointer-exceptions">The Java Optional class: 11 more recipes for preventing null pointer exceptions</a>.</p>
+<p>Example of violations:</p>
+<pre><code>    class MyClass {
+        protected MyClass(Optional&lt;Integer&gt; count) { }                  // violation
+        MyClass(Optional&lt;String&gt; name, Optional&lt;Integer&gt; sum) { }       // 2 violations
+        private MyClass(Optional something) { }                         // violation
+
+        void doStuff(Optional&lt;Integer&gt; count) { }                       // violation
+        public String getName() { return 'abc' }
+        int count(Optional&lt;String&gt; alias, Optional&lt;Integer&gt; total) { }  // 2 violations
+        private doSomething(Optional something) { }                     // violation
+    }
 </code></pre>
 ]]></description>
     <tag>design</tag>
@@ -3872,6 +3975,10 @@ annotation.</p>
 ]]></description>
     <tag>bug</tag>
     <param>
+      <key>duplicateNumberMinimumValue</key>
+      <description><![CDATA[Ignore duplicate numbers less than this value]]></description>
+    </param>
+    <param>
       <key>ignoreNumbers</key>
       <description><![CDATA[The optional comma-separated list of numbers that should be ignored (i.e., not cause a violation).]]></description>
       <defaultValue>0,1</defaultValue>
@@ -3886,6 +3993,7 @@ annotation.</p>
     <internalKey><![CDATA[DuplicateStringLiteral]]></internalKey>
     <description><![CDATA[<p>This rule checks for duplicate String literals within the current class.</p>
 <p>Code containing duplicate <em>String</em> literals can usually be improved by declaring the <em>String</em> as a constant field.</p>
+<p>This rule ignores (zero-length) empty strings.</p>
 <p>By default, the rule does not analyze test files. This rule sets the default value of the
 <em>doNotApplyToFilesMatching</em> property to ignore file names ending in 'Spec.groovy', 'Test.groovy', 'Tests.groovy'
 or 'TestCase.groovy'.</p>
@@ -3902,6 +4010,10 @@ annotation.</p>
 </ul>
 ]]></description>
     <tag>bug</tag>
+    <param>
+      <key>duplicateStringMinimumLength</key>
+      <description><![CDATA[Ignore duplicate strings whose length is less than this value]]></description>
+    </param>
     <param>
       <key>ignoreStrings</key>
       <description><![CDATA[The optional comma-separated list of Strings that should be ignored (i.e., not cause a violation).]]></description>
@@ -4846,6 +4958,76 @@ applyToFilesMatching and doNotApplyToFilesMatching.</p>
     <tag>convention</tag>
   </rule>
 
+  <!-- since 2.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.MissingBlankLineBeforeAnnotatedFieldRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Missing Blank Line Before Annotated Field]]></name>
+    <internalKey><![CDATA[MissingBlankLineBeforeAnnotatedField]]></internalKey>
+    <description><![CDATA[<p>Checks that there is a blank line before a field declaration that uses annotations.</p>
+<p>Ignore field declarations where:</p>
+<ul>
+<li>The previous line contains a comment</li>
+<li>The declaration (annotations) start on the first line of the class</li>
+<li>All annotations are on the same line as the field declaration.</li>
+</ul>
+<p>Examples of violations:</p>
+<pre><code>    class MyClass {
+        // No violations for field declarations preceded by a comment
+        @Delegate
+        AutoCloseable stream
+        
+        String publicField                  // violation
+        @PackageScope
+        String packageScopedField
+    }
+</code></pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 2.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterMethodDeclarationNameRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Method Declaration Name]]></name>
+    <internalKey><![CDATA[SpaceAfterMethodDeclarationName]]></internalKey>
+    <description><![CDATA[<p>Check whether method declarations do not contain unnecessary whitespace between method name and the opening parenthesis
+for parameter list.</p>
+<p>Examples of violations:</p>
+<pre><code>    class ClassWithWhitespaceInConstructorDeclaration {
+        
+        ClassWithWhitespaceInConstructorDeclaration () { //violation
+        }
+        
+        void methodWithWhitespaceInDeclaration () { //violation
+        }
+    }
+</code></pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 2.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterMethodCallNameRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Method Call Name]]></name>
+    <internalKey><![CDATA[SpaceAfterMethodCallName]]></internalKey>
+    <description><![CDATA[<p>Checks that there is no whitespace after the method name when a method call contains parenthesis or that there
+is at most one space after the method name if the call does not contain parenthesis.</p>
+<p>Examples of violations:</p>
+<pre><code>    aMethod (&quot;arg&quot;) //violation
+    
+    aMethod  &quot;arg&quot; //violation
+    
+    throw new Exception () //violation
+    
+</code></pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
   <!-- since 0.18 -->
   <rule>
     <key>org.codenarc.rule.formatting.SpaceAfterCatchRule</key>
@@ -4951,6 +5133,22 @@ null-safe operator (?.) does not cause a violation.</p>
 <p>Examples of violations:</p>
 <pre><code>    if(true) { }                            // violation
     if  (true) { }                          // violation
+</code></pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
+  <!-- since 2.1 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceAfterNotOperatorRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Not Operator]]></name>
+    <internalKey><![CDATA[SpaceAfterNotOperator]]></internalKey>
+    <description><![CDATA[<p>Check that there are no whitespace characters directly after the not (!) operator.</p>
+<p>Examples of violations:</p>
+<pre><code>    def negatedValue = ! value //violation
+    
+    if (! items.empty()) { println &quot;not empty&quot; } //violataion
 </code></pre>
 ]]></description>
     <tag>convention</tag>
@@ -5270,6 +5468,39 @@ brace ([), or a dollar sign ($) within a GString does not cause a violation.</p>
     </param>
   </rule>
 
+  <!-- since 2.1.0 -->
+  <rule>
+    <key>org.codenarc.rule.formatting.SpaceInsideParenthesesRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Inside Parentheses]]></name>
+    <internalKey><![CDATA[SpaceInsideParentheses]]></internalKey>
+    <description><![CDATA[<p>Check for whitespace after opening parentheses and before closing parentheses</p>
+<p>Example of violations:</p>
+<pre><code>    if( running) { }                        // violation
+    if(running ) { }                        // violation
+    if(      x &lt; calculateLastIndex(        // violation
+            'name') + 1    ) { }            // violation
+            
+    for(    String name: filterNames(       // violation
+            names)   ) { }                  // violation
+
+    println( 123 )                          // violations
+
+    println (3 + ( 4 * 7 )+7) + (   5 * 1 ) // violations
+    def v =  (y - 7 )*( x + (z - 3))        // violations
+    def v2 =  (y - 7 ) *                    // violation
+        (x + 
+        ( z - 3)                            // violation
+        )
+    def v3 = calc(a) + calc( a + ( b - 1) * 2) + calc(7)  // violation
+    def v4 = (a ) ? (17) : (19 )            // violation
+    
+    void doStuff( int n) { }                // violation
+</code></pre>
+]]></description>
+    <tag>convention</tag>
+  </rule>
+
   <!-- since 0.21 -->
   <rule>
     <key>org.codenarc.rule.formatting.TrailingWhitespaceRule</key>
@@ -5492,7 +5723,10 @@ with a unique rule <em>name</em> and <em>regex</em>, and (optionally) customized
 with a unique rule <em>name</em> and <em>string</em>, and (optionally) customized <em>violationMessage</em> and <em>priority</em>.</p>
 <p>NOTE: This is a file-based rule, rather than an AST-based rule, so the <em>applyToClassNames</em> and
 <em>doNotApplyToClassNames</em> rule configuration properties are not available. See
-<a href="./codenarc-configuring-rules.html#standard-properties-for-configuring-rules">Standard Properties for Configuring Rules</a>.</p>
+<a href="./codenarc-configuring-rules.html#standard-properties-for-configuring-rules">Standard Properties for Configuring Rules</a>.
+The <code>@SuppressWarnings</code> annotation-based disablement is also unavailable, but including a <code>// codenarc-disable IllegalString</code> comment
+somewhere above the violation will disable this rule. See
+<a href="./codenarc-configuring-rules.html#disabling-rules-from-comments">Disabling Rules From Comments</a>.</p>
 ]]></description>
     <tag>bug</tag>
     <param>
@@ -6028,8 +6262,7 @@ or when it appears as the first method call in a series of chained method calls.
     <severity>MAJOR</severity>
     <name><![CDATA[Closure As Last Method Parameter]]></name>
     <internalKey><![CDATA[ClosureAsLastMethodParameter]]></internalKey>
-    <description><![CDATA[<p>If a method is called and the last parameter is an inline closure then it can be declared outside
-of the method call parentheses.</p>
+    <description><![CDATA[<p>If the last parameter of a method call is an inline closure then it can be declared outside the method call parentheses.</p>
 <p>Example of violations:</p>
 <pre><code>    // creates violation: poor Groovy style
     [1,2,3].each({ println it })
@@ -6039,6 +6272,10 @@ of the method call parentheses.</p>
 </code></pre>
 ]]></description>
     <tag>groovyism</tag>
+    <param>
+      <key>ignoreCallsToMethodNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) method names; method calls on the named methods are ignored (i.e., do not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+    </param>
   </rule>
 
   <!-- since 0.16 -->
@@ -7775,8 +8012,8 @@ package name consists of only lowercase letters and numbers, separated by period
     </param>
     <param>
       <key>regex</key>
-      <description><![CDATA[Specifies the regular expression used to validate the package]]></description>
-      <defaultValue>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</defaultValue>
+      <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty.]]></description>
+      <defaultValue>[a-z]+[a-z0-9](\.[a-z0-9]+)</defaultValue>
     </param>
   </rule>
 
@@ -7865,18 +8102,18 @@ modifiers for the property is the one that is applied for the field name validat
     <severity>MINOR</severity>
     <name><![CDATA[Variable Name]]></name>
     <internalKey><![CDATA[VariableName]]></internalKey>
-    <description><![CDATA[<p>Verifies that the name of each variable matches a regular expression. By default it checks that
-non-<code>final</code> variable names start with a lowercase letter and contains only letters or numbers.</p>
-<p>NOTE: The default naming pattern for <code>final</code> variable names is <em>currently</em> that they start with an uppercase letter and contain only uppercase
-letters, numbers and underscores (i.e., like <em>constants</em>). But our consensus is that they <em>should</em> rather be named like regular variables.
-See <a href="https://github.com/CodeNarc/CodeNarc/issues/467">#467</a>. Our intent is to make that the default with the next major CodeNarc version (2.0).
-To reflect that intended behavior now, just set <code>finalRegex</code> to <code>null</code>.</p>
+    <description><![CDATA[<p>Verifies that the name of each variable matches a regular expression. By default, this rule checks that
+variable names start with a lowercase letter and contain only letters or numbers.</p>
+<p>Variables annotated with @Field are ignored.</p>
+<p>NOTE: Until CodeNarc 2.0, the default naming pattern for <code>final</code> variable names was that they start with an uppercase letter and contain only
+uppercase letters, numbers and underscores (i.e., like <em>constants</em>). Starting with CodeNarc 2.0, that has been changed so that <code>finalRegex</code>
+defaults to <code>null</code> and thus <code>final</code> variable names are treated like regular variables. See <a href="https://github.com/CodeNarc/CodeNarc/issues/467">#467</a>.
+To restore that previous behavior, set <code>finalRegex</code> to <code>[A-Z][A-Z0-9_]*</code>.</p>
 ]]></description>
     <tag>bug</tag>
     <param>
       <key>finalRegex</key>
-      <description><![CDATA[Specifies the regular expression used to validate "final" variable names. It is optional. If not set, then regex is used to validate "final" variable names. Starting with CodeNarc 2.0, we intend to default this value to "null".]]></description>
-      <defaultValue>[A-Z][A-Z0-9_]*</defaultValue>
+      <description><![CDATA[Specifies the regular expression used to validate "final" variable names. It is optional. If not set, then regex is used to validate "final" variable names.]]></description>
     </param>
     <param>
       <key>ignoreVariableNames</key>
@@ -7884,7 +8121,7 @@ To reflect that intended behavior now, just set <code>finalRegex</code> to <code
     </param>
     <param>
       <key>regex</key>
-      <description><![CDATA[Specifies the default regular expression used to validate the variable name. It is required and cannot be null or empty.]]></description>
+      <description><![CDATA[Specifies the regular expression used to validate the variable name. It is required and cannot be null or empty.]]></description>
       <defaultValue>[a-z][a-zA-Z0-9]*</defaultValue>
     </param>
   </rule>
@@ -9609,6 +9846,10 @@ Any source line that even looks like it is a comment is ignored.</p>
     // this code is OK
     println(value); println (otherValue)
 </code></pre>
+<p>Known limitations:</p>
+<ul>
+<li>Will not flag a semicolon on a field declaration with no initial value specified when running on Groovy 3.x.</li>
+</ul>
 ]]></description>
     <tag>clumsy</tag>
   </rule>
@@ -9645,7 +9886,9 @@ Setters take one method argument. Setter calls within an expression are ignored.
     <severity>MAJOR</severity>
     <name><![CDATA[Unnecessary Substring]]></name>
     <internalKey><![CDATA[UnnecessarySubstring]]></internalKey>
-    <description><![CDATA[<p>This rule finds usages of <code>String.substring(int)</code> and <code>String.substring(int, int)</code> that can be replaced by use of the
+    <description><![CDATA[<p>NOTE: This rule is <em>deprecated</em> and will be removed in a future CodeNarc version. Its recommendation to use subscripts on
+strings is not always safe/valid. See <a href="https://github.com/CodeNarc/CodeNarc/issues/562">#562</a>.</p>
+<p>This rule finds usages of <code>String.substring(int)</code> and <code>String.substring(int, int)</code> that can be replaced by use of the
 subscript operator. For instance, <code>var.substring(5)</code> can be replaced with <code>var[5..-1]</code>.</p>
 <p>Note that the String.substring(beginIndex,endIndex) method specifies a range of beginIndex..endIndex-1, while
 Groovy's String subscript specifies an inclusive range. So, <code>&quot;123456&quot;.substring(1, 5)</code> is equivalent to <code>&quot;123456&quot;[1..4]</code>.</p>
@@ -9750,9 +9993,13 @@ on which Java frameworks are in use.</p>
         String name = nameNode.toString()           // violation - field
         String code = account.getCode().toString()  // violation - field
 
+        def name = &quot;Joe&quot; + new Date().toString()    // violation - adding object to String
+
         void run() {
             String name = nameNode.toString()       // violation - variable
             String id = account.id.toString()       // violation - variable
+
+            def string = &quot;processing ${123L.toString()} or ${new Date().toString()}&quot;    // 2 violations - GString value
         }
     }
 </code></pre>
@@ -9802,7 +10049,7 @@ include:</p>
     <severity>MINOR</severity>
     <name><![CDATA[Unused Method Parameter]]></name>
     <internalKey><![CDATA[UnusedMethodParameter]]></internalKey>
-    <description><![CDATA[<p>This rule finds instances of method parameters not being used. It does not analyze private methods (that is done by
+    <description><![CDATA[<p>This rule finds instances of method (or constructor) parameters not being used. It does not analyze private methods (that is done by
 the UnusedPrivateMethodParameter rule) or methods marked @Override.</p>
 <ul>
 <li>
@@ -9915,6 +10162,11 @@ For instance, to also ignore fields named 'fieldx', set the property to the 'fie
 ]]></description>
     <tag>bug</tag>
     <param>
+      <key>allowConstructorOnlyUsages</key>
+      <description><![CDATA[Should be set to "false" if violations are to be raised for fields which are used only within constructors.]]></description>
+      <defaultValue>true</defaultValue>
+    </param>
+    <param>
       <key>ignoreFieldNames</key>
       <description><![CDATA[Specifies one or more (comma-separated) field names that should be ignored (i.e., that should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
       <defaultValue>serialVersionUID</defaultValue>
@@ -9934,6 +10186,7 @@ members within other classes).</p>
 <li>Does not recognize method reference through property access (e.g. <code>getName()</code> accessed as <code>x.name</code>)</li>
 <li>Does not recognize method invocations when method name is a GString (e.g. <code>this.&quot;${methodName}&quot;()</code>)</li>
 <li>Does not recognize invoking private method of another instance (i.e. other than <code>this</code>)</li>
+<li>Does not recognize when a private method is used as @MethodSource</li>
 <li>Does not differentiate between multiple private methods with the same name but different parameters (i.e., overloaded)</li>
 <li>Does not check for unused constructors</li>
 </ul>
@@ -9952,15 +10205,14 @@ members within other classes).</p>
     <severity>MINOR</severity>
     <name><![CDATA[Unused Private Method Parameter]]></name>
     <internalKey><![CDATA[UnusedPrivateMethodParameter]]></internalKey>
-    <description><![CDATA[<p>Checks for parameters to private methods that are not referenced within the method body. Note that the
+    <description><![CDATA[<p>Checks for parameters to private methods (or constructors) that are not referenced within the method body. Note that the
 <code>private</code> modifier is not currently &quot;respected&quot; by Groovy code (i.e., Groovy can access <code>private</code>
 members within other classes).</p>
 <p>Known limitations:</p>
 <ul>
 <li>Does not recognize parameter references within an inner class. See
 <a href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=3155974&amp;group_id=250145&amp;atid=1126573">CodeNarc bug #3155974</a>.</li>
-<li>Does not recognize parameter references when parameter name is a GString (e.g. <code>println &quot;${parameterName}&quot;</code>)
-<em>Since CodeNarc 0.14</em></li>
+<li>Does not recognize parameter references when parameter name is a GString (e.g. <code>println &quot;${parameterName}&quot;</code>)</li>
 <li>You can specify an ignore list using the 'ignoreRegex' property. By default, a parameter named 'ignore' or 'ignored'
 does not trigger a violation (the regex value is 'ignore|ignored'). You can add your own ignore list using this property.</li>
 </ul>
