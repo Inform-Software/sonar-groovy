@@ -75,6 +75,7 @@
   </distributionManagement>
 
   <properties>
+    <jdk.min.version>1.8</jdk.min.version>
     <sonar.version>8.0</sonar.version>
     <orchestrator.version>3.11</orchestrator.version>
 
