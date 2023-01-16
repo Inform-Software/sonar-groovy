@@ -13,7 +13,7 @@
   <name>Sonar CodeNarc Converter</name>
 
   <properties>
-    <auto.version>1.9</auto.version>
+    <auto.version>1.10.1</auto.version>
     <commonmark.version>0.21.0</commonmark.version>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
