@@ -8,6 +8,14 @@ Get test builds from [GitHub
 Actions](https://github.com/Inform-Software/sonar-groovy/actions) (click on a
 recent run and get the artifacts from the bottom of the page).
 
+## Status
+
+![Maintenance](https://img.shields.io/maintenance/no/2022)
+
+**WARNING**: This project is currently unmaintained. If you want to take over
+maintainership, please contact me (see mail address in recent commits) and I'll
+arrrange a repository move and inform SonarSource about the new maintainer.
+
 ## Description
 
 This plugin enables analysis of Groovy within SonarQube.
