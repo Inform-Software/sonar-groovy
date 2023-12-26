@@ -1,6 +1,6 @@
 /*
  * Sonar Groovy Plugin
- * Copyright (C) 2010-2021 SonarQube Community
+ * Copyright (C) 2010-2023 SonarQube Community
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -131,7 +131,7 @@ public class GroovySurefireSensorTest {
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest", CoreMetrics.SKIPPED_TESTS)
                 .value())
-        .isEqualTo(0);
+        .isZero();
 
     assertThat(context.measure(":org.sonar.core.ExtensionsFinderTest2", CoreMetrics.TESTS).value())
         .isEqualTo(2);
@@ -144,17 +144,17 @@ public class GroovySurefireSensorTest {
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest2", CoreMetrics.TEST_FAILURES)
                 .value())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest2", CoreMetrics.TEST_ERRORS)
                 .value())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest2", CoreMetrics.SKIPPED_TESTS)
                 .value())
-        .isEqualTo(0);
+        .isZero();
 
     assertThat(context.measure(":org.sonar.core.ExtensionsFinderTest3", CoreMetrics.TESTS).value())
         .isEqualTo(1);
@@ -167,12 +167,12 @@ public class GroovySurefireSensorTest {
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest3", CoreMetrics.TEST_FAILURES)
                 .value())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest3", CoreMetrics.TEST_ERRORS)
                 .value())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             context
                 .measure(":org.sonar.core.ExtensionsFinderTest3", CoreMetrics.SKIPPED_TESTS)
@@ -266,7 +266,7 @@ public class GroovySurefireSensorTest {
 
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(2);
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(1);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isEqualTo(0);
+    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isZero();
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.SKIPPED_TESTS).value()).isEqualTo(1);
   }
 
@@ -284,9 +284,9 @@ public class GroovySurefireSensorTest {
                         "/org/sonar/plugins/groovy/surefire/SurefireSensorTest/noSuccessRatioIfNoTests/")
                     .toURI())));
 
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isEqualTo(0);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isEqualTo(0);
-    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isEqualTo(0);
+    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TESTS).value()).isZero();
+    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_FAILURES).value()).isZero();
+    assertThat(context.measure(":org.sonar.Foo", CoreMetrics.TEST_ERRORS).value()).isZero();
     assertThat(context.measure(":org.sonar.Foo", CoreMetrics.SKIPPED_TESTS).value()).isEqualTo(2);
   }
 
@@ -307,7 +307,7 @@ public class GroovySurefireSensorTest {
     // ignore TestHandler$Input.xml
     assertThat(
             context.measure(":org.apache.shindig.protocol.TestHandler", CoreMetrics.TESTS).value())
-        .isEqualTo(0);
+        .isZero();
     assertThat(
             context
                 .measure(":org.apache.shindig.protocol.TestHandler", CoreMetrics.SKIPPED_TESTS)
