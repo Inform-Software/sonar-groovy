@@ -1,4 +1,4 @@
-<!-- Generated using CodeNarc 2.2.0 -->
+<!-- Generated using CodeNarc 3.3.0 -->
 <rules>
   <!-- basic rules -->
 
@@ -631,7 +631,7 @@ put <code>@Override</code> on a method implementing an interface. Use with Java 
     <severity>MINOR</severity>
     <name><![CDATA[Empty Try Block]]></name>
     <internalKey><![CDATA[EmptyTryBlock]]></internalKey>
-    <description><![CDATA[<p>Checks for empty <em>try</em> blocks. Empty <em>try</em> blocks are confusing and serve no purpose.</p>
+    <description><![CDATA[<p>Checks for empty <em>try</em> blocks. Empty <em>try</em> blocks are confusing and serve no purpose. This rule ignores all try-with-resources statements.</p>
 <p>Here is an example of code that produces a violation:</p>
 <pre><code>    def myMethod() {
         try {
@@ -1482,6 +1482,68 @@ property <code>applyToNonMainClasses</code> to true.</p>
     </param>
   </rule>
 
+  <rule>
+    <key>org.codenarc.rule.comments.SpaceAfterCommentDelimiterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space After Comment Delimiter]]></name>
+    <internalKey><![CDATA[SpaceAfterCommentDelimiter]]></internalKey>
+    <description><![CDATA[<p>&lt;Since CodeNarc 3.3.0&gt;</p>
+<p>Checks that there is whitespace after comment delimiter (// and /*).</p>
+<p>Notes:</p>
+<ul>
+<li>Comments are not available as part of the Groovy AST, so this rule is implemented using regular expression searches. The rule uses some heuristics to avoid false positives, but can also miss some actual violations (i.e., false negatives).</li>
+<li>May cause violation for commented-out code (if there is no space after the comment delimiter)</li>
+</ul>
+<p>Example of violations:</p>
+<pre><code>    /**Bad1                                             // violation
+     *Ignored .. not a violation
+     *    @author Some Developer
+     */
+    class MyClass {//Bad4                               // violation
+        int countThings(int start) { //some comment     // violation
+            //Do stuff                                  // violation
+        } //comment                                     // violation
+    }
+    //Other comment                                     // violation
+    /*Single line comment*/                             // violation
+</code></pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.comments.SpaceBeforeCommentDelimiterRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Space Before Comment Delimiter]]></name>
+    <internalKey><![CDATA[SpaceBeforeCommentDelimiter]]></internalKey>
+    <description><![CDATA[<p>&lt;Since CodeNarc 3.3.0&gt;</p>
+<p>Checks that there is whitespace before comment characters (// and /*)</p>
+<p>Notes:</p>
+<ul>
+<li>Comments are not available as part of the Groovy AST, so this rule is implemented using regular expression searches. The rule uses some heuristics to avoid false positives, but can also miss some actual violations (i.e., false negatives).</li>
+</ul>
+<p>Example of violations:</p>
+<pre><code>    import org.acme.Stuff/**                            // violation
+     *    @author Some Developer
+     */
+    class MyClass {// class comment                     // violation
+        /**
+         *Return the calculated count of some stuff,
+         */
+        int countThings(int startIndex) {// comment     // violation
+            int count = 3 +// first part                // violation
+            reduce(23)
+            amount = 3 + amount/*violation*/            // violation
+        }//comment                                      // violation
+        
+        int count = 3//Other comment                    // violation
+        String x = doStuff()/*Single line comment*/     // violation
+    }
+</code></pre>
+]]></description>
+    <tag>bug</tag>
+  </rule>
+
   <!-- concurrency rules -->
 
   <!-- since 0.13 -->
@@ -1704,6 +1766,30 @@ within an outer <code>synchronized</code> statement does not cause a violation (
                 // do something else ...
             }
         }
+    }
+</code></pre>
+]]></description>
+    <tag>multi-threading</tag>
+  </rule>
+
+  <rule>
+    <key>org.codenarc.rule.concurrency.NoScriptBindingsRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[No Script Bindings]]></name>
+    <internalKey><![CDATA[NoScriptBindings]]></internalKey>
+    <description><![CDATA[<p>This rule reports occurrences of global variables that are bound to a script.</p>
+<p>These should be avoided as concurrent executions can modify and read the shared
+variable, leading to concurrency bugs.</p>
+<p>Examples (within a script):</p>
+<pre><code>    b = 1                       // violation
+    def myMethod() {
+        a = 1                   // violation
+    }
+
+    // These are fields and local variables; they are OK
+    int b = 1
+    def myMethod2() {
+        Integer a = 1
     }
 </code></pre>
 ]]></description>
@@ -3145,18 +3231,21 @@ out of the ternary expression.</p>
     <severity>MAJOR</severity>
     <name><![CDATA[Trailing Comma]]></name>
     <internalKey><![CDATA[TrailingComma]]></internalKey>
-    <description><![CDATA[<p>Check whether list and map literals contain optional trailing comma.
-Rationale: Putting this comma in make is easier
+    <description><![CDATA[<p>Check whether list and map literals contain an optional trailing comma.
+Rationale: Putting this comma in makes it easier
 to change the order of the elements or add new elements on the end.</p>
 <p>This is valid code:</p>
-<pre><code>  int[] array1 = [] // one line declaration
-  int[] array2 = [ // empty list
+<pre><code>  int[] array1 = []         // one line declaration
+  int[] array2 = [          // empty list
                  ]
-  int[] array3 = [1,2,3] // one line declaration
+  int[] array3 = [1,2,3]    // one line declaration
   int[] array4 = [1,
                   2,
-                  3, // contains trailing comma
+                  3,        // contains trailing comma
                  ]
+  int[] array5 = [1,
+                  2]        // last element followed by closing bracket on the same line
+                            // NOTE: This style actually violates the intention of this rule
 </code></pre>
 <p>Example of violations:</p>
 <pre><code>  int[] array2 = [1,
@@ -4797,6 +4886,11 @@ missed when reading the code.</p>
     <description><![CDATA[<p>Makes sure there are no consecutive lines that are either blank or whitespace only. This reduces the need to scroll
 further than necessary when reading code, and increases the likelihood that a logical block of code will fit on one
 screen for easier comprehension.</p>
+<p>Known Limitations:</p>
+<ul>
+<li>Will create <em>false positive</em> violation for consecutive blank lines within string literals. For those cases,
+configure the rule to skip that file (using <em>doNotApplyToFileNames</em> or <em>doNotApplyToFilesMatching</em> rule properties). See <a href="https://codenarc.org/codenarc-configuring-rules.html#standard-properties-for-configuring-rules">Standard Properties for Configuring Rules</a>. Note that the class-based rule properties are not available on this rule.</li>
+</ul>
 <p>Example of violation:</p>
 <pre><code>    def name
 
@@ -5014,15 +5108,11 @@ for parameter list.</p>
     <severity>MAJOR</severity>
     <name><![CDATA[Space After Method Call Name]]></name>
     <internalKey><![CDATA[SpaceAfterMethodCallName]]></internalKey>
-    <description><![CDATA[<p>Checks that there is no whitespace after the method name when a method call contains parenthesis or that there
-is at most one space after the method name if the call does not contain parenthesis.</p>
+    <description><![CDATA[<p>Checks that there is no whitespace after the method name when a method call contains parenthesis.</p>
 <p>Examples of violations:</p>
-<pre><code>    aMethod (&quot;arg&quot;) //violation
+<pre><code>    aMethod (&quot;arg&quot;)         // violation
     
-    aMethod  &quot;arg&quot; //violation
-    
-    throw new Exception () //violation
-    
+    throw new Exception ()  // violation
 </code></pre>
 ]]></description>
     <tag>convention</tag>
@@ -5322,8 +5412,15 @@ properties below.</p>
     <severity>MAJOR</severity>
     <name><![CDATA[Space Around Operator]]></name>
     <internalKey><![CDATA[SpaceAroundOperator]]></internalKey>
-    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator,
-including: +, -, *, /, **, **, &amp;&amp;, ||, &amp;, |, ?:, =, &quot;as&quot;.</p>
+    <description><![CDATA[<p>Check that there is at least one space (blank) or whitespace around each binary operator, including:</p>
+<ul>
+<li>Arithmetic operators: +, -, *, /, **</li>
+<li>Assignment operators: =, +=, -=, *=, /=, **=, ?=</li>
+<li>Relational operators: ==, !=, &gt;, &gt;=, &lt;, &lt;=, ===, !==</li>
+<li>Logical operators: &amp;&amp;, ||</li>
+<li>Bitwise operators: &amp;, |</li>
+<li>Other: ?:, &quot;as&quot;</li>
+</ul>
 <p>Do not check dot ('.') operator. Do not check unary operators (!, +, -, ++, --, ?.).
 Do not check array ('[') operator.</p>
 <p>Known limitations:</p>
@@ -6784,6 +6881,15 @@ Consider calling <code>key.toString()</code>.</p>
     <internalKey><![CDATA[UseCollectMany]]></internalKey>
     <description><![CDATA[<p>In many case <code>collectMany()</code> yields the same result as <code>collect{}.flatten()</code>.
 It is easier to understand and more clearly conveys the intent.</p>
+<p>Limitations:</p>
+<ul>
+<li>The <code>collectMany()</code> method does not recursively flatten nested collections, unlike <code>collect().flatten()</code>.
+e.g.</li>
+</ul>
+<pre><code>     def l = [1, [2, 22], 3]
+     println l.collect{ [it, it*2] }.flatten() // [1, 2, 2, 22, 2, 22, 2, 22, 3, 6]
+     println l.collectMany{ [it, it*2] }       // [1, 2, [2, 22], [2, 22, 2, 22], 3, 6]
+</code></pre>
 <p>Example of violations:</p>
 <pre><code>def l = [1, 2, 3, 4]
 
@@ -7343,7 +7449,7 @@ default value is this comma separated list of regular expressions:</p>
     <severity>MAJOR</severity>
     <name><![CDATA[JUnit Unnecessary Set Up]]></name>
     <internalKey><![CDATA[JUnitUnnecessarySetUp]]></internalKey>
-    <description><![CDATA[<p>Rule that checks checks for JUnit <code>setUp()</code> methods that contain only a call to
+    <description><![CDATA[<p>Rule that checks for JUnit <code>setUp()</code> methods that contain only a call to
 <code>super.setUp()</code>. The method is then unnecessary.</p>
 <p>This rule sets the default value of the <em>applyToClassNames</em> property to only match class names
 ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
@@ -7363,7 +7469,7 @@ ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
     <severity>MAJOR</severity>
     <name><![CDATA[JUnit Unnecessary Tear Down]]></name>
     <internalKey><![CDATA[JUnitUnnecessaryTearDown]]></internalKey>
-    <description><![CDATA[<p>Rule that checks checks for JUnit <code>tearDown()</code> methods that contain only a call to
+    <description><![CDATA[<p>Rule that checks for JUnit <code>tearDown()</code> methods that contain only a call to
 <code>super.tearDown()</code>. The method is then unnecessary.</p>
 <p>This rule sets the default value of the <em>applyToClassNames</em> property to only match class names
 ending in 'Spec', 'Test', 'Tests' or 'TestCase'.</p>
@@ -7431,6 +7537,48 @@ Spock <em>Specification</em> classes.</p>
             when: a *= 2
 
             then: a == 4
+        }
+    }
+</code></pre>
+]]></description>
+    <tag>junit</tag>
+    <param>
+      <key>specificationClassNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification classes. The class names may optionally contain wildcards (*,?), e.g. "*Spec".]]></description>
+    </param>
+    <param>
+      <key>specificationSuperclassNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) class names that should be treated as Spock Specification superclasses. In other words, a class that extends a matching class name is considered a Spock Specification . The class names may optionally contain wildcards (*,?), e.g. "*Spec".]]></description>
+      <defaultValue>*Specification</defaultValue>
+    </param>
+  </rule>
+
+  <!-- since 3.3.0 -->
+  <rule>
+    <key>org.codenarc.rule.junit.SpockMissingAssertRule</key>
+    <severity>MAJOR</severity>
+    <name><![CDATA[Spock Missing Assert]]></name>
+    <internalKey><![CDATA[SpockMissingAssert]]></internalKey>
+    <description><![CDATA[<p>Spock treats all expressions on the first level of a then or expect block as an implicit assertion.
+However, everything inside if/for/switch/... blocks is not an implicit assert, just a useless comparison (unless wrapped by a <code>with</code> or <code>verifyAll</code>).</p>
+<p>This rule finds such expressions, where an explicit call to <code>assert</code> would be required. Please note that the rule might
+produce false positives, as it relies on method names to determine whether an expression has a boolean type or not.</p>
+<p>Example of violations:</p>
+<pre><code>    public class MySpec extends spock.lang.Specification {
+        def &quot;test passes - does not behave as expected&quot;() {
+            expect:
+            if (true) {
+                true == false // violation - is inside an if block, and therefore not treated as an implicit assertion by spock
+            }
+        }
+
+        def &quot;test fails - behaves as expected&quot;() {
+            expect:
+            if (true) {
+                with(new Object()) {
+                    true == false // no violation - expressions in with are treated as implicit assertions by spock
+                }
+            }
         }
     }
 </code></pre>
@@ -7870,7 +8018,7 @@ popular Builder Pattern. If the 'build' method is in a class named *Builder then
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the default regular expression used to validate the method name. It is required and cannot be null or empty.]]></description>
-      <defaultValue>(build.|create.)</defaultValue>
+      <defaultValue>(build.*|create.*)</defaultValue>
     </param>
   </rule>
 
@@ -8013,7 +8161,7 @@ package name consists of only lowercase letters and numbers, separated by period
     <param>
       <key>regex</key>
       <description><![CDATA[Specifies the regular expression used to validate the package name. It is required and cannot be null or empty.]]></description>
-      <defaultValue>[a-z]+[a-z0-9](\.[a-z0-9]+)</defaultValue>
+      <defaultValue>[a-z]+[a-z0-9]*(\.[a-z0-9]+)*</defaultValue>
     </param>
   </rule>
 
@@ -8486,7 +8634,6 @@ declarations: = *= /= %= += **= **= &amp;= |= ^= `=</li>
 eXcentia Sonar ABC Metric Plugin (for Java) includes a table of risk classifications for ABC scores for both methods and classes.</li>
 <li>See the <a href="http://gmetrics.sourceforge.net/gmetrics-AbcMetric.html">GMetrics ABC metric</a>.
 This includes a discussion of guidelines for interpreting <em>ABC</em> scores.</li>
-<li>This rule requires Groovy 1.6 (or later).</li>
 <li>This rule requires the GMetrics jar on the classpath. See <a href="http://gmetrics.sourceforge.net/">GMetrics</a>.</li>
 </ul>
 ]]></description>
@@ -8614,7 +8761,6 @@ Add one (1) for each occurrence of each of the following:</em></p>
 <li>See the <a href="http://www.literateprogramming.com/mccabe.pdf">original paper describing Cyclomatic Complexity</a></li>
 <li>See the <a href="http://gmetrics.sourceforge.net/gmetrics-CyclomaticComplexityMetric.html">GMetrics Cyclomatic Complexity metric</a>.
 This includes a discussion of guidelines for interpreting <em>cyclomatic complexity</em> values.</li>
-<li>This rule requires Groovy 1.6 (or later).</li>
 <li>This rule requires the GMetrics jar on the classpath. See <a href="http://gmetrics.sourceforge.net/">GMetrics</a>.</li>
 </ul>
 ]]></description>
@@ -9735,15 +9881,15 @@ definitions, for older versions of Groovy (* 1.7.10?). For instance,
     <name><![CDATA[Unnecessary Public Modifier]]></name>
     <internalKey><![CDATA[UnnecessaryPublicModifier]]></internalKey>
     <description><![CDATA[<p>The 'public' modifier is not required on methods, constructors or classes.</p>
-<p>Because of Groovy parsing limitations, this rule ignores methods (and constructors) that include Generic types in the method declaration.</p>
+<p>Limitations:</p>
+<ul>
+<li>Because of Groovy parsing limitations, this rule ignores methods (and constructors) that include Generic types in the method declaration.</li>
+<li>This rule will not catch the <code>public</code> modifier if it is on a separate line from the rest of the declaration.</li>
+</ul>
 <p>Example of violations:</p>
-<pre><code>    // violation on class
-    public class MyClass {
-        // violation on constructor
-        public MyClass() {}
-
-        // violation on method
-        public void myMethod() {}
+<pre><code>    public class MyClass {              // violation on class
+        public MyClass() {}             // violation on constructor
+        public void myMethod() {}       // violation on method
     }
 </code></pre>
 ]]></description>
@@ -9862,7 +10008,8 @@ Any source line that even looks like it is a comment is ignored.</p>
     <internalKey><![CDATA[UnnecessarySetter]]></internalKey>
     <description><![CDATA[<p>Checks for explicit calls to setter methods which can, for the most part, be replaced by assignment to property.
 A setter is defined as a method call that matches set[A-Z] but not set[A-Z][A-Z] such as setURL().
-Setters take one method argument. Setter calls within an expression are ignored.</p>
+Setters take one method argument. Setter calls within an expression are ignored. Calls to static setter methods
+within the same class are ignored.</p>
 <p>These bits of code produce violations:</p>
 <pre><code>  x.setProperty(1)
   x.setProperty(this.getA())
@@ -9875,26 +10022,6 @@ Setters take one method argument. Setter calls within an expression are ignored.
   x.setSomething('arg1', 'arg2')        // Setter must have exactly one argument
   if (!file.setExecutable(true)) { }    // Set method called within expression
   def count = x.setCount(92)            // Set method called within expression
-</code></pre>
-]]></description>
-    <tag>clumsy</tag>
-  </rule>
-
-  <!-- since 0.15 -->
-  <rule>
-    <key>org.codenarc.rule.unnecessary.UnnecessarySubstringRule</key>
-    <severity>MAJOR</severity>
-    <name><![CDATA[Unnecessary Substring]]></name>
-    <internalKey><![CDATA[UnnecessarySubstring]]></internalKey>
-    <description><![CDATA[<p>NOTE: This rule is <em>deprecated</em> and will be removed in a future CodeNarc version. Its recommendation to use subscripts on
-strings is not always safe/valid. See <a href="https://github.com/CodeNarc/CodeNarc/issues/562">#562</a>.</p>
-<p>This rule finds usages of <code>String.substring(int)</code> and <code>String.substring(int, int)</code> that can be replaced by use of the
-subscript operator. For instance, <code>var.substring(5)</code> can be replaced with <code>var[5..-1]</code>.</p>
-<p>Note that the String.substring(beginIndex,endIndex) method specifies a range of beginIndex..endIndex-1, while
-Groovy's String subscript specifies an inclusive range. So, <code>&quot;123456&quot;.substring(1, 5)</code> is equivalent to <code>&quot;123456&quot;[1..4]</code>.</p>
-<p>Example of violations:</p>
-<pre><code>    myVar.substring(5)          // can use myVar[5..-1] instead
-    myVar.substring(1, 5)       // can use myVar[1..4] instead
 </code></pre>
 ]]></description>
     <tag>clumsy</tag>
@@ -10165,6 +10292,11 @@ For instance, to also ignore fields named 'fieldx', set the property to the 'fie
       <key>allowConstructorOnlyUsages</key>
       <description><![CDATA[Should be set to "false" if violations are to be raised for fields which are used only within constructors.]]></description>
       <defaultValue>true</defaultValue>
+    </param>
+    <param>
+      <key>ignoreClassesAnnotatedWithNames</key>
+      <description><![CDATA[Specifies one or more (comma-separated) annotation names; any classes annotated with those should be ignored (i.e., should not cause a rule violation). The names may optionally contain wildcards (*,?).]]></description>
+      <defaultValue>Entity</defaultValue>
     </param>
     <param>
       <key>ignoreFieldNames</key>

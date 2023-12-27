@@ -1,6 +1,6 @@
 /*
  * Sonar Groovy Plugin
- * Copyright (C) 2010-2021 SonarQube Community
+ * Copyright (C) 2010-2023 SonarQube Community
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,7 @@ public class CodeNarcRulesDefinitionTest {
     assertThat(repository.language()).isEqualTo(Groovy.KEY);
 
     List<Rule> rules = repository.rules();
-    assertThat(rules).hasSize(394);
+    assertThat(rules).hasSize(397);
 
     List<String> missingDebt = new LinkedList<>();
     for (Rule rule : rules) {
@@ -55,7 +55,13 @@ public class CodeNarcRulesDefinitionTest {
     }
     // From SONARGROOV-36, 'org.codenarc.rule.generic.IllegalSubclassRule' does not have debt by
     // purpose
-    assertThat(missingDebt).containsOnly("org.codenarc.rule.generic.IllegalSubclassRule.fixed");
+    assertThat(missingDebt)
+        .containsOnly(
+            "org.codenarc.rule.generic.IllegalSubclassRule.fixed",
+            "org.codenarc.rule.junit.SpockMissingAssertRule",
+            "org.codenarc.rule.concurrency.NoScriptBindingsRule",
+            "org.codenarc.rule.comments.SpaceAfterCommentDelimiterRule",
+            "org.codenarc.rule.comments.SpaceBeforeCommentDelimiterRule");
 
     Rule rule = repository.rule("org.codenarc.rule.braces.ElseBlockBracesRule");
     assertThat(rule.params()).hasSize(1);

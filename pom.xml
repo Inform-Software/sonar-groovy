@@ -51,7 +51,6 @@
     <module>codenarc-converter</module>
   </modules>
 
-
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false">
     <connection>scm:git:git@github.com:Inform-Software/sonar-groovy.git</connection>
     <developerConnection>scm:git:git@github.com:Inform-Software/sonar-groovy.git
