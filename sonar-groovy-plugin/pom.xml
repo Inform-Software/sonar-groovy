@@ -124,6 +124,9 @@
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
                   </files>
                 </requireFilesSize>
+                <requireJavaVersion>
+                  <version>1.8</version>
+                </requireJavaVersion>
               </rules>
             </configuration>
           </execution>
